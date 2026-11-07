@@ -1,0 +1,397 @@
+{
+ "before": {
+  "overall": {
+   "totalDark": 3119,
+   "totalNeeds": 11728,
+   "coverage": 0.266,
+   "modules": [
+    {
+     "module": "DashboardView.tsx",
+     "dark": 0,
+     "needs": 95,
+     "coverage": 0.0
+    },
+    {
+     "module": "InventoryView.tsx",
+     "dark": 0,
+     "needs": 145,
+     "coverage": 0.0
+    },
+    {
+     "module": "MovementDetailsModal.tsx",
+     "dark": 0,
+     "needs": 62,
+     "coverage": 0.0
+    },
+    {
+     "module": "MovementModal.tsx",
+     "dark": 0,
+     "needs": 126,
+     "coverage": 0.0
+    },
+    {
+     "module": "Navbar.tsx",
+     "dark": 0,
+     "needs": 21,
+     "coverage": 0.0
+    },
+    {
+     "module": "RecordsView.tsx",
+     "dark": 0,
+     "needs": 194,
+     "coverage": 0.0
+    },
+    {
+     "module": "ReportsView.tsx",
+     "dark": 0,
+     "needs": 169,
+     "coverage": 0.0
+    },
+    {
+     "module": "SearchableSelect.tsx",
+     "dark": 0,
+     "needs": 27,
+     "coverage": 0.0
+    },
+    {
+     "module": "SettingsView.tsx",
+     "dark": 0,
+     "needs": 165,
+     "coverage": 0.0
+    },
+    {
+     "module": "common",
+     "dark": 0,
+     "needs": 50,
+     "coverage": 0.0
+    },
+    {
+     "module": "workos",
+     "dark": 0,
+     "needs": 2313,
+     "coverage": 0.0
+    },
+    {
+     "module": "(core/utils)",
+     "dark": 0,
+     "needs": 13,
+     "coverage": 0.0
+    },
+    {
+     "module": "customers",
+     "dark": 49,
+     "needs": 980,
+     "coverage": 0.05
+    },
+    {
+     "module": "doctors",
+     "dark": 44,
+     "needs": 800,
+     "coverage": 0.055
+    },
+    {
+     "module": "debts",
+     "dark": 62,
+     "needs": 700,
+     "coverage": 0.089
+    },
+    {
+     "module": "custody",
+     "dark": 56,
+     "needs": 525,
+     "coverage": 0.107
+    },
+    {
+     "module": "taskflow",
+     "dark": 60,
+     "needs": 502,
+     "coverage": 0.12
+    },
+    {
+     "module": "links",
+     "dark": 74,
+     "needs": 410,
+     "coverage": 0.18
+    },
+    {
+     "module": "tasks",
+     "dark": 92,
+     "needs": 488,
+     "coverage": 0.189
+    },
+    {
+     "module": "financial",
+     "dark": 356,
+     "needs": 777,
+     "coverage": 0.458
+    },
+    {
+     "module": "auth",
+     "dark": 35,
+     "needs": 74,
+     "coverage": 0.473
+    },
+    {
+     "module": "(app shell)",
+     "dark": 7,
+     "needs": 11,
+     "coverage": 0.636
+    },
+    {
+     "module": "pwa",
+     "dark": 14,
+     "needs": 21,
+     "coverage": 0.667
+    },
+    {
+     "module": "routines",
+     "dark": 587,
+     "needs": 832,
+     "coverage": 0.706
+    },
+    {
+     "module": "settings",
+     "dark": 539,
+     "needs": 750,
+     "coverage": 0.719
+    },
+    {
+     "module": "Header.tsx",
+     "dark": 26,
+     "needs": 36,
+     "coverage": 0.722
+    },
+    {
+     "module": "knowledge",
+     "dark": 664,
+     "needs": 917,
+     "coverage": 0.724
+    },
+    {
+     "module": "notifications",
+     "dark": 103,
+     "needs": 124,
+     "coverage": 0.831
+    },
+    {
+     "module": "dashboard",
+     "dark": 292,
+     "needs": 336,
+     "coverage": 0.869
+    },
+    {
+     "module": "Sidebar.tsx",
+     "dark": 33,
+     "needs": 37,
+     "coverage": 0.892
+    },
+    {
+     "module": "stock",
+     "dark": 26,
+     "needs": 28,
+     "coverage": 0.929
+    }
+   ]
+  }
+ },
+ "after": {
+  "overall": {
+   "totalDark": 7750,
+   "totalNeeds": 11728,
+   "coverage": 0.661,
+   "modules": [
+    {
+     "module": "Navbar.tsx",
+     "dark": 0,
+     "needs": 21,
+     "coverage": 0.0
+    },
+    {
+     "module": "SearchableSelect.tsx",
+     "dark": 0,
+     "needs": 27,
+     "coverage": 0.0
+    },
+    {
+     "module": "SettingsView.tsx",
+     "dark": 0,
+     "needs": 165,
+     "coverage": 0.0
+    },
+    {
+     "module": "(core/utils)",
+     "dark": 1,
+     "needs": 13,
+     "coverage": 0.077
+    },
+    {
+     "module": "taskflow",
+     "dark": 60,
+     "needs": 502,
+     "coverage": 0.12
+    },
+    {
+     "module": "workos",
+     "dark": 1180,
+     "needs": 2313,
+     "coverage": 0.51
+    },
+    {
+     "module": "auth",
+     "dark": 42,
+     "needs": 74,
+     "coverage": 0.568
+    },
+    {
+     "module": "debts",
+     "dark": 415,
+     "needs": 700,
+     "coverage": 0.593
+    },
+    {
+     "module": "links",
+     "dark": 255,
+     "needs": 410,
+     "coverage": 0.622
+    },
+    {
+     "module": "(app shell)",
+     "dark": 7,
+     "needs": 11,
+     "coverage": 0.636
+    },
+    {
+     "module": "doctors",
+     "dark": 534,
+     "needs": 800,
+     "coverage": 0.667
+    },
+    {
+     "module": "custody",
+     "dark": 352,
+     "needs": 525,
+     "coverage": 0.67
+    },
+    {
+     "module": "InventoryView.tsx",
+     "dark": 98,
+     "needs": 145,
+     "coverage": 0.676
+    },
+    {
+     "module": "tasks",
+     "dark": 347,
+     "needs": 488,
+     "coverage": 0.711
+    },
+    {
+     "module": "pwa",
+     "dark": 15,
+     "needs": 21,
+     "coverage": 0.714
+    },
+    {
+     "module": "customers",
+     "dark": 729,
+     "needs": 980,
+     "coverage": 0.744
+    },
+    {
+     "module": "MovementModal.tsx",
+     "dark": 98,
+     "needs": 126,
+     "coverage": 0.778
+    },
+    {
+     "module": "DashboardView.tsx",
+     "dark": 74,
+     "needs": 95,
+     "coverage": 0.779
+    },
+    {
+     "module": "routines",
+     "dark": 655,
+     "needs": 832,
+     "coverage": 0.787
+    },
+    {
+     "module": "financial",
+     "dark": 616,
+     "needs": 777,
+     "coverage": 0.793
+    },
+    {
+     "module": "settings",
+     "dark": 605,
+     "needs": 750,
+     "coverage": 0.807
+    },
+    {
+     "module": "RecordsView.tsx",
+     "dark": 157,
+     "needs": 194,
+     "coverage": 0.809
+    },
+    {
+     "module": "knowledge",
+     "dark": 754,
+     "needs": 917,
+     "coverage": 0.822
+    },
+    {
+     "module": "Header.tsx",
+     "dark": 30,
+     "needs": 36,
+     "coverage": 0.833
+    },
+    {
+     "module": "notifications",
+     "dark": 106,
+     "needs": 124,
+     "coverage": 0.855
+    },
+    {
+     "module": "ReportsView.tsx",
+     "dark": 149,
+     "needs": 169,
+     "coverage": 0.882
+    },
+    {
+     "module": "MovementDetailsModal.tsx",
+     "dark": 55,
+     "needs": 62,
+     "coverage": 0.887
+    },
+    {
+     "module": "dashboard",
+     "dark": 306,
+     "needs": 336,
+     "coverage": 0.911
+    },
+    {
+     "module": "common",
+     "dark": 46,
+     "needs": 50,
+     "coverage": 0.92
+    },
+    {
+     "module": "stock",
+     "dark": 26,
+     "needs": 28,
+     "coverage": 0.929
+    },
+    {
+     "module": "Sidebar.tsx",
+     "dark": 38,
+     "needs": 37,
+     "coverage": 1.027
+    }
+   ]
+  },
+  "liveOnly": {
+   "dark": 7690,
+   "needs": 10282,
+   "coverage": 0.748
+  }
+ }
+}

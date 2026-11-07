@@ -1,0 +1,19 @@
+node_modules/
+build/
+dist/
+dev-dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# مخرجات أدوات التدقيق/الانحدار (تُولَّد آلياً)
+docs/تدقيق/.regression-bundle.js
+docs/تدقيق/last-run.json
+docs/تدقيق/.dark-bundle.js
+docs/تدقيق/.auth-bundle.js
+__pycache__/
+docs/تدقيق/.typo-bundle.js
+docs/تدقيق/.resp-bundle.js
+docs/تدقيق/.workos-bundle.js

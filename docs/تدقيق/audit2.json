@@ -1,0 +1,4071 @@
+{
+ "storageMap": {
+  "suite_stock_products_v2": {
+   "constName": "STOCK_PRODUCTS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadProducts",
+   "saveFn": "saveProducts",
+   "readers": [],
+   "writers": [
+    "src/app/App.tsx"
+   ]
+  },
+  "suite_stock_records_v2": {
+   "constName": "STOCK_RECORDS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadStockRecords",
+   "saveFn": "saveStockRecords",
+   "readers": [],
+   "writers": []
+  },
+  "suite_stock_categories_v2": {
+   "constName": "STOCK_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadStockCategories",
+   "saveFn": "saveStockCategories",
+   "readers": [],
+   "writers": []
+  },
+  "suite_stock_statuses_v2": {
+   "constName": "STOCK_STATUSES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadStockStatuses",
+   "saveFn": "saveStockStatuses",
+   "readers": [],
+   "writers": []
+  },
+  "suite_stock_seq_v2": {
+   "constName": "STOCK_SEQ",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadStockSeq",
+   "saveFn": "saveStockSeq",
+   "readers": [],
+   "writers": []
+  },
+  "suite_fin_transactions_v2": {
+   "constName": "FIN_TRANSACTIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadFinancialTransactions",
+   "saveFn": "saveFinancialTransactions",
+   "readers": [],
+   "writers": [
+    "src/app/App.tsx"
+   ]
+  },
+  "suite_fin_movements_v2": {
+   "constName": "FIN_MOVEMENTS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadFinancialMovements",
+   "saveFn": "saveFinancialMovements",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": []
+  },
+  "suite_fin_restrictions_v2": {
+   "constName": "FIN_RESTRICTIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadFinancialRestrictions",
+   "saveFn": "saveFinancialRestrictions",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": [
+    "src/app/App.tsx"
+   ]
+  },
+  "suite_fin_movement_types_v2": {
+   "constName": "FIN_MOVEMENT_TYPES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadFinancialMovementTypes",
+   "saveFn": "saveFinancialMovementTypes",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": [
+    "src/app/App.tsx"
+   ]
+  },
+  "suite_fin_importance_v2": {
+   "constName": "FIN_IMPORTANCE",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadFinancialImportanceList",
+   "saveFn": "saveFinancialImportanceList",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": []
+  },
+  "suite_fin_category_accounts_v2": {
+   "constName": "FIN_CATEGORY_ACCOUNTS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadFinancialCategoryAccounts",
+   "saveFn": "saveFinancialCategoryAccounts",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": []
+  },
+  "suite_fin_restriction_accounts_v2": {
+   "constName": "FIN_RESTRICTION_ACCOUNTS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadFinancialRestrictionAccounts",
+   "saveFn": "saveFinancialRestrictionAccounts",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": [
+    "src/app/App.tsx"
+   ]
+  },
+  "suite_fin_account_names_v2": {
+   "constName": "FIN_ACCOUNT_NAMES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadFinancialAccountNames",
+   "saveFn": "saveFinancialAccountNames",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": [
+    "src/app/App.tsx"
+   ]
+  },
+  "suite_custody_records_v1": {
+   "constName": "CUSTODY_RECORDS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustodyIssues",
+   "saveFn": "saveCustodyIssues",
+   "readers": [
+    "src/app/router/AppRouter.tsx",
+    "src/components/custody/CustodyIssuesModule.tsx",
+    "src/components/dashboard/UnifiedDashboard.tsx"
+   ],
+   "writers": [
+    "src/components/custody/CustodyIssuesModule.tsx"
+   ]
+  },
+  "suite_custody_categories_v1": {
+   "constName": "CUSTODY_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustodyCategories",
+   "saveFn": "saveCustodyCategories",
+   "readers": [
+    "src/components/custody/CustodyIssuesModule.tsx"
+   ],
+   "writers": [
+    "src/components/custody/CustodyIssuesModule.tsx"
+   ]
+  },
+  "suite_custody_responsibles_v1": {
+   "constName": "CUSTODY_RESPONSIBLES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustodyResponsibles",
+   "saveFn": "saveCustodyResponsibles",
+   "readers": [
+    "src/components/custody/CustodyIssuesModule.tsx"
+   ],
+   "writers": [
+    "src/components/custody/CustodyIssuesModule.tsx"
+   ]
+  },
+  "suite_custody_statuses_v1": {
+   "constName": "CUSTODY_STATUSES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustodyStatuses",
+   "saveFn": "saveCustodyStatuses",
+   "readers": [
+    "src/components/custody/CustodyIssuesModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_custody_priorities_v1": {
+   "constName": "CUSTODY_PRIORITIES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustodyPriorities",
+   "saveFn": "saveCustodyPriorities",
+   "readers": [
+    "src/components/custody/CustodyIssuesModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_custody_audit_v1": {
+   "constName": "CUSTODY_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustodyAuditLogs",
+   "saveFn": "saveCustodyAuditLogs",
+   "readers": [],
+   "writers": []
+  },
+  "suite_tasks_items_v2": {
+   "constName": "TASKS_ITEMS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadTasks",
+   "saveFn": "saveTasks",
+   "readers": [
+    "src/utils/workosStorage.ts"
+   ],
+   "writers": [
+    "src/utils/workosStorage.ts"
+   ]
+  },
+  "suite_tasks_commitments_v2": {
+   "constName": "TASKS_COMMITMENTS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCommitments",
+   "saveFn": "saveCommitments",
+   "readers": [
+    "src/utils/workosStorage.ts"
+   ],
+   "writers": [
+    "src/database/repositories/DebtRepository.ts",
+    "src/utils/workosStorage.ts"
+   ]
+  },
+  "suite_tasks_categories_v2": {
+   "constName": "TASKS_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadTaskCategories",
+   "saveFn": "saveTaskCategories",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": []
+  },
+  "suite_tasks_operations_v2": {
+   "constName": "TASKS_OPERATIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadTaskOperations",
+   "saveFn": "saveTaskOperations",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": []
+  },
+  "suite_tasks_assignees_v2": {
+   "constName": "TASKS_ASSIGNEES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadTaskAssignees",
+   "saveFn": "saveTaskAssignees",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": []
+  },
+  "suite_tasks_audit_v2": {
+   "constName": "TASKS_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadTaskAuditLogs",
+   "saveFn": "saveTaskAuditLogs",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": [
+    "src/app/router/AppRouter.tsx"
+   ]
+  },
+  "suite_customers_items_v2": {
+   "constName": "CUSTOMERS_ITEMS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustomers",
+   "saveFn": "saveCustomers",
+   "readers": [],
+   "writers": []
+  },
+  "suite_customers_visits_v2": {
+   "constName": "CUSTOMERS_VISITS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustomerVisits",
+   "saveFn": "saveCustomerVisits",
+   "readers": [],
+   "writers": []
+  },
+  "suite_customers_sources_v2": {
+   "constName": "CUSTOMERS_SOURCES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustomerSources",
+   "saveFn": "saveCustomerSources",
+   "readers": [],
+   "writers": []
+  },
+  "suite_customers_regions_v2": {
+   "constName": "CUSTOMERS_REGIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustomerRegions",
+   "saveFn": "saveCustomerRegions",
+   "readers": [],
+   "writers": []
+  },
+  "suite_customers_routes_v2": {
+   "constName": "CUSTOMERS_ROUTES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustomerRoutes",
+   "saveFn": "saveCustomerRoutes",
+   "readers": [],
+   "writers": []
+  },
+  "suite_customers_responsibles_v2": {
+   "constName": "CUSTOMERS_RESPONSIBLES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustomerResponsibles",
+   "saveFn": "saveCustomerResponsibles",
+   "readers": [],
+   "writers": []
+  },
+  "suite_customers_audit_v2": {
+   "constName": "CUSTOMERS_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadCustomerAuditLogs",
+   "saveFn": "saveCustomerAuditLogs",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": []
+  },
+  "suite_doctors_items_v1": {
+   "constName": "DOCTORS_ITEMS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDoctors",
+   "saveFn": "saveDoctors",
+   "readers": [],
+   "writers": []
+  },
+  "suite_doctors_visits_v1": {
+   "constName": "DOCTORS_VISITS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDoctorVisits",
+   "saveFn": "saveDoctorVisits",
+   "readers": [],
+   "writers": []
+  },
+  "suite_doctors_regions_v1": {
+   "constName": "DOCTORS_REGIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDoctorRegions",
+   "saveFn": "saveDoctorRegions",
+   "readers": [],
+   "writers": []
+  },
+  "suite_doctors_routes_v1": {
+   "constName": "DOCTORS_ROUTES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDoctorRoutes",
+   "saveFn": "saveDoctorRoutes",
+   "readers": [],
+   "writers": []
+  },
+  "suite_doctors_responsibles_v1": {
+   "constName": "DOCTORS_RESPONSIBLES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDoctorResponsibles",
+   "saveFn": "saveDoctorResponsibles",
+   "readers": [],
+   "writers": []
+  },
+  "suite_doctors_specialties_v1": {
+   "constName": "DOCTORS_SPECIALTIES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDoctorSpecialties",
+   "saveFn": "saveDoctorSpecialties",
+   "readers": [],
+   "writers": []
+  },
+  "suite_doctors_audit_v1": {
+   "constName": "DOCTORS_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDoctorAuditLogs",
+   "saveFn": "saveDoctorAuditLogs",
+   "readers": [
+    "src/app/App.tsx"
+   ],
+   "writers": [
+    "src/app/App.tsx"
+   ]
+  },
+  "suite_debts_records_v1": {
+   "constName": "DEBTS_RECORDS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDebts",
+   "saveFn": "saveDebts",
+   "readers": [
+    "src/app/router/AppRouter.tsx",
+    "src/components/debts/DebtsModule.tsx"
+   ],
+   "writers": [
+    "src/components/debts/DebtsModule.tsx"
+   ]
+  },
+  "suite_debts_commitments_v1": {
+   "constName": "DEBTS_COMMITMENTS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDebtCommitments",
+   "saveFn": "saveDebtCommitments",
+   "readers": [
+    "src/app/router/AppRouter.tsx",
+    "src/components/debts/DebtsModule.tsx"
+   ],
+   "writers": [
+    "src/components/debts/DebtsModule.tsx"
+   ]
+  },
+  "suite_debts_categories_v1": {
+   "constName": "DEBTS_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDebtCategories",
+   "saveFn": "saveDebtCategories",
+   "readers": [
+    "src/components/debts/DebtsModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_debts_owners_v1": {
+   "constName": "DEBTS_OWNERS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDebtOwners",
+   "saveFn": "saveDebtOwners",
+   "readers": [
+    "src/components/debts/DebtsModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_debts_audit_v1": {
+   "constName": "DEBTS_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadDebtAuditLogs",
+   "saveFn": "saveDebtAuditLogs",
+   "readers": [
+    "src/components/debts/DebtsModule.tsx"
+   ],
+   "writers": [
+    "src/components/debts/DebtsModule.tsx"
+   ]
+  },
+  "suite_knowledge_notes_v1": {
+   "constName": "KNOWLEDGE_NOTES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadNotes",
+   "saveFn": "saveNotes",
+   "readers": [
+    "src/components/dashboard/UnifiedDashboard.tsx",
+    "src/components/knowledge/KnowledgeModule.tsx",
+    "src/utils/workosStorage.ts"
+   ],
+   "writers": [
+    "src/components/knowledge/KnowledgeModule.tsx",
+    "src/utils/workosStorage.ts"
+   ]
+  },
+  "suite_knowledge_folders_v1": {
+   "constName": "KNOWLEDGE_FOLDERS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadNoteFolders",
+   "saveFn": "saveNoteFolders",
+   "readers": [
+    "src/components/knowledge/KnowledgeModule.tsx"
+   ],
+   "writers": [
+    "src/components/knowledge/KnowledgeModule.tsx"
+   ]
+  },
+  "suite_knowledge_tags_v1": {
+   "constName": "KNOWLEDGE_TAGS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadNoteTags",
+   "saveFn": "saveNoteTags",
+   "readers": [
+    "src/components/knowledge/KnowledgeModule.tsx"
+   ],
+   "writers": [
+    "src/components/knowledge/KnowledgeModule.tsx"
+   ]
+  },
+  "suite_knowledge_templates_v1": {
+   "constName": "KNOWLEDGE_TEMPLATES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadNoteTemplates",
+   "saveFn": "saveNoteTemplates",
+   "readers": [
+    "src/components/knowledge/KnowledgeModule.tsx"
+   ],
+   "writers": [
+    "src/components/knowledge/KnowledgeModule.tsx"
+   ]
+  },
+  "suite_knowledge_audit_v1": {
+   "constName": "KNOWLEDGE_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadNoteAuditLogs",
+   "saveFn": "saveNoteAuditLogs",
+   "readers": [
+    "src/components/knowledge/KnowledgeModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_routines_items_v1": {
+   "constName": "ROUTINES_ITEMS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutines",
+   "saveFn": "saveRoutines",
+   "readers": [
+    "src/app/App.tsx",
+    "src/components/dashboard/UnifiedDashboard.tsx",
+    "src/components/routines/RoutinesModule.tsx"
+   ],
+   "writers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ]
+  },
+  "suite_routines_occurrences_v1": {
+   "constName": "ROUTINES_OCCURRENCES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutineOccurrences",
+   "saveFn": "saveRoutineOccurrences",
+   "readers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ],
+   "writers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ]
+  },
+  "suite_routines_executions_v1": {
+   "constName": "ROUTINES_EXECUTIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutineExecutions",
+   "saveFn": "saveRoutineExecutions",
+   "readers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ],
+   "writers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ]
+  },
+  "suite_routines_categories_v1": {
+   "constName": "ROUTINES_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutineCategories",
+   "saveFn": "saveRoutineCategories",
+   "readers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_routines_tags_v1": {
+   "constName": "ROUTINES_TAGS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutineTags",
+   "saveFn": "saveRoutineTags",
+   "readers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_routines_templates_v1": {
+   "constName": "ROUTINES_TEMPLATES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutineTemplates",
+   "saveFn": "saveRoutineTemplates",
+   "readers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_routines_exceptions_v1": {
+   "constName": "ROUTINES_EXCEPTIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutineExceptions",
+   "saveFn": "saveRoutineExceptions",
+   "readers": [],
+   "writers": []
+  },
+  "suite_routines_audit_v1": {
+   "constName": "ROUTINES_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutineAuditLogs",
+   "saveFn": "saveRoutineAuditLogs",
+   "readers": [],
+   "writers": []
+  },
+  "suite_routines_settings_v1": {
+   "constName": "ROUTINES_SETTINGS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadRoutineSettings",
+   "saveFn": "saveRoutineSettings",
+   "readers": [
+    "src/components/routines/RoutinesModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_links_records_v1": {
+   "constName": "LINKS_RECORDS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadLinksRecords",
+   "saveFn": "saveLinksRecords",
+   "readers": [
+    "src/app/router/AppRouter.tsx",
+    "src/components/dashboard/UnifiedDashboard.tsx",
+    "src/components/links/LinksLibraryModule.tsx"
+   ],
+   "writers": [
+    "src/components/links/LinksLibraryModule.tsx"
+   ]
+  },
+  "suite_links_classifications_v1": {
+   "constName": "LINKS_CLASSIFICATIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadLinkClassifications",
+   "saveFn": "saveLinkClassifications",
+   "readers": [
+    "src/components/links/LinksLibraryModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_links_categories_v1": {
+   "constName": "LINKS_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadLinkCategories",
+   "saveFn": "saveLinkCategories",
+   "readers": [
+    "src/components/links/LinksLibraryModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_links_types_v1": {
+   "constName": "LINKS_TYPES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadLinkTypes",
+   "saveFn": "saveLinkTypes",
+   "readers": [
+    "src/components/links/LinksLibraryModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_links_importances_v1": {
+   "constName": "LINKS_IMPORTANCES",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadLinkImportances",
+   "saveFn": "saveLinkImportances",
+   "readers": [
+    "src/components/links/LinksLibraryModule.tsx"
+   ],
+   "writers": []
+  },
+  "suite_unified_settings_v2": {
+   "constName": "SETTINGS",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadSettings",
+   "saveFn": "saveSettings",
+   "readers": [
+    "src/app/App.tsx",
+    "src/services/dashboard/DashboardService.ts"
+   ],
+   "writers": []
+  },
+  "suite_unified_audit_v2": {
+   "constName": "SYSTEM_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": "loadSystemAuditLogs",
+   "saveFn": "saveSystemAuditLogs",
+   "readers": [],
+   "writers": []
+  },
+  "suite_unified_autobackup_v2": {
+   "constName": "UNIFIED_BACKUP",
+   "declaredIn": "src/utils/storage.ts",
+   "loadFn": null,
+   "saveFn": null,
+   "readers": [],
+   "writers": []
+  }
+ },
+ "crud": {
+  "handlers": [
+   {
+    "name": "handleSaveMovement",
+    "args": "record: Movement"
+   },
+   {
+    "name": "handleDeleteRecord",
+    "args": "record: Movement"
+   },
+   {
+    "name": "handleBulkDelete",
+    "args": "subIds: string[]"
+   },
+   {
+    "name": "handleCloneRecord",
+    "args": "record: Movement"
+   },
+   {
+    "name": "handleAddProduct",
+    "args": "product: Item"
+   },
+   {
+    "name": "handleEditProduct",
+    "args": "oldName: string, updatedProduct: Item"
+   },
+   {
+    "name": "handleDeleteProduct",
+    "args": "product: Item"
+   },
+   {
+    "name": "handleToggleProductActive",
+    "args": "product: Item"
+   },
+   {
+    "name": "handleSaveFinancialTxn",
+    "args": "txn: FinancialTransaction"
+   },
+   {
+    "name": "handleDeleteFinancialTxn",
+    "args": "id: string"
+   },
+   {
+    "name": "handleImportFinancialTxns",
+    "args": "imported: FinancialTransaction[],\n    mode: 'append' | 'replace'"
+   },
+   {
+    "name": "handleAddFinancialOption",
+    "args": "type: 'category' | 'account' | 'restriction' | 'movementType' | 'restrictionAcco"
+   },
+   {
+    "name": "handleSaveTask",
+    "args": "task: Task"
+   },
+   {
+    "name": "handleDeleteTask",
+    "args": "id: string"
+   },
+   {
+    "name": "handleToggleCompleteTask",
+    "args": "id: string"
+   },
+   {
+    "name": "handleSaveCommitment",
+    "args": "comm: Commitment"
+   },
+   {
+    "name": "handleDeleteCommitment",
+    "args": "id: string"
+   },
+   {
+    "name": "handleToggleCompleteCommitment",
+    "args": "id: string"
+   },
+   {
+    "name": "handleClearCompletedTasks",
+    "args": ""
+   },
+   {
+    "name": "handleUpdateCustomers",
+    "args": "newCustomers: Customer[]"
+   },
+   {
+    "name": "handleUpdateVisits",
+    "args": "newVisits: CustomerVisitRecord[]"
+   },
+   {
+    "name": "handleUpdateDoctors",
+    "args": "newDoctors: DoctorRecord[]"
+   },
+   {
+    "name": "handleUpdateDoctorVisits",
+    "args": "newVisits: DoctorVisitLog[]"
+   },
+   {
+    "name": "handleImportBackup",
+    "args": "backup: UnifiedBackupState"
+   },
+   {
+    "name": "handleResetAllData",
+    "args": ""
+   }
+  ],
+  "state": [
+   {
+    "state": "activeTab",
+    "setter": "setActiveTab"
+   },
+   {
+    "state": "products",
+    "setter": "setProducts"
+   },
+   {
+    "state": "records",
+    "setter": "setRecords"
+   },
+   {
+    "state": "categories",
+    "setter": "setCategories"
+   },
+   {
+    "state": "statuses",
+    "setter": "setStatuses"
+   },
+   {
+    "state": "settings",
+    "setter": "setSettings"
+   },
+   {
+    "state": "seq",
+    "setter": "setSeq"
+   },
+   {
+    "state": "stockAuditLogs",
+    "setter": "setStockAuditLogs"
+   },
+   {
+    "state": "financialTransactions",
+    "setter": "setFinancialTransactions"
+   },
+   {
+    "state": "movements",
+    "setter": "setMovements"
+   },
+   {
+    "state": "restrictions",
+    "setter": "setRestrictions"
+   },
+   {
+    "state": "movementTypes",
+    "setter": "setMovementTypes"
+   },
+   {
+    "state": "importanceList",
+    "setter": "setImportanceList"
+   },
+   {
+    "state": "categoryAccounts",
+    "setter": "setCategoryAccounts"
+   },
+   {
+    "state": "restrictionAccounts",
+    "setter": "setRestrictionAccounts"
+   },
+   {
+    "state": "accountNames",
+    "setter": "setAccountNames"
+   },
+   {
+    "state": "tasks",
+    "setter": "setTasks"
+   },
+   {
+    "state": "commitments",
+    "setter": "setCommitments"
+   },
+   {
+    "state": "taskCategories",
+    "setter": "setTaskCategories"
+   },
+   {
+    "state": "taskOperations",
+    "setter": "setTaskOperations"
+   },
+   {
+    "state": "taskAssignees",
+    "setter": "setTaskAssignees"
+   },
+   {
+    "state": "taskAuditLogs",
+    "setter": "setTaskAuditLogs"
+   },
+   {
+    "state": "customers",
+    "setter": "setCustomers"
+   },
+   {
+    "state": "customerVisits",
+    "setter": "setCustomerVisits"
+   },
+   {
+    "state": "customerAuditLogs",
+    "setter": "setCustomerAuditLogs"
+   },
+   {
+    "state": "doctors",
+    "setter": "setDoctors"
+   },
+   {
+    "state": "doctorVisits",
+    "setter": "setDoctorVisits"
+   },
+   {
+    "state": "doctorAuditLogs",
+    "setter": "setDoctorAuditLogs"
+   },
+   {
+    "state": "routinesCount",
+    "setter": "setRoutinesCount"
+   },
+   {
+    "state": "debtsCount",
+    "setter": "setDebtsCount"
+   },
+   {
+    "state": "debtCommitmentsCount",
+    "setter": "setDebtCommitmentsCount"
+   },
+   {
+    "state": "custodyCount",
+    "setter": "setCustodyCount"
+   },
+   {
+    "state": "isAlertsModalOpen",
+    "setter": "setIsAlertsModalOpen"
+   },
+   {
+    "state": "isToastDismissed",
+    "setter": "setIsToastDismissed"
+   }
+  ],
+  "importedLoaders": [
+   "loadAuditLogs",
+   "loadCategories",
+   "loadCustomerAuditLogs",
+   "loadDoctorAuditLogs",
+   "loadFinancialAccountNames",
+   "loadFinancialCategoryAccounts",
+   "loadFinancialImportanceList",
+   "loadFinancialMovementTypes",
+   "loadFinancialMovements",
+   "loadFinancialRestrictionAccounts",
+   "loadFinancialRestrictions",
+   "loadRoutines",
+   "loadSeq",
+   "loadSettings",
+   "loadStatuses",
+   "loadTaskAssignees",
+   "loadTaskAuditLogs",
+   "loadTaskCategories",
+   "loadTaskOperations"
+  ],
+  "importedSavers": [
+   "saveAuditLogs",
+   "saveCustomerAuditLogs",
+   "saveDoctorAuditLogs",
+   "saveFinancialAccountNames",
+   "saveFinancialCategoryAccounts",
+   "saveFinancialImportanceList",
+   "saveFinancialMovementTypes",
+   "saveFinancialMovements",
+   "saveFinancialRestrictionAccounts",
+   "saveFinancialRestrictions",
+   "saveFinancialTransactions",
+   "saveProducts",
+   "saveRecords",
+   "saveSeq",
+   "saveTaskAssignees",
+   "saveTaskAuditLogs",
+   "saveTaskCategories",
+   "saveTaskOperations"
+  ]
+ },
+ "services": {
+  "src/database/repositories/BaseRepository.ts": [],
+  "src/database/repositories/CustomerRepository.ts": [],
+  "src/database/repositories/DebtRepository.ts": [],
+  "src/database/repositories/FinancialRepository.ts": [],
+  "src/database/repositories/OtherRepositories.ts": [],
+  "src/database/repositories/ProductRepository.ts": [],
+  "src/database/repositories/WorkTaskRepository.ts": [],
+  "src/database/repositories/index.ts": [],
+  "src/services/index.ts": [],
+  "src/services/backup/BackupService.ts": [
+   "createBackup",
+   "resetSystem",
+   "restoreBackup"
+  ],
+  "src/services/crm/CustomerService.ts": [],
+  "src/services/crm/DoctorService.ts": [],
+  "src/services/custody/CustodyService.ts": [],
+  "src/services/work/TaskService.ts": [],
+  "src/services/dashboard/DashboardService.ts": [
+   "getRealtimeKPIs"
+  ],
+  "src/services/debts/DebtService.ts": [],
+  "src/services/financial/FinancialService.ts": [],
+  "src/services/inventory/InventoryService.ts": []
+ },
+ "protectedRegistry": [
+  {
+   "component": "NoteEditorModal",
+   "file": "src/components/knowledge/NoteEditorModal.tsx",
+   "loc": 1165,
+   "propsCount": 9,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "noteToEdit",
+     "optional": false,
+     "type": "NoteRecord | null"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(note: Partial<NoteRecord>, isNew: boolean) => void"
+    },
+    {
+     "name": "folders",
+     "optional": false,
+     "type": "NoteFolder[]"
+    },
+    {
+     "name": "tagsList",
+     "optional": false,
+     "type": "NoteTagItem[]"
+    },
+    {
+     "name": "customersList",
+     "optional": true,
+     "type": "{ id: string"
+    },
+    {
+     "name": "doctorsList",
+     "optional": true,
+     "type": "{ id: string"
+    },
+    {
+     "name": "tasksList",
+     "optional": true,
+     "type": "{ id: string"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "noteToEdit",
+    "folders",
+    "tagsList",
+    "customersList",
+    "doctorsList",
+    "tasksList"
+   ],
+   "labels": [
+    "الأولوية",
+    "التصنيف الرئيسي",
+    "الحالة",
+    "نوع الملاحظة"
+   ],
+   "placeholders": [
+    "أدخل رمز PIN للقفل (مثال: 1234)...",
+    "أدخل عنواناً واضحاً وموجزاً للملاحظة...",
+    "أضف مهمة جديدة ناتجة عن هذه الملاحظة...",
+    "أضف وسماً واضغط Enter...",
+    "اجتماع، اتصال، كتاب، رابط...",
+    "اسم الطبيب أو العيادة...",
+    "اسم العميل أو المركز...",
+    "اسم المشروع أو المبادرة...",
+    "العمل، المالية، مبيعات...",
+    "ملخص مكثف من سطر واحد لأهم ما ورد في الملاحظة..."
+   ],
+   "buttons": [
+    "+ إدراج بقائمة المهام",
+    "+ اعتماد كملخص",
+    "+ تطبيق التصنيف والوسوم",
+    "إضافة",
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "RoutineWizardModal",
+   "file": "src/components/routines/RoutineWizardModal.tsx",
+   "loc": 975,
+   "propsCount": 6,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "initialData",
+     "optional": true,
+     "type": "RoutineRecord | null"
+    },
+    {
+     "name": "categories",
+     "optional": false,
+     "type": "RoutineCategoryItem[]"
+    },
+    {
+     "name": "tags",
+     "optional": false,
+     "type": "RoutineTagItem[]"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(routine: RoutineRecord) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "initialData",
+    "categories",
+    "tags"
+   ],
+   "labels": [],
+   "placeholders": [
+    "عنوان الخطوة...",
+    "ما الهدف الذي يحققه هذا الروتين؟ وما هي المعايير المتبعة؟",
+    "مثال: G-01, G-02",
+    "مثال: P-01, P-04",
+    "مثال: TSK-001, TSK-004",
+    "مثال: الإدارة العامة، المحاسب",
+    "مثال: المكتب الرئيسي، العيادات، المنزل",
+    "مثال: انطلاقة العمل",
+    "مثال: مراجعة وتخطيط أولويات يوم العمل"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": false,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "FinancialModal",
+   "file": "src/components/financial/FinancialModal.tsx",
+   "loc": 682,
+   "propsCount": 13,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(txn: FinancialTransaction) => void"
+    },
+    {
+     "name": "editingTransaction",
+     "optional": true,
+     "type": "FinancialTransaction | null"
+    },
+    {
+     "name": "existingTransactions",
+     "optional": false,
+     "type": "FinancialTransaction[]"
+    },
+    {
+     "name": "movements",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "restrictions",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "movementTypes",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "importanceList",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "categoryAccounts",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "restrictionAccounts",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "accountNames",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "onAddOption",
+     "optional": true,
+     "type": "(type: 'category' | 'account' | 'restriction' | 'movementTyp"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave",
+    "onAddOption"
+   ],
+   "dataCallbacks": [
+    "editingTransaction",
+    "existingTransactions",
+    "movements",
+    "restrictions",
+    "movementTypes",
+    "importanceList",
+    "categoryAccounts",
+    "restrictionAccounts",
+    "accountNames"
+   ],
+   "labels": [
+    "المعرف الفريد (ID)"
+   ],
+   "placeholders": [
+    "أدخل اسم الحساب أو الصيدلية الجديد...",
+    "اسم حساب التقييد الجديد...",
+    "اكتب تفاصيل القيد أو الحركة وملاحظات السداد...",
+    "فلترة الأسماء (مثال: عصام، صيدلية...)",
+    "مثال: 851",
+    "مثال: سند استلام ورقي رقم #4192 أو رابط المستند..."
+   ],
+   "buttons": [
+    "إضافة للقائمة",
+    "إلغاء",
+    "حفظ"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "handleSubmit",
+    "onSave"
+   ]
+  },
+  {
+   "component": "WorkOSTaskDrawer",
+   "file": "src/components/workos/WorkOSTaskDrawer.tsx",
+   "loc": 642,
+   "propsCount": 9,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "task",
+     "optional": false,
+     "type": "WorkTask | null"
+    },
+    {
+     "name": "projects",
+     "optional": false,
+     "type": "WorkProject[]"
+    },
+    {
+     "name": "team",
+     "optional": false,
+     "type": "TeamMember[]"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSaveTask",
+     "optional": false,
+     "type": "(updatedTask: WorkTask) => void"
+    },
+    {
+     "name": "onDeleteTask",
+     "optional": false,
+     "type": "(taskId: string) => void"
+    },
+    {
+     "name": "onConvertToProject",
+     "optional": true,
+     "type": "(task: WorkTask) => void"
+    },
+    {
+     "name": "onStartTimer",
+     "optional": true,
+     "type": "(task: WorkTask) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSaveTask",
+    "onDeleteTask",
+    "onConvertToProject",
+    "onStartTimer"
+   ],
+   "dataCallbacks": [
+    "task",
+    "projects",
+    "team"
+   ],
+   "labels": [
+    "اسم المهمة:",
+    "الحالة:",
+    "المسؤول عن التنفيذ:",
+    "المشروع المرتبط:",
+    "تاريخ الاستحقاق:",
+    "تاريخ البداية:",
+    "مستوى الأولوية:",
+    "وصف المهمة وملاحظات التنفيذ:"
+   ],
+   "placeholders": [
+    "إضافة مهمة فرعية جديدة...",
+    "اكتب تعليقاً أو استفساراً...",
+    "تفاصيل وإرشادات المهمة...",
+    "عنوان المهمة..."
+   ],
+   "buttons": [
+    "إرسال",
+    "إلغاء"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "CustomerStatementModal",
+   "file": "src/components/customers/CustomerStatementModal.tsx",
+   "loc": 631,
+   "propsCount": 4,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "customer",
+     "optional": false,
+     "type": "Customer | null"
+    },
+    {
+     "name": "visits",
+     "optional": false,
+     "type": "CustomerVisitRecord[]"
+    }
+   ],
+   "callbacks": [
+    "onClose"
+   ],
+   "dataCallbacks": [
+    "customer",
+    "visits"
+   ],
+   "labels": [],
+   "placeholders": [
+    "مثال: 777123456 أو 967777123456"
+   ],
+   "buttons": [],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "WorkOSTaskDetailModal",
+   "file": "src/components/workos/WorkOSTaskDetailModal.tsx",
+   "loc": 623,
+   "propsCount": 8,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "task",
+     "optional": false,
+     "type": "WorkTask | null"
+    },
+    {
+     "name": "projects",
+     "optional": false,
+     "type": "WorkProject[]"
+    },
+    {
+     "name": "team",
+     "optional": false,
+     "type": "TeamMember[]"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSaveTask",
+     "optional": false,
+     "type": "(updatedTask: WorkTask) => void"
+    },
+    {
+     "name": "onDeleteTask",
+     "optional": false,
+     "type": "(taskId: string) => void"
+    },
+    {
+     "name": "onStartTimer",
+     "optional": true,
+     "type": "(task: WorkTask) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSaveTask",
+    "onDeleteTask",
+    "onStartTimer"
+   ],
+   "dataCallbacks": [
+    "task",
+    "projects",
+    "team"
+   ],
+   "labels": [
+    "الأولوية",
+    "التصنيف",
+    "الحالة",
+    "الساعات المقدرة للمهمة",
+    "العميل / الصيدلية المرتبطة",
+    "المسؤول المكلف",
+    "المشروع",
+    "الوصف التفصيلي والتعليمات",
+    "تاريخ الاستحقاق",
+    "تاريخ البدء",
+    "ساعات العمل الفعلية المسجلة"
+   ],
+   "placeholders": [
+    "إضافة بند فحص (Checklist item)...",
+    "إضافة مهمة فرعية جديدة (Subtask)...",
+    "اسم الصيدلية أو العميل...",
+    "اكتب تعليقاً أو ملاحظة عمل...",
+    "اكتب هنا كافة تفاصيل تنفيذ المهمة...",
+    "عنوان المهمة..."
+   ],
+   "buttons": [
+    "إرسال",
+    "إضافة",
+    "إلغاء"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "MovementModal",
+   "file": "src/components/MovementModal.tsx",
+   "loc": 613,
+   "propsCount": 9,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(record: MovementRecord) => void"
+    },
+    {
+     "name": "editingRecord",
+     "optional": false,
+     "type": "MovementRecord | null"
+    },
+    {
+     "name": "products",
+     "optional": false,
+     "type": "Product[]"
+    },
+    {
+     "name": "records",
+     "optional": false,
+     "type": "MovementRecord[]"
+    },
+    {
+     "name": "categories",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "statuses",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "seq",
+     "optional": false,
+     "type": "{ IN: number"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "editingRecord",
+    "products",
+    "records",
+    "categories",
+    "statuses",
+    "seq"
+   ],
+   "labels": [
+    "البيان / الوصف",
+    "الحالة",
+    "الرقم الرئيسي (Main_ID)",
+    "الفئة",
+    "ملاحظة إضافية (اختياري)"
+   ],
+   "placeholders": [
+    "Categ-1001",
+    "IN-0004 أو OUT-0299",
+    "اسم الصيدلية، المركز، المورد، أو الشخص...",
+    "الكمية",
+    "رقم سند يدوي، اسم المندوب...",
+    "وصف تفصيلي للعملية..."
+   ],
+   "buttons": [
+    "إلغاء",
+    "نعم، حفظ بدون كميات"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "NoteDetailModal",
+   "file": "src/components/knowledge/NoteDetailModal.tsx",
+   "loc": 571,
+   "propsCount": 11,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "note",
+     "optional": false,
+     "type": "NoteRecord | null"
+    },
+    {
+     "name": "onEdit",
+     "optional": false,
+     "type": "(note: NoteRecord) => void"
+    },
+    {
+     "name": "onDelete",
+     "optional": false,
+     "type": "(id: string) => void"
+    },
+    {
+     "name": "onTogglePin",
+     "optional": false,
+     "type": "(id: string) => void"
+    },
+    {
+     "name": "onToggleFavorite",
+     "optional": false,
+     "type": "(id: string) => void"
+    },
+    {
+     "name": "onToggleTaskItem",
+     "optional": false,
+     "type": "(noteId: string, taskId: string) => void"
+    },
+    {
+     "name": "onUnlockNote",
+     "optional": true,
+     "type": "(id: string) => void"
+    },
+    {
+     "name": "onOpenVersionHistory",
+     "optional": true,
+     "type": "(note: NoteRecord) => void"
+    },
+    {
+     "name": "onScheduleReview",
+     "optional": true,
+     "type": "(noteId: string, nextDate: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onEdit",
+    "onDelete",
+    "onTogglePin",
+    "onToggleFavorite",
+    "onToggleTaskItem",
+    "onUnlockNote",
+    "onOpenVersionHistory",
+    "onScheduleReview"
+   ],
+   "dataCallbacks": [
+    "note"
+   ],
+   "labels": [],
+   "placeholders": [
+    "أدخل رمز PIN..."
+   ],
+   "buttons": [
+    "إغلاق",
+    "تحديث"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "CustomerModal",
+   "file": "src/components/customers/CustomerModal.tsx",
+   "loc": 540,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(customer: Customer) => void"
+    },
+    {
+     "name": "customer",
+     "optional": true,
+     "type": "Customer | null"
+    },
+    {
+     "name": "existingCustomers",
+     "optional": false,
+     "type": "Customer[]"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "customer",
+    "existingCustomers"
+   ],
+   "labels": [
+    "المعرف الرئيسي (Main_ID)",
+    "المعرف الفرعي (Sub_ID)",
+    "المندوب المسؤول",
+    "المنطقة الجغرافية",
+    "تاريخ انتهاء المهمة / الاستحقاق",
+    "تاريخ بدء المهمة",
+    "حالة الزيارة الحالية",
+    "مسار الزيارة (اليوم)",
+    "مستوى الأهمية",
+    "وصف المهمة / الغرض من الزيارة"
+   ],
+   "placeholders": [
+    "أي ملاحظات حول السداد، تفضيلات العميل، أو تعليمات للمندوب...",
+    "مثال: 771234567",
+    "مثال: ذهبي-001، توب-001، د-001",
+    "مثال: زيارة دورية وعرض منتجات جديدة وتحصيل الدفعة الشهرية...",
+    "مثال: صنعاء - شارع الزبيري بجوار المستشفى الجمهوري",
+    "مثال: صيدلية العالمية، د. أحمد الوادعي، مركز كوزمتكس"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "DoctorModal",
+   "file": "src/components/doctors/DoctorModal.tsx",
+   "loc": 504,
+   "propsCount": 9,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(doctor: DoctorRecord) => void"
+    },
+    {
+     "name": "doctorToEdit",
+     "optional": true,
+     "type": "DoctorRecord | null"
+    },
+    {
+     "name": "existingDoctors",
+     "optional": false,
+     "type": "DoctorRecord[]"
+    },
+    {
+     "name": "customRegions",
+     "optional": true,
+     "type": "string[]"
+    },
+    {
+     "name": "customRoutes",
+     "optional": true,
+     "type": "string[]"
+    },
+    {
+     "name": "customResponsibles",
+     "optional": true,
+     "type": "string[]"
+    },
+    {
+     "name": "customSpecialties",
+     "optional": true,
+     "type": "string[]"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "doctorToEdit",
+    "existingDoctors",
+    "customRegions",
+    "customRoutes",
+    "customResponsibles",
+    "customSpecialties"
+   ],
+   "labels": [
+    "المسار / اليوم",
+    "المصدر (Source)",
+    "المندوب المسؤول",
+    "المنطقة الجغرافية",
+    "حالة الزيارة",
+    "ملاحظات وتفاصيل إضافية"
+   ],
+   "placeholders": [
+    "مثال: 4 عبوات سيروم تجريبي + بروشورات",
+    "مثال: 777123456",
+    "مثال: د. خالد عبدالجليل الشرجبي",
+    "مثال: شارع حدة - برج الأمل الدور الثاني",
+    "مثال: عيادة النور التخصصية / مستشفى آزال",
+    "مثال: وافق الطبيب على إدراج الصنف في الوصفات"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "RoutineTimerModal",
+   "file": "src/components/routines/RoutineTimerModal.tsx",
+   "loc": 497,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "routine",
+     "optional": false,
+     "type": "RoutineRecord | null"
+    },
+    {
+     "name": "occurrence",
+     "optional": false,
+     "type": "RoutineOccurrence | null"
+    },
+    {
+     "name": "onComplete",
+     "optional": false,
+     "type": "(execution: RoutineExecution) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onComplete"
+   ],
+   "dataCallbacks": [
+    "routine",
+    "occurrence"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "CustodyIssueModal",
+   "file": "src/components/custody/CustodyIssueModal.tsx",
+   "loc": 439,
+   "propsCount": 9,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(record: Partial<CustodyIssueRecord>) => void"
+    },
+    {
+     "name": "initialRecord",
+     "optional": true,
+     "type": "CustodyIssueRecord | null"
+    },
+    {
+     "name": "defaultSection",
+     "optional": true,
+     "type": "CustodySection"
+    },
+    {
+     "name": "categories",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "responsibles",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "statuses",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "priorities",
+     "optional": false,
+     "type": "string[]"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "initialRecord",
+    "defaultSection",
+    "categories",
+    "responsibles",
+    "statuses",
+    "priorities"
+   ],
+   "labels": [
+    "الحالة",
+    "العملة",
+    "ملاحظات إضافية"
+   ],
+   "placeholders": [
+    "0.00",
+    "https://...",
+    "اختر أو اكتب فئة",
+    "انا، صدام، الفريق...",
+    "مثال: صيدلية البركة / صدام / أمين العهدة",
+    "ملاحظات المتابعة أو الإجراءات القادمة"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "CustomerDetailsModal",
+   "file": "src/components/customers/CustomerDetailsModal.tsx",
+   "loc": 421,
+   "propsCount": 8,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "customer",
+     "optional": false,
+     "type": "Customer | null"
+    },
+    {
+     "name": "visits",
+     "optional": false,
+     "type": "CustomerVisitRecord[]"
+    },
+    {
+     "name": "onEditCustomer",
+     "optional": false,
+     "type": "(customer: Customer) => void"
+    },
+    {
+     "name": "onDeleteCustomer",
+     "optional": false,
+     "type": "(id: string) => void"
+    },
+    {
+     "name": "onAddVisit",
+     "optional": false,
+     "type": "(customer: Customer) => void"
+    },
+    {
+     "name": "onOpenStatement",
+     "optional": false,
+     "type": "(customer: Customer) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onEditCustomer",
+    "onDeleteCustomer",
+    "onAddVisit",
+    "onOpenStatement"
+   ],
+   "dataCallbacks": [
+    "customer",
+    "visits"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [
+    "إغلاق"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "CommitmentModal",
+   "file": "src/components/debts/CommitmentModal.tsx",
+   "loc": 407,
+   "propsCount": 7,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(commitment: DebtCommitment) => void"
+    },
+    {
+     "name": "initialCommitment",
+     "optional": true,
+     "type": "DebtCommitment | null"
+    },
+    {
+     "name": "existingCommitments",
+     "optional": false,
+     "type": "DebtCommitment[]"
+    },
+    {
+     "name": "categories",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "owners",
+     "optional": false,
+     "type": "string[]"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "initialCommitment",
+    "existingCommitments",
+    "categories",
+    "owners"
+   ],
+   "labels": [
+    "الحالة",
+    "الرمز / الدليل",
+    "العملة",
+    "الفئة",
+    "المسؤول",
+    "الوصف والتفاصيل",
+    "تاريخ القيد",
+    "درجة الأهمية",
+    "ملاحظات إضافية",
+    "نوع الالتزام"
+   ],
+   "placeholders": [
+    "التزامات-001",
+    "تفاصيل إضافية عن الالتزام أو العقد...",
+    "شروط السداد، رقم الحساب البنكي، أرقام السندات...",
+    "مثال: إيجار المقر، فاتورة الهاتف، مورد العبوات، قسط سيارة..."
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "DoctorDetailsModal",
+   "file": "src/components/doctors/DoctorDetailsModal.tsx",
+   "loc": 401,
+   "propsCount": 8,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "doctor",
+     "optional": false,
+     "type": "DoctorRecord | null"
+    },
+    {
+     "name": "visits",
+     "optional": false,
+     "type": "DoctorVisitLog[]"
+    },
+    {
+     "name": "onEdit",
+     "optional": false,
+     "type": "(doctor: DoctorRecord) => void"
+    },
+    {
+     "name": "onDelete",
+     "optional": false,
+     "type": "(id: string) => void"
+    },
+    {
+     "name": "onRecordVisit",
+     "optional": false,
+     "type": "(doctor: DoctorRecord) => void"
+    },
+    {
+     "name": "onUpdateStatus",
+     "optional": false,
+     "type": "(id: string, newStatus: DoctorVisitStatus) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onEdit",
+    "onDelete",
+    "onRecordVisit",
+    "onUpdateStatus"
+   ],
+   "dataCallbacks": [
+    "doctor",
+    "visits"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [
+    "إغلاق"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "FinancialVoucherModal",
+   "file": "src/components/financial/FinancialVoucherModal.tsx",
+   "loc": 400,
+   "propsCount": 3,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "transaction",
+     "optional": false,
+     "type": "FinancialTransaction | null"
+    }
+   ],
+   "callbacks": [
+    "onClose"
+   ],
+   "dataCallbacks": [
+    "transaction"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "WorkOSQuickAddModal",
+   "file": "src/components/workos/WorkOSQuickAddModal.tsx",
+   "loc": 384,
+   "propsCount": 14,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "initialType",
+     "optional": true,
+     "type": "string"
+    },
+    {
+     "name": "initialProjectId",
+     "optional": true,
+     "type": "string"
+    },
+    {
+     "name": "initialPriority",
+     "optional": true,
+     "type": "TaskPriority"
+    },
+    {
+     "name": "projects",
+     "optional": false,
+     "type": "WorkProject[]"
+    },
+    {
+     "name": "team",
+     "optional": false,
+     "type": "TeamMember[]"
+    },
+    {
+     "name": "onAddTask",
+     "optional": false,
+     "type": "(task: any) => void"
+    },
+    {
+     "name": "onAddProject",
+     "optional": false,
+     "type": "(project: any) => void"
+    },
+    {
+     "name": "onAddNote",
+     "optional": false,
+     "type": "(note: any) => void"
+    },
+    {
+     "name": "onAddAppointment",
+     "optional": false,
+     "type": "(appointment: any) => void"
+    },
+    {
+     "name": "onAddCommitment",
+     "optional": false,
+     "type": "(commitment: any) => void"
+    },
+    {
+     "name": "onAddHabit",
+     "optional": false,
+     "type": "(habit: any) => void"
+    },
+    {
+     "name": "onAddGoal",
+     "optional": false,
+     "type": "(goal: any) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onAddTask",
+    "onAddProject",
+    "onAddNote",
+    "onAddAppointment",
+    "onAddCommitment",
+    "onAddHabit",
+    "onAddGoal"
+   ],
+   "dataCallbacks": [
+    "initialType",
+    "initialProjectId",
+    "initialPriority",
+    "projects",
+    "team"
+   ],
+   "labels": [
+    "الأولوية",
+    "الجهة المتعهد لها",
+    "الشخص المعني",
+    "المبلغ المالي (إن وجد)",
+    "المسؤول",
+    "المشروع",
+    "المكان",
+    "الوصف والملاحظات",
+    "الوقت",
+    "تاريخ الاستحقاق / التسليم"
+   ],
+   "placeholders": [
+    "اسم الطبيب أو العميل",
+    "اسم المنشأة أو التاجر...",
+    "اكتب أي تفاصيل إضافية...",
+    "اكتب العنوان هنا...",
+    "العيادة أو المكتب",
+    "المبلغ بالريال..."
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "DueAlertsModal",
+   "file": "src/components/notifications/DueAlertsModal.tsx",
+   "loc": 383,
+   "propsCount": 6,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "summary",
+     "optional": false,
+     "type": "DueAlertsSummary"
+    },
+    {
+     "name": "onNavigateToTasks",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onToggleCompleteTask",
+     "optional": false,
+     "type": "(taskId: string) => void"
+    },
+    {
+     "name": "onToggleCompleteCommitment",
+     "optional": false,
+     "type": "(commId: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onNavigateToTasks",
+    "onToggleCompleteTask",
+    "onToggleCompleteCommitment"
+   ],
+   "dataCallbacks": [
+    "summary"
+   ],
+   "labels": [],
+   "placeholders": [
+    "تصفية بالاسم..."
+   ],
+   "buttons": [
+    "تم"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "TaskFlowImportExportModal",
+   "file": "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "loc": 367,
+   "propsCount": 7,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "tasks",
+     "optional": false,
+     "type": "TaskFlowTask[]"
+    },
+    {
+     "name": "projects",
+     "optional": false,
+     "type": "TaskFlowProject[]"
+    },
+    {
+     "name": "members",
+     "optional": false,
+     "type": "TaskFlowMember[]"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onImportTasks",
+     "optional": false,
+     "type": "(importedTasks: TaskFlowTask[]) => void"
+    },
+    {
+     "name": "onResetData",
+     "optional": false,
+     "type": "() => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onImportTasks",
+    "onResetData"
+   ],
+   "dataCallbacks": [
+    "tasks",
+    "projects",
+    "members"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "TaskFlowMembersModal",
+   "file": "src/components/taskflow/TaskFlowMembersModal.tsx",
+   "loc": 367,
+   "propsCount": 8,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "members",
+     "optional": false,
+     "type": "TaskFlowMember[]"
+    },
+    {
+     "name": "currentUserId",
+     "optional": false,
+     "type": "string"
+    },
+    {
+     "name": "isAdmin",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSaveMember",
+     "optional": false,
+     "type": "(member: TaskFlowMember) => void"
+    },
+    {
+     "name": "onDeleteMember",
+     "optional": true,
+     "type": "(memberId: string) => void"
+    },
+    {
+     "name": "onToggleActive",
+     "optional": false,
+     "type": "(memberId: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSaveMember",
+    "onDeleteMember",
+    "onToggleActive"
+   ],
+   "dataCallbacks": [
+    "members",
+    "currentUserId"
+   ],
+   "labels": [
+    "البريد أو الهاتف (اختياري)",
+    "الدور والصلاحية",
+    "المسمى الوظيفي / الاختصاص",
+    "لون الأفاتار المميز"
+   ],
+   "placeholders": [
+    "name@company.com أو رقم الهاتف",
+    "مثال: د. ماجد السقاف",
+    "مثال: مسؤول دعاية طبية / مشرف مبيعات"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "UniversalDataExchangeModal",
+   "file": "src/components/common/UniversalDataExchangeModal.tsx",
+   "loc": 357,
+   "propsCount": 17,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "moduleTitle",
+     "optional": false,
+     "type": "string"
+    },
+    {
+     "name": "moduleSubtitle",
+     "optional": true,
+     "type": "string"
+    },
+    {
+     "name": "itemTypeName",
+     "optional": true,
+     "type": "string"
+    },
+    {
+     "name": "icon",
+     "optional": false,
+     "type": "React.ElementType"
+    },
+    {
+     "name": "themeColor",
+     "optional": true,
+     "type": "'teal' | 'indigo' | 'amber' | 'sky' | 'purple' | 'rose' | 'e"
+    },
+    {
+     "name": "supportedColumnsText",
+     "optional": false,
+     "type": "string"
+    },
+    {
+     "name": "onDownloadTemplate",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onImportFile",
+     "optional": false,
+     "type": "(file: File) => Promise<{ success: boolean"
+    },
+    {
+     "name": "onGenerateSampleData",
+     "optional": true,
+     "type": "() => void"
+    },
+    {
+     "name": "sampleDataDescription",
+     "optional": true,
+     "type": "string"
+    },
+    {
+     "name": "onExportExcel",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "excelSubtitle",
+     "optional": true,
+     "type": "string"
+    },
+    {
+     "name": "onExportJSON",
+     "optional": true,
+     "type": "() => void"
+    },
+    {
+     "name": "jsonSubtitle",
+     "optional": true,
+     "type": "string"
+    },
+    {
+     "name": "extraExportButtons",
+     "optional": true,
+     "type": "React.ReactNode"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onDownloadTemplate",
+    "onImportFile",
+    "onGenerateSampleData",
+    "onExportExcel",
+    "onExportJSON"
+   ],
+   "dataCallbacks": [
+    "moduleTitle",
+    "moduleSubtitle",
+    "itemTypeName",
+    "icon",
+    "supportedColumnsText",
+    "sampleDataDescription",
+    "excelSubtitle",
+    "jsonSubtitle",
+    "extraExportButtons"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "LinkModal",
+   "file": "src/components/links/LinkModal.tsx",
+   "loc": 347,
+   "propsCount": 8,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(link: LinkRecord) => void"
+    },
+    {
+     "name": "initialData",
+     "optional": true,
+     "type": "LinkRecord | null"
+    },
+    {
+     "name": "classifications",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "categories",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "types",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "importances",
+     "optional": false,
+     "type": "string[]"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "initialData",
+    "categories",
+    "types",
+    "importances"
+   ],
+   "labels": [
+    "التصنيف الرئيسي",
+    "الفئة",
+    "النوع",
+    "درجة الأهمية"
+   ],
+   "placeholders": [
+    "https://example.com",
+    "أدخل التصنيف المخصص...",
+    "أي ملاحظة أو كلمة سر أو تنبيه يتعلق بالرابط...",
+    "مثال: ChatGPT, ExcelJet...",
+    "وصف مختصر لمميزات الموقع واستخداماته الموصى بها..."
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "FinancialPrintModal",
+   "file": "src/components/financial/FinancialPrintModal.tsx",
+   "loc": 335,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "transactions",
+     "optional": false,
+     "type": "FinancialTransaction[]"
+    },
+    {
+     "name": "periodSummary",
+     "optional": false,
+     "type": "FinancialSummary"
+    },
+    {
+     "name": "periodLabel",
+     "optional": false,
+     "type": "string"
+    },
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    }
+   ],
+   "callbacks": [
+    "onClose"
+   ],
+   "dataCallbacks": [
+    "transactions",
+    "periodSummary",
+    "periodLabel"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "TaskFlowProjectsModal",
+   "file": "src/components/taskflow/TaskFlowProjectsModal.tsx",
+   "loc": 335,
+   "propsCount": 7,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "projects",
+     "optional": false,
+     "type": "TaskFlowProject[]"
+    },
+    {
+     "name": "tasks",
+     "optional": false,
+     "type": "TaskFlowTask[]"
+    },
+    {
+     "name": "isAdmin",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSaveProject",
+     "optional": false,
+     "type": "(project: TaskFlowProject) => void"
+    },
+    {
+     "name": "onDeleteProject",
+     "optional": false,
+     "type": "(projectId: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSaveProject",
+    "onDeleteProject"
+   ],
+   "dataCallbacks": [
+    "projects",
+    "tasks"
+   ],
+   "labels": [
+    "اسم المشروع",
+    "الوصف",
+    "لون المشروع المميز"
+   ],
+   "placeholders": [
+    "مثال: إطلاق منتج جديد 2026",
+    "وصف أهداف المشروع ونطاق العمل..."
+   ],
+   "buttons": [
+    "إلغاء",
+    "حفظ المشروع"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "TaskModal",
+   "file": "src/components/tasks/TaskModal.tsx",
+   "loc": 331,
+   "propsCount": 8,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(task: Task) => void"
+    },
+    {
+     "name": "editingTask",
+     "optional": true,
+     "type": "Task | null"
+    },
+    {
+     "name": "existingTasks",
+     "optional": false,
+     "type": "Task[]"
+    },
+    {
+     "name": "categories",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "operations",
+     "optional": false,
+     "type": "string[]"
+    },
+    {
+     "name": "assignees",
+     "optional": false,
+     "type": "string[]"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "editingTask",
+    "existingTasks",
+    "categories",
+    "operations",
+    "assignees"
+   ],
+   "labels": [
+    "الأولوية",
+    "الحالة",
+    "العملية (8 عمليات)",
+    "الفئة (18 فئة)",
+    "المبلغ المالي (إن وجد)",
+    "المسؤول (12 مسؤول)",
+    "المعرف الرئيسي",
+    "المعرف الفرعي",
+    "الوصف والتفاصيل",
+    "تاريخ الانتهاء / الاستحقاق",
+    "تاريخ البداية (إلزامي)",
+    "عنوان المهمة"
+   ],
+   "placeholders": [
+    "0.00",
+    "تفاصيل إضافية أو مخرجات متوقعة للمهمة...",
+    "عملاء-0012",
+    "مثال: زيارة الدكتور سامي في العيادة"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "ImportFinancialModal",
+   "file": "src/components/financial/ImportFinancialModal.tsx",
+   "loc": 330,
+   "propsCount": 6,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "existingTransactions",
+     "optional": false,
+     "type": "FinancialTransaction[]"
+    },
+    {
+     "name": "onImportTransactions",
+     "optional": false,
+     "type": "("
+    },
+    {
+     "name": "transactions",
+     "optional": false,
+     "type": "FinancialTransaction[],"
+    },
+    {
+     "name": "mode",
+     "optional": false,
+     "type": "'append' | 'replace'"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onImportTransactions"
+   ],
+   "dataCallbacks": [
+    "existingTransactions",
+    "transactions",
+    "mode"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "TemplatesLibraryModal",
+   "file": "src/components/knowledge/TemplatesLibraryModal.tsx",
+   "loc": 321,
+   "propsCount": 6,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "templates",
+     "optional": false,
+     "type": "NoteTemplate[]"
+    },
+    {
+     "name": "onUseTemplate",
+     "optional": false,
+     "type": "(template: NoteTemplate) => void"
+    },
+    {
+     "name": "onAddTemplate",
+     "optional": true,
+     "type": "(template: NoteTemplate) => void"
+    },
+    {
+     "name": "onDeleteTemplate",
+     "optional": true,
+     "type": "(id: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onUseTemplate",
+    "onAddTemplate",
+    "onDeleteTemplate"
+   ],
+   "dataCallbacks": [
+    "templates"
+   ],
+   "labels": [
+    "الأيقونة",
+    "التصنيف",
+    "الوصف الموجز"
+   ],
+   "placeholders": [
+    "إدارية، مبيعات، مالية...",
+    "اكتب العناوين والبنود الافتراضية للقالب...",
+    "بحث في القوالب...",
+    "رمز إيموجي مثل: 📦",
+    "مثال: تقرير استلام بضاعة...",
+    "وصف مختصر للغرض من استخدام القالب..."
+   ],
+   "buttons": [
+    "حفظ القالب"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "TaskFlowTaskModal",
+   "file": "src/components/taskflow/TaskFlowTaskModal.tsx",
+   "loc": 306,
+   "propsCount": 8,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "task",
+     "optional": true,
+     "type": "TaskFlowTask | null"
+    },
+    {
+     "name": "initialStatus",
+     "optional": true,
+     "type": "TaskFlowStatus"
+    },
+    {
+     "name": "projects",
+     "optional": false,
+     "type": "TaskFlowProject[]"
+    },
+    {
+     "name": "members",
+     "optional": false,
+     "type": "TaskFlowMember[]"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(taskData: Omit<TaskFlowTask, 'id' | 'createdAt' | 'updatedA"
+    },
+    {
+     "name": "onDelete",
+     "optional": true,
+     "type": "(id: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave",
+    "onDelete"
+   ],
+   "dataCallbacks": [
+    "task",
+    "initialStatus",
+    "projects",
+    "members"
+   ],
+   "labels": [
+    "الأولوية",
+    "حالة المهمة"
+   ],
+   "placeholders": [
+    "اكتب أي متطلبات أو ملاحظات إضافية للمهمة...",
+    "مثال: فحص جودة عبوات السيروم الجديدة ومطابقة الباركود"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "AIAssistantModal",
+   "file": "src/components/knowledge/AIAssistantModal.tsx",
+   "loc": 296,
+   "propsCount": 4,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "notes",
+     "optional": false,
+     "type": "NoteRecord[]"
+    },
+    {
+     "name": "onCreateNoteFromAi",
+     "optional": false,
+     "type": "(title: string, content: string, category: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onCreateNoteFromAi"
+   ],
+   "dataCallbacks": [
+    "notes"
+   ],
+   "labels": [],
+   "placeholders": [
+    "اطلب ملخصاً، ابحث عن موضوع، أو اطلب صياغة مسودة..."
+   ],
+   "buttons": [],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "PartialPaymentModal",
+   "file": "src/components/debts/PartialPaymentModal.tsx",
+   "loc": 292,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "commitment",
+     "optional": false,
+     "type": "DebtCommitment | null"
+    },
+    {
+     "name": "onAddPayment",
+     "optional": false,
+     "type": "(commitmentId: string, payment: DebtCommitmentPayment) => vo"
+    },
+    {
+     "name": "onDeletePayment",
+     "optional": false,
+     "type": "(commitmentId: string, paymentId: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onAddPayment",
+    "onDeletePayment"
+   ],
+   "dataCallbacks": [
+    "commitment"
+   ],
+   "labels": [
+    "تاريخ السداد"
+   ],
+   "placeholders": [
+    "مثال: نقداً، تحويل عبر الكريمي، سند رقم 902..."
+   ],
+   "buttons": [
+    "إغلاق"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "DebtRecordModal",
+   "file": "src/components/debts/DebtRecordModal.tsx",
+   "loc": 288,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(record: DebtRecord) => void"
+    },
+    {
+     "name": "initialRecord",
+     "optional": true,
+     "type": "DebtRecord | null"
+    },
+    {
+     "name": "defaultBook",
+     "optional": true,
+     "type": "DebtBookId"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "initialRecord",
+    "defaultBook"
+   ],
+   "labels": [
+    "التاريخ",
+    "الدفتر المستهدف",
+    "الرمز / الدليل",
+    "العملة",
+    "الملاحظات والتفاصيل",
+    "دائن (له)",
+    "مدين (عليه)"
+   ],
+   "placeholders": [
+    "أي تفاصيل أو مراجع أو سندات...",
+    "مثال: سداد دفعة حساب محروقات، شراء بضاعة..."
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "ImportDoctorsModal",
+   "file": "src/components/doctors/ImportDoctorsModal.tsx",
+   "loc": 280,
+   "propsCount": 4,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "existingDoctors",
+     "optional": false,
+     "type": "DoctorRecord[]"
+    },
+    {
+     "name": "onImportDoctors",
+     "optional": false,
+     "type": "(importedDoctors: DoctorRecord[], mode: 'append' | 'replace'"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onImportDoctors"
+   ],
+   "dataCallbacks": [
+    "existingDoctors"
+   ],
+   "labels": [
+    "طريقة الاستيراد:"
+   ],
+   "placeholders": [],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "RecordDoctorVisitModal",
+   "file": "src/components/doctors/RecordDoctorVisitModal.tsx",
+   "loc": 272,
+   "propsCount": 9,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "doctor",
+     "optional": false,
+     "type": "DoctorRecord | null"
+    },
+    {
+     "name": "onSaveVisit",
+     "optional": false,
+     "type": "("
+    },
+    {
+     "name": "visit",
+     "optional": false,
+     "type": "DoctorVisitLog,"
+    },
+    {
+     "name": "updatedDoctorStatus",
+     "optional": true,
+     "type": "DoctorVisitStatus,"
+    },
+    {
+     "name": "samplesGiven",
+     "optional": true,
+     "type": "string,"
+    },
+    {
+     "name": "visitResult",
+     "optional": true,
+     "type": "string"
+    },
+    {
+     "name": "customResponsibles",
+     "optional": true,
+     "type": "string[]"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSaveVisit"
+   ],
+   "dataCallbacks": [
+    "doctor",
+    "visit",
+    "updatedDoctorStatus",
+    "samplesGiven",
+    "visitResult",
+    "customResponsibles"
+   ],
+   "labels": [
+    "اليوم"
+   ],
+   "placeholders": [
+    "مثال: 5 عبوات سيروم فيتامين C + 3 عينات كريم واقي شمس"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "RecordVisitModal",
+   "file": "src/components/customers/RecordVisitModal.tsx",
+   "loc": 267,
+   "propsCount": 4,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "customer",
+     "optional": false,
+     "type": "Customer | null"
+    },
+    {
+     "name": "onSaveVisit",
+     "optional": false,
+     "type": "(visit: CustomerVisitRecord, updatedCustomerStatus?: VisitSt"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSaveVisit"
+   ],
+   "dataCallbacks": [
+    "customer"
+   ],
+   "labels": [
+    "المندوب المنفذ",
+    "اليوم",
+    "تاريخ الزيارة",
+    "حالة الزيارة والنتيجة",
+    "دولار (USD)",
+    "ريال يمني (YER)",
+    "سعودي (SAR)"
+   ],
+   "placeholders": [],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "RoutineDetailModal",
+   "file": "src/components/routines/RoutineDetailModal.tsx",
+   "loc": 256,
+   "propsCount": 8,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "routine",
+     "optional": false,
+     "type": "RoutineRecord | null"
+    },
+    {
+     "name": "executions",
+     "optional": false,
+     "type": "RoutineExecution[]"
+    },
+    {
+     "name": "onStartTimer",
+     "optional": false,
+     "type": "(routine: RoutineRecord) => void"
+    },
+    {
+     "name": "onEdit",
+     "optional": false,
+     "type": "(routine: RoutineRecord) => void"
+    },
+    {
+     "name": "onDuplicate",
+     "optional": false,
+     "type": "(routine: RoutineRecord) => void"
+    },
+    {
+     "name": "onDelete",
+     "optional": false,
+     "type": "(routineId: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onStartTimer",
+    "onEdit",
+    "onDuplicate",
+    "onDelete"
+   ],
+   "dataCallbacks": [
+    "routine",
+    "executions"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [
+    "إغلاق"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "ImportCustomersModal",
+   "file": "src/components/customers/ImportCustomersModal.tsx",
+   "loc": 255,
+   "propsCount": 3,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onImport",
+     "optional": false,
+     "type": "(customers: Customer[]) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onImport"
+   ],
+   "dataCallbacks": [],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "CommitmentModal",
+   "file": "src/components/tasks/CommitmentModal.tsx",
+   "loc": 235,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSave",
+     "optional": false,
+     "type": "(commitment: Commitment) => void"
+    },
+    {
+     "name": "editingCommitment",
+     "optional": true,
+     "type": "Commitment | null"
+    },
+    {
+     "name": "existingCommitments",
+     "optional": false,
+     "type": "Commitment[]"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSave"
+   ],
+   "dataCallbacks": [
+    "editingCommitment",
+    "existingCommitments"
+   ],
+   "labels": [
+    "الأهمية / الأولوية",
+    "الالتزام / الجهة المستحقة",
+    "الحالة",
+    "المبلغ المطلوب (ريال)",
+    "المعرف",
+    "الوصف والملاحظات",
+    "تاريخ الاستحقاق"
+   ],
+   "placeholders": [
+    "0.00",
+    "مثال: سداد إيجار المستودع / مستحقات المورد"
+   ],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": true,
+   "writesStorage": true,
+   "saveCalls": [
+    "onSave"
+   ]
+  },
+  {
+   "component": "WorkOSAICopilotModal",
+   "file": "src/components/workos/WorkOSAICopilotModal.tsx",
+   "loc": 234,
+   "propsCount": 7,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "tasks",
+     "optional": false,
+     "type": "WorkTask[]"
+    },
+    {
+     "name": "projects",
+     "optional": false,
+     "type": "WorkProject[]"
+    },
+    {
+     "name": "appointments",
+     "optional": false,
+     "type": "AppointmentItem[]"
+    },
+    {
+     "name": "routine",
+     "optional": false,
+     "type": "DailyRoutineBlock[]"
+    },
+    {
+     "name": "onAddTaskFromAI",
+     "optional": false,
+     "type": "(parsed: any) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onAddTaskFromAI"
+   ],
+   "dataCallbacks": [
+    "tasks",
+    "projects",
+    "appointments",
+    "routine"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": true,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "RoutineAIAssistantModal",
+   "file": "src/components/routines/RoutineAIAssistantModal.tsx",
+   "loc": 221,
+   "propsCount": 3,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onRoutineGenerated",
+     "optional": false,
+     "type": "(routine: RoutineRecord) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onRoutineGenerated"
+   ],
+   "dataCallbacks": [],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [
+    "إلغاء"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "WorkOSCommandPaletteModal",
+   "file": "src/components/workos/WorkOSCommandPaletteModal.tsx",
+   "loc": 218,
+   "propsCount": 10,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "tasks",
+     "optional": true,
+     "type": "WorkTask[]"
+    },
+    {
+     "name": "projects",
+     "optional": true,
+     "type": "WorkProject[]"
+    },
+    {
+     "name": "onSelectTask",
+     "optional": true,
+     "type": "(task: WorkTask) => void"
+    },
+    {
+     "name": "onSelectView",
+     "optional": true,
+     "type": "(view: WorkOSViewMode) => void"
+    },
+    {
+     "name": "onNavigate",
+     "optional": true,
+     "type": "(view: any) => void"
+    },
+    {
+     "name": "onSelectProject",
+     "optional": true,
+     "type": "(project: WorkProject) => void"
+    },
+    {
+     "name": "onOpenQuickAdd",
+     "optional": true,
+     "type": "(type?: string) => void"
+    },
+    {
+     "name": "onOpenAI",
+     "optional": true,
+     "type": "() => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSelectTask",
+    "onSelectView",
+    "onNavigate",
+    "onSelectProject",
+    "onOpenQuickAdd",
+    "onOpenAI"
+   ],
+   "dataCallbacks": [
+    "tasks",
+    "projects"
+   ],
+   "labels": [],
+   "placeholders": [
+    "ابحث عن مهمة، مشروع، أو اكتب أمراً سريعاً... (Esc للإغلاق)"
+   ],
+   "buttons": [],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "MovementDetailsModal",
+   "file": "src/components/MovementDetailsModal.tsx",
+   "loc": 207,
+   "propsCount": 3,
+   "props": [
+    {
+     "name": "record",
+     "optional": false,
+     "type": "MovementRecord | null"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onEdit",
+     "optional": false,
+     "type": "(record: MovementRecord) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onEdit"
+   ],
+   "dataCallbacks": [
+    "record"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "RoutineTemplatesModal",
+   "file": "src/components/routines/RoutineTemplatesModal.tsx",
+   "loc": 203,
+   "propsCount": 4,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "templates",
+     "optional": false,
+     "type": "RoutineTemplateItem[]"
+    },
+    {
+     "name": "onApplyTemplate",
+     "optional": false,
+     "type": "(template: RoutineTemplateItem) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onApplyTemplate"
+   ],
+   "dataCallbacks": [
+    "templates"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [
+    "إغلاق"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "RoutinePostponeModal",
+   "file": "src/components/routines/RoutinePostponeModal.tsx",
+   "loc": 155,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "occurrence",
+     "optional": false,
+     "type": "RoutineOccurrence | null"
+    },
+    {
+     "name": "routine",
+     "optional": false,
+     "type": "RoutineRecord | null"
+    },
+    {
+     "name": "onPostpone",
+     "optional": false,
+     "type": "(occurrenceId: string, newTime: string, newDate?: string, re"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onPostpone"
+   ],
+   "dataCallbacks": [
+    "occurrence",
+    "routine"
+   ],
+   "labels": [],
+   "placeholders": [
+    "مثال: اجتماع طارئ، مكالمة هاتفية"
+   ],
+   "buttons": [
+    "إلغاء",
+    "تأكيد التأجيل"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "TaskFlowUserSwitchModal",
+   "file": "src/components/taskflow/TaskFlowUserSwitchModal.tsx",
+   "loc": 154,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "currentUser",
+     "optional": false,
+     "type": "TaskFlowMember"
+    },
+    {
+     "name": "members",
+     "optional": false,
+     "type": "TaskFlowMember[]"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "onSwitchUser",
+     "optional": false,
+     "type": "(member: TaskFlowMember) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSwitchUser"
+   ],
+   "dataCallbacks": [
+    "currentUser",
+    "members"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "VersionHistoryModal",
+   "file": "src/components/knowledge/VersionHistoryModal.tsx",
+   "loc": 144,
+   "propsCount": 4,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "note",
+     "optional": false,
+     "type": "NoteRecord | null"
+    },
+    {
+     "name": "onRestoreVersion",
+     "optional": false,
+     "type": "(noteId: string, version: NoteVersion) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onRestoreVersion"
+   ],
+   "dataCallbacks": [
+    "note"
+   ],
+   "labels": [],
+   "placeholders": [],
+   "buttons": [],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  },
+  {
+   "component": "RoutineSkipModal",
+   "file": "src/components/routines/RoutineSkipModal.tsx",
+   "loc": 107,
+   "propsCount": 5,
+   "props": [
+    {
+     "name": "isOpen",
+     "optional": false,
+     "type": "boolean"
+    },
+    {
+     "name": "onClose",
+     "optional": false,
+     "type": "() => void"
+    },
+    {
+     "name": "occurrence",
+     "optional": false,
+     "type": "RoutineOccurrence | null"
+    },
+    {
+     "name": "routine",
+     "optional": false,
+     "type": "RoutineRecord | null"
+    },
+    {
+     "name": "onSkip",
+     "optional": false,
+     "type": "(occurrenceId: string, reason: string) => void"
+    }
+   ],
+   "callbacks": [
+    "onClose",
+    "onSkip"
+   ],
+   "dataCallbacks": [
+    "occurrence",
+    "routine"
+   ],
+   "labels": [],
+   "placeholders": [
+    "اكتب أية تفاصيل لتوضيح سبب الاستثناء..."
+   ],
+   "buttons": [
+    "إلغاء",
+    "تأكيد التخطي"
+   ],
+   "validation": false,
+   "writesStorage": false,
+   "saveCalls": []
+  }
+ ],
+ "tabs": [
+  "dashboard",
+  "workos",
+  "taskflow",
+  "links",
+  "custody",
+  "financial",
+  "debts",
+  "knowledge",
+  "routines",
+  "stock",
+  "tasks",
+  "customers",
+  "doctors",
+  "settings"
+ ],
+ "counts": {
+  "storageKeys": 66,
+  "keysWithReader": 43,
+  "keysWithWriter": 24,
+  "keysNeverRead": 23,
+  "protectedComponents": 46,
+  "crudHandlers": 25,
+  "stateHooks": 34
+ }
+}

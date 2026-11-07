@@ -1,0 +1,753 @@
+{
+ "summary": {
+  "totalDark": 3119,
+  "totalNeeds": 11728,
+  "coverage": 0.266,
+  "modules": [
+   {
+    "module": "DashboardView.tsx",
+    "dark": 0,
+    "needs": 95,
+    "coverage": 0.0
+   },
+   {
+    "module": "InventoryView.tsx",
+    "dark": 0,
+    "needs": 145,
+    "coverage": 0.0
+   },
+   {
+    "module": "MovementDetailsModal.tsx",
+    "dark": 0,
+    "needs": 62,
+    "coverage": 0.0
+   },
+   {
+    "module": "MovementModal.tsx",
+    "dark": 0,
+    "needs": 126,
+    "coverage": 0.0
+   },
+   {
+    "module": "Navbar.tsx",
+    "dark": 0,
+    "needs": 21,
+    "coverage": 0.0
+   },
+   {
+    "module": "RecordsView.tsx",
+    "dark": 0,
+    "needs": 194,
+    "coverage": 0.0
+   },
+   {
+    "module": "ReportsView.tsx",
+    "dark": 0,
+    "needs": 169,
+    "coverage": 0.0
+   },
+   {
+    "module": "SearchableSelect.tsx",
+    "dark": 0,
+    "needs": 27,
+    "coverage": 0.0
+   },
+   {
+    "module": "SettingsView.tsx",
+    "dark": 0,
+    "needs": 165,
+    "coverage": 0.0
+   },
+   {
+    "module": "common",
+    "dark": 0,
+    "needs": 50,
+    "coverage": 0.0
+   },
+   {
+    "module": "workos",
+    "dark": 0,
+    "needs": 2313,
+    "coverage": 0.0
+   },
+   {
+    "module": "(core/utils)",
+    "dark": 0,
+    "needs": 13,
+    "coverage": 0.0
+   },
+   {
+    "module": "customers",
+    "dark": 49,
+    "needs": 980,
+    "coverage": 0.05
+   },
+   {
+    "module": "doctors",
+    "dark": 44,
+    "needs": 800,
+    "coverage": 0.055
+   },
+   {
+    "module": "debts",
+    "dark": 62,
+    "needs": 700,
+    "coverage": 0.089
+   },
+   {
+    "module": "custody",
+    "dark": 56,
+    "needs": 525,
+    "coverage": 0.107
+   },
+   {
+    "module": "taskflow",
+    "dark": 60,
+    "needs": 502,
+    "coverage": 0.12
+   },
+   {
+    "module": "links",
+    "dark": 74,
+    "needs": 410,
+    "coverage": 0.18
+   },
+   {
+    "module": "tasks",
+    "dark": 92,
+    "needs": 488,
+    "coverage": 0.189
+   },
+   {
+    "module": "financial",
+    "dark": 356,
+    "needs": 777,
+    "coverage": 0.458
+   },
+   {
+    "module": "auth",
+    "dark": 35,
+    "needs": 74,
+    "coverage": 0.473
+   },
+   {
+    "module": "(app shell)",
+    "dark": 7,
+    "needs": 11,
+    "coverage": 0.636
+   },
+   {
+    "module": "pwa",
+    "dark": 14,
+    "needs": 21,
+    "coverage": 0.667
+   },
+   {
+    "module": "routines",
+    "dark": 587,
+    "needs": 832,
+    "coverage": 0.706
+   },
+   {
+    "module": "settings",
+    "dark": 539,
+    "needs": 750,
+    "coverage": 0.719
+   },
+   {
+    "module": "Header.tsx",
+    "dark": 26,
+    "needs": 36,
+    "coverage": 0.722
+   },
+   {
+    "module": "knowledge",
+    "dark": 664,
+    "needs": 917,
+    "coverage": 0.724
+   },
+   {
+    "module": "notifications",
+    "dark": 103,
+    "needs": 124,
+    "coverage": 0.831
+   },
+   {
+    "module": "dashboard",
+    "dark": 292,
+    "needs": 336,
+    "coverage": 0.869
+   },
+   {
+    "module": "Sidebar.tsx",
+    "dark": 33,
+    "needs": 37,
+    "coverage": 0.892
+   },
+   {
+    "module": "stock",
+    "dark": 26,
+    "needs": 28,
+    "coverage": 0.929
+   }
+  ]
+ },
+ "perFile": {
+  "src/app/layouts/MainLayout.tsx": {
+   "dark": 1,
+   "needs": 2
+  },
+  "src/app/router/AppRouter.tsx": {
+   "dark": 6,
+   "needs": 9
+  },
+  "src/components/DashboardView.tsx": {
+   "dark": 0,
+   "needs": 95
+  },
+  "src/components/Header.tsx": {
+   "dark": 26,
+   "needs": 36
+  },
+  "src/components/InventoryView.tsx": {
+   "dark": 0,
+   "needs": 145
+  },
+  "src/components/MovementDetailsModal.tsx": {
+   "dark": 0,
+   "needs": 62
+  },
+  "src/components/MovementModal.tsx": {
+   "dark": 0,
+   "needs": 126
+  },
+  "src/components/Navbar.tsx": {
+   "dark": 0,
+   "needs": 21
+  },
+  "src/components/RecordsView.tsx": {
+   "dark": 0,
+   "needs": 194
+  },
+  "src/components/ReportsView.tsx": {
+   "dark": 0,
+   "needs": 169
+  },
+  "src/components/SearchableSelect.tsx": {
+   "dark": 0,
+   "needs": 27
+  },
+  "src/components/SettingsView.tsx": {
+   "dark": 0,
+   "needs": 165
+  },
+  "src/components/Sidebar.tsx": {
+   "dark": 33,
+   "needs": 37
+  },
+  "src/components/auth/LoginScreen.tsx": {
+   "dark": 35,
+   "needs": 74
+  },
+  "src/components/common/UniversalDataExchangeModal.tsx": {
+   "dark": 0,
+   "needs": 50
+  },
+  "src/components/custody/CustodyIssueModal.tsx": {
+   "dark": 0,
+   "needs": 110
+  },
+  "src/components/custody/CustodyIssuesModule.tsx": {
+   "dark": 55,
+   "needs": 105
+  },
+  "src/components/custody/CustodyIssuesTable.tsx": {
+   "dark": 0,
+   "needs": 122
+  },
+  "src/components/custody/CustodyPrintReport.tsx": {
+   "dark": 0,
+   "needs": 107
+  },
+  "src/components/custody/CustodyStatsCards.tsx": {
+   "dark": 1,
+   "needs": 81
+  },
+  "src/components/customers/BalancesLedger.tsx": {
+   "dark": 0,
+   "needs": 96
+  },
+  "src/components/customers/CustomerDetailsModal.tsx": {
+   "dark": 1,
+   "needs": 125
+  },
+  "src/components/customers/CustomerDirectory.tsx": {
+   "dark": 0,
+   "needs": 169
+  },
+  "src/components/customers/CustomerModal.tsx": {
+   "dark": 0,
+   "needs": 127
+  },
+  "src/components/customers/CustomerReports.tsx": {
+   "dark": 0,
+   "needs": 69
+  },
+  "src/components/customers/CustomerStatementModal.tsx": {
+   "dark": 0,
+   "needs": 115
+  },
+  "src/components/customers/CustomersModule.tsx": {
+   "dark": 48,
+   "needs": 65
+  },
+  "src/components/customers/ImportCustomersModal.tsx": {
+   "dark": 0,
+   "needs": 58
+  },
+  "src/components/customers/RecordVisitModal.tsx": {
+   "dark": 0,
+   "needs": 63
+  },
+  "src/components/customers/VisitsPlanner.tsx": {
+   "dark": 0,
+   "needs": 93
+  },
+  "src/components/dashboard/DashboardCharts.tsx": {
+   "dark": 15,
+   "needs": 15
+  },
+  "src/components/dashboard/UnifiedDashboard.tsx": {
+   "dark": 277,
+   "needs": 321
+  },
+  "src/components/debts/CommitmentModal.tsx": {
+   "dark": 0,
+   "needs": 101
+  },
+  "src/components/debts/CommitmentsTable.tsx": {
+   "dark": 0,
+   "needs": 133
+  },
+  "src/components/debts/DebtAuditView.tsx": {
+   "dark": 0,
+   "needs": 41
+  },
+  "src/components/debts/DebtLedgerTable.tsx": {
+   "dark": 0,
+   "needs": 125
+  },
+  "src/components/debts/DebtRecordModal.tsx": {
+   "dark": 0,
+   "needs": 70
+  },
+  "src/components/debts/DebtsModule.tsx": {
+   "dark": 62,
+   "needs": 70
+  },
+  "src/components/debts/DueAlertsPanel.tsx": {
+   "dark": 0,
+   "needs": 85
+  },
+  "src/components/debts/PartialPaymentModal.tsx": {
+   "dark": 0,
+   "needs": 75
+  },
+  "src/components/doctors/DoctorDetailsModal.tsx": {
+   "dark": 0,
+   "needs": 113
+  },
+  "src/components/doctors/DoctorDirectory.tsx": {
+   "dark": 0,
+   "needs": 196
+  },
+  "src/components/doctors/DoctorModal.tsx": {
+   "dark": 0,
+   "needs": 101
+  },
+  "src/components/doctors/DoctorReports.tsx": {
+   "dark": 0,
+   "needs": 106
+  },
+  "src/components/doctors/DoctorVisitsPlanner.tsx": {
+   "dark": 0,
+   "needs": 95
+  },
+  "src/components/doctors/DoctorsModule.tsx": {
+   "dark": 44,
+   "needs": 69
+  },
+  "src/components/doctors/ImportDoctorsModal.tsx": {
+   "dark": 0,
+   "needs": 62
+  },
+  "src/components/doctors/RecordDoctorVisitModal.tsx": {
+   "dark": 0,
+   "needs": 58
+  },
+  "src/components/financial/FinancialModal.tsx": {
+   "dark": 0,
+   "needs": 124
+  },
+  "src/components/financial/FinancialModule.tsx": {
+   "dark": 292,
+   "needs": 385
+  },
+  "src/components/financial/FinancialPrintModal.tsx": {
+   "dark": 0,
+   "needs": 85
+  },
+  "src/components/financial/FinancialVoucherModal.tsx": {
+   "dark": 0,
+   "needs": 98
+  },
+  "src/components/financial/ImportFinancialModal.tsx": {
+   "dark": 64,
+   "needs": 85
+  },
+  "src/components/knowledge/AIAssistantModal.tsx": {
+   "dark": 33,
+   "needs": 49
+  },
+  "src/components/knowledge/KnowledgeModule.tsx": {
+   "dark": 81,
+   "needs": 113
+  },
+  "src/components/knowledge/NoteDetailModal.tsx": {
+   "dark": 109,
+   "needs": 147
+  },
+  "src/components/knowledge/NoteEditorModal.tsx": {
+   "dark": 169,
+   "needs": 211
+  },
+  "src/components/knowledge/NotesDashboard.tsx": {
+   "dark": 83,
+   "needs": 111
+  },
+  "src/components/knowledge/NotesListView.tsx": {
+   "dark": 115,
+   "needs": 187
+  },
+  "src/components/knowledge/TemplatesLibraryModal.tsx": {
+   "dark": 50,
+   "needs": 66
+  },
+  "src/components/knowledge/VersionHistoryModal.tsx": {
+   "dark": 24,
+   "needs": 33
+  },
+  "src/components/links/LinkCard.tsx": {
+   "dark": 0,
+   "needs": 59
+  },
+  "src/components/links/LinkModal.tsx": {
+   "dark": 0,
+   "needs": 71
+  },
+  "src/components/links/LinksGridView.tsx": {
+   "dark": 0,
+   "needs": 11
+  },
+  "src/components/links/LinksLibraryModule.tsx": {
+   "dark": 74,
+   "needs": 109
+  },
+  "src/components/links/LinksPrintReport.tsx": {
+   "dark": 0,
+   "needs": 48
+  },
+  "src/components/links/LinksStatsCards.tsx": {
+   "dark": 0,
+   "needs": 63
+  },
+  "src/components/links/LinksTableView.tsx": {
+   "dark": 0,
+   "needs": 49
+  },
+  "src/components/notifications/DueAlertsModal.tsx": {
+   "dark": 86,
+   "needs": 101
+  },
+  "src/components/notifications/DueAlertsToast.tsx": {
+   "dark": 17,
+   "needs": 23
+  },
+  "src/components/pwa/PWAInstallButton.tsx": {
+   "dark": 14,
+   "needs": 21
+  },
+  "src/components/routines/HabitsStreakView.tsx": {
+   "dark": 17,
+   "needs": 43
+  },
+  "src/components/routines/RoutineAIAssistantModal.tsx": {
+   "dark": 28,
+   "needs": 45
+  },
+  "src/components/routines/RoutineAnalyticsView.tsx": {
+   "dark": 35,
+   "needs": 51
+  },
+  "src/components/routines/RoutineCalendarView.tsx": {
+   "dark": 31,
+   "needs": 35
+  },
+  "src/components/routines/RoutineDetailModal.tsx": {
+   "dark": 51,
+   "needs": 71
+  },
+  "src/components/routines/RoutineExecutionsHistory.tsx": {
+   "dark": 33,
+   "needs": 48
+  },
+  "src/components/routines/RoutineOccurrencesList.tsx": {
+   "dark": 68,
+   "needs": 88
+  },
+  "src/components/routines/RoutinePostponeModal.tsx": {
+   "dark": 26,
+   "needs": 35
+  },
+  "src/components/routines/RoutineSkipModal.tsx": {
+   "dark": 14,
+   "needs": 18
+  },
+  "src/components/routines/RoutineTemplatesModal.tsx": {
+   "dark": 28,
+   "needs": 45
+  },
+  "src/components/routines/RoutineTimerModal.tsx": {
+   "dark": 40,
+   "needs": 66
+  },
+  "src/components/routines/RoutineWizardModal.tsx": {
+   "dark": 140,
+   "needs": 190
+  },
+  "src/components/routines/RoutinesModule.tsx": {
+   "dark": 76,
+   "needs": 97
+  },
+  "src/components/settings/UnifiedSettings.tsx": {
+   "dark": 14,
+   "needs": 19
+  },
+  "src/components/settings/tabs/AboutAppTab.tsx": {
+   "dark": 30,
+   "needs": 48
+  },
+  "src/components/settings/tabs/CompanyInfoTab.tsx": {
+   "dark": 47,
+   "needs": 65
+  },
+  "src/components/settings/tabs/DatabasesTab.tsx": {
+   "dark": 84,
+   "needs": 120
+  },
+  "src/components/settings/tabs/FiscalYearTab.tsx": {
+   "dark": 36,
+   "needs": 50
+  },
+  "src/components/settings/tabs/GeneralSettingsTab.tsx": {
+   "dark": 81,
+   "needs": 104
+  },
+  "src/components/settings/tabs/InventorySettingsTab.tsx": {
+   "dark": 44,
+   "needs": 60
+  },
+  "src/components/settings/tabs/NotificationsTab.tsx": {
+   "dark": 56,
+   "needs": 86
+  },
+  "src/components/settings/tabs/PrinterSettingsTab.tsx": {
+   "dark": 66,
+   "needs": 83
+  },
+  "src/components/settings/tabs/SecurityPermissionsTab.tsx": {
+   "dark": 26,
+   "needs": 36
+  },
+  "src/components/settings/tabs/UsersTab.tsx": {
+   "dark": 55,
+   "needs": 79
+  },
+  "src/components/stock/StockModule.tsx": {
+   "dark": 26,
+   "needs": 28
+  },
+  "src/components/taskflow/TaskFlowBoardView.tsx": {
+   "dark": 0,
+   "needs": 47
+  },
+  "src/components/taskflow/TaskFlowImportExportModal.tsx": {
+   "dark": 0,
+   "needs": 72
+  },
+  "src/components/taskflow/TaskFlowMembersModal.tsx": {
+   "dark": 0,
+   "needs": 79
+  },
+  "src/components/taskflow/TaskFlowModule.tsx": {
+   "dark": 60,
+   "needs": 76
+  },
+  "src/components/taskflow/TaskFlowProjectsModal.tsx": {
+   "dark": 0,
+   "needs": 64
+  },
+  "src/components/taskflow/TaskFlowTaskModal.tsx": {
+   "dark": 0,
+   "needs": 69
+  },
+  "src/components/taskflow/TaskFlowTimelineView.tsx": {
+   "dark": 0,
+   "needs": 53
+  },
+  "src/components/taskflow/TaskFlowUserSwitchModal.tsx": {
+   "dark": 0,
+   "needs": 42
+  },
+  "src/components/tasks/CalendarView.tsx": {
+   "dark": 0,
+   "needs": 108
+  },
+  "src/components/tasks/CommitmentModal.tsx": {
+   "dark": 0,
+   "needs": 40
+  },
+  "src/components/tasks/CommitmentsTable.tsx": {
+   "dark": 0,
+   "needs": 85
+  },
+  "src/components/tasks/TaskModal.tsx": {
+   "dark": 0,
+   "needs": 55
+  },
+  "src/components/tasks/TasksModule.tsx": {
+   "dark": 92,
+   "needs": 200
+  },
+  "src/components/workos/WorkOSAICopilotModal.tsx": {
+   "dark": 0,
+   "needs": 73
+  },
+  "src/components/workos/WorkOSAppointmentsCommitmentsView.tsx": {
+   "dark": 0,
+   "needs": 54
+  },
+  "src/components/workos/WorkOSAutomationView.tsx": {
+   "dark": 0,
+   "needs": 22
+  },
+  "src/components/workos/WorkOSCommandPaletteModal.tsx": {
+   "dark": 0,
+   "needs": 28
+  },
+  "src/components/workos/WorkOSDashboard.tsx": {
+   "dark": 0,
+   "needs": 171
+  },
+  "src/components/workos/WorkOSEisenhowerMatrix.tsx": {
+   "dark": 0,
+   "needs": 94
+  },
+  "src/components/workos/WorkOSFilterStrip.tsx": {
+   "dark": 0,
+   "needs": 109
+  },
+  "src/components/workos/WorkOSGoalsView.tsx": {
+   "dark": 0,
+   "needs": 28
+  },
+  "src/components/workos/WorkOSHabitsView.tsx": {
+   "dark": 0,
+   "needs": 29
+  },
+  "src/components/workos/WorkOSInbox.tsx": {
+   "dark": 0,
+   "needs": 54
+  },
+  "src/components/workos/WorkOSKPICards.tsx": {
+   "dark": 0,
+   "needs": 5
+  },
+  "src/components/workos/WorkOSKanbanTab.tsx": {
+   "dark": 0,
+   "needs": 45
+  },
+  "src/components/workos/WorkOSModule.tsx": {
+   "dark": 0,
+   "needs": 58
+  },
+  "src/components/workos/WorkOSNotesMeetingsView.tsx": {
+   "dark": 0,
+   "needs": 62
+  },
+  "src/components/workos/WorkOSOverviewTab.tsx": {
+   "dark": 0,
+   "needs": 92
+  },
+  "src/components/workos/WorkOSPrioritiesTab.tsx": {
+   "dark": 0,
+   "needs": 64
+  },
+  "src/components/workos/WorkOSProjectsTab.tsx": {
+   "dark": 0,
+   "needs": 222
+  },
+  "src/components/workos/WorkOSProjectsView.tsx": {
+   "dark": 0,
+   "needs": 57
+  },
+  "src/components/workos/WorkOSQuickAddModal.tsx": {
+   "dark": 0,
+   "needs": 48
+  },
+  "src/components/workos/WorkOSReportsView.tsx": {
+   "dark": 0,
+   "needs": 48
+  },
+  "src/components/workos/WorkOSRoutineView.tsx": {
+   "dark": 0,
+   "needs": 76
+  },
+  "src/components/workos/WorkOSTaskDetailModal.tsx": {
+   "dark": 0,
+   "needs": 106
+  },
+  "src/components/workos/WorkOSTaskDrawer.tsx": {
+   "dark": 0,
+   "needs": 159
+  },
+  "src/components/workos/WorkOSTasksTab.tsx": {
+   "dark": 0,
+   "needs": 72
+  },
+  "src/components/workos/WorkOSTasksView.tsx": {
+   "dark": 0,
+   "needs": 272
+  },
+  "src/components/workos/WorkOSTeamWorkloadTab.tsx": {
+   "dark": 0,
+   "needs": 66
+  },
+  "src/components/workos/WorkOSTeamWorkloadView.tsx": {
+   "dark": 0,
+   "needs": 31
+  },
+  "src/components/workos/WorkOSTimelineTab.tsx": {
+   "dark": 0,
+   "needs": 50
+  },
+  "src/components/workos/WorkOSUnifiedTopBar.tsx": {
+   "dark": 0,
+   "needs": 118
+  },
+  "src/core/errors/AppErrorBoundary.tsx": {
+   "dark": 0,
+   "needs": 13
+  }
+ }
+}

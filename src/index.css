@@ -1,0 +1,205 @@
+@import "tailwindcss" source(none);
+/* مصادر الأصناف الفعلية فقط: كود التطبيق + قالب HTML.
+   (كان الفحص التلقائي يشمل مخرجات قديمة مثل standalone_app.html وتقارير JSON
+    فتُولَّد قواعد CSS ميتة لا يستخدمها التطبيق.) */
+@source "./";
+@source "../index.html";
+
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  /* نظام الهوية المحاسبي الحديث المعتمد */
+  --sidebar-primary: #0F3935;     /* الأخضر الداكن / الزيتي للقائمة الجانبية */
+  --sidebar-secondary: #134E48;   /* درجة زيتي مكملة */
+  --sidebar-active: #0D9488;      /* الأخضر الزمردي للعنصر النشط */
+  
+  --emerald-primary: #0D9488;     /* الأخضر الزمردي للأزرار الرئيسية والتحديث */
+  --emerald-hover: #059669;       /* الأخضر الفيروزي عند التحويم وحفظ السند */
+  
+  --royal-blue: #3B82F6;          /* الأزرق الملكي لشريط الخزينة والمبيعات */
+  --royal-indigo: #4338CA;        /* الأزرق الداكن للخزينة */
+  
+  --coral-red: #EF4444;           /* الأحمر المرجاني للسحب والصرف والخروج */
+  --coral-red-light: #FCA5A5;     /* الوردي الفاتح للحركات والتحذير */
+  
+  --amber-gold: #D97706;          /* الذهبي للعمليات والتقارير */
+  --amber-bronze: #B45309;        /* البرونزي لأزرار "جديد" و"بحث" */
+
+  --color-bg-base: #F3F4F6;       /* رمادي فاتح مائل للدفء (#F3F4F6 إلى #F9FAFB) */
+  --color-bg-canvas: #F9FAFB;
+  --color-bg-card: #FFFFFF;       /* أبيض ناصع تماماً للبطاقات والحقول */
+  --color-bg-surface: #FFFFFF;
+  --color-bg-muted: #F3F4F6;
+  --color-bg-elevated: #FFFFFF;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4B5563;
+  --color-text-muted: #6B7280;
+  --color-text-dim: #9CA3AF;
+  --color-border: #E5E7EB;        /* حدود خفيفة بتمويه رمادي ناعم */
+  --color-border-subtle: #F3F4F6;
+}
+
+:root[data-theme="dark"],
+:root.dark,
+[data-theme="dark"],
+.dark {
+  /* الوضع الليلي المحاسبي المريح */
+  --sidebar-primary: #0F3935;     /* القائمة الجانبية الزيتية الثابتة */
+  --sidebar-secondary: #134E48;
+  --sidebar-active: #0D9488;
+  
+  --emerald-primary: #0D9488;
+  --emerald-hover: #059669;
+  
+  --royal-blue: #3B82F6;
+  --royal-indigo: #4338CA;
+  
+  --coral-red: #EF4444;
+  --coral-red-light: #FCA5A5;
+  
+  --amber-gold: #D97706;
+  --amber-bronze: #B45309;
+
+  --color-bg-base: #0F172A;       /* خلفية الشاشة الداكنة #0F172A */
+  --color-bg-canvas: #0F172A;
+  --color-bg-card: #1E293B;       /* خلفيات البطاقات والمحافظ #1E293B */
+  --color-bg-surface: #1E293B;
+  --color-bg-muted: #1E293B;
+  --color-bg-elevated: #334155;
+  --color-text-primary: #F8FAFC;  /* نصوص بيضاء ناصعة */
+  --color-text-secondary: #CBD5E1;/* نصوص ثانوية مريحة */
+  --color-text-muted: #94A3B8;    /* تسميات ووصف فرعي */
+  --color-text-dim: #64748B;
+  --color-border: #334155;        /* حدود فواصل ناعمة */
+  --color-border-subtle: #1E293B;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  html.dark,
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    background-color: #0F172A;
+    color: #F8FAFC;
+  }
+
+  html, body {
+    direction: rtl;
+    text-align: right;
+    font-family: 'Rubik', 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+  }
+
+  input, select, textarea, button {
+    font-family: 'Rubik', 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    text-align: right;
+  }
+
+  input[type="number"], input[type="date"], input[type="time"], input[type="email"], input[type="tel"], input[type="url"], code, pre {
+    font-feature-settings: "tnum";
+    direction: ltr;
+    text-align: left;
+  }
+}
+
+/* Modern Flat Accounting Gradient Canvas Background (#F3F4F6 to #F9FAFB) */
+.bg-canvas-pattern {
+  background-color: #F3F4F6;
+  background-image: 
+    radial-gradient(circle, rgba(15, 57, 53, 0.08) 1.2px, transparent 1.2px),
+    linear-gradient(135deg, #F3F4F6 0%, #F9FAFB 100%);
+  background-size: 24px 24px, 100% 100%;
+}
+
+.dark .bg-canvas-pattern,
+[data-theme="dark"] .bg-canvas-pattern,
+.dark.bg-canvas-pattern,
+[data-theme="dark"].bg-canvas-pattern {
+  background-color: #0F172A;
+  background-image: 
+    radial-gradient(circle, rgba(13, 148, 136, 0.12) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+/* Smooth Staggered Animation Utilities */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+.stagger-5 { animation-delay: 250ms; }
+.stagger-6 { animation-delay: 300ms; }
+
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-container {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 11px !important;
+  }
+  th, td {
+    border: 1px solid #cbd5e1 !important;
+    padding: 4px 6px !important;
+  }
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0d9488;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #14b8a6;
+}
+
+

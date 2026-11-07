@@ -1,0 +1,513 @@
+{
+ "dryRun": false,
+ "status": "منفَّذ",
+ "files": 124,
+ "changes": 1172,
+ "byPair": {
+  "text-[11px] -> text-xs": 579,
+  "text-[10px] -> text-xs": 557,
+  "text-[9px] -> text-xs": 20,
+  "text-[9.5px] -> text-xs": 1,
+  "text-[10px] -> text-[11px]": 6,
+  "text-[10.5px] -> text-xs": 5,
+  "text-[8px] -> text-xs": 4
+ },
+ "details": [
+  {
+   "file": "src/components/DashboardView.tsx",
+   "changes": 17
+  },
+  {
+   "file": "src/components/Header.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/InventoryView.tsx",
+   "changes": 9
+  },
+  {
+   "file": "src/components/MovementDetailsModal.tsx",
+   "changes": 11
+  },
+  {
+   "file": "src/components/MovementModal.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/Navbar.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/RecordsView.tsx",
+   "changes": 31
+  },
+  {
+   "file": "src/components/ReportsView.tsx",
+   "changes": 12
+  },
+  {
+   "file": "src/components/SettingsView.tsx",
+   "changes": 12
+  },
+  {
+   "file": "src/components/Sidebar.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/auth/LoginScreen.tsx",
+   "changes": 10
+  },
+  {
+   "file": "src/components/common/UniversalDataExchangeModal.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/custody/CustodyIssueModal.tsx",
+   "changes": 1
+  },
+  {
+   "file": "src/components/custody/CustodyIssuesModule.tsx",
+   "changes": 1
+  },
+  {
+   "file": "src/components/custody/CustodyIssuesTable.tsx",
+   "changes": 22
+  },
+  {
+   "file": "src/components/custody/CustodyPrintReport.tsx",
+   "changes": 13
+  },
+  {
+   "file": "src/components/custody/CustodyStatsCards.tsx",
+   "changes": 16
+  },
+  {
+   "file": "src/components/customers/BalancesLedger.tsx",
+   "changes": 11
+  },
+  {
+   "file": "src/components/customers/CustomerDetailsModal.tsx",
+   "changes": 15
+  },
+  {
+   "file": "src/components/customers/CustomerDirectory.tsx",
+   "changes": 27
+  },
+  {
+   "file": "src/components/customers/CustomerModal.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/customers/CustomerReports.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/customers/CustomerStatementModal.tsx",
+   "changes": 26
+  },
+  {
+   "file": "src/components/customers/CustomersModule.tsx",
+   "changes": 11
+  },
+  {
+   "file": "src/components/customers/ImportCustomersModal.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/customers/RecordVisitModal.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/customers/VisitsPlanner.tsx",
+   "changes": 15
+  },
+  {
+   "file": "src/components/dashboard/DashboardCharts.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/dashboard/UnifiedDashboard.tsx",
+   "changes": 57
+  },
+  {
+   "file": "src/components/debts/CommitmentsTable.tsx",
+   "changes": 15
+  },
+  {
+   "file": "src/components/debts/DebtAuditView.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/debts/DebtLedgerTable.tsx",
+   "changes": 14
+  },
+  {
+   "file": "src/components/debts/DebtsModule.tsx",
+   "changes": 7
+  },
+  {
+   "file": "src/components/debts/DueAlertsPanel.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/debts/PartialPaymentModal.tsx",
+   "changes": 11
+  },
+  {
+   "file": "src/components/doctors/DoctorDetailsModal.tsx",
+   "changes": 8
+  },
+  {
+   "file": "src/components/doctors/DoctorDirectory.tsx",
+   "changes": 27
+  },
+  {
+   "file": "src/components/doctors/DoctorModal.tsx",
+   "changes": 7
+  },
+  {
+   "file": "src/components/doctors/DoctorReports.tsx",
+   "changes": 10
+  },
+  {
+   "file": "src/components/doctors/DoctorVisitsPlanner.tsx",
+   "changes": 13
+  },
+  {
+   "file": "src/components/doctors/DoctorsModule.tsx",
+   "changes": 9
+  },
+  {
+   "file": "src/components/doctors/ImportDoctorsModal.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/financial/FinancialModal.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/financial/FinancialModule.tsx",
+   "changes": 45
+  },
+  {
+   "file": "src/components/financial/FinancialPrintModal.tsx",
+   "changes": 16
+  },
+  {
+   "file": "src/components/financial/FinancialVoucherModal.tsx",
+   "changes": 14
+  },
+  {
+   "file": "src/components/financial/ImportFinancialModal.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/knowledge/AIAssistantModal.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/knowledge/KnowledgeModule.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/knowledge/NoteDetailModal.tsx",
+   "changes": 10
+  },
+  {
+   "file": "src/components/knowledge/NoteEditorModal.tsx",
+   "changes": 8
+  },
+  {
+   "file": "src/components/knowledge/NotesDashboard.tsx",
+   "changes": 12
+  },
+  {
+   "file": "src/components/knowledge/NotesListView.tsx",
+   "changes": 13
+  },
+  {
+   "file": "src/components/knowledge/TemplatesLibraryModal.tsx",
+   "changes": 2
+  },
+  {
+   "file": "src/components/knowledge/VersionHistoryModal.tsx",
+   "changes": 2
+  },
+  {
+   "file": "src/components/links/LinkCard.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/links/LinkModal.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/links/LinksLibraryModule.tsx",
+   "changes": 1
+  },
+  {
+   "file": "src/components/links/LinksPrintReport.tsx",
+   "changes": 9
+  },
+  {
+   "file": "src/components/links/LinksStatsCards.tsx",
+   "changes": 13
+  },
+  {
+   "file": "src/components/links/LinksTableView.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/notifications/DueAlertsModal.tsx",
+   "changes": 8
+  },
+  {
+   "file": "src/components/notifications/DueAlertsToast.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/routines/HabitsStreakView.tsx",
+   "changes": 2
+  },
+  {
+   "file": "src/components/routines/RoutineAIAssistantModal.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/routines/RoutineAnalyticsView.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/routines/RoutineCalendarView.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/routines/RoutineDetailModal.tsx",
+   "changes": 10
+  },
+  {
+   "file": "src/components/routines/RoutineExecutionsHistory.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/routines/RoutineOccurrencesList.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/routines/RoutineTemplatesModal.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/routines/RoutineTimerModal.tsx",
+   "changes": 1
+  },
+  {
+   "file": "src/components/routines/RoutineWizardModal.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/routines/RoutinesModule.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/settings/tabs/AboutAppTab.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/settings/tabs/CompanyInfoTab.tsx",
+   "changes": 2
+  },
+  {
+   "file": "src/components/settings/tabs/DatabasesTab.tsx",
+   "changes": 17
+  },
+  {
+   "file": "src/components/settings/tabs/FiscalYearTab.tsx",
+   "changes": 1
+  },
+  {
+   "file": "src/components/settings/tabs/GeneralSettingsTab.tsx",
+   "changes": 11
+  },
+  {
+   "file": "src/components/settings/tabs/InventorySettingsTab.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/settings/tabs/NotificationsTab.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/settings/tabs/PrinterSettingsTab.tsx",
+   "changes": 7
+  },
+  {
+   "file": "src/components/settings/tabs/SecurityPermissionsTab.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/settings/tabs/UsersTab.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/stock/StockModule.tsx",
+   "changes": 1
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowBoardView.tsx",
+   "changes": 12
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowMembersModal.tsx",
+   "changes": 9
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowModule.tsx",
+   "changes": 3
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowProjectsModal.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowTimelineView.tsx",
+   "changes": 7
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowUserSwitchModal.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/tasks/CalendarView.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/tasks/TasksModule.tsx",
+   "changes": 18
+  },
+  {
+   "file": "src/components/workos/WorkOSAICopilotModal.tsx",
+   "changes": 10
+  },
+  {
+   "file": "src/components/workos/WorkOSAppointmentsCommitmentsView.tsx",
+   "changes": 5
+  },
+  {
+   "file": "src/components/workos/WorkOSAutomationView.tsx",
+   "changes": 2
+  },
+  {
+   "file": "src/components/workos/WorkOSCommandPaletteModal.tsx",
+   "changes": 7
+  },
+  {
+   "file": "src/components/workos/WorkOSDashboard.tsx",
+   "changes": 26
+  },
+  {
+   "file": "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "changes": 14
+  },
+  {
+   "file": "src/components/workos/WorkOSFilterStrip.tsx",
+   "changes": 20
+  },
+  {
+   "file": "src/components/workos/WorkOSGoalsView.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/workos/WorkOSHabitsView.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/workos/WorkOSInbox.tsx",
+   "changes": 2
+  },
+  {
+   "file": "src/components/workos/WorkOSKPICards.tsx",
+   "changes": 2
+  },
+  {
+   "file": "src/components/workos/WorkOSKanbanTab.tsx",
+   "changes": 8
+  },
+  {
+   "file": "src/components/workos/WorkOSModule.tsx",
+   "changes": 1
+  },
+  {
+   "file": "src/components/workos/WorkOSNotesMeetingsView.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/workos/WorkOSOverviewTab.tsx",
+   "changes": 8
+  },
+  {
+   "file": "src/components/workos/WorkOSPrioritiesTab.tsx",
+   "changes": 9
+  },
+  {
+   "file": "src/components/workos/WorkOSProjectsTab.tsx",
+   "changes": 26
+  },
+  {
+   "file": "src/components/workos/WorkOSProjectsView.tsx",
+   "changes": 9
+  },
+  {
+   "file": "src/components/workos/WorkOSQuickAddModal.tsx",
+   "changes": 11
+  },
+  {
+   "file": "src/components/workos/WorkOSReportsView.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/workos/WorkOSRoutineView.tsx",
+   "changes": 4
+  },
+  {
+   "file": "src/components/workos/WorkOSTaskDetailModal.tsx",
+   "changes": 13
+  },
+  {
+   "file": "src/components/workos/WorkOSTaskDrawer.tsx",
+   "changes": 17
+  },
+  {
+   "file": "src/components/workos/WorkOSTasksTab.tsx",
+   "changes": 15
+  },
+  {
+   "file": "src/components/workos/WorkOSTasksView.tsx",
+   "changes": 38
+  },
+  {
+   "file": "src/components/workos/WorkOSTeamWorkloadTab.tsx",
+   "changes": 11
+  },
+  {
+   "file": "src/components/workos/WorkOSTeamWorkloadView.tsx",
+   "changes": 6
+  },
+  {
+   "file": "src/components/workos/WorkOSTimelineTab.tsx",
+   "changes": 8
+  },
+  {
+   "file": "src/components/workos/WorkOSUnifiedTopBar.tsx",
+   "changes": 19
+  },
+  {
+   "file": "src/core/errors/AppErrorBoundary.tsx",
+   "changes": 1
+  }
+ ]
+}

@@ -1,0 +1,309 @@
+{
+ "startedAt": "2026-09-27T20:52:27.848Z",
+ "steps": [
+  {
+   "step": "boot",
+   "rootLen": 12984,
+   "loggedOut": true
+  },
+  {
+   "step": "login",
+   "sawShell": true
+  },
+  {
+   "step": "tabs",
+   "visited": 12
+  },
+  {
+   "step": "crud-create",
+   "filledInputs": 6,
+   "saved": true
+  }
+ ],
+ "tabs": {
+  "اللوحة التحكم": {
+   "newErrors": 0,
+   "domLen": 76526
+  },
+  "ادارة السجل اليومي5": {
+   "newErrors": 0,
+   "domLen": 64570
+  },
+  "ادارة الديون والالتزامات126": {
+   "newErrors": 0,
+   "domLen": 149425
+  },
+  "ادارة صرف وتوريد301": {
+   "newErrors": 0,
+   "domLen": 196099
+  },
+  "إدارة العمل67": {
+   "newErrors": 0,
+   "domLen": 59850
+  },
+  "ادارة العملاء وزيارات26": {
+   "newErrors": 0,
+   "domLen": 127711
+  },
+  "ادارة الاطباء وزيارات10": {
+   "newErrors": 0,
+   "domLen": 101015
+  },
+  "ادارة الروتين والعادات6": {
+   "newErrors": 0,
+   "domLen": 57377
+  },
+  "ادارة الملاحظات": {
+   "newErrors": 0,
+   "domLen": 68513
+  },
+  "ادارة العهد والاشكاليات40": {
+   "newErrors": 0,
+   "domLen": 303429
+  },
+  "مكتبة الروابط": {
+   "newErrors": 0,
+   "domLen": 345381
+  },
+  "الاعدادات": {
+   "newErrors": 0,
+   "domLen": 42877
+  }
+ },
+ "storage": {
+  "before": {
+   "suite_device_id_v1": {
+    "bytes": 23,
+    "records": null
+   },
+   "suite_stock_products_v2": {
+    "bytes": 10697,
+    "records": 62
+   },
+   "suite_stock_records_v2": {
+    "bytes": 102358,
+    "records": 301
+   },
+   "suite_fin_transactions_v2": {
+    "bytes": 1935,
+    "records": 5
+   },
+   "suite_tasks_tasks_v2": {
+    "bytes": 43176,
+    "records": 103
+   },
+   "suite_tasks_commitments_v2": {
+    "bytes": 7607,
+    "records": 32
+   },
+   "suite_customers_items_v2": {
+    "bytes": 11778,
+    "records": 26
+   },
+   "suite_doctors_items_v1": {
+    "bytes": 6210,
+    "records": 10
+   },
+   "suite_debts_records_v1": {
+    "bytes": 22477,
+    "records": 126
+   },
+   "suite_custody_records_v1": {
+    "bytes": 15898,
+    "records": 40
+   },
+   "app_theme_mode": {
+    "bytes": 5,
+    "records": null
+   },
+   "qeema_accounting_system_settings_v1": {
+    "bytes": 3075,
+    "records": null
+   },
+   "suite_active_auth_session_v1": {
+    "bytes": 57,
+    "records": null
+   }
+  },
+  "after": {
+   "suite_device_id_v1": {
+    "bytes": 23,
+    "records": null
+   },
+   "suite_stock_products_v2": {
+    "bytes": 10697,
+    "records": 62
+   },
+   "suite_stock_records_v2": {
+    "bytes": 102358,
+    "records": 301
+   },
+   "suite_fin_transactions_v2": {
+    "bytes": 2369,
+    "records": 6
+   },
+   "suite_tasks_tasks_v2": {
+    "bytes": 43176,
+    "records": 103
+   },
+   "suite_tasks_commitments_v2": {
+    "bytes": 7607,
+    "records": 32
+   },
+   "suite_customers_items_v2": {
+    "bytes": 11778,
+    "records": 26
+   },
+   "suite_doctors_items_v1": {
+    "bytes": 6210,
+    "records": 10
+   },
+   "suite_debts_records_v1": {
+    "bytes": 22477,
+    "records": 126
+   },
+   "suite_custody_records_v1": {
+    "bytes": 15898,
+    "records": 40
+   },
+   "app_theme_mode": {
+    "bytes": 5,
+    "records": null
+   },
+   "qeema_accounting_system_settings_v1": {
+    "bytes": 3075,
+    "records": null
+   },
+   "suite_active_auth_session_v1": {
+    "bytes": 57,
+    "records": null
+   },
+   "workos_v1_workspaces": {
+    "bytes": 334,
+    "records": 3
+   },
+   "workos_v1_current_workspace": {
+    "bytes": 9,
+    "records": null
+   },
+   "workos_v1_projects": {
+    "bytes": 2045,
+    "records": 4
+   },
+   "workos_v1_tasks": {
+    "bytes": 5840,
+    "records": 5
+   },
+   "workos_v1_inbox": {
+    "bytes": 793,
+    "records": 3
+   },
+   "workos_v1_routines": {
+    "bytes": 1140,
+    "records": 5
+   },
+   "workos_v1_reviews": {
+    "bytes": 2,
+    "records": 0
+   },
+   "workos_v1_habits": {
+    "bytes": 931,
+    "records": 3
+   },
+   "workos_v1_goals": {
+    "bytes": 1059,
+    "records": 2
+   },
+   "workos_v1_appointments": {
+    "bytes": 770,
+    "records": 2
+   },
+   "workos_v1_commitments": {
+    "bytes": 870,
+    "records": 2
+   },
+   "workos_v1_meetings": {
+    "bytes": 909,
+    "records": 1
+   },
+   "workos_v1_notes": {
+    "bytes": 1063,
+    "records": 2
+   },
+   "workos_v1_team": {
+    "bytes": 1249,
+    "records": 5
+   },
+   "workos_v1_automations": {
+    "bytes": 1014,
+    "records": 3
+   },
+   "workos_v1_activity": {
+    "bytes": 677,
+    "records": 3
+   },
+   "suite_routines_occurrences_v1": {
+    "bytes": 91759,
+    "records": 296
+   },
+   "suite_knowledge_notes_v1": {
+    "bytes": 8195,
+    "records": 6
+   },
+   "suite_knowledge_folders_v1": {
+    "bytes": 1168,
+    "records": 8
+   },
+   "suite_knowledge_tags_v1": {
+    "bytes": 538,
+    "records": 10
+   },
+   "suite_knowledge_templates_v1": {
+    "bytes": 5222,
+    "records": 6
+   },
+   "suite_unified_audit_v2": {
+    "bytes": 708,
+    "records": 1
+   },
+   "suite_sync_outbox_v1": {
+    "bytes": 648,
+    "records": 1
+   }
+  }
+ },
+ "errors": [],
+ "warnings": [
+  "IndexedDB not available in current environment. Using memory fallback.",
+  "The width(0) and height(0) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined)",
+  "The width(0) and height(0) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined)"
+ ],
+ "finishedAt": "2026-09-27T20:52:47.281Z",
+ "diffVsSelf": [
+  "~ suite_fin_transactions_v2: 5 → 6",
+  "+ مفتاح جديد: workos_v1_workspaces (3 سجلاً)",
+  "+ مفتاح جديد: workos_v1_current_workspace (- سجلاً)",
+  "+ مفتاح جديد: workos_v1_projects (4 سجلاً)",
+  "+ مفتاح جديد: workos_v1_tasks (5 سجلاً)",
+  "+ مفتاح جديد: workos_v1_inbox (3 سجلاً)",
+  "+ مفتاح جديد: workos_v1_routines (5 سجلاً)",
+  "+ مفتاح جديد: workos_v1_reviews (0 سجلاً)",
+  "+ مفتاح جديد: workos_v1_habits (3 سجلاً)",
+  "+ مفتاح جديد: workos_v1_goals (2 سجلاً)",
+  "+ مفتاح جديد: workos_v1_appointments (2 سجلاً)",
+  "+ مفتاح جديد: workos_v1_commitments (2 سجلاً)",
+  "+ مفتاح جديد: workos_v1_meetings (1 سجلاً)",
+  "+ مفتاح جديد: workos_v1_notes (2 سجلاً)",
+  "+ مفتاح جديد: workos_v1_team (5 سجلاً)",
+  "+ مفتاح جديد: workos_v1_automations (3 سجلاً)",
+  "+ مفتاح جديد: workos_v1_activity (3 سجلاً)",
+  "+ مفتاح جديد: suite_routines_occurrences_v1 (296 سجلاً)",
+  "+ مفتاح جديد: suite_knowledge_notes_v1 (6 سجلاً)",
+  "+ مفتاح جديد: suite_knowledge_folders_v1 (8 سجلاً)",
+  "+ مفتاح جديد: suite_knowledge_tags_v1 (10 سجلاً)",
+  "+ مفتاح جديد: suite_knowledge_templates_v1 (6 سجلاً)",
+  "+ مفتاح جديد: suite_unified_audit_v2 (1 سجلاً)",
+  "+ مفتاح جديد: suite_sync_outbox_v1 (1 سجلاً)"
+ ],
+ "regression": []
+}

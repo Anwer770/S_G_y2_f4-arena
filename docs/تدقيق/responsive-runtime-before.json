@@ -1,0 +1,67 @@
+{
+ "tag": "before",
+ "tables": [
+  {
+   "where": "ادارة السجل اليومي5",
+   "cols": 16,
+   "minw": null,
+   "printOk": false,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العهد والاشكاليات40",
+   "cols": 11,
+   "minw": null,
+   "printOk": false,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العملاء وزيارات26",
+   "cols": 10,
+   "minw": null,
+   "printOk": false,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة السجل اليومي5 › نافذة",
+   "cols": 9,
+   "minw": null,
+   "printOk": false,
+   "hasScroll": false
+  },
+  {
+   "where": "ادارة الديون والالتزامات126",
+   "cols": 9,
+   "minw": null,
+   "printOk": false,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة صرف وتوريد301",
+   "cols": 9,
+   "minw": null,
+   "printOk": false,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاطباء وزيارات10",
+   "cols": 9,
+   "minw": null,
+   "printOk": false,
+   "hasScroll": true
+  }
+ ],
+ "errors": [],
+ "navErrors": [
+  "jsdomError: Not implemented: navigation (except hash changes)",
+  "jsdomError: Not implemented: navigation (except hash changes)",
+  "jsdomError: Not implemented: navigation (except hash changes)",
+  "jsdomError: Not implemented: navigation (except hash changes)"
+ ],
+ "counts": {
+  "total": 7,
+  "noScroll": 1,
+  "noMin": 7,
+  "noPrint": 7
+ }
+}

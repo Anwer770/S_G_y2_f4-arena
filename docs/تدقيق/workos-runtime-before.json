@@ -1,0 +1,8 @@
+{
+ "tag": "before",
+ "appRoot": "/tmp/pre-wos",
+ "suiteOpen": 63,
+ "workosOpen": 2,
+ "badge": 126,
+ "expected": 65
+}

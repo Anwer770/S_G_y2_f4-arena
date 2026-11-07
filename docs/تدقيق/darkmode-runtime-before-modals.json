@@ -1,0 +1,193 @@
+{
+ "appRoot": "/tmp/pre-modals",
+ "tag": "before-modals",
+ "themeApplied": true,
+ "views": {
+  "اللوحة التحكم": {
+   "dark": 283,
+   "dom": 78637,
+   "newErrors": 0
+  },
+  "ادارة السجل اليومي5": {
+   "dark": 209,
+   "dom": 64878,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 15,
+    "dark": 2,
+    "newErrors": 0
+   }
+  },
+  "ادارة الديون والالتزامات126": {
+   "dark": 413,
+   "dom": 149902,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 8,
+    "dark": 0,
+    "newErrors": 0
+   }
+  },
+  "ادارة صرف وتوريد301": {
+   "dark": 511,
+   "dom": 197398,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 10,
+    "dark": 0,
+    "newErrors": 0
+   }
+  },
+  "إدارة العمل والمشاريع والمهام126": {
+   "dark": 187,
+   "dom": 60090,
+   "newErrors": 0
+  },
+  "ادارة العملاء وزيارات26": {
+   "dark": 342,
+   "dom": 128444,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 19,
+    "dark": 0,
+    "newErrors": 0
+   }
+  },
+  "ادارة الاطباء وزيارات10": {
+   "dark": 280,
+   "dom": 101768,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 17,
+    "dark": 0,
+    "newErrors": 0
+   }
+  },
+  "ادارة الروتين والعادات6": {
+   "dark": 182,
+   "dom": 63612,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 6,
+    "dark": 39,
+    "newErrors": 0
+   }
+  },
+  "ادارة الملاحظات": {
+   "dark": 230,
+   "dom": 68898,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 20,
+    "dark": 67,
+    "newErrors": 0
+   }
+  },
+  "ادارة العهد والاشكاليات40": {
+   "dark": 1225,
+   "dom": 305298,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 11,
+    "dark": 0,
+    "newErrors": 0
+   }
+  },
+  "مكتبة الروابط": {
+   "dark": 822,
+   "dom": 346922,
+   "newErrors": 0,
+   "modal": {
+    "opened": true,
+    "fields": 9,
+    "dark": 0,
+    "newErrors": 0
+   }
+  },
+  "الاعدادات": {
+   "dark": 94,
+   "dom": 43122,
+   "newErrors": 0
+  }
+ },
+ "errors": [],
+ "modals": {
+  "ادارة السجل اليومي5": {
+   "opened": true,
+   "fields": 15,
+   "dark": 2,
+   "newErrors": 0
+  },
+  "ادارة الديون والالتزامات126": {
+   "opened": true,
+   "fields": 8,
+   "dark": 0,
+   "newErrors": 0
+  },
+  "ادارة صرف وتوريد301": {
+   "opened": true,
+   "fields": 10,
+   "dark": 0,
+   "newErrors": 0
+  },
+  "ادارة العملاء وزيارات26": {
+   "opened": true,
+   "fields": 19,
+   "dark": 0,
+   "newErrors": 0
+  },
+  "ادارة الاطباء وزيارات10": {
+   "opened": true,
+   "fields": 17,
+   "dark": 0,
+   "newErrors": 0
+  },
+  "ادارة الروتين والعادات6": {
+   "opened": true,
+   "fields": 6,
+   "dark": 39,
+   "newErrors": 0
+  },
+  "ادارة الملاحظات": {
+   "opened": true,
+   "fields": 20,
+   "dark": 67,
+   "newErrors": 0
+  },
+  "ادارة العهد والاشكاليات40": {
+   "opened": true,
+   "fields": 11,
+   "dark": 0,
+   "newErrors": 0
+  },
+  "مكتبة الروابط": {
+   "opened": true,
+   "fields": 9,
+   "dark": 0,
+   "newErrors": 0
+  }
+ },
+ "totalDark": 4778,
+ "viewsWithDark": [
+  "اللوحة التحكم",
+  "ادارة السجل اليومي5",
+  "ادارة الديون والالتزامات126",
+  "ادارة صرف وتوريد301",
+  "إدارة العمل والمشاريع والمهام126",
+  "ادارة العملاء وزيارات26",
+  "ادارة الاطباء وزيارات10",
+  "ادارة الروتين والعادات6",
+  "ادارة الملاحظات",
+  "ادارة العهد والاشكاليات40",
+  "مكتبة الروابط",
+  "الاعدادات"
+ ]
+}

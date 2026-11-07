@@ -1,0 +1,22 @@
+{
+ "tag": "after",
+ "appRoot": "/app/applet",
+ "suiteOpen": 63,
+ "workosOpen": 3,
+ "badge": 66,
+ "expected": 66,
+ "kpi": {
+  "expected": {
+   "delayedProjects": 2,
+   "upcomingAppointments": 3,
+   "activeGoals": 2,
+   "upcomingVisits": 2
+  },
+  "actual": {
+   "delayedProjects": 2,
+   "upcomingAppointments": 3,
+   "activeGoals": 2,
+   "upcomingVisits": 2
+  }
+ }
+}

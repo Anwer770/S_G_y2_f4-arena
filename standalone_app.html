@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المنظومة الإدارية والمحاسبية الشاملة v2.7</title>
+  
+  <!-- خط Cairo الأصيل بكافة الأوزان -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React 18 & ReactDOM UMD -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel for inline JSX compilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Lucide Icons standalone font / SVG generator -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * {
+      font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      direction: rtl;
+      text-align: right;
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+    input, select, textarea, button {
+      font-family: 'Cairo', system-ui, sans-serif;
+      text-align: right;
+    }
+    input[type="number"], input[type="date"], input[type="time"], input[type="url"], code, pre {
+      direction: ltr;
+      text-align: left;
+      font-feature-settings: "tnum";
+    }
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    @media print {
+      #app-sidebar, header, .no-print {
+        display: none !important;
+      }
+      main {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body class="selection:bg-indigo-600 selection:text-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
+
+    // =========================================================================
+    // 1. DEFAULT DATA & STORAGE ENGINES (بيانات تجريبية ومحرك التخزين المحلي)
+    // =========================================================================
+    const STORAGE_PREFIX = 'AL_MANZUMA_V27_';
+
+    const loadData = (key, fallback) => {
+      try {
+        const item = localStorage.getItem(STORAGE_PREFIX + key);
+        return item ? JSON.parse(item) : fallback;
+      } catch (e) {
+        console.error('Storage load error:', e);
+        return fallback;
+      }
+    };
+
+    const saveData = (key, data) => {
+      try {
+        localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
+      } catch (e) {
+        console.error('Storage save error:', e);
+      }
+    };
+
+    const INITIAL_PRODUCTS = [
+      { id: 'p-1', name: 'غسول بشرة 200 مل', unit: 'حبة', openingBalance: 50, minLimit: 10, category: 'عناية بالبشرة' },
+      { id: 'p-2', name: 'كريم مرطب طبيعي', unit: 'حبة', openingBalance: 100, minLimit: 15, category: 'عناية بالبشرة' },
+      { id: 'p-3', name: 'سيروم فيتامين سي 30 مل', unit: 'حبة', openingBalance: 30, minLimit: 5, category: 'عناية بالوجه' },
+      { id: 'p-4', name: 'واقي شمس SPF 50+', unit: 'حبة', openingBalance: 80, minLimit: 12, category: 'وقاية' },
+      { id: 'p-5', name: 'شامبو مغذي للشعر 400 مل', unit: 'كرتون', openingBalance: 20, minLimit: 4, category: 'عناية بالشعر' }
+    ];
+
+    const INITIAL_STOCK_MOVEMENTS = [
+      {
+        id: 'IN-001',
+        date: '2026-08-28',
+        day: 'الجمعة',
+        type: 'وارد',
+        recipient: 'المورد / الشركة الدولية للتجميل',
+        items: [{ itemId: 'p-1', itemName: 'غسول بشرة 200 مل', subId: 'SUB-01', quantity: 20 }],
+        notes: 'فاتورة توريد شحنة جديدة'
+      },
+      {
+        id: 'OUT-001',
+        date: '2026-08-29',
+        day: 'السبت',
+        type: 'منصرف',
+        recipient: 'د. سمير - المركز الطبي التخصصي',
+        items: [{ itemId: 'p-2', itemName: 'كريم مرطب طبيعي', subId: 'SUB-02', quantity: 5 }],
+        notes: 'عينات مجانية للترويج'
+      }
+    ];
+
+    const INITIAL_FINANCIAL = [
+      { id: 'ACC-001', date: '2026-08-28', day: 'الجمعة', amount: 1500, type: 'إيراد', account: 'الصندوق الرئيسي', movement: 'مبيعات نقدية مباشرة', restriction: 'تم الترحيل', party: 'صيدلية النور' },
+      { id: 'ACC-002', date: '2026-08-29', day: 'السبت', amount: 350, type: 'مصروف', account: 'الصندوق الرئيسي', movement: 'مصاريف بترول وانتقالات مندوبين', restriction: '√', party: 'مندوب التوزيع' },
+      { id: 'ACC-003', date: '2026-08-30', day: 'الأحد', amount: 600, type: 'سند قبض', account: 'البنك', movement: 'تحصيل دفعة من دين عميل', restriction: 'A', party: 'مركز العناية الحديث' }
+    ];
+
+    const INITIAL_DEBTS = [
+      { id: 'd-1', partyName: 'صيدلية النور الحديثة', phone: '777123456', type: 'لنا', totalAmount: 1200, paidAmount: 600, remainingAmount: 600, dueDate: '2026-09-15', status: 'مسدد جزئياً', category: 'صيدليات', repayments: [{ id: 'rep-1', date: '2026-08-30', amount: 600, notes: 'سداد تحويل بنكي' }] },
+      { id: 'd-2', partyName: 'شركة النقاء للمستلزمات الطبية', phone: '771987654', type: 'علينا', totalAmount: 3400, paidAmount: 1000, remainingAmount: 2400, dueDate: '2026-09-25', status: 'مسدد جزئياً', category: 'موردين', repayments: [{ id: 'rep-2', date: '2026-08-25', amount: 1000, notes: 'سداد دفعة أولى' }] }
+    ];
+
+    const INITIAL_CUSTOMERS = [
+      { id: 'c-1', name: 'د. عادل النجار', tradeName: 'صيدلية النور', phone: '777123456', address: 'شارع الزبيري، تقاطع عمان', region: 'صنعاء - الوسط', category: 'Class A', creditLimit: 2000, currentBalance: 600, assignedRoute: 'مسار السبت والأربعاء' },
+      { id: 'c-2', name: 'أ. مروان القدسي', tradeName: 'مركز العناية الفائقة', phone: '773456789', address: 'شارع حدة، خلف مجمع التوفير', region: 'صنعاء - حدة', category: 'VIP', creditLimit: 5000, currentBalance: 0, assignedRoute: 'مسار الأحد والثلاثاء' }
+    ];
+
+    const INITIAL_CUSTOMER_VISITS = [
+      { id: 'cv-1', customerId: 'c-1', customerName: 'صيدلية النور', visitDate: '2026-08-30', purpose: 'تحصيل', outcome: 'تم تحصيل 600$ وتحديد طلبية الأسبوع القادم', collectedAmount: 600, nextFollowUpDate: '2026-09-06' }
+    ];
+
+    const INITIAL_DOCTORS = [
+      { id: 'doc-1', name: 'د. سمير عبد الرحمن', specialty: 'جلدية وتجميل', clinicName: 'مستشفى العلوم والتقنية', address: 'مبنى العيادات التخصصية - الدور 3', classCategory: 'Class A+', visitSchedule: 'السبت والأربعاء 5-8 م', phone: '775112233' },
+      { id: 'doc-2', name: 'د. ريم فاروق', specialty: 'جلدية وعلاج بالليزر', clinicName: 'مركز النضارة التخصصي', address: 'شارع الخمسين', classCategory: 'Class A', visitSchedule: 'الأحد والثلاثاء 4-7 م', phone: '772998877' }
+    ];
+
+    const INITIAL_DOCTOR_VISITS = [
+      { id: 'dv-1', doctorId: 'doc-1', doctorName: 'د. سمير عبد الرحمن', visitDate: '2026-08-29', promotedProducts: ['غسول بشرة 200 مل', 'سيروم فيتامين سي 30 مل'], samplesGiven: [{ productName: 'غسول بشرة 200 مل', quantity: 2 }], doctorFeedback: 'إيجابي جداً', nextVisitDate: '2026-09-12', notes: 'أبدى اهتماماً كبيراً وطلب التركيز على الغسول الجديد' }
+    ];
+
+    const INITIAL_TASKS = [
+      { id: 't-1', title: 'مراجعة ومطابقة الجرد المخزني لنهاية الشهر', quadrant: 'urgent_important', priority: 'A', dueDate: '2026-09-02', isCompleted: false, category: 'مخازن' },
+      { id: 't-2', title: 'تجهيز خطة مسارات المناديب للأسبوع القادم', quadrant: 'important_not_urgent', priority: 'B', dueDate: '2026-09-04', isCompleted: false, category: 'مبيعات' },
+      { id: 't-3', title: 'سداد دفعة المورد (شركة النقاء)', quadrant: 'urgent_important', priority: 'A', dueDate: '2026-09-05', isCompleted: false, category: 'مالية' }
+    ];
+
+    const INITIAL_ROUTINES = [
+      { id: 'r-1', title: 'مطابقة رصيد الصندوق اليومي مع السجل المالي', frequency: 'يومي', targetMinutes: 10, importance: 'عالي', currentStreak: 14, bestStreak: 30, lastCompletedDate: '2026-08-31' },
+      { id: 'r-2', title: 'مراجعة الأصناف التي اقتربت من حد الطلب الأدنى', frequency: 'يومي', targetMinutes: 15, importance: 'عالي', currentStreak: 8, bestStreak: 12, lastCompletedDate: '2026-08-31' },
+      { id: 'r-3', title: 'أخذ نسخة احتياطية وتصدير ملف JSON الشامل', frequency: 'أسبوعي', targetMinutes: 5, importance: 'عالي', currentStreak: 4, bestStreak: 4, lastCompletedDate: '2026-08-29' }
+    ];
+
+    const INITIAL_CUSTODY = [
+      { id: 'cst-1', title: 'عهدة نقدية للمصروفات النثرية والانتقالات', responsiblePerson: 'أحمد صالح (أمين الصندوق)', custodyType: 'نقدية', amount: 500, issueDate: '2026-08-01', status: 'قيد المتابعة', notes: 'تُجدد عند الوصول إلى 100$' },
+      { id: 'cst-2', title: 'جهاز لابتوب HP مخصص لإدارة المخازن والمبيعات', responsiblePerson: 'ماهر العنسي (مسؤول التوزيع)', custodyType: 'أجهزة ومعدات', amount: 800, issueDate: '2026-07-15', status: 'معلق', notes: 'عهدة عينية رقم تسلسلي HP-9921' }
+    ];
+
+    const INITIAL_LINKS = [
+      { id: 'l-1', title: 'Google Gemini Studio & AI API', url: 'https://aistudio.google.com/', category: 'ذكاء اصطناعي', classification: 'أدوات تطوير', importance: 'A', type: 'رسمي', isAi: true, isFavorite: true, visitCount: 45 },
+      { id: 'l-2', title: 'ChatGPT OpenAI Assistant', url: 'https://chatgpt.com/', category: 'ذكاء اصطناعي', classification: 'مساعد ذكي', importance: 'A', type: 'مجاني', isAi: true, isFavorite: true, visitCount: 88 },
+      { id: 'l-3', title: 'Canva Design & Social Kits', url: 'https://www.canva.com/', category: 'تصميم ومونتاج', classification: 'دعاية وإعلان', importance: 'B', type: 'رسمي', isAi: false, isFavorite: false, visitCount: 12 }
+    ];
+
+    const INITIAL_NOTES = [
+      { id: 'n-1', title: 'محضر اجتماع خطة التوزيع والتوسع الربع سنوي', content: 'تم الاتفاق على توسيع خطة التغطية لتشمل 25 صيدلية إضافية، وتخصيص نسبة 5% عينات ترويجية للأطباء ذوي التصنيف Class A+.', tags: ['مبيعات', 'استراتيجية'], isPinned: true, isFavorite: true, isTrashed: false, updatedAt: Date.now() },
+      { id: 'n-2', title: 'توجيهات الحسابات ومواعيد ترحيل القيود', content: 'يجب ترحيل كافة السندات النقدية قبل الساعة 6 مساءً يومياً ومطابقة الصندوق بحضور أمين الصندوق والمدير المالي.', tags: ['محاسبة', 'إدارة'], isPinned: false, isFavorite: false, isTrashed: false, updatedAt: Date.now() }
+    ];
+
+    // =========================================================================
+    // 2. MAIN APPLICATION COMPONENT (المكون الرئيسي)
+    // =========================================================================
+    function App() {
+      // Navigation Tab
+      const [activeTab, setActiveTab] = useState('dashboard');
+      const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+      const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+      // Data States
+      const [products, setProducts] = useState(() => loadData('products', INITIAL_PRODUCTS));
+      const [stockMovements, setStockMovements] = useState(() => loadData('stock_movements', INITIAL_STOCK_MOVEMENTS));
+      const [financial, setFinancial] = useState(() => loadData('financial', INITIAL_FINANCIAL));
+      const [debts, setDebts] = useState(() => loadData('debts', INITIAL_DEBTS));
+      const [customers, setCustomers] = useState(() => loadData('customers', INITIAL_CUSTOMERS));
+      const [customerVisits, setCustomerVisits] = useState(() => loadData('customer_visits', INITIAL_CUSTOMER_VISITS));
+      const [doctors, setDoctors] = useState(() => loadData('doctors', INITIAL_DOCTORS));
+      const [doctorVisits, setDoctorVisits] = useState(() => loadData('doctor_visits', INITIAL_DOCTOR_VISITS));
+      const [tasks, setTasks] = useState(() => loadData('tasks', INITIAL_TASKS));
+      const [routines, setRoutines] = useState(() => loadData('routines', INITIAL_ROUTINES));
+      const [custody, setCustody] = useState(() => loadData('custody', INITIAL_CUSTODY));
+      const [links, setLinks] = useState(() => loadData('links', INITIAL_LINKS));
+      const [notes, setNotes] = useState(() => loadData('notes', INITIAL_NOTES));
+
+      // Notification / Toast
+      const [toastMessage, setToastMessage] = useState(null);
+
+      const showToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3000);
+      };
+
+      // Auto-save effects
+      useEffect(() => saveData('products', products), [products]);
+      useEffect(() => saveData('stock_movements', stockMovements), [stockMovements]);
+      useEffect(() => saveData('financial', financial), [financial]);
+      useEffect(() => saveData('debts', debts), [debts]);
+      useEffect(() => saveData('customers', customers), [customers]);
+      useEffect(() => saveData('customer_visits', customerVisits), [customerVisits]);
+      useEffect(() => saveData('doctors', doctors), [doctors]);
+      useEffect(() => saveData('doctor_visits', doctorVisits), [doctorVisits]);
+      useEffect(() => saveData('tasks', tasks), [tasks]);
+      useEffect(() => saveData('routines', routines), [routines]);
+      useEffect(() => saveData('custody', custody), [custody]);
+      useEffect(() => saveData('links', links), [links]);
+      useEffect(() => saveData('notes', notes), [notes]);
+
+      // Global Calculations
+      const stockBalances = useMemo(() => {
+        const balances = {};
+        products.forEach(p => {
+          balances[p.id] = p.openingBalance;
+        });
+        stockMovements.forEach(m => {
+          m.items.forEach(item => {
+            if (balances[item.itemId] !== undefined) {
+              if (m.type === 'وارد') balances[item.itemId] += Number(item.quantity);
+              if (m.type === 'منصرف') balances[item.itemId] -= Number(item.quantity);
+            }
+          });
+        });
+        return balances;
+      }, [products, stockMovements]);
+
+      const financialStats = useMemo(() => {
+        let inflow = 0;
+        let outflow = 0;
+        financial.forEach(f => {
+          const amt = Number(f.amount) || 0;
+          if (f.type === 'إيراد' || f.type === 'سند قبض') inflow += amt;
+          if (f.type === 'مصروف' || f.type === 'سند صرف') outflow += amt;
+        });
+        return {
+          inflow,
+          outflow,
+          balance: inflow - outflow
+        };
+      }, [financial]);
+
+      const debtsStats = useMemo(() => {
+        let forUs = 0;
+        let onUs = 0;
+        debts.forEach(d => {
+          const rem = Number(d.remainingAmount) || 0;
+          if (d.type === 'لنا') forUs += rem;
+          if (d.type === 'علينا') onUs += rem;
+        });
+        return { forUs, onUs };
+      }, [debts]);
+
+      // Backup & Restore
+      const exportUnifiedBackup = () => {
+        const payload = {
+          app: "المنظومة الإدارية والمحاسبية وإدارة العملاء والأطباء والديون والمعرفة المتكاملة",
+          version: "2.7.0",
+          exportedAt: new Date().toISOString(),
+          data: {
+            products,
+            stockMovements,
+            financial,
+            debts,
+            customers,
+            customerVisits,
+            doctors,
+            doctorVisits,
+            tasks,
+            routines,
+            custody,
+            links,
+            notes
+          }
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `AL_MANZUMA_BACKUP_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('تم تصدير ملف النسخة الاحتياطية الموحدة بنجاح!');
+      };
+
+      const handleImportBackup = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const parsed = JSON.parse(event.target.result);
+            if (parsed.data) {
+              const d = parsed.data;
+              if (d.products) setProducts(d.products);
+              if (d.stockMovements) setStockMovements(d.stockMovements);
+              if (d.financial) setFinancial(d.financial);
+              if (d.debts) setDebts(d.debts);
+              if (d.customers) setCustomers(d.customers);
+              if (d.customerVisits) setCustomerVisits(d.customerVisits);
+              if (d.doctors) setDoctors(d.doctors);
+              if (d.doctorVisits) setDoctorVisits(d.doctorVisits);
+              if (d.tasks) setTasks(d.tasks);
+              if (d.routines) setRoutines(d.routines);
+              if (d.custody) setCustody(d.custody);
+              if (d.links) setLinks(d.links);
+              if (d.notes) setNotes(d.notes);
+              showToast('تمت استعادة البيانات ومطابقتها بنجاح!');
+            } else {
+              alert('ملف غير متوافق');
+            }
+          } catch (err) {
+            alert('خطأ في قراءة ملف النسخة الاحتياطية');
+          }
+        };
+        reader.readAsText(file);
+      };
+
+      const navItems = [
+        { id: 'dashboard', label: 'اللوحة العامة الموحدة', icon: '📊', group: 'الرئيسية' },
+        { id: 'financial', label: 'السجل المالي اليومي', icon: '💳', count: financial.length, group: 'المالية' },
+        { id: 'debts', label: 'الديون والالتزامات', icon: '🪙', count: debts.length, group: 'المالية' },
+        { id: 'stock', label: 'المخزون وحركات الأصناف', icon: '📦', count: products.length, group: 'المخازن' },
+        { id: 'tasks', label: 'المهام ومصفوفة آيزنهاور', icon: '✅', count: tasks.filter(t=>!t.isCompleted).length, group: 'الإنتاجية' },
+        { id: 'routines', label: 'الروتين والعادات اليومية', icon: '🔥', count: routines.length, group: 'الإنتاجية' },
+        { id: 'customers', label: 'العملاء وخطوط السير (CRM)', icon: '👥', count: customers.length, group: 'العلاقات' },
+        { id: 'doctors', label: 'زيارات الأطباء والدعاية', icon: '🩺', count: doctors.length, group: 'العلاقات' },
+        { id: 'custody', label: 'العهد والإشكاليات المعلقة', icon: '🛡️', count: custody.length, group: 'الرقابة' },
+        { id: 'links', label: 'مكتبة الروابط الذكية', icon: '🌐', count: links.length, group: 'المعرفة' },
+        { id: 'notes', label: 'الملاحظات وقاعدة المعرفة', icon: '📚', count: notes.length, group: 'المعرفة' },
+        { id: 'settings', label: 'النسخ الاحتياطي والإعدادات', icon: '⚙️', group: 'النظام' }
+      ];
+
+      return (
+        <div className="min-h-screen flex flex-col bg-slate-100 text-slate-900" dir="rtl">
+          {/* Toast Notification */}
+          {toastMessage && (
+            <div className="fixed bottom-5 left-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-indigo-500 animate-bounce">
+              <span className="text-emerald-400 font-bold">✓</span>
+              <span className="text-sm font-bold">{toastMessage}</span>
+            </div>
+          )}
+
+          {/* RIGHT-HAND SIDEBAR */}
+          <aside
+            id="app-sidebar"
+            className={`fixed top-0 right-0 h-screen bg-slate-900 text-slate-100 z-50 flex flex-col border-l border-slate-800 transition-all duration-300 shadow-2xl ${
+              isSidebarCollapsed ? 'w-20' : 'w-72'
+            } ${isMobileSidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}`}
+          >
+            {/* Brand Header */}
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/70">
+              <div 
+                onClick={() => setActiveTab('dashboard')} 
+                className="flex items-center gap-3 cursor-pointer overflow-hidden"
+              >
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-teal-500 flex items-center justify-center text-white font-black text-xl shadow-lg shrink-0">
+                  م
+                </div>
+                {!isSidebarCollapsed && (
+                  <div className="min-w-0">
+                    <h1 className="text-sm font-black text-white truncate">المنظومة الشاملة</h1>
+                    <p className="text-[11px] text-slate-400 truncate">v2.7 Offline Standalone</p>
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                className="hidden lg:flex w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 items-center justify-center text-xs"
+                title="تصغير / توسيع القائمة"
+              >
+                {isSidebarCollapsed ? '◀' : '▶'}
+              </button>
+            </div>
+
+            {/* Nav Menu */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-1">
+              {navItems.map((item) => {
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActiveTab(item.id);
+                      setIsMobileSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-right ${
+                      isActive
+                        ? 'bg-indigo-600 text-white shadow-md font-black'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    } ${isSidebarCollapsed ? 'justify-center' : 'justify-between'}`}
+                    title={item.label}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-base">{item.icon}</span>
+                      {!isSidebarCollapsed && <span className="truncate">{item.label}</span>}
+                    </div>
+                    {!isSidebarCollapsed && item.count !== undefined && (
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
+                        isActive ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
+                      }`}>
+                        {item.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Sidebar Footer */}
+            <div className="p-3 border-t border-slate-800 bg-slate-950/60 text-[11px] text-slate-400 text-center">
+              {!isSidebarCollapsed ? (
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>محلي 100%</span>
+                  </span>
+                  <span className="font-mono text-[10px]">HTML5 Single File</span>
+                </div>
+              ) : (
+                <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+              )}
+            </div>
+          </aside>
+
+          {/* MAIN WRAPPER */}
+          <div className={`flex-1 flex flex-col transition-all duration-300 ${
+            isSidebarCollapsed ? 'lg:mr-20' : 'lg:mr-72'
+          }`}>
+            {/* Top Bar */}
+            <header className="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 py-3 flex items-center justify-between shadow-xs">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setIsMobileSidebarOpen(true)}
+                  className="lg:hidden p-2 rounded-xl bg-slate-900 text-white text-sm"
+                >
+                  ☰
+                </button>
+                <div>
+                  <h2 className="text-base sm:text-lg font-black text-slate-900">
+                    {navItems.find(n => n.id === activeTab)?.label || 'المنظومة'}
+                  </h2>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={exportUnifiedBackup}
+                  className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+                >
+                  <span>💾</span>
+                  <span className="hidden sm:inline">نسخ احتياطي JSON</span>
+                </button>
+              </div>
+            </header>
+
+            {/* CONTENT VIEWS */}
+            <main className="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto space-y-6">
+              {/* TAB 1: DASHBOARD */}
+              {activeTab === 'dashboard' && (
+                <div className="space-y-6">
+                  {/* KPI Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+                      <div className="flex justify-between items-center text-slate-500 text-xs font-bold mb-2">
+                        <span>رصيد الصندوق اللحظي</span>
+                        <span className="text-indigo-600 font-bold">💳</span>
+                      </div>
+                      <div className="text-2xl font-black text-slate-900 font-mono">
+                        ${financialStats.balance.toLocaleString()}
+                      </div>
+                      <div className="mt-2 text-[11px] text-slate-500 flex justify-between">
+                        <span className="text-emerald-600 font-bold">+{financialStats.inflow} وارد</span>
+                        <span className="text-rose-600 font-bold">-{financialStats.outflow} صادر</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+                      <div className="flex justify-between items-center text-slate-500 text-xs font-bold mb-2">
+                        <span>ديون مستحقة لنا (العملاء)</span>
+                        <span className="text-emerald-600 font-bold">🪙</span>
+                      </div>
+                      <div className="text-2xl font-black text-emerald-600 font-mono">
+                        ${debtsStats.forUs.toLocaleString()}
+                      </div>
+                      <div className="mt-2 text-[11px] text-slate-500">
+                        ديون علينا للموردين: <span className="font-bold text-rose-600">${debtsStats.onUs.toLocaleString()}</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+                      <div className="flex justify-between items-center text-slate-500 text-xs font-bold mb-2">
+                        <span>أصناف المخزون الفعلي</span>
+                        <span className="text-blue-600 font-bold">📦</span>
+                      </div>
+                      <div className="text-2xl font-black text-slate-900 font-mono">
+                        {products.length} صنف
+                      </div>
+                      <div className="mt-2 text-[11px] text-amber-600 font-bold">
+                        {products.filter(p => (stockBalances[p.id] || 0) <= (p.minLimit || 5)).length} أصناف اقتربت من حد الطلب
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+                      <div className="flex justify-between items-center text-slate-500 text-xs font-bold mb-2">
+                        <span>المهام المعلقة العاجلة</span>
+                        <span className="text-purple-600 font-bold">✅</span>
+                      </div>
+                      <div className="text-2xl font-black text-purple-600 font-mono">
+                        {tasks.filter(t => !t.isCompleted && t.priority === 'A').length} مهام
+                      </div>
+                      <div className="mt-2 text-[11px] text-slate-500">
+                        إجمالي المهام المتبقية: <span className="font-bold">{tasks.filter(t => !t.isCompleted).length}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Modules Quick Navigation Grid */}
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+                    <h3 className="text-base font-black text-slate-900">الوصول السريع لكافة دفاتر المنظومة الـ 11</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                      {navItems.filter(i => i.id !== 'dashboard').map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => setActiveTab(item.id)}
+                          className="p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 transition-all cursor-pointer group"
+                        >
+                          <div className="text-2xl mb-2">{item.icon}</div>
+                          <div className="text-xs font-black text-slate-900 group-hover:text-indigo-700">{item.label}</div>
+                          <div className="text-[10px] text-slate-500 mt-1">{item.group}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: FINANCIAL */}
+              {activeTab === 'financial' && (
+                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-6">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                      <h3 className="text-lg font-black text-slate-900">دفتر السجل المالي واليومية العامة</h3>
+                      <p className="text-xs text-slate-500">توثيق الإيرادات والمصروفات وسندات القبض والصرف</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const amount = prompt('المبلغ بالدولار:');
+                        if (!amount || isNaN(amount)) return;
+                        const type = prompt('نوع الحركة (إيراد / مصروف / سند قبض / سند صرف):', 'إيراد');
+                        const movement = prompt('بيان الحركة والتفاصيل:', 'مبيعات نقدية');
+                        const party = prompt('طرف التعامل:', 'العميل');
+                        const newTx = {
+                          id: `ACC-00${financial.length + 1}`,
+                          date: new Date().toISOString().split('T')[0],
+                          day: 'اليوم',
+                          amount: Number(amount),
+                          type: type || 'إيراد',
+                          account: 'الصندوق الرئيسي',
+                          movement: movement || 'قيد مالي',
+                          restriction: '√',
+                          party: party || ''
+                        };
+                        setFinancial([newTx, ...financial]);
+                        showToast('تمت إضافة القيد المالي بنجاح');
+                      }}
+                      className="px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-xs hover:bg-indigo-700"
+                    >
+                      + إضافة قيد مالي جديد
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-right text-xs">
+                      <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="p-3">رقم القيد</th>
+                          <th className="p-3">التاريخ</th>
+                          <th className="p-3">نوع الحركة</th>
+                          <th className="p-3">المبلغ ($)</th>
+                          <th className="p-3">الحساب</th>
+                          <th className="p-3">البيان</th>
+                          <th className="p-3">الطرف</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {financial.map((f) => (
+                          <tr key={f.id} className="hover:bg-slate-50/80">
+                            <td className="p-3 font-mono font-bold text-slate-900">{f.id}</td>
+                            <td className="p-3 font-mono text-slate-600">{f.date}</td>
+                            <td className="p-3">
+                              <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
+                                f.type === 'إيراد' || f.type === 'سند قبض' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                              }`}>
+                                {f.type}
+                              </span>
+                            </td>
+                            <td className="p-3 font-mono font-black text-slate-900">${f.amount}</td>
+                            <td className="p-3">{f.account}</td>
+                            <td className="p-3 text-slate-700">{f.movement}</td>
+                            <td className="p-3 text-slate-500">{f.party || '-'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: STOCK & INVENTORY */}
+              {activeTab === 'stock' && (
+                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-6">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                      <h3 className="text-lg font-black text-slate-900">دفتر صرف وتوريد الأصناف والمخزون الفعلي</h3>
+                      <p className="text-xs text-slate-500">مراقبة الأرصدة الحية وحركات الوارد والمنصرف</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          const name = prompt('اسم الصنف الجديد:');
+                          if (!name) return;
+                          const opening = prompt('رصيد أول المدة:', '0');
+                          const unit = prompt('الوحدة (حبة / كرتون / باكت):', 'حبة');
+                          const newItem = {
+                            id: `p-${Date.now()}`,
+                            name,
+                            unit: unit || 'حبة',
+                            openingBalance: Number(opening) || 0,
+                            minLimit: 5,
+                            category: 'عام'
+                          };
+                          setProducts([...products, newItem]);
+                          showToast('تمت إضافة الصنف بنجاح');
+                        }}
+                        className="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl shadow-xs"
+                      >
+                        + صنف جديد
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {products.map((p) => {
+                      const currentBal = stockBalances[p.id] || 0;
+                      const isLow = currentBal <= (p.minLimit || 5);
+                      return (
+                        <div key={p.id} className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3">
+                          <div className="flex justify-between items-start">
+                            <h4 className="font-bold text-sm text-slate-900">{p.name}</h4>
+                            <span className="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-bold">{p.unit}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-slate-500">رصيد أول المدة:</span>
+                            <span className="font-mono font-bold">{p.openingBalance}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-xs border-t border-slate-200 pt-2">
+                            <span className="text-slate-500">الرصيد الفعلي الحالي:</span>
+                            <span className={`font-mono font-black text-base ${isLow ? 'text-rose-600' : 'text-emerald-700'}`}>
+                              {currentBal} {p.unit}
+                            </span>
+                          </div>
+                          {isLow && (
+                            <div className="text-[10px] text-rose-700 bg-rose-50 border border-rose-200 p-1.5 rounded-lg text-center font-bold">
+                              ⚠️ اقترب من حد الطلب الأدنى ({p.minLimit})
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: DEBTS */}
+              {activeTab === 'debts' && (
+                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-6">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-lg font-black text-slate-900">دفتر الدين والالتزامات والجدولة</h3>
+                      <p className="text-xs text-slate-500">ديون لنا (العملاء) والتزامات علينا (الموردين)</p>
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-right text-xs">
+                      <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="p-3">الطرف / الشخص</th>
+                          <th className="p-3">النوع</th>
+                          <th className="p-3">إجمالي الدين</th>
+                          <th className="p-3">المسدد</th>
+                          <th className="p-3">المتبقي</th>
+                          <th className="p-3">تاريخ الاستحقاق</th>
+                          <th className="p-3">الحالة</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {debts.map((d) => (
+                          <tr key={d.id} className="hover:bg-slate-50/80">
+                            <td className="p-3 font-bold text-slate-900">{d.partyName}</td>
+                            <td className="p-3">
+                              <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
+                                d.type === 'لنا' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                              }`}>
+                                {d.type === 'لنا' ? 'دين لنا' : 'التزام علينا'}
+                              </span>
+                            </td>
+                            <td className="p-3 font-mono font-bold">${d.totalAmount}</td>
+                            <td className="p-3 font-mono text-emerald-600">${d.paidAmount}</td>
+                            <td className="p-3 font-mono font-black text-rose-600">${d.remainingAmount}</td>
+                            <td className="p-3 font-mono text-slate-600">{d.dueDate || '-'}</td>
+                            <td className="p-3">
+                              <span className="px-2 py-0.5 rounded-md bg-slate-100 font-bold text-[10px] text-slate-700">
+                                {d.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 5: TASKS (EISENHOWER MATRIX) */}
+              {activeTab === 'tasks' && (
+                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-6">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-lg font-black text-slate-900">دفتر المهام ومصفوفة آيزنهاور للأولويات</h3>
+                      <p className="text-xs text-slate-500">تقسيم المهام رباعياً حسب العجلة والأهمية</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Q1: Urgent & Important */}
+                    <div className="p-4 rounded-2xl bg-rose-50/60 border border-rose-200 space-y-3">
+                      <h4 className="text-xs font-black text-rose-900 flex justify-between">
+                        <span>🔥 عاجل ومهم (نفذ فوراً)</span>
+                        <span>{tasks.filter(t => t.quadrant === 'urgent_important' && !t.isCompleted).length}</span>
+                      </h4>
+                      <div className="space-y-2">
+                        {tasks.filter(t => t.quadrant === 'urgent_important').map(t => (
+                          <div key={t.id} className="p-3 rounded-xl bg-white border border-rose-100 flex items-center justify-between text-xs">
+                            <span className={`font-bold ${t.isCompleted ? 'line-through text-slate-400' : 'text-slate-800'}`}>{t.title}</span>
+                            <button
+                              onClick={() => {
+                                setTasks(tasks.map(item => item.id === t.id ? { ...item, isCompleted: !item.isCompleted } : item));
+                              }}
+                              className="text-xs px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 font-bold"
+                            >
+                              {t.isCompleted ? 'مكتملة ✓' : 'إنجاز'}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Q2: Important Not Urgent */}
+                    <div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200 space-y-3">
+                      <h4 className="text-xs font-black text-indigo-900 flex justify-between">
+                        <span>📅 مهم غير عاجل (خطط له)</span>
+                        <span>{tasks.filter(t => t.quadrant === 'important_not_urgent' && !t.isCompleted).length}</span>
+                      </h4>
+                      <div className="space-y-2">
+                        {tasks.filter(t => t.quadrant === 'important_not_urgent').map(t => (
+                          <div key={t.id} className="p-3 rounded-xl bg-white border border-indigo-100 flex items-center justify-between text-xs">
+                            <span className={`font-bold ${t.isCompleted ? 'line-through text-slate-400' : 'text-slate-800'}`}>{t.title}</span>
+                            <button
+                              onClick={() => {
+                                setTasks(tasks.map(item => item.id === t.id ? { ...item, isCompleted: !item.isCompleted } : item));
+                              }}
+                              className="text-xs px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 font-bold"
+                            >
+                              {t.isCompleted ? 'مكتملة ✓' : 'إنجاز'}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 6: ROUTINES & HABITS */}
+              {activeTab === 'routines' && (
+                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-6">
+                  <h3 className="text-lg font-black text-slate-900">إدارة الروتين والعادات اليومية والأسبوعية</h3>
+                  <div className="space-y-3">
+                    {routines.map(r => (
+                      <div key={r.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                        <div>
+                          <h4 className="font-bold text-sm text-slate-900">{r.title}</h4>
+                          <span className="text-[10px] text-slate-500">{r.frequency} • {r.targetMinutes} دقيقة</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+                            🔥 {r.currentStreak} أيام متتالية
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 7: SETTINGS & BACKUP */}
+              {activeTab === 'settings' && (
+                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-6">
+                  <h3 className="text-lg font-black text-slate-900">النسخ الاحتياطي وإدارة البيانات</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="p-5 rounded-2xl bg-indigo-50 border border-indigo-200 space-y-3">
+                      <h4 className="font-bold text-sm text-indigo-900">تصدير نسخة احتياطية موحدة</h4>
+                      <p className="text-xs text-slate-600">تنزيل كامل بيانات الدفاتر الـ 11 في ملف JSON واحد للحفظ والترحيل.</p>
+                      <button
+                        onClick={exportUnifiedBackup}
+                        className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs"
+                      >
+                        💾 تنزيل ملف النسخة الاحتياطية (JSON)
+                      </button>
+                    </div>
+
+                    <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                      <h4 className="font-bold text-sm text-slate-900">استعادة البيانات من ملف</h4>
+                      <p className="text-xs text-slate-600">اختر ملف JSON الذي قمت بتصديره سابقاً لاستعادة كافة الدفاتر.</p>
+                      <input
+                        type="file"
+                        accept=".json"
+                        onChange={handleImportBackup}
+                        className="w-full text-xs file:mr-0 file:ml-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-slate-900 file:text-white file:font-bold cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TABS 8-11 FALLBACK / SIMPLE VIEWS */}
+              {(activeTab === 'customers' || activeTab === 'doctors' || activeTab === 'custody' || activeTab === 'links' || activeTab === 'notes') && (
+                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+                  <h3 className="text-lg font-black text-slate-900">
+                    {navItems.find(n => n.id === activeTab)?.label}
+                  </h3>
+                  <p className="text-xs text-slate-500">تم تفعيل وإتاحة محرك التخزين المحلي والبيانات الافتراضية لهذا الدفتر بنجاح.</p>
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 font-mono text-xs overflow-x-auto text-slate-700 max-h-96">
+                    {activeTab === 'customers' && JSON.stringify(customers, null, 2)}
+                    {activeTab === 'doctors' && JSON.stringify(doctors, null, 2)}
+                    {activeTab === 'custody' && JSON.stringify(custody, null, 2)}
+                    {activeTab === 'links' && JSON.stringify(links, null, 2)}
+                    {activeTab === 'notes' && JSON.stringify(notes, null, 2)}
+                  </div>
+                </div>
+              )}
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    // Render the App
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

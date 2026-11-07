@@ -1,0 +1,6694 @@
+{
+ "summary": {
+  "sourceFiles": 227,
+  "sourceLOC": 77624,
+  "reachableFiles": 190,
+  "unreachableFiles": 37,
+  "unreachableLOC": 8447,
+  "protectedComponents": 47,
+  "storageKeys": 76,
+  "duplicateTypeNames": 4,
+  "sharedFuncNames": 134
+ },
+ "uiStats": {
+  "darkClasses": 3196,
+  "rows_x_overflow": 55,
+  "tables": 35,
+  "responsive_sm": 369,
+  "responsive_md": 160,
+  "localStorageDirect": 26,
+  "dbStorageCalls": 165,
+  "consoleLog": 2,
+  "anyTypes": 107
+ },
+ "inventory": [
+  {
+   "file": "src/App.tsx",
+   "loc": 18,
+   "bytes": 463,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "App"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/main.tsx",
+   "loc": 14,
+   "bytes": 335,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/app/App.tsx",
+   "loc": 578,
+   "bytes": 22130,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "MainApp"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/app/layouts/MainLayout.tsx",
+   "loc": 90,
+   "bytes": 2916,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "MainLayout"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/app/providers/AppProviders.tsx",
+   "loc": 18,
+   "bytes": 524,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "AppProviders"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/app/router/AppRouter.tsx",
+   "loc": 324,
+   "bytes": 12503,
+   "tags": [
+    "routing"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "AppRouter"
+   ],
+   "inputs": 1,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/DashboardView.tsx",
+   "loc": 376,
+   "bytes": 16628,
+   "tags": [
+    "component",
+    "module:DashboardView.tsx"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DashboardView"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/Header.tsx",
+   "loc": 246,
+   "bytes": 11622,
+   "tags": [
+    "component",
+    "module:Header.tsx"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "Header"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/InventoryView.tsx",
+   "loc": 582,
+   "bytes": 25743,
+   "tags": [
+    "component",
+    "module:InventoryView.tsx"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "InventoryView"
+   ],
+   "inputs": 17,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/MovementDetailsModal.tsx",
+   "loc": 207,
+   "bytes": 9021,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:MovementDetailsModal.tsx"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "MovementDetailsModal"
+   ],
+   "inputs": 3,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/MovementModal.tsx",
+   "loc": 613,
+   "bytes": 24029,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:MovementModal.tsx"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "MovementModal"
+   ],
+   "inputs": 20,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "Categ-1001",
+    "IN-0004 أو OUT-0299",
+    "اسم الصيدلية، المركز، المورد، أو الشخص...",
+    "الكمية",
+    "رقم سند يدوي، اسم المندوب...",
+    "وصف تفصيلي للعملية..."
+   ],
+   "protectedLabels": [
+    "البيان / الوصف",
+    "الحالة",
+    "الرقم الرئيسي (Main_ID)",
+    "الفئة",
+    "ملاحظة إضافية (اختياري)"
+   ]
+  },
+  {
+   "file": "src/components/Navbar.tsx",
+   "loc": 211,
+   "bytes": 6253,
+   "tags": [
+    "component",
+    "module:Navbar.tsx"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "Navbar"
+   ],
+   "inputs": 1,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/RecordsView.tsx",
+   "loc": 952,
+   "bytes": 42578,
+   "tags": [
+    "component",
+    "module:RecordsView.tsx"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RecordsView"
+   ],
+   "inputs": 31,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/ReportsView.tsx",
+   "loc": 720,
+   "bytes": 32774,
+   "tags": [
+    "component",
+    "module:ReportsView.tsx"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "ReportsView"
+   ],
+   "inputs": 13,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/SearchableSelect.tsx",
+   "loc": 156,
+   "bytes": 5587,
+   "tags": [
+    "component",
+    "module:SearchableSelect.tsx"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "SearchableSelect"
+   ],
+   "inputs": 4,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/SettingsView.tsx",
+   "loc": 658,
+   "bytes": 29361,
+   "tags": [
+    "component",
+    "module:SettingsView.tsx"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "SettingsView"
+   ],
+   "inputs": 23,
+   "hasNameAttr": true,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/Sidebar.tsx",
+   "loc": 422,
+   "bytes": 15698,
+   "tags": [
+    "component",
+    "module:Sidebar.tsx"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "Sidebar"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/auth/LoginScreen.tsx",
+   "loc": 343,
+   "bytes": 16396,
+   "tags": [
+    "component",
+    "module:auth"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "LoginScreen"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSubmit"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/common/AnimatedCounter.tsx",
+   "loc": 67,
+   "bytes": 2178,
+   "tags": [
+    "component",
+    "module:common"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "AnimatedCounter"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/common/UniversalDataExchangeModal.tsx",
+   "loc": 357,
+   "bytes": 15530,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:common"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "UniversalDataExchangeModal"
+   ],
+   "inputs": 8,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/custody/CustodyIssueModal.tsx",
+   "loc": 439,
+   "bytes": 18317,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:custody"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustodyIssueModal"
+   ],
+   "inputs": 17,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "0.00",
+    "https://...",
+    "اختر أو اكتب فئة",
+    "انا، صدام، الفريق...",
+    "مثال: صيدلية البركة / صدام / أمين العهدة",
+    "ملاحظات المتابعة أو الإجراءات القادمة"
+   ],
+   "protectedLabels": [
+    "الحالة",
+    "العملة",
+    "ملاحظات إضافية"
+   ]
+  },
+  {
+   "file": "src/components/custody/CustodyIssuesModule.tsx",
+   "loc": 739,
+   "bytes": 31716,
+   "tags": [
+    "component",
+    "module:custody"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustodyIssuesModule"
+   ],
+   "inputs": 22,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/custody/CustodyIssuesTable.tsx",
+   "loc": 418,
+   "bytes": 18037,
+   "tags": [
+    "component",
+    "module:custody"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustodyIssuesTable"
+   ],
+   "inputs": 9,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/custody/CustodyPrintReport.tsx",
+   "loc": 250,
+   "bytes": 12598,
+   "tags": [
+    "component",
+    "module:custody"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustodyPrintReport"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/custody/CustodyStatsCards.tsx",
+   "loc": 227,
+   "bytes": 10052,
+   "tags": [
+    "component",
+    "module:custody"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustodyStatsCards"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/customers/BalancesLedger.tsx",
+   "loc": 352,
+   "bytes": 16202,
+   "tags": [
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "BalancesLedger"
+   ],
+   "inputs": 8,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/customers/CustomerDetailsModal.tsx",
+   "loc": 421,
+   "bytes": 19854,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustomerDetailsModal"
+   ],
+   "inputs": 8,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/customers/CustomerDirectory.tsx",
+   "loc": 786,
+   "bytes": 34013,
+   "tags": [
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustomerDirectory"
+   ],
+   "inputs": 29,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/customers/CustomerModal.tsx",
+   "loc": 540,
+   "bytes": 22713,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustomerModal"
+   ],
+   "inputs": 22,
+   "hasNameAttr": true,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "أي ملاحظات حول السداد، تفضيلات العميل، أو تعليمات للمندوب...",
+    "مثال: 771234567",
+    "مثال: ذهبي-001، توب-001، د-001",
+    "مثال: زيارة دورية وعرض منتجات جديدة وتحصيل الدفعة الشهرية...",
+    "مثال: صنعاء - شارع الزبيري بجوار المستشفى الجمهوري",
+    "مثال: صيدلية العالمية، د. أحمد الوادعي، مركز كوزمتكس"
+   ],
+   "protectedLabels": [
+    "المعرف الرئيسي (Main_ID)",
+    "المعرف الفرعي (Sub_ID)",
+    "المندوب المسؤول",
+    "المنطقة الجغرافية",
+    "تاريخ انتهاء المهمة / الاستحقاق",
+    "تاريخ بدء المهمة",
+    "حالة الزيارة الحالية",
+    "مسار الزيارة (اليوم)",
+    "مستوى الأهمية",
+    "وصف المهمة / الغرض من الزيارة"
+   ]
+  },
+  {
+   "file": "src/components/customers/CustomerReports.tsx",
+   "loc": 232,
+   "bytes": 10683,
+   "tags": [
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustomerReports"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/customers/CustomerStatementModal.tsx",
+   "loc": 631,
+   "bytes": 29619,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustomerStatementModal"
+   ],
+   "inputs": 9,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [
+    "مثال: 777123456 أو 967777123456"
+   ],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/customers/CustomersModule.tsx",
+   "loc": 476,
+   "bytes": 19433,
+   "tags": [
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustomersModule"
+   ],
+   "inputs": 7,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/customers/ImportCustomersModal.tsx",
+   "loc": 255,
+   "bytes": 10427,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:customers",
+    "excel-io"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "ImportCustomersModal"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/customers/RecordVisitModal.tsx",
+   "loc": 267,
+   "bytes": 11599,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RecordVisitModal"
+   ],
+   "inputs": 12,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": [
+    "المندوب المنفذ",
+    "اليوم",
+    "تاريخ الزيارة",
+    "حالة الزيارة والنتيجة",
+    "دولار (USD)",
+    "ريال يمني (YER)",
+    "سعودي (SAR)"
+   ]
+  },
+  {
+   "file": "src/components/customers/VisitsPlanner.tsx",
+   "loc": 350,
+   "bytes": 14926,
+   "tags": [
+    "component",
+    "module:customers"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "VisitsPlanner"
+   ],
+   "inputs": 9,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/dashboard/DashboardCharts.tsx",
+   "loc": 215,
+   "bytes": 8567,
+   "tags": [
+    "component",
+    "module:dashboard"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DashboardCharts"
+   ],
+   "inputs": 0,
+   "hasNameAttr": true,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/dashboard/UnifiedDashboard.tsx",
+   "loc": 991,
+   "bytes": 56214,
+   "tags": [
+    "component",
+    "module:dashboard"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "UnifiedDashboard"
+   ],
+   "inputs": 4,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/debts/CommitmentModal.tsx",
+   "loc": 407,
+   "bytes": 17342,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:debts"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CommitmentModal"
+   ],
+   "inputs": 18,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "التزامات-001",
+    "تفاصيل إضافية عن الالتزام أو العقد...",
+    "شروط السداد، رقم الحساب البنكي، أرقام السندات...",
+    "مثال: إيجار المقر، فاتورة الهاتف، مورد العبوات، قسط سيارة..."
+   ],
+   "protectedLabels": [
+    "الحالة",
+    "الرمز / الدليل",
+    "العملة",
+    "الفئة",
+    "المسؤول",
+    "الوصف والتفاصيل",
+    "تاريخ القيد",
+    "درجة الأهمية",
+    "ملاحظات إضافية",
+    "نوع الالتزام"
+   ]
+  },
+  {
+   "file": "src/components/debts/CommitmentsTable.tsx",
+   "loc": 569,
+   "bytes": 25464,
+   "tags": [
+    "component",
+    "module:debts"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CommitmentsTable"
+   ],
+   "inputs": 18,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/debts/DebtAuditView.tsx",
+   "loc": 129,
+   "bytes": 5932,
+   "tags": [
+    "component",
+    "module:debts"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DebtAuditView"
+   ],
+   "inputs": 3,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/debts/DebtLedgerTable.tsx",
+   "loc": 531,
+   "bytes": 24292,
+   "tags": [
+    "component",
+    "module:debts"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DebtLedgerTable"
+   ],
+   "inputs": 16,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/debts/DebtRecordModal.tsx",
+   "loc": 288,
+   "bytes": 11799,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:debts"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DebtRecordModal"
+   ],
+   "inputs": 12,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "أي تفاصيل أو مراجع أو سندات...",
+    "مثال: سداد دفعة حساب محروقات، شراء بضاعة..."
+   ],
+   "protectedLabels": [
+    "التاريخ",
+    "الدفتر المستهدف",
+    "الرمز / الدليل",
+    "العملة",
+    "الملاحظات والتفاصيل",
+    "دائن (له)",
+    "مدين (عليه)"
+   ]
+  },
+  {
+   "file": "src/components/debts/DebtsModule.tsx",
+   "loc": 635,
+   "bytes": 26563,
+   "tags": [
+    "component",
+    "module:debts"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DebtsModule"
+   ],
+   "inputs": 7,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/debts/DueAlertsPanel.tsx",
+   "loc": 342,
+   "bytes": 16286,
+   "tags": [
+    "component",
+    "module:debts"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DueAlertsPanel"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/debts/PartialPaymentModal.tsx",
+   "loc": 292,
+   "bytes": 13125,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:debts"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "PartialPaymentModal"
+   ],
+   "inputs": 9,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "مثال: نقداً، تحويل عبر الكريمي، سند رقم 902..."
+   ],
+   "protectedLabels": [
+    "تاريخ السداد"
+   ]
+  },
+  {
+   "file": "src/components/doctors/DoctorDetailsModal.tsx",
+   "loc": 401,
+   "bytes": 17941,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:doctors"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DoctorDetailsModal"
+   ],
+   "inputs": 7,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/doctors/DoctorDirectory.tsx",
+   "loc": 832,
+   "bytes": 38215,
+   "tags": [
+    "component",
+    "module:doctors"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DoctorDirectory"
+   ],
+   "inputs": 39,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/doctors/DoctorModal.tsx",
+   "loc": 504,
+   "bytes": 22054,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:doctors"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DoctorModal"
+   ],
+   "inputs": 20,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "مثال: 4 عبوات سيروم تجريبي + بروشورات",
+    "مثال: 777123456",
+    "مثال: د. خالد عبدالجليل الشرجبي",
+    "مثال: شارع حدة - برج الأمل الدور الثاني",
+    "مثال: عيادة النور التخصصية / مستشفى آزال",
+    "مثال: وافق الطبيب على إدراج الصنف في الوصفات"
+   ],
+   "protectedLabels": [
+    "الأهمية (Significance)",
+    "العنوان والمقر التفصيلي",
+    "المسار / اليوم",
+    "المصدر (Source)",
+    "المندوب المسؤول",
+    "المنطقة الجغرافية",
+    "تاريخ انتهاء المهمة",
+    "تاريخ بدء المهمة",
+    "حالة الزيارة",
+    "رقم الهاتف / الواتساب",
+    "ملاحظات وتفاصيل إضافية"
+   ]
+  },
+  {
+   "file": "src/components/doctors/DoctorReports.tsx",
+   "loc": 339,
+   "bytes": 15274,
+   "tags": [
+    "component",
+    "module:doctors"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DoctorReports"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/doctors/DoctorVisitsPlanner.tsx",
+   "loc": 436,
+   "bytes": 18720,
+   "tags": [
+    "component",
+    "module:doctors"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DoctorVisitsPlanner"
+   ],
+   "inputs": 10,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/doctors/DoctorsModule.tsx",
+   "loc": 494,
+   "bytes": 20004,
+   "tags": [
+    "component",
+    "module:doctors"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DoctorsModule"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/doctors/ImportDoctorsModal.tsx",
+   "loc": 280,
+   "bytes": 12498,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:doctors",
+    "excel-io"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "ImportDoctorsModal"
+   ],
+   "inputs": 7,
+   "hasNameAttr": true,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": [
+    "طريقة الاستيراد:"
+   ]
+  },
+  {
+   "file": "src/components/doctors/RecordDoctorVisitModal.tsx",
+   "loc": 272,
+   "bytes": 11417,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:doctors"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RecordDoctorVisitModal"
+   ],
+   "inputs": 11,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "مثال: 5 عبوات سيروم فيتامين C + 3 عينات كريم واقي شمس"
+   ],
+   "protectedLabels": [
+    "اليوم",
+    "ملاحظات وتفاصيل تفاعل المقابلة"
+   ]
+  },
+  {
+   "file": "src/components/financial/FinancialModal.tsx",
+   "loc": 682,
+   "bytes": 29529,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:financial"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "FinancialModal"
+   ],
+   "inputs": 25,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "أدخل اسم الحساب أو الصيدلية الجديد...",
+    "اسم حساب التقييد الجديد...",
+    "اكتب تفاصيل القيد أو الحركة وملاحظات السداد...",
+    "فلترة الأسماء (مثال: عصام، صيدلية...)",
+    "مثال: 851",
+    "مثال: سند استلام ورقي رقم #4192 أو رابط المستند..."
+   ],
+   "protectedLabels": [
+    "المبلغ (ريال يمني - YER)",
+    "المعرف الفريد (ID)",
+    "اليوم (محسوب تلقائياً)"
+   ]
+  },
+  {
+   "file": "src/components/financial/FinancialModule.tsx",
+   "loc": 1779,
+   "bytes": 91331,
+   "tags": [
+    "component",
+    "module:financial"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "FinancialModule"
+   ],
+   "inputs": 51,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/financial/FinancialPrintModal.tsx",
+   "loc": 335,
+   "bytes": 16028,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:financial"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "FinancialPrintModal"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/financial/FinancialVoucherModal.tsx",
+   "loc": 400,
+   "bytes": 19552,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:financial"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "FinancialVoucherModal"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/financial/ImportFinancialModal.tsx",
+   "loc": 330,
+   "bytes": 16241,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:financial",
+    "excel-io"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "ImportFinancialModal"
+   ],
+   "inputs": 7,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/knowledge/AIAssistantModal.tsx",
+   "loc": 296,
+   "bytes": 13978,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:knowledge"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "AIAssistantModal"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "اطلب ملخصاً، ابحث عن موضوع، أو اطلب صياغة مسودة..."
+   ],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/knowledge/KnowledgeModule.tsx",
+   "loc": 978,
+   "bytes": 38531,
+   "tags": [
+    "component",
+    "module:knowledge"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "KnowledgeModule"
+   ],
+   "inputs": 21,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/knowledge/NoteDetailModal.tsx",
+   "loc": 571,
+   "bytes": 25821,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:knowledge"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "NoteDetailModal"
+   ],
+   "inputs": 17,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "أدخل رمز PIN..."
+   ],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/knowledge/NoteEditorModal.tsx",
+   "loc": 1165,
+   "bytes": 51704,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:knowledge"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "NoteEditorModal"
+   ],
+   "inputs": 46,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "أدخل رمز PIN للقفل (مثال: 1234)...",
+    "أدخل عنواناً واضحاً وموجزاً للملاحظة...",
+    "أضف مهمة جديدة ناتجة عن هذه الملاحظة...",
+    "أضف وسماً واضغط Enter...",
+    "اجتماع، اتصال، كتاب، رابط...",
+    "اسم الطبيب أو العيادة...",
+    "اسم العميل أو المركز...",
+    "اسم المشروع أو المبادرة...",
+    "العمل، المالية، مبيعات...",
+    "ملخص مكثف من سطر واحد لأهم ما ورد في الملاحظة..."
+   ],
+   "protectedLabels": [
+    "الأولوية",
+    "التصنيف الرئيسي",
+    "الحالة",
+    "نوع الملاحظة"
+   ]
+  },
+  {
+   "file": "src/components/knowledge/NotesDashboard.tsx",
+   "loc": 373,
+   "bytes": 18278,
+   "tags": [
+    "component",
+    "module:knowledge"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "NotesDashboard"
+   ],
+   "inputs": 3,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/knowledge/NotesListView.tsx",
+   "loc": 871,
+   "bytes": 37512,
+   "tags": [
+    "component",
+    "module:knowledge"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "NotesListView"
+   ],
+   "inputs": 28,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/knowledge/TemplatesLibraryModal.tsx",
+   "loc": 321,
+   "bytes": 14391,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:knowledge"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "TemplatesLibraryModal"
+   ],
+   "inputs": 13,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "إدارية، مبيعات، مالية...",
+    "اكتب العناوين والبنود الافتراضية للقالب...",
+    "بحث في القوالب...",
+    "رمز إيموجي مثل: 📦",
+    "مثال: تقرير استلام بضاعة...",
+    "وصف مختصر للغرض من استخدام القالب..."
+   ],
+   "protectedLabels": [
+    "الأيقونة",
+    "التصنيف",
+    "الوصف الموجز"
+   ]
+  },
+  {
+   "file": "src/components/knowledge/VersionHistoryModal.tsx",
+   "loc": 144,
+   "bytes": 6476,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:knowledge"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "VersionHistoryModal"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/links/LinkCard.tsx",
+   "loc": 303,
+   "bytes": 11391,
+   "tags": [
+    "component",
+    "module:links"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "LinkCard"
+   ],
+   "inputs": 7,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/links/LinkModal.tsx",
+   "loc": 347,
+   "bytes": 14645,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:links"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "LinkModal"
+   ],
+   "inputs": 14,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "https://example.com",
+    "أدخل التصنيف المخصص...",
+    "أي ملاحظة أو كلمة سر أو تنبيه يتعلق بالرابط...",
+    "مثال: ChatGPT, ExcelJet...",
+    "وصف مختصر لمميزات الموقع واستخداماته الموصى بها..."
+   ],
+   "protectedLabels": [
+    "التصنيف الرئيسي",
+    "الفئة",
+    "النوع",
+    "الوصف والفائدة الأساسية",
+    "درجة الأهمية",
+    "ملاحظات إضافية / نصائح استخدام"
+   ]
+  },
+  {
+   "file": "src/components/links/LinksGridView.tsx",
+   "loc": 73,
+   "bytes": 2510,
+   "tags": [
+    "component",
+    "module:links"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "LinksGridView"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/links/LinksLibraryModule.tsx",
+   "loc": 665,
+   "bytes": 26266,
+   "tags": [
+    "component",
+    "module:links"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "LinksLibraryModule"
+   ],
+   "inputs": 22,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/links/LinksPrintReport.tsx",
+   "loc": 131,
+   "bytes": 6303,
+   "tags": [
+    "component",
+    "module:links"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "LinksPrintReport"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/links/LinksStatsCards.tsx",
+   "loc": 185,
+   "bytes": 7505,
+   "tags": [
+    "component",
+    "module:links"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "LinksStatsCards"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/links/LinksTableView.tsx",
+   "loc": 267,
+   "bytes": 11081,
+   "tags": [
+    "component",
+    "module:links"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "LinksTableView"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/notifications/DueAlertsModal.tsx",
+   "loc": 383,
+   "bytes": 18841,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:notifications"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DueAlertsModal"
+   ],
+   "inputs": 12,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [
+    "تصفية بالاسم..."
+   ],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/notifications/DueAlertsToast.tsx",
+   "loc": 110,
+   "bytes": 4962,
+   "tags": [
+    "component",
+    "module:notifications"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DueAlertsToast"
+   ],
+   "inputs": 3,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/pwa/PWAInstallButton.tsx",
+   "loc": 94,
+   "bytes": 4601,
+   "tags": [
+    "component",
+    "module:pwa"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "PWAInstallButton"
+   ],
+   "inputs": 4,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/routines/HabitsStreakView.tsx",
+   "loc": 203,
+   "bytes": 9805,
+   "tags": [
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "HabitsStreakView"
+   ],
+   "inputs": 3,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/routines/RoutineAIAssistantModal.tsx",
+   "loc": 221,
+   "bytes": 10041,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineAIAssistantModal"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/routines/RoutineAnalyticsView.tsx",
+   "loc": 251,
+   "bytes": 11111,
+   "tags": [
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineAnalyticsView"
+   ],
+   "inputs": 0,
+   "hasNameAttr": true,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/routines/RoutineCalendarView.tsx",
+   "loc": 207,
+   "bytes": 8387,
+   "tags": [
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineCalendarView"
+   ],
+   "inputs": 3,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/routines/RoutineDetailModal.tsx",
+   "loc": 256,
+   "bytes": 11506,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineDetailModal"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/routines/RoutineExecutionsHistory.tsx",
+   "loc": 211,
+   "bytes": 9951,
+   "tags": [
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineExecutionsHistory"
+   ],
+   "inputs": 4,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/routines/RoutineOccurrencesList.tsx",
+   "loc": 378,
+   "bytes": 17256,
+   "tags": [
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineOccurrencesList"
+   ],
+   "inputs": 13,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/routines/RoutinePostponeModal.tsx",
+   "loc": 155,
+   "bytes": 6625,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutinePostponeModal"
+   ],
+   "inputs": 8,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "handleSubmit",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "مثال: اجتماع طارئ، مكالمة هاتفية"
+   ],
+   "protectedLabels": [
+    "سبب التأجيل (للتوثيق والتحليل):"
+   ]
+  },
+  {
+   "file": "src/components/routines/RoutineSkipModal.tsx",
+   "loc": 107,
+   "bytes": 4922,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineSkipModal"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "اكتب أية تفاصيل لتوضيح سبب الاستثناء..."
+   ],
+   "protectedLabels": [
+    "التصنيف الرئيسي لسبب التخطي:",
+    "تفاصيل إضافية (اختياري):"
+   ]
+  },
+  {
+   "file": "src/components/routines/RoutineTemplatesModal.tsx",
+   "loc": 203,
+   "bytes": 8845,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineTemplatesModal"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/routines/RoutineTimerModal.tsx",
+   "loc": 497,
+   "bytes": 20898,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineTimerModal"
+   ],
+   "inputs": 9,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": [
+    "ملاحظات ونتائج التنفيذ:"
+   ]
+  },
+  {
+   "file": "src/components/routines/RoutineWizardModal.tsx",
+   "loc": 975,
+   "bytes": 45485,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutineWizardModal"
+   ],
+   "inputs": 36,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "handleSave",
+    "onSave"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "عنوان الخطوة...",
+    "ما الهدف الذي يحققه هذا الروتين؟ وما هي المعايير المتبعة؟",
+    "مثال: G-01, G-02",
+    "مثال: P-01, P-04",
+    "مثال: TSK-001, TSK-004",
+    "مثال: الإدارة العامة، المحاسب",
+    "مثال: المكتب الرئيسي، العيادات، المنزل",
+    "مثال: انطلاقة العمل",
+    "مثال: مراجعة وتخطيط أولويات يوم العمل"
+   ],
+   "protectedLabels": [
+    "الأيام النشطة للروتين",
+    "الأيقونة التعبيرية",
+    "التصنيف الرئيسي",
+    "اللون المميز",
+    "المسؤول / المنفذ",
+    "المكان أو البيئة",
+    "الوصف والهدف من الروتين",
+    "تاريخ بدء الروتين",
+    "نمط التكرار",
+    "وقت البدء المخطط"
+   ]
+  },
+  {
+   "file": "src/components/routines/RoutinesModule.tsx",
+   "loc": 1015,
+   "bytes": 40690,
+   "tags": [
+    "component",
+    "module:routines"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "RoutinesModule"
+   ],
+   "inputs": 19,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/UnifiedSettings.tsx",
+   "loc": 287,
+   "bytes": 10328,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "UnifiedSettings"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/AboutAppTab.tsx",
+   "loc": 156,
+   "bytes": 8524,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "AboutAppTab"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/CompanyInfoTab.tsx",
+   "loc": 245,
+   "bytes": 11994,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CompanyInfoTab"
+   ],
+   "inputs": 11,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/DatabasesTab.tsx",
+   "loc": 612,
+   "bytes": 27324,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DatabasesTab"
+   ],
+   "inputs": 17,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/FiscalYearTab.tsx",
+   "loc": 184,
+   "bytes": 9210,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "FiscalYearTab"
+   ],
+   "inputs": 7,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/GeneralSettingsTab.tsx",
+   "loc": 315,
+   "bytes": 18011,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "GeneralSettingsTab"
+   ],
+   "inputs": 11,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/InventorySettingsTab.tsx",
+   "loc": 302,
+   "bytes": 12715,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "InventorySettingsTab"
+   ],
+   "inputs": 10,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/NotificationsTab.tsx",
+   "loc": 218,
+   "bytes": 13506,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "NotificationsTab"
+   ],
+   "inputs": 9,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/PrinterSettingsTab.tsx",
+   "loc": 313,
+   "bytes": 15636,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "PrinterSettingsTab"
+   ],
+   "inputs": 13,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/SecurityPermissionsTab.tsx",
+   "loc": 227,
+   "bytes": 10304,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "SecurityPermissionsTab"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/settings/tabs/UsersTab.tsx",
+   "loc": 340,
+   "bytes": 16761,
+   "tags": [
+    "component",
+    "module:settings"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "UsersTab"
+   ],
+   "inputs": 12,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSubmit"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/stock/StockModule.tsx",
+   "loc": 298,
+   "bytes": 11371,
+   "tags": [
+    "component",
+    "module:stock"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "StockModule"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowBoardView.tsx",
+   "loc": 291,
+   "bytes": 12411,
+   "tags": [
+    "component",
+    "module:taskflow"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "TaskFlowBoardView"
+   ],
+   "inputs": 4,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "loc": 367,
+   "bytes": 16580,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:taskflow",
+    "excel-io"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "TaskFlowImportExportModal"
+   ],
+   "inputs": 9,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowMembersModal.tsx",
+   "loc": 367,
+   "bytes": 15262,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:taskflow"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "TaskFlowMembersModal"
+   ],
+   "inputs": 14,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "name@company.com أو رقم الهاتف",
+    "مثال: د. ماجد السقاف",
+    "مثال: مسؤول دعاية طبية / مشرف مبيعات"
+   ],
+   "protectedLabels": [
+    "البريد أو الهاتف (اختياري)",
+    "الدور والصلاحية",
+    "المسمى الوظيفي / الاختصاص",
+    "لون الأفاتار المميز"
+   ]
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowModule.tsx",
+   "loc": 618,
+   "bytes": 26133,
+   "tags": [
+    "component",
+    "module:taskflow"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "TaskFlowModule"
+   ],
+   "inputs": 12,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowProjectsModal.tsx",
+   "loc": 335,
+   "bytes": 13679,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:taskflow"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "TaskFlowProjectsModal"
+   ],
+   "inputs": 12,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "مثال: إطلاق منتج جديد 2026",
+    "وصف أهداف المشروع ونطاق العمل..."
+   ],
+   "protectedLabels": [
+    "اسم المشروع",
+    "الوصف",
+    "لون المشروع المميز"
+   ]
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowTaskModal.tsx",
+   "loc": 306,
+   "bytes": 12529,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:taskflow"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "TaskFlowTaskModal"
+   ],
+   "inputs": 12,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "اكتب أي متطلبات أو ملاحظات إضافية للمهمة...",
+    "مثال: فحص جودة عبوات السيروم الجديدة ومطابقة الباركود"
+   ],
+   "protectedLabels": [
+    "الأولوية",
+    "الشخص المسؤول (Assignee)",
+    "الوصف والتفاصيل (اختياري)",
+    "تاريخ الاستحقاق (Due Date)",
+    "تاريخ البداية (Start Date)",
+    "حالة المهمة"
+   ]
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowTimelineView.tsx",
+   "loc": 292,
+   "bytes": 12287,
+   "tags": [
+    "component",
+    "module:taskflow"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "TaskFlowTimelineView"
+   ],
+   "inputs": 3,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/taskflow/TaskFlowUserSwitchModal.tsx",
+   "loc": 154,
+   "bytes": 6869,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:taskflow"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "TaskFlowUserSwitchModal"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/tasks/CalendarView.tsx",
+   "loc": 477,
+   "bytes": 20100,
+   "tags": [
+    "component",
+    "module:tasks"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CalendarView"
+   ],
+   "inputs": 10,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/tasks/CommitmentModal.tsx",
+   "loc": 235,
+   "bytes": 9730,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:tasks"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CommitmentModal"
+   ],
+   "inputs": 10,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "0.00",
+    "مثال: سداد إيجار المستودع / مستحقات المورد"
+   ],
+   "protectedLabels": [
+    "الأهمية / الأولوية",
+    "الالتزام / الجهة المستحقة",
+    "الحالة",
+    "المبلغ المطلوب (ريال)",
+    "المعرف",
+    "الوصف والملاحظات",
+    "تاريخ الاستحقاق"
+   ]
+  },
+  {
+   "file": "src/components/tasks/CommitmentsTable.tsx",
+   "loc": 327,
+   "bytes": 14273,
+   "tags": [
+    "component",
+    "module:tasks"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CommitmentsTable"
+   ],
+   "inputs": 8,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/tasks/TaskModal.tsx",
+   "loc": 331,
+   "bytes": 13024,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:tasks"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "TaskModal"
+   ],
+   "inputs": 15,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "0.00",
+    "تفاصيل إضافية أو مخرجات متوقعة للمهمة...",
+    "عملاء-0012",
+    "مثال: زيارة الدكتور سامي في العيادة"
+   ],
+   "protectedLabels": [
+    "الأولوية",
+    "الحالة",
+    "العملية (8 عمليات)",
+    "الفئة (18 فئة)",
+    "المبلغ المالي (إن وجد)",
+    "المسؤول (12 مسؤول)",
+    "المعرف الرئيسي",
+    "المعرف الفرعي",
+    "الوصف والتفاصيل",
+    "تاريخ الانتهاء / الاستحقاق",
+    "تاريخ البداية (إلزامي)",
+    "عنوان المهمة"
+   ]
+  },
+  {
+   "file": "src/components/tasks/TasksModule.tsx",
+   "loc": 753,
+   "bytes": 36890,
+   "tags": [
+    "component",
+    "module:tasks"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "TasksModule"
+   ],
+   "inputs": 22,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "onSave"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSAICopilotModal.tsx",
+   "loc": 234,
+   "bytes": 11474,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSAICopilotModal"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/workos/WorkOSAppointmentsCommitmentsView.tsx",
+   "loc": 188,
+   "bytes": 8409,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSAppointmentsCommitmentsView"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSAutomationView.tsx",
+   "loc": 85,
+   "bytes": 3834,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSAutomationView"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSCommandPaletteModal.tsx",
+   "loc": 218,
+   "bytes": 8118,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSCommandPaletteModal"
+   ],
+   "inputs": 4,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [
+    "ابحث عن مهمة، مشروع، أو اكتب أمراً سريعاً... (Esc للإغلاق)"
+   ],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/components/workos/WorkOSDashboard.tsx",
+   "loc": 497,
+   "bytes": 24509,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "WorkOSDashboard"
+   ],
+   "inputs": 10,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "loc": 464,
+   "bytes": 20985,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "WorkOSEisenhowerMatrix"
+   ],
+   "inputs": 10,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSFilterStrip.tsx",
+   "loc": 462,
+   "bytes": 17952,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSFilterStrip"
+   ],
+   "inputs": 20,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSGoalsView.tsx",
+   "loc": 98,
+   "bytes": 4700,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSGoalsView"
+   ],
+   "inputs": 1,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSHabitsView.tsx",
+   "loc": 117,
+   "bytes": 5260,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSHabitsView"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSInbox.tsx",
+   "loc": 178,
+   "bytes": 8164,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSInbox"
+   ],
+   "inputs": 7,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "handleSubmit",
+    "onSubmit"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSKPICards.tsx",
+   "loc": 189,
+   "bytes": 6242,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSKPICards"
+   ],
+   "inputs": 1,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSKanbanTab.tsx",
+   "loc": 292,
+   "bytes": 12119,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSKanbanTab"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSModule.tsx",
+   "loc": 1575,
+   "bytes": 59561,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSModule"
+   ],
+   "inputs": 12,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSNotesMeetingsView.tsx",
+   "loc": 215,
+   "bytes": 9504,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSNotesMeetingsView"
+   ],
+   "inputs": 5,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSOverviewTab.tsx",
+   "loc": 381,
+   "bytes": 16944,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSOverviewTab"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSPrioritiesTab.tsx",
+   "loc": 271,
+   "bytes": 12771,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSPrioritiesTab"
+   ],
+   "inputs": 4,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSProjectsTab.tsx",
+   "loc": 647,
+   "bytes": 30807,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSProjectsTab"
+   ],
+   "inputs": 14,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSProjectsView.tsx",
+   "loc": 212,
+   "bytes": 9562,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "WorkOSProjectsView"
+   ],
+   "inputs": 6,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSQuickAddModal.tsx",
+   "loc": 384,
+   "bytes": 14559,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSQuickAddModal"
+   ],
+   "inputs": 15,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "handleSubmit",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "اسم الطبيب أو العميل",
+    "اسم المنشأة أو التاجر...",
+    "اكتب أي تفاصيل إضافية...",
+    "اكتب العنوان هنا...",
+    "العيادة أو المكتب",
+    "المبلغ بالريال..."
+   ],
+   "protectedLabels": [
+    "الأولوية",
+    "الجهة المتعهد لها",
+    "الشخص المعني",
+    "المبلغ المالي (إن وجد)",
+    "المسؤول",
+    "المشروع",
+    "المكان",
+    "الوصف والملاحظات",
+    "الوقت",
+    "تاريخ الاستحقاق / التسليم"
+   ]
+  },
+  {
+   "file": "src/components/workos/WorkOSReportsView.tsx",
+   "loc": 142,
+   "bytes": 6985,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSReportsView"
+   ],
+   "inputs": 2,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSRoutineView.tsx",
+   "loc": 340,
+   "bytes": 14988,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSRoutineView"
+   ],
+   "inputs": 18,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [
+    "onSubmit"
+   ],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSTaskDetailModal.tsx",
+   "loc": 623,
+   "bytes": 25584,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "WorkOSTaskDetailModal"
+   ],
+   "inputs": 32,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "handleSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "إضافة بند فحص (Checklist item)...",
+    "إضافة مهمة فرعية جديدة (Subtask)...",
+    "اسم الصيدلية أو العميل...",
+    "اكتب تعليقاً أو ملاحظة عمل...",
+    "اكتب هنا كافة تفاصيل تنفيذ المهمة...",
+    "عنوان المهمة..."
+   ],
+   "protectedLabels": [
+    "الأولوية",
+    "التصنيف",
+    "الحالة",
+    "الساعات المقدرة للمهمة",
+    "العميل / الصيدلية المرتبطة",
+    "المسؤول المكلف",
+    "المشروع",
+    "الوصف التفصيلي والتعليمات",
+    "تاريخ الاستحقاق",
+    "تاريخ البدء",
+    "ساعات العمل الفعلية المسجلة"
+   ]
+  },
+  {
+   "file": "src/components/workos/WorkOSTaskDrawer.tsx",
+   "loc": 642,
+   "bytes": 27422,
+   "tags": [
+    "protected-input",
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSTaskDrawer"
+   ],
+   "inputs": 27,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [
+    "handleSave",
+    "onSubmit"
+   ],
+   "storageKeys": [],
+   "protectedFields": [
+    "إضافة مهمة فرعية جديدة...",
+    "اكتب تعليقاً أو استفساراً...",
+    "تفاصيل وإرشادات المهمة...",
+    "عنوان المهمة..."
+   ],
+   "protectedLabels": [
+    "اسم المهمة:",
+    "الحالة:",
+    "المسؤول عن التنفيذ:",
+    "المشروع المرتبط:",
+    "تاريخ الاستحقاق:",
+    "تاريخ البداية:",
+    "مستوى الأولوية:",
+    "وصف المهمة وملاحظات التنفيذ:"
+   ]
+  },
+  {
+   "file": "src/components/workos/WorkOSTasksTab.tsx",
+   "loc": 513,
+   "bytes": 22522,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSTasksTab"
+   ],
+   "inputs": 16,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSTasksView.tsx",
+   "loc": 1308,
+   "bytes": 55648,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "WorkOSTasksView"
+   ],
+   "inputs": 32,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSTeamWorkloadTab.tsx",
+   "loc": 278,
+   "bytes": 12022,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSTeamWorkloadTab"
+   ],
+   "inputs": 3,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSTeamWorkloadView.tsx",
+   "loc": 104,
+   "bytes": 5315,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "WorkOSTeamWorkloadView"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSTimelineTab.tsx",
+   "loc": 233,
+   "bytes": 9677,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSTimelineTab"
+   ],
+   "inputs": 1,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/components/workos/WorkOSUnifiedTopBar.tsx",
+   "loc": 474,
+   "bytes": 21716,
+   "tags": [
+    "component",
+    "module:workos"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "WorkOSUnifiedTopBar"
+   ],
+   "inputs": 15,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/context/AuthContext.tsx",
+   "loc": 260,
+   "bytes": 7537,
+   "tags": [
+    "state-context"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "AuthProvider",
+    "useAuth"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [
+    "suite_active_auth_session_v1"
+   ]
+  },
+  {
+   "file": "src/context/ThemeContext.tsx",
+   "loc": 78,
+   "bytes": 1956,
+   "tags": [
+    "state-context"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "ThemeProvider",
+    "useTheme"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/core/index.ts",
+   "loc": 5,
+   "bytes": 208,
+   "tags": [
+    "core"
+   ],
+   "reachableFromEntry": false,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/core/audit/AuditService.ts",
+   "loc": 106,
+   "bytes": 2827,
+   "tags": [
+    "core"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CentralAuditService",
+    "auditService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [
+    "suite_device_id_v1",
+    "suite_unified_audit_v2"
+   ]
+  },
+  {
+   "file": "src/core/errors/AppErrorBoundary.tsx",
+   "loc": 73,
+   "bytes": 2611,
+   "tags": [
+    "core"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "AppErrorBoundary"
+   ],
+   "inputs": 1,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/core/permissions/PermissionMatrix.ts",
+   "loc": 94,
+   "bytes": 2234,
+   "tags": [
+    "core"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "ROLE_PERMISSIONS",
+    "isModuleAllowedForRole"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultCommitments.ts",
+   "loc": 182,
+   "bytes": 6908,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_COMMITMENTS"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultCustodyIssues.ts",
+   "loc": 726,
+   "bytes": 24761,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_CUSTODY_CATEGORIES",
+    "DEFAULT_CUSTODY_ISSUES_RECORDS",
+    "DEFAULT_CUSTODY_PRIORITIES",
+    "DEFAULT_CUSTODY_RESPONSIBLES",
+    "DEFAULT_CUSTODY_STATUSES"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultCustomers.ts",
+   "loc": 669,
+   "bytes": 21903,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "CUSTOMER_REGIONS",
+    "CUSTOMER_RESPONSIBLES",
+    "CUSTOMER_ROUTES",
+    "CUSTOMER_SIGNIFICANCES",
+    "CUSTOMER_SOURCES",
+    "CUSTOMER_STATUSES",
+    "DEFAULT_CUSTOMERS",
+    "DEFAULT_CUSTOMER_VISITS"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultDoctors.ts",
+   "loc": 324,
+   "bytes": 14044,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_DOCTORS",
+    "DEFAULT_DOCTOR_VISITS",
+    "DOCTOR_REGIONS",
+    "DOCTOR_RESPONSIBLES",
+    "DOCTOR_ROUTES",
+    "DOCTOR_SPECIALTIES",
+    "DOCTOR_STATUSES"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultFinancial.ts",
+   "loc": 421,
+   "bytes": 12359,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_ACCOUNT_NAMES",
+    "DEFAULT_CATEGORY_ACCOUNTS",
+    "DEFAULT_FINANCIAL_TRANSACTIONS",
+    "DEFAULT_IMPORTANCE_LIST",
+    "DEFAULT_MOVEMENTS",
+    "DEFAULT_MOVEMENT_TYPES",
+    "DEFAULT_RESTRICTIONS",
+    "DEFAULT_RESTRICTION_ACCOUNTS",
+    "getImportanceBadgeStyle",
+    "getMovementBadgeStyle"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultLinks.ts",
+   "loc": 809,
+   "bytes": 33562,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_LINKS_RECORDS",
+    "DEFAULT_LINK_CATEGORIES",
+    "DEFAULT_LINK_CLASSIFICATIONS",
+    "DEFAULT_LINK_IMPORTANCES",
+    "DEFAULT_LINK_TYPES"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultNotes.ts",
+   "loc": 506,
+   "bytes": 23407,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_NOTES",
+    "DEFAULT_NOTE_FOLDERS",
+    "DEFAULT_NOTE_TAGS",
+    "DEFAULT_NOTE_TEMPLATES"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultProducts.ts",
+   "loc": 111,
+   "bytes": 3445,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_62_PRODUCT_NAMES",
+    "DEFAULT_CATEGORIES",
+    "DEFAULT_PRODUCTS",
+    "DEFAULT_STATUSES"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultRecords.ts",
+   "loc": 172,
+   "bytes": 6002,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "INITIAL_RECORDS",
+    "generateDefaultRecords"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultRoutines.ts",
+   "loc": 580,
+   "bytes": 23251,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_ROUTINES",
+    "DEFAULT_ROUTINE_CATEGORIES",
+    "DEFAULT_ROUTINE_EXECUTIONS",
+    "DEFAULT_ROUTINE_OCCURRENCES",
+    "DEFAULT_ROUTINE_SETTINGS",
+    "DEFAULT_ROUTINE_TAGS",
+    "DEFAULT_ROUTINE_TEMPLATES"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/data/defaultTasks.ts",
+   "loc": 163,
+   "bytes": 15839,
+   "tags": [],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_TASKS",
+    "TASK_ASSIGNEES",
+    "TASK_CATEGORIES",
+    "TASK_OPERATIONS",
+    "TASK_PRIORITIES",
+    "TASK_STATUSES"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/database/dbStorage.ts",
+   "loc": 34,
+   "bytes": 1028,
+   "tags": [
+    "storage"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "dbStorage"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/database/adapters/IndexedDBAdapter.ts",
+   "loc": 337,
+   "bytes": 10286,
+   "tags": [
+    "adapter"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "IndexedDBAdapter",
+    "indexedDBStorage"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/database/adapters/LocalStorageAdapter.ts",
+   "loc": 119,
+   "bytes": 3260,
+   "tags": [
+    "adapter",
+    "storage"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "LocalStorageAdapter",
+    "defaultStorage"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/database/adapters/index.ts",
+   "loc": 2,
+   "bytes": 75,
+   "tags": [
+    "adapter"
+   ],
+   "reachableFromEntry": false,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/database/migrations/MigrationRunner.ts",
+   "loc": 48,
+   "bytes": 1241,
+   "tags": [],
+   "reachableFromEntry": false,
+   "exports": [
+    "MigrationRunner"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [
+    "suite_db_schema_version"
+   ]
+  },
+  {
+   "file": "src/database/repositories/BaseRepository.ts",
+   "loc": 128,
+   "bytes": 3387,
+   "tags": [
+    "repository"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "BaseRepository"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/database/repositories/CustomerRepository.ts",
+   "loc": 82,
+   "bytes": 2736,
+   "tags": [
+    "repository"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustomerRepository",
+    "DoctorRepository",
+    "customerRepository",
+    "doctorRepository"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_customers_items_v2",
+    "suite_customers_visits_v2",
+    "suite_doctors_items_v1",
+    "suite_doctors_visits_v1"
+   ]
+  },
+  {
+   "file": "src/database/repositories/DebtRepository.ts",
+   "loc": 69,
+   "bytes": 2415,
+   "tags": [
+    "repository"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DebtRepository",
+    "debtRepository"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_debts_commitments_v1",
+    "suite_debts_records_v1"
+   ]
+  },
+  {
+   "file": "src/database/repositories/FinancialRepository.ts",
+   "loc": 80,
+   "bytes": 3108,
+   "tags": [
+    "repository"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "FinancialRepository",
+    "financialRepository"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_fin_",
+    "suite_fin_transactions_v2"
+   ]
+  },
+  {
+   "file": "src/database/repositories/OtherRepositories.ts",
+   "loc": 35,
+   "bytes": 1255,
+   "tags": [
+    "repository"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustodyRepository",
+    "LinksRepository",
+    "NotesRepository",
+    "RoutinesRepository",
+    "custodyRepository",
+    "linksRepository",
+    "notesRepository",
+    "routinesRepository"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_custody_records_v1",
+    "suite_knowledge_notes_v1",
+    "suite_links_records_v1",
+    "suite_routines_items_v1"
+   ]
+  },
+  {
+   "file": "src/database/repositories/ProductRepository.ts",
+   "loc": 121,
+   "bytes": 3457,
+   "tags": [
+    "repository"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "ProductRepository",
+    "StockMovementRepository",
+    "productRepository",
+    "stockMovementRepository"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_stock_products_v2",
+    "suite_stock_records_v2"
+   ]
+  },
+  {
+   "file": "src/database/repositories/WorkTaskRepository.ts",
+   "loc": 124,
+   "bytes": 3596,
+   "tags": [
+    "repository"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CommitmentRepository",
+    "SuiteTaskRepository",
+    "WorkProjectRepository",
+    "WorkTaskRepository",
+    "commitmentRepository",
+    "suiteTaskRepository",
+    "workProjectRepository",
+    "workTaskRepository"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_tasks_commitments_v2",
+    "suite_tasks_tasks_v2"
+   ]
+  },
+  {
+   "file": "src/database/repositories/index.ts",
+   "loc": 7,
+   "bytes": 257,
+   "tags": [
+    "repository"
+   ],
+   "reachableFromEntry": false,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/database/sqlite/SqliteSchema.ts",
+   "loc": 139,
+   "bytes": 3391,
+   "tags": [],
+   "reachableFromEntry": false,
+   "exports": [
+    "SQLITE_TABLES_DDL"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/database/types/StorageEngine.ts",
+   "loc": 17,
+   "bytes": 631,
+   "tags": [
+    "types",
+    "storage"
+   ],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/hooks/usePWAInstall.ts",
+   "loc": 68,
+   "bytes": 2069,
+   "tags": [
+    "hook"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "usePWAInstall"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/index.ts",
+   "loc": 9,
+   "bytes": 369,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": false,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/backup/BackupService.ts",
+   "loc": 39,
+   "bytes": 1353,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "BackupService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/crm/CustomerService.ts",
+   "loc": 81,
+   "bytes": 2335,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustomerService",
+    "customerService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/crm/DoctorService.ts",
+   "loc": 81,
+   "bytes": 2284,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DoctorService",
+    "doctorService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/custody/CustodyService.ts",
+   "loc": 67,
+   "bytes": 2086,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "CustodyService",
+    "custodyService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/work/TaskService.ts",
+   "loc": 88,
+   "bytes": 2569,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "TaskService",
+    "taskService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/dashboard/DashboardService.ts",
+   "loc": 98,
+   "bytes": 3634,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "DashboardService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/debts/DebtService.ts",
+   "loc": 79,
+   "bytes": 2268,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DebtService",
+    "debtService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/financial/FinancialService.ts",
+   "loc": 94,
+   "bytes": 2777,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "FinancialService",
+    "financialService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/services/inventory/InventoryService.ts",
+   "loc": 91,
+   "bytes": 3132,
+   "tags": [
+    "service"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "InventoryService",
+    "inventoryService"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/shared/constants/index.ts",
+   "loc": 3,
+   "bytes": 167,
+   "tags": [],
+   "reachableFromEntry": false,
+   "exports": [
+    "APP_NAME",
+    "APP_SHORT_NAME",
+    "DEFAULT_PAGE_SIZE"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/shared/hooks/index.ts",
+   "loc": 2,
+   "bytes": 85,
+   "tags": [
+    "hook"
+   ],
+   "reachableFromEntry": false,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/shared/types/index.ts",
+   "loc": 1,
+   "bytes": 29,
+   "tags": [
+    "types"
+   ],
+   "reachableFromEntry": false,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/shared/utils/index.ts",
+   "loc": 8,
+   "bytes": 329,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": false,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/sync/ConflictResolver.ts",
+   "loc": 102,
+   "bytes": 3308,
+   "tags": [
+    "sync"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "ConflictResolver"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_sync_conflicts_v1"
+   ]
+  },
+  {
+   "file": "src/sync/Inbox.ts",
+   "loc": 56,
+   "bytes": 1642,
+   "tags": [
+    "sync"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "Inbox"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_sync_inbox_v1"
+   ]
+  },
+  {
+   "file": "src/sync/Outbox.ts",
+   "loc": 67,
+   "bytes": 1843,
+   "tags": [
+    "sync"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "Outbox"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_sync_outbox_v1"
+   ]
+  },
+  {
+   "file": "src/sync/SyncEngine.ts",
+   "loc": 113,
+   "bytes": 3268,
+   "tags": [
+    "sync"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "SyncEngine",
+    "syncEngine"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_sync_state_v1"
+   ]
+  },
+  {
+   "file": "src/sync/SyncState.ts",
+   "loc": 28,
+   "bytes": 863,
+   "tags": [
+    "sync"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "SyncState"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [
+    "suite_sync_config_v1"
+   ]
+  },
+  {
+   "file": "src/sync/index.ts",
+   "loc": 5,
+   "bytes": 146,
+   "tags": [
+    "sync"
+   ],
+   "reachableFromEntry": false,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/types/custodyIssues.ts",
+   "loc": 78,
+   "bytes": 2642,
+   "tags": [
+    "types"
+   ],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/types/index.ts",
+   "loc": 724,
+   "bytes": 24419,
+   "tags": [
+    "types"
+   ],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/types/linksLibrary.ts",
+   "loc": 69,
+   "bytes": 1792,
+   "tags": [
+    "types"
+   ],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/types/routines.ts",
+   "loc": 410,
+   "bytes": 10044,
+   "tags": [
+    "types"
+   ],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/types/settings.ts",
+   "loc": 132,
+   "bytes": 3218,
+   "tags": [
+    "types"
+   ],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/types/taskflow.ts",
+   "loc": 57,
+   "bytes": 1264,
+   "tags": [
+    "types"
+   ],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/types/workos.ts",
+   "loc": 397,
+   "bytes": 8172,
+   "tags": [
+    "types"
+   ],
+   "reachableFromEntry": true,
+   "exports": [],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/autoJournaling.ts",
+   "loc": 109,
+   "bytes": 4106,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "generateJournalEntryFromMovement",
+    "removeMovementFromFinancialJournal",
+    "syncMovementToFinancialJournal"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/custodyExport.ts",
+   "loc": 150,
+   "bytes": 4671,
+   "tags": [
+    "utility",
+    "excel-io"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "exportCustodyToCSV",
+    "exportCustodyToExcel",
+    "exportCustodyToJSON",
+    "normalizeArabicText",
+    "searchCustodyRecords"
+   ],
+   "inputs": 0,
+   "hasNameAttr": true,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/customers.ts",
+   "loc": 346,
+   "bytes": 10879,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "calculateCustomerStats",
+    "filterCustomersList",
+    "generateNextCustomerId",
+    "getTodayArabicDay",
+    "isCustomerVisitDueToday"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/debts.ts",
+   "loc": 886,
+   "bytes": 46204,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEBT_BOOKS_META",
+    "DEBT_CATEGORIES",
+    "DEBT_ICONS",
+    "DEBT_OWNERS",
+    "DEFAULT_ALI_QAT_DEBTS",
+    "DEFAULT_ANWAR_DEBTS",
+    "DEFAULT_DEBT_COMMITMENTS",
+    "DEFAULT_DEBT_RECORDS",
+    "DEFAULT_PREVIOUS_DEBTS",
+    "DEFAULT_ZAHA_DEBTS",
+    "calculateCommitmentRemaining",
+    "calculateDebtStats",
+    "computeAliQatRunningBalances",
+    "exportCommitmentsToCSV",
+    "exportDebtCommitmentsToCSV",
+    "exportDebtRecordsToCSV",
+    "exportDebtsAndCommitmentsToExcel",
+    "formatDebtAmount",
+    "generateNextCommitmentId"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/doctors.ts",
+   "loc": 580,
+   "bytes": 21023,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "calculateDoctorStats",
+    "exportDoctorVisitsToExcel",
+    "exportDoctorsToCSV",
+    "exportDoctorsToExcel",
+    "filterDoctors",
+    "findDoctorDuplicates",
+    "generateNextDoctorId",
+    "getTodayArabicDay",
+    "isDoctorTaskActiveInRange",
+    "isDoctorVisitDueToday",
+    "parseDoctorsExcelOrCSV"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/dueAlerts.ts",
+   "loc": 259,
+   "bytes": 7572,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "archiveAlertIds",
+    "clearArchivedAlerts",
+    "formatDueText",
+    "getCalendarDayDiff",
+    "getDueAlerts",
+    "loadArchivedAlertIds",
+    "saveArchivedAlertIds"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/excel.ts",
+   "loc": 1080,
+   "bytes": 38819,
+   "tags": [
+    "utility",
+    "excel-io"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "BASE_EXCEL_HEADERS",
+    "downloadCustomersExcelTemplate",
+    "downloadFinancialExcelTemplate",
+    "downloadStockRecordsExcelTemplate",
+    "exportCustomersToExcel",
+    "exportFinancialToExcel",
+    "exportFullBackupJSON",
+    "exportRecordsToCSV",
+    "exportRecordsToExcel",
+    "exportTasksToCSV",
+    "exportTasksToExcel",
+    "exportUnifiedBackupJSON",
+    "parseCustomersExcelFile",
+    "parseExcelForImport",
+    "parseFinancialExcelOrCSV"
+   ],
+   "inputs": 0,
+   "hasNameAttr": true,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/excelExport.ts",
+   "loc": 207,
+   "bytes": 7091,
+   "tags": [
+    "utility",
+    "excel-io"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "exportCustomersToExcel",
+    "exportFinancialToExcel",
+    "exportStockMovementsToExcel"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/financial.ts",
+   "loc": 250,
+   "bytes": 8848,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "calculateFinancialSummary",
+    "filterFinancialTransactions",
+    "generateNextTransactionId"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/formatters.ts",
+   "loc": 164,
+   "bytes": 5740,
+   "tags": [
+    "protected-input",
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "ARABIC_DAYS",
+    "calculateArabicDay",
+    "formatArabicDate",
+    "formatCurrency",
+    "formatNumberLatin",
+    "getCategoryBadgeStyle",
+    "getMovementTypeStyle",
+    "getStatusStyle",
+    "numberToWordsArabic"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": [],
+   "protectedFields": [],
+   "protectedLabels": []
+  },
+  {
+   "file": "src/utils/linksExport.ts",
+   "loc": 179,
+   "bytes": 5917,
+   "tags": [
+    "utility",
+    "excel-io"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "exportLinksToCSV",
+    "exportLinksToExcel",
+    "exportLinksToJSON",
+    "filterLinks",
+    "formatValidUrl",
+    "normalizeArabicSearch"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/multiTabSync.ts",
+   "loc": 112,
+   "bytes": 3036,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "broadcastDataChange",
+    "useMultiTabSync"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/notes.ts",
+   "loc": 779,
+   "bytes": 26828,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "calculateNoteStats",
+    "exportNoteToMarkdown",
+    "exportNoteToText",
+    "exportNotesToCSV",
+    "exportNotesToExcel",
+    "exportNotesToJSON",
+    "filterNotes",
+    "generateNoteId",
+    "smartAnalyzeNoteText"
+   ],
+   "inputs": 0,
+   "hasNameAttr": true,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/routines.ts",
+   "loc": 575,
+   "bytes": 22685,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "calculateHabitStreaksList",
+    "calculateRoutineKPIs",
+    "detectScheduleConflicts",
+    "formatDurationArabic",
+    "formatTimerSeconds",
+    "generateOccurrencesForDateRange",
+    "getAIRoutineOptimizationAdvice",
+    "isRoutineScheduledForDate",
+    "minutesToTime",
+    "parseAIPromptToRoutine",
+    "timeToMinutes"
+   ],
+   "inputs": 0,
+   "hasNameAttr": true,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/settingsStorage.ts",
+   "loc": 262,
+   "bytes": 12587,
+   "tags": [
+    "utility",
+    "storage"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "ALL_PERMISSIONS_LIST",
+    "DEFAULT_SYSTEM_SETTINGS",
+    "SETTINGS_UPDATED_EVENT",
+    "getCurrentUserProfile",
+    "loadCompleteSystemSettings",
+    "saveCompleteSystemSettings",
+    "updateCurrentUserName"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/stock.ts",
+   "loc": 201,
+   "bytes": 5481,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "calculateStock",
+    "cascadeRenameProduct",
+    "getNextSubId",
+    "normalizeArabicDigits",
+    "normalizeDate"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/storage.ts",
+   "loc": 2372,
+   "bytes": 75575,
+   "tags": [
+    "utility",
+    "storage"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "DEFAULT_APP_SETTINGS",
+    "DEFAULT_STOCK_SEQ",
+    "calculateCustodyKPIs",
+    "calculateLinksKPIs",
+    "clearAllData",
+    "createUnifiedBackup",
+    "getStorageEngineStats",
+    "getUnifiedBackupState",
+    "loadAuditLogs",
+    "loadCategories",
+    "loadCommitments",
+    "loadCustodyAuditLogs",
+    "loadCustodyCategories",
+    "loadCustodyIssues",
+    "loadCustodyPriorities",
+    "loadCustodyResponsibles",
+    "loadCustodyStatuses",
+    "loadCustomerAuditLogs",
+    "loadCustomerRegions",
+    "loadCustomerResponsibles",
+    "loadCustomerRoutes",
+    "loadCustomerSources",
+    "loadCustomerVisits",
+    "loadCustomers",
+    "loadDebtAuditLogs",
+    "loadDebtCategories",
+    "loadDebtCommitments",
+    "loadDebtOwners",
+    "loadDebts",
+    "loadDoctorAuditLogs"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": [
+    "suite_custody_audit_v1",
+    "suite_custody_categories_v1",
+    "suite_custody_priorities_v1",
+    "suite_custody_records_v1",
+    "suite_custody_responsibles_v1",
+    "suite_custody_statuses_v1",
+    "suite_customers_audit_v2",
+    "suite_customers_items_v2",
+    "suite_customers_regions_v2",
+    "suite_customers_responsibles_v2",
+    "suite_customers_routes_v2",
+    "suite_customers_sources_v2",
+    "suite_customers_visits_v2",
+    "suite_debts_audit_v1",
+    "suite_debts_categories_v1",
+    "suite_debts_commitments_v1",
+    "suite_debts_owners_v1",
+    "suite_debts_records_v1",
+    "suite_doctors_audit_v1",
+    "suite_doctors_items_v1",
+    "suite_doctors_regions_v1",
+    "suite_doctors_responsibles_v1",
+    "suite_doctors_routes_v1",
+    "suite_doctors_specialties_v1",
+    "suite_doctors_visits_v1",
+    "suite_fin_account_names_v2",
+    "suite_fin_category_accounts_v2",
+    "suite_fin_importance_v2",
+    "suite_fin_movement_types_v2",
+    "suite_fin_movements_v2"
+   ]
+  },
+  {
+   "file": "src/utils/syncOutbox.ts",
+   "loc": 125,
+   "bytes": 3360,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "clearSyncedOutbox",
+    "getOutboxStats",
+    "getPendingOutboxCount",
+    "getPendingOutboxEntries",
+    "loadSyncOutbox",
+    "markAllOutboxSynced",
+    "markOutboxItemSynced",
+    "recordOutboxMutation",
+    "saveSyncOutbox"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/taskflowStorage.ts",
+   "loc": 438,
+   "bytes": 15150,
+   "tags": [
+    "utility",
+    "storage"
+   ],
+   "reachableFromEntry": false,
+   "exports": [
+    "INITIAL_MEMBERS",
+    "INITIAL_PROJECTS",
+    "INITIAL_TASKS",
+    "addTaskFlowActivity",
+    "broadcastTaskFlowUpdate",
+    "downloadTaskFlowExcelTemplate",
+    "exportTaskFlowToExcel",
+    "getEffectiveStatus",
+    "isTaskOverdue",
+    "loadTaskFlowActivities",
+    "loadTaskFlowCurrentUser",
+    "loadTaskFlowMembers",
+    "loadTaskFlowProjects",
+    "loadTaskFlowTasks",
+    "resetTaskFlowSampleData",
+    "saveTaskFlowCurrentUser",
+    "saveTaskFlowMembers",
+    "saveTaskFlowProjects",
+    "saveTaskFlowTasks",
+    "taskflowChannel"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/tasks.ts",
+   "loc": 253,
+   "bytes": 8228,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "calculateTaskStats",
+    "downloadICS",
+    "filterTasks",
+    "generateICS",
+    "generateNextCommitmentId",
+    "generateNextTaskId",
+    "getUpcomingTasks",
+    "isTaskOverdue"
+   ],
+   "inputs": 0,
+   "hasNameAttr": true,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/universalDataTemplates.ts",
+   "loc": 444,
+   "bytes": 20979,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "downloadCustodyExcelTemplate",
+    "downloadCustomersExcelTemplate",
+    "downloadDailyTasksExcelTemplate",
+    "downloadDebtsExcelTemplate",
+    "downloadDoctorsExcelTemplate",
+    "downloadFinancialExcelTemplate",
+    "downloadLinksExcelTemplate",
+    "downloadNotesExcelTemplate",
+    "downloadRoutinesExcelTemplate",
+    "downloadStockExcelTemplate",
+    "saveRTLWorkbook"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": false,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/universalImporters.ts",
+   "loc": 431,
+   "bytes": 16836,
+   "tags": [
+    "utility",
+    "excel-io"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "parseCustodyExcelFile",
+    "parseCustomersExcelFile",
+    "parseDailyTasksExcelFile",
+    "parseDebtsExcelFile",
+    "parseLinksExcelFile",
+    "parseNotesExcelFile",
+    "parseRoutinesExcelFile",
+    "parseStockExcelFile",
+    "readFileToRows"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/webNotifications.ts",
+   "loc": 65,
+   "bytes": 1775,
+   "tags": [
+    "utility"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "getNotificationPermission",
+    "isNotificationSupported",
+    "requestNotificationPermission",
+    "sendSystemNotification"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  },
+  {
+   "file": "src/utils/workosStorage.ts",
+   "loc": 1201,
+   "bytes": 45833,
+   "tags": [
+    "utility",
+    "storage"
+   ],
+   "reachableFromEntry": true,
+   "exports": [
+    "exportWorkOSToCSV",
+    "exportWorkOSToJSON",
+    "loadActiveTimer",
+    "loadActivity",
+    "loadAppointments",
+    "loadAutomations",
+    "loadCommitments",
+    "loadCurrentWorkspaceId",
+    "loadDailyReviews",
+    "loadGoals",
+    "loadHabits",
+    "loadInbox",
+    "loadMeetings",
+    "loadNotes",
+    "loadProjects",
+    "loadRoutine",
+    "loadTasks",
+    "loadTeam",
+    "loadWorkOSData",
+    "loadWorkspaces",
+    "logWorkActivity",
+    "parseNaturalLanguageTask",
+    "resetWorkOSToDefault",
+    "saveActiveTimer",
+    "saveActivity",
+    "saveAppointments",
+    "saveAutomations",
+    "saveCommitments",
+    "saveCurrentWorkspaceId",
+    "saveDailyReviews"
+   ],
+   "inputs": 0,
+   "hasNameAttr": false,
+   "hasValidation": true,
+   "handlers": [],
+   "storageKeys": []
+  }
+ ],
+ "storage": {
+  "suite_stock_products_v2": {
+   "constName": "STOCK_PRODUCTS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_stock_records_v2": {
+   "constName": "STOCK_RECORDS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_stock_categories_v2": {
+   "constName": "STOCK_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_stock_statuses_v2": {
+   "constName": "STOCK_STATUSES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_stock_seq_v2": {
+   "constName": "STOCK_SEQ",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_transactions_v2": {
+   "constName": "FIN_TRANSACTIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_movements_v2": {
+   "constName": "FIN_MOVEMENTS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_restrictions_v2": {
+   "constName": "FIN_RESTRICTIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_movement_types_v2": {
+   "constName": "FIN_MOVEMENT_TYPES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_importance_v2": {
+   "constName": "FIN_IMPORTANCE",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_category_accounts_v2": {
+   "constName": "FIN_CATEGORY_ACCOUNTS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_restriction_accounts_v2": {
+   "constName": "FIN_RESTRICTION_ACCOUNTS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_account_names_v2": {
+   "constName": "FIN_ACCOUNT_NAMES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_custody_records_v1": {
+   "constName": "CUSTODY_RECORDS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_custody_categories_v1": {
+   "constName": "CUSTODY_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_custody_responsibles_v1": {
+   "constName": "CUSTODY_RESPONSIBLES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_custody_statuses_v1": {
+   "constName": "CUSTODY_STATUSES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_custody_priorities_v1": {
+   "constName": "CUSTODY_PRIORITIES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_custody_audit_v1": {
+   "constName": "CUSTODY_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_tasks_items_v2": {
+   "constName": "TASKS_ITEMS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_tasks_commitments_v2": {
+   "constName": "TASKS_COMMITMENTS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_tasks_categories_v2": {
+   "constName": "TASKS_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_tasks_operations_v2": {
+   "constName": "TASKS_OPERATIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_tasks_assignees_v2": {
+   "constName": "TASKS_ASSIGNEES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_tasks_audit_v2": {
+   "constName": "TASKS_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_customers_items_v2": {
+   "constName": "CUSTOMERS_ITEMS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_customers_visits_v2": {
+   "constName": "CUSTOMERS_VISITS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_customers_sources_v2": {
+   "constName": "CUSTOMERS_SOURCES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_customers_regions_v2": {
+   "constName": "CUSTOMERS_REGIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_customers_routes_v2": {
+   "constName": "CUSTOMERS_ROUTES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_customers_responsibles_v2": {
+   "constName": "CUSTOMERS_RESPONSIBLES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_customers_audit_v2": {
+   "constName": "CUSTOMERS_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_doctors_items_v1": {
+   "constName": "DOCTORS_ITEMS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_doctors_visits_v1": {
+   "constName": "DOCTORS_VISITS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_doctors_regions_v1": {
+   "constName": "DOCTORS_REGIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_doctors_routes_v1": {
+   "constName": "DOCTORS_ROUTES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_doctors_responsibles_v1": {
+   "constName": "DOCTORS_RESPONSIBLES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_doctors_specialties_v1": {
+   "constName": "DOCTORS_SPECIALTIES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_doctors_audit_v1": {
+   "constName": "DOCTORS_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_debts_records_v1": {
+   "constName": "DEBTS_RECORDS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_debts_commitments_v1": {
+   "constName": "DEBTS_COMMITMENTS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_debts_categories_v1": {
+   "constName": "DEBTS_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_debts_owners_v1": {
+   "constName": "DEBTS_OWNERS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_debts_audit_v1": {
+   "constName": "DEBTS_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_knowledge_notes_v1": {
+   "constName": "KNOWLEDGE_NOTES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_knowledge_folders_v1": {
+   "constName": "KNOWLEDGE_FOLDERS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_knowledge_tags_v1": {
+   "constName": "KNOWLEDGE_TAGS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_knowledge_templates_v1": {
+   "constName": "KNOWLEDGE_TEMPLATES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_knowledge_audit_v1": {
+   "constName": "KNOWLEDGE_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_items_v1": {
+   "constName": "ROUTINES_ITEMS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_occurrences_v1": {
+   "constName": "ROUTINES_OCCURRENCES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_executions_v1": {
+   "constName": "ROUTINES_EXECUTIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_categories_v1": {
+   "constName": "ROUTINES_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_tags_v1": {
+   "constName": "ROUTINES_TAGS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_templates_v1": {
+   "constName": "ROUTINES_TEMPLATES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_exceptions_v1": {
+   "constName": "ROUTINES_EXCEPTIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_audit_v1": {
+   "constName": "ROUTINES_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_routines_settings_v1": {
+   "constName": "ROUTINES_SETTINGS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_links_records_v1": {
+   "constName": "LINKS_RECORDS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_links_classifications_v1": {
+   "constName": "LINKS_CLASSIFICATIONS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_links_categories_v1": {
+   "constName": "LINKS_CATEGORIES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_links_types_v1": {
+   "constName": "LINKS_TYPES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_links_importances_v1": {
+   "constName": "LINKS_IMPORTANCES",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_unified_settings_v2": {
+   "constName": "SETTINGS",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_unified_audit_v2": {
+   "constName": "SYSTEM_AUDIT",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_unified_autobackup_v2": {
+   "constName": "UNIFIED_BACKUP",
+   "declaredIn": "src/utils/storage.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_active_auth_session_v1": {
+   "constName": "(literal)",
+   "declaredIn": "src/context/AuthContext.tsx",
+   "reads": [],
+   "writes": []
+  },
+  "suite_device_id_v1": {
+   "constName": "(literal)",
+   "declaredIn": "src/core/audit/AuditService.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_db_schema_version": {
+   "constName": "(literal)",
+   "declaredIn": "src/database/migrations/MigrationRunner.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_fin_": {
+   "constName": "(literal)",
+   "declaredIn": "src/database/repositories/FinancialRepository.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_tasks_tasks_v2": {
+   "constName": "(literal)",
+   "declaredIn": "src/database/repositories/WorkTaskRepository.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_sync_conflicts_v1": {
+   "constName": "(literal)",
+   "declaredIn": "src/sync/ConflictResolver.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_sync_inbox_v1": {
+   "constName": "(literal)",
+   "declaredIn": "src/sync/Inbox.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_sync_outbox_v1": {
+   "constName": "(literal)",
+   "declaredIn": "src/sync/Outbox.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_sync_state_v1": {
+   "constName": "(literal)",
+   "declaredIn": "src/sync/SyncEngine.ts",
+   "reads": [],
+   "writes": []
+  },
+  "suite_sync_config_v1": {
+   "constName": "(literal)",
+   "declaredIn": "src/sync/SyncState.ts",
+   "reads": [],
+   "writes": []
+  }
+ },
+ "contracts": {
+  "Customer": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "subId",
+    "name",
+    "source",
+    "region",
+    "route",
+    "significance",
+    "status",
+    "responsible",
+    "taskDesc",
+    "dateBegin",
+    "dateEnd",
+    "balanceYER",
+    "balanceSAR",
+    "balanceUSD",
+    "notes",
+    "phone",
+    "address",
+    "isInternalAccount",
+    "lastVisitDate",
+    "visitResult",
+    "createdAt",
+    "updatedAt"
+   ],
+   "count": 23
+  },
+  "DoctorRecord": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "name",
+    "source",
+    "specialty",
+    "clinicName",
+    "region",
+    "route",
+    "significance",
+    "responsible",
+    "taskDesc",
+    "dateBegin",
+    "dateEnd",
+    "status",
+    "notes",
+    "phone",
+    "address",
+    "visitResult",
+    "samplesGiven",
+    "lastVisitDate",
+    "createdAt",
+    "updatedAt"
+   ],
+   "count": 21
+  },
+  "DoctorVisitLog": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "doctorId",
+    "doctorName",
+    "date",
+    "dayOfWeek",
+    "responsible",
+    "status",
+    "notes",
+    "visitResult",
+    "samplesGiven",
+    "nextFollowUpDate",
+    "createdAt"
+   ],
+   "count": 12
+  },
+  "CustomerVisitRecord": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "customerId",
+    "customerName",
+    "date",
+    "dayOfWeek",
+    "responsible",
+    "status",
+    "notes",
+    "amountCollectedYER",
+    "amountCollectedSAR",
+    "amountCollectedUSD",
+    "createdAt"
+   ],
+   "count": 12
+  },
+  "Task": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "sub",
+    "start",
+    "end",
+    "title",
+    "desc",
+    "cat",
+    "op",
+    "pri",
+    "status",
+    "resp",
+    "amount",
+    "createdAt",
+    "updatedAt"
+   ],
+   "count": 14
+  },
+  "Commitment": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "name",
+    "amount",
+    "pri",
+    "due",
+    "status",
+    "desc",
+    "createdAt",
+    "updatedAt"
+   ],
+   "count": 9
+  },
+  "FinancialTransaction": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "day",
+    "date",
+    "importance",
+    "movement",
+    "restriction",
+    "movementType",
+    "categoryAccount",
+    "restrictionAccount",
+    "accountName",
+    "description",
+    "number",
+    "amountYER",
+    "amountSAR",
+    "amountUSD",
+    "isDraft",
+    "attachmentUrl",
+    "createdAt",
+    "updatedAt"
+   ],
+   "count": 19
+  },
+  "DebtRecord": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "book",
+    "date",
+    "icon",
+    "name",
+    "currency",
+    "debit",
+    "credit",
+    "note",
+    "isCompleted",
+    "runningBalance",
+    "createdAt",
+    "updatedAt"
+   ],
+   "count": 13
+  },
+  "DebtCommitment": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "name",
+    "desc",
+    "date",
+    "endDate",
+    "priority",
+    "status",
+    "icon",
+    "owner",
+    "category",
+    "amount",
+    "currency",
+    "dir",
+    "note",
+    "payments",
+    "createdAt",
+    "updatedAt"
+   ],
+   "count": 17
+  },
+  "MovementRecord": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "mainId",
+    "subId",
+    "date",
+    "beneficiary",
+    "description",
+    "movementType",
+    "status",
+    "category",
+    "items"
+   ],
+   "count": 10
+  },
+  "Product": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "name",
+    "openingStock",
+    "unit",
+    "isActive",
+    "description",
+    "createdAt"
+   ],
+   "count": 7
+  },
+  "NoteRecord": {
+   "definedIn": "src/types/index.ts",
+   "fields": [
+    "id",
+    "title",
+    "content",
+    "summary",
+    "type",
+    "category",
+    "subCategory",
+    "priority",
+    "status",
+    "tags",
+    "folderId",
+    "folderName",
+    "date",
+    "time",
+    "isPinned",
+    "isFavorite",
+    "isLocked",
+    "pinCode",
+    "isQuickNote",
+    "isArchived",
+    "isDeleted",
+    "color",
+    "source",
+    "linkedCustomerId",
+    "linkedCustomerName",
+    "linkedDoctorId",
+    "linkedDoctorName",
+    "linkedTaskId",
+    "linkedTaskTitle",
+    "linkedProject",
+    "nextReviewDate",
+    "reviewReminderEnabled",
+    "attachments",
+    "tasks",
+    "reminders",
+    "links",
+    "versions",
+    "createdAt",
+    "updatedAt",
+    "deletedAt"
+   ],
+   "count": 40
+  },
+  "LinkRecord": {
+   "definedIn": "src/types/linksLibrary.ts",
+   "fields": [
+    "id",
+    "siteName",
+    "desc",
+    "url",
+    "type",
+    "classification",
+    "category",
+    "importance",
+    "notes",
+    "isFavorite",
+    "visitCount",
+    "createdAt",
+    "updatedAt"
+   ],
+   "count": 13
+  }
+ },
+ "duplicateTypes": {
+  "FinancialSummary": [
+   "src/services/financial/FinancialService.ts",
+   "src/utils/financial.ts"
+  ],
+  "TaskPriority": [
+   "src/types/index.ts",
+   "src/types/workos.ts"
+  ],
+  "TaskStatus": [
+   "src/types/index.ts",
+   "src/types/workos.ts"
+  ],
+  "ActiveTimerState": [
+   "src/types/workos.ts",
+   "src/utils/workosStorage.ts"
+  ]
+ },
+ "duplicateFunctions": {
+  "saved": [
+   "src/app/App.tsx",
+   "src/context/ThemeContext.tsx",
+   "src/services/crm/CustomerService.ts",
+   "src/services/crm/DoctorService.ts",
+   "src/services/financial/FinancialService.ts",
+   "src/sync/SyncState.ts"
+  ],
+  "handleDeleteRecord": [
+   "src/app/App.tsx",
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/debts/DebtsModule.tsx"
+  ],
+  "updated": [
+   "src/app/App.tsx",
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/customers/CustomersModule.tsx",
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/doctors/DoctorsModule.tsx",
+   "src/components/knowledge/KnowledgeModule.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/routines/RoutineTimerModal.tsx",
+   "src/components/routines/RoutineWizardModal.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/workos/WorkOSTaskDrawer.tsx",
+   "src/core/audit/AuditService.ts",
+   "src/database/repositories/BaseRepository.ts",
+   "src/database/repositories/CustomerRepository.ts",
+   "src/database/repositories/DebtRepository.ts",
+   "src/services/inventory/InventoryService.ts",
+   "src/sync/ConflictResolver.ts",
+   "src/utils/syncOutbox.ts",
+   "src/utils/taskflowStorage.ts"
+  ],
+  "handleBulkDelete": [
+   "src/app/App.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "filtered": [
+   "src/app/App.tsx",
+   "src/database/repositories/BaseRepository.ts",
+   "src/utils/notes.ts"
+  ],
+  "handleSaveTask": [
+   "src/app/App.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/workos/WorkOSModule.tsx"
+  ],
+  "handleDeleteTask": [
+   "src/app/App.tsx",
+   "src/components/knowledge/NoteEditorModal.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/workos/WorkOSModule.tsx"
+  ],
+  "isCompleted": [
+   "src/app/App.tsx",
+   "src/components/customers/VisitsPlanner.tsx",
+   "src/components/doctors/DoctorDirectory.tsx",
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/components/routines/RoutineOccurrencesList.tsx",
+   "src/components/tasks/CommitmentsTable.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/database/repositories/DebtRepository.ts",
+   "src/utils/debts.ts"
+  ],
+  "remaining": [
+   "src/app/App.tsx",
+   "src/components/settings/tabs/InventorySettingsTab.tsx",
+   "src/components/tasks/CalendarView.tsx",
+   "src/utils/debts.ts"
+  ],
+  "moveStyle": [
+   "src/components/DashboardView.tsx",
+   "src/components/MovementDetailsModal.tsx",
+   "src/components/RecordsView.tsx",
+   "src/components/ReportsView.tsx"
+  ],
+  "itemsEntries": [
+   "src/components/DashboardView.tsx",
+   "src/components/MovementDetailsModal.tsx",
+   "src/components/RecordsView.tsx",
+   "src/components/ReportsView.tsx"
+  ],
+  "totalUnits": [
+   "src/components/DashboardView.tsx",
+   "src/components/MovementDetailsModal.tsx",
+   "src/components/MovementModal.tsx",
+   "src/components/RecordsView.tsx",
+   "src/utils/excelExport.ts"
+  ],
+  "handleSettingsUpdate": [
+   "src/components/Header.tsx",
+   "src/components/Sidebar.tsx",
+   "src/components/dashboard/UnifiedDashboard.tsx",
+   "src/context/AuthContext.tsx"
+  ],
+  "todayArabic": [
+   "src/components/Header.tsx",
+   "src/components/customers/VisitsPlanner.tsx",
+   "src/components/dashboard/UnifiedDashboard.tsx",
+   "src/components/doctors/DoctorVisitsPlanner.tsx"
+  ],
+  "existing": [
+   "src/components/InventoryView.tsx",
+   "src/services/inventory/InventoryService.ts",
+   "src/utils/autoJournaling.ts"
+  ],
+  "opening": [
+   "src/components/InventoryView.tsx",
+   "src/components/ReportsView.tsx",
+   "src/utils/stock.ts"
+  ],
+  "query": [
+   "src/components/InventoryView.tsx",
+   "src/components/MovementModal.tsx",
+   "src/components/RecordsView.tsx"
+  ],
+  "stats": [
+   "src/components/InventoryView.tsx",
+   "src/components/customers/BalancesLedger.tsx",
+   "src/components/customers/CustomerReports.tsx",
+   "src/components/customers/CustomersModule.tsx",
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/doctors/DoctorReports.tsx",
+   "src/components/doctors/DoctorsModule.tsx",
+   "src/components/knowledge/NotesDashboard.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/tasks/CommitmentsTable.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/components/workos/WorkOSProjectsTab.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "dayName": [
+   "src/components/MovementDetailsModal.tsx",
+   "src/components/MovementModal.tsx",
+   "src/components/RecordsView.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/utils/formatters.ts"
+  ],
+  "handlePrint": [
+   "src/components/MovementDetailsModal.tsx",
+   "src/components/ReportsView.tsx",
+   "src/components/custody/CustodyPrintReport.tsx",
+   "src/components/customers/CustomerStatementModal.tsx",
+   "src/components/financial/FinancialPrintModal.tsx",
+   "src/components/financial/FinancialVoucherModal.tsx",
+   "src/components/knowledge/NoteDetailModal.tsx",
+   "src/components/links/LinksPrintReport.tsx",
+   "src/components/tasks/TasksModule.tsx"
+  ],
+  "handleSubmit": [
+   "src/components/MovementModal.tsx",
+   "src/components/auth/LoginScreen.tsx",
+   "src/components/custody/CustodyIssueModal.tsx",
+   "src/components/customers/CustomerModal.tsx",
+   "src/components/customers/RecordVisitModal.tsx",
+   "src/components/debts/CommitmentModal.tsx",
+   "src/components/debts/DebtRecordModal.tsx",
+   "src/components/doctors/DoctorModal.tsx",
+   "src/components/doctors/RecordDoctorVisitModal.tsx",
+   "src/components/financial/FinancialModal.tsx",
+   "src/components/knowledge/NoteEditorModal.tsx",
+   "src/components/links/LinkModal.tsx",
+   "src/components/routines/RoutinePostponeModal.tsx",
+   "src/components/settings/tabs/UsersTab.tsx",
+   "src/components/taskflow/TaskFlowMembersModal.tsx",
+   "src/components/taskflow/TaskFlowTaskModal.tsx",
+   "src/components/tasks/CommitmentModal.tsx",
+   "src/components/tasks/TaskModal.tsx",
+   "src/components/workos/WorkOSInbox.tsx",
+   "src/components/workos/WorkOSQuickAddModal.tsx"
+  ],
+  "exists": [
+   "src/components/MovementModal.tsx",
+   "src/components/customers/CustomersModule.tsx",
+   "src/components/doctors/DoctorsModule.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/workos/WorkOSModule.tsx"
+  ],
+  "numStr": [
+   "src/components/MovementModal.tsx",
+   "src/utils/debts.ts",
+   "src/utils/excel.ts"
+  ],
+  "Icon": [
+   "src/components/Navbar.tsx",
+   "src/components/Sidebar.tsx",
+   "src/components/settings/UnifiedSettings.tsx",
+   "src/components/workos/WorkOSCommandPaletteModal.tsx",
+   "src/components/workos/WorkOSKPICards.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSQuickAddModal.tsx"
+  ],
+  "isActive": [
+   "src/components/Navbar.tsx",
+   "src/components/Sidebar.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/settings/UnifiedSettings.tsx",
+   "src/components/workos/WorkOSKPICards.tsx",
+   "src/components/workos/WorkOSModule.tsx"
+  ],
+  "filteredRecords": [
+   "src/components/RecordsView.tsx",
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/debts/DebtLedgerTable.tsx"
+  ],
+  "start": [
+   "src/components/RecordsView.tsx",
+   "src/components/customers/CustomerDirectory.tsx",
+   "src/components/knowledge/NoteEditorModal.tsx",
+   "src/components/taskflow/TaskFlowTimelineView.tsx",
+   "src/utils/routines.ts"
+  ],
+  "handleResetFilters": [
+   "src/components/RecordsView.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/tasks/TasksModule.tsx"
+  ],
+  "handleToggleSelectAll": [
+   "src/components/RecordsView.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/knowledge/NotesListView.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "merged": [
+   "src/components/RecordsView.tsx",
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/customers/CustomersModule.tsx",
+   "src/components/knowledge/KnowledgeModule.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/database/repositories/BaseRepository.ts",
+   "src/sync/ConflictResolver.ts"
+  ],
+  "items": [
+   "src/components/RecordsView.tsx",
+   "src/database/repositories/BaseRepository.ts",
+   "src/utils/stock.ts"
+  ],
+  "isSelected": [
+   "src/components/RecordsView.tsx",
+   "src/components/SearchableSelect.tsx",
+   "src/components/auth/LoginScreen.tsx",
+   "src/components/customers/VisitsPlanner.tsx",
+   "src/components/debts/DebtLedgerTable.tsx",
+   "src/components/debts/DebtRecordModal.tsx",
+   "src/components/doctors/DoctorDirectory.tsx",
+   "src/components/doctors/DoctorVisitsPlanner.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/settings/tabs/GeneralSettingsTab.tsx",
+   "src/components/settings/tabs/SecurityPermissionsTab.tsx",
+   "src/components/taskflow/TaskFlowUserSwitchModal.tsx",
+   "src/components/workos/WorkOSTaskDrawer.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "isInput": [
+   "src/components/ReportsView.tsx",
+   "src/utils/excel.ts",
+   "src/utils/stock.ts"
+  ],
+  "handleClickOutside": [
+   "src/components/SearchableSelect.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/workos/WorkOSUnifiedTopBar.tsx"
+  ],
+  "fileInputRef": [
+   "src/components/SettingsView.tsx",
+   "src/components/common/UniversalDataExchangeModal.tsx",
+   "src/components/customers/ImportCustomersModal.tsx",
+   "src/components/doctors/ImportDoctorsModal.tsx",
+   "src/components/financial/ImportFinancialModal.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/settings/tabs/CompanyInfoTab.tsx",
+   "src/components/settings/tabs/DatabasesTab.tsx"
+  ],
+  "handleFileChange": [
+   "src/components/SettingsView.tsx",
+   "src/components/customers/ImportCustomersModal.tsx",
+   "src/components/doctors/ImportDoctorsModal.tsx",
+   "src/components/financial/ImportFinancialModal.tsx",
+   "src/components/settings/tabs/DatabasesTab.tsx"
+  ],
+  "file": [
+   "src/components/SettingsView.tsx",
+   "src/components/common/UniversalDataExchangeModal.tsx",
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/settings/tabs/CompanyInfoTab.tsx",
+   "src/components/settings/tabs/DatabasesTab.tsx",
+   "src/components/taskflow/TaskFlowImportExportModal.tsx"
+  ],
+  "current": [
+   "src/components/common/AnimatedCounter.tsx",
+   "src/sync/SyncState.ts",
+   "src/utils/dueAlerts.ts",
+   "src/utils/routines.ts",
+   "src/utils/storage.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "result": [
+   "src/components/common/UniversalDataExchangeModal.tsx",
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/doctors/ImportDoctorsModal.tsx",
+   "src/components/financial/ImportFinancialModal.tsx",
+   "src/components/knowledge/KnowledgeModule.tsx",
+   "src/components/knowledge/NotesListView.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/stock/StockModule.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/services/financial/FinancialService.ts"
+  ],
+  "handleDrop": [
+   "src/components/common/UniversalDataExchangeModal.tsx",
+   "src/components/customers/ImportCustomersModal.tsx",
+   "src/components/doctors/ImportDoctorsModal.tsx",
+   "src/components/financial/ImportFinancialModal.tsx",
+   "src/components/taskflow/TaskFlowBoardView.tsx",
+   "src/components/workos/WorkOSKanbanTab.tsx"
+  ],
+  "handleImportFile": [
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/knowledge/KnowledgeModule.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/stock/StockModule.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "target": [
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/customers/CustomersModule.tsx",
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/debts/DueAlertsPanel.tsx",
+   "src/components/doctors/DoctorsModule.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/knowledge/KnowledgeModule.tsx",
+   "src/components/taskflow/TaskFlowBoardView.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/services/financial/FinancialService.ts"
+  ],
+  "reader": [
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/knowledge/NoteEditorModal.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/settings/tabs/CompanyInfoTab.tsx",
+   "src/components/settings/tabs/DatabasesTab.tsx",
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "parsed": [
+   "src/components/custody/CustodyIssuesModule.tsx",
+   "src/components/links/LinksLibraryModule.tsx",
+   "src/components/workos/WorkOSAICopilotModal.tsx",
+   "src/components/workos/WorkOSInbox.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/utils/dueAlerts.ts",
+   "src/utils/settingsStorage.ts",
+   "src/utils/storage.ts",
+   "src/utils/syncOutbox.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "getPriorityBadge": [
+   "src/components/custody/CustodyIssuesTable.tsx",
+   "src/components/workos/WorkOSProjectsTab.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "getStatusBadge": [
+   "src/components/custody/CustodyIssuesTable.tsx",
+   "src/components/doctors/DoctorDetailsModal.tsx",
+   "src/components/doctors/DoctorDirectory.tsx",
+   "src/components/doctors/DoctorVisitsPlanner.tsx",
+   "src/components/workos/WorkOSProjectsView.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "match": [
+   "src/components/customers/BalancesLedger.tsx",
+   "src/components/customers/VisitsPlanner.tsx",
+   "src/utils/autoJournaling.ts",
+   "src/utils/customers.ts",
+   "src/utils/doctors.ts",
+   "src/utils/notes.ts",
+   "src/utils/stock.ts"
+  ],
+  "list": [
+   "src/components/customers/CustomerDirectory.tsx",
+   "src/components/doctors/DoctorVisitsPlanner.tsx",
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/database/repositories/DebtRepository.ts",
+   "src/sync/ConflictResolver.ts",
+   "src/utils/routines.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "isDueToday": [
+   "src/components/customers/CustomerDirectory.tsx",
+   "src/components/doctors/DoctorDirectory.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx"
+  ],
+  "generated": [
+   "src/components/customers/CustomerModal.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/utils/autoJournaling.ts"
+  ],
+  "text": [
+   "src/components/customers/CustomerStatementModal.tsx",
+   "src/components/financial/FinancialVoucherModal.tsx",
+   "src/components/knowledge/NoteDetailModal.tsx",
+   "src/components/routines/RoutineAIAssistantModal.tsx",
+   "src/utils/routines.ts"
+  ],
+  "handleExportExcel": [
+   "src/components/customers/CustomersModule.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "handleDragOver": [
+   "src/components/customers/ImportCustomersModal.tsx",
+   "src/components/financial/ImportFinancialModal.tsx",
+   "src/components/taskflow/TaskFlowBoardView.tsx",
+   "src/components/workos/WorkOSKanbanTab.tsx"
+  ],
+  "handleDragLeave": [
+   "src/components/customers/ImportCustomersModal.tsx",
+   "src/components/financial/ImportFinancialModal.tsx",
+   "src/components/taskflow/TaskFlowBoardView.tsx"
+  ],
+  "count": [
+   "src/components/customers/VisitsPlanner.tsx",
+   "src/components/debts/DebtLedgerTable.tsx",
+   "src/components/doctors/DoctorVisitsPlanner.tsx",
+   "src/components/knowledge/NotesDashboard.tsx",
+   "src/components/settings/tabs/SecurityPermissionsTab.tsx"
+  ],
+  "isInProgress": [
+   "src/components/customers/VisitsPlanner.tsx",
+   "src/components/routines/RoutineOccurrencesList.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx"
+  ],
+  "urgentTasks": [
+   "src/components/dashboard/UnifiedDashboard.tsx",
+   "src/components/workos/WorkOSAICopilotModal.tsx",
+   "src/components/workos/WorkOSDashboard.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSTeamWorkloadTab.tsx"
+  ],
+  "isIncome": [
+   "src/components/dashboard/UnifiedDashboard.tsx",
+   "src/components/financial/FinancialPrintModal.tsx",
+   "src/utils/financial.ts"
+  ],
+  "todayStr": [
+   "src/components/debts/CommitmentsTable.tsx",
+   "src/components/debts/DueAlertsPanel.tsx",
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/components/routines/RoutineOccurrencesList.tsx",
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/components/taskflow/TaskFlowTaskModal.tsx",
+   "src/components/tasks/CalendarView.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/components/workos/WorkOSAICopilotModal.tsx",
+   "src/components/workos/WorkOSDashboard.tsx",
+   "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "src/components/workos/WorkOSKanbanTab.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx",
+   "src/components/workos/WorkOSProjectsTab.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/components/workos/WorkOSTeamWorkloadTab.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx",
+   "src/components/workos/WorkOSUnifiedTopBar.tsx",
+   "src/data/defaultRoutines.ts",
+   "src/utils/doctors.ts",
+   "src/utils/notes.ts",
+   "src/utils/taskflowStorage.ts",
+   "src/utils/tasks.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "matchId": [
+   "src/components/debts/CommitmentsTable.tsx",
+   "src/components/debts/DebtLedgerTable.tsx",
+   "src/components/tasks/CommitmentsTable.tsx",
+   "src/utils/financial.ts",
+   "src/utils/tasks.ts"
+  ],
+  "matchName": [
+   "src/components/debts/CommitmentsTable.tsx",
+   "src/components/debts/DebtLedgerTable.tsx",
+   "src/components/tasks/CommitmentsTable.tsx"
+  ],
+  "matchDesc": [
+   "src/components/debts/CommitmentsTable.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/tasks/CommitmentsTable.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/utils/financial.ts",
+   "src/utils/tasks.ts"
+  ],
+  "isOverdue": [
+   "src/components/debts/CommitmentsTable.tsx",
+   "src/components/workos/WorkOSDashboard.tsx",
+   "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "src/components/workos/WorkOSKanbanTab.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx"
+  ],
+  "matchTitle": [
+   "src/components/debts/DebtAuditView.tsx",
+   "src/components/notifications/DueAlertsModal.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/utils/tasks.ts"
+  ],
+  "handleExportJSON": [
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/stock/StockModule.tsx",
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/components/tasks/TasksModule.tsx"
+  ],
+  "data": [
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/settings/tabs/DatabasesTab.tsx",
+   "src/components/stock/StockModule.tsx",
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/database/repositories/BaseRepository.ts",
+   "src/database/repositories/DebtRepository.ts",
+   "src/database/repositories/FinancialRepository.ts",
+   "src/sync/ConflictResolver.ts",
+   "src/sync/Inbox.ts",
+   "src/sync/Outbox.ts",
+   "src/utils/custodyExport.ts",
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/multiTabSync.ts",
+   "src/utils/taskflowStorage.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "blob": [
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/knowledge/NoteDetailModal.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/settings/tabs/DatabasesTab.tsx",
+   "src/components/stock/StockModule.tsx",
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/utils/custodyExport.ts",
+   "src/utils/debts.ts",
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/linksExport.ts",
+   "src/utils/notes.ts",
+   "src/utils/tasks.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "link": [
+   "src/components/debts/DebtsModule.tsx",
+   "src/components/stock/StockModule.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/utils/custodyExport.ts",
+   "src/utils/debts.ts",
+   "src/utils/doctors.ts",
+   "src/utils/linksExport.ts",
+   "src/utils/notes.ts",
+   "src/utils/tasks.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "today": [
+   "src/components/debts/DueAlertsPanel.tsx",
+   "src/components/financial/FinancialModal.tsx",
+   "src/components/knowledge/KnowledgeModule.tsx",
+   "src/components/knowledge/NotesDashboard.tsx",
+   "src/components/knowledge/NotesListView.tsx",
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/workos/WorkOSFilterStrip.tsx",
+   "src/components/workos/WorkOSHabitsView.tsx",
+   "src/utils/customers.ts",
+   "src/utils/debts.ts",
+   "src/utils/doctors.ts",
+   "src/utils/notes.ts",
+   "src/utils/routines.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "diffTime": [
+   "src/components/debts/DueAlertsPanel.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx",
+   "src/utils/notes.ts"
+  ],
+  "progressPercent": [
+   "src/components/debts/PartialPaymentModal.tsx",
+   "src/components/routines/RoutineTimerModal.tsx",
+   "src/utils/debts.ts"
+  ],
+  "getSignificanceBadge": [
+   "src/components/doctors/DoctorDetailsModal.tsx",
+   "src/components/doctors/DoctorDirectory.tsx",
+   "src/components/doctors/DoctorVisitsPlanner.tsx"
+  ],
+  "handleSelectAll": [
+   "src/components/doctors/DoctorDirectory.tsx",
+   "src/components/settings/tabs/SecurityPermissionsTab.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx"
+  ],
+  "isToday": [
+   "src/components/doctors/DoctorVisitsPlanner.tsx",
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/components/routines/RoutineOccurrencesList.tsx",
+   "src/components/tasks/CalendarView.tsx",
+   "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "src/components/workos/WorkOSTasksView.tsx"
+  ],
+  "worksheet": [
+   "src/components/doctors/ImportDoctorsModal.tsx",
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/notes.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "workbook": [
+   "src/components/doctors/ImportDoctorsModal.tsx",
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/notes.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "nextId": [
+   "src/components/financial/FinancialModal.tsx",
+   "src/components/tasks/TaskModal.tsx",
+   "src/utils/customers.ts"
+  ],
+  "trimmed": [
+   "src/components/financial/FinancialModal.tsx",
+   "src/utils/formatters.ts",
+   "src/utils/linksExport.ts",
+   "src/utils/storage.ts",
+   "src/utils/syncOutbox.ts"
+  ],
+  "year": [
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/components/tasks/CalendarView.tsx",
+   "src/utils/dueAlerts.ts"
+  ],
+  "month": [
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/components/tasks/CalendarView.tsx",
+   "src/utils/dueAlerts.ts"
+  ],
+  "dayOfWeek": [
+   "src/components/financial/FinancialModule.tsx",
+   "src/utils/financial.ts",
+   "src/utils/routines.ts"
+  ],
+  "diffToSat": [
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/tasks/CalendarView.tsx",
+   "src/utils/financial.ts"
+  ],
+  "handleOpenAdd": [
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/tasks/CommitmentsTable.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/components/workos/WorkOSCommandPaletteModal.tsx",
+   "src/components/workos/WorkOSUnifiedTopBar.tsx"
+  ],
+  "handleOpenEdit": [
+   "src/components/financial/FinancialModule.tsx",
+   "src/components/tasks/CommitmentsTable.tsx",
+   "src/components/tasks/TasksModule.tsx"
+  ],
+  "handleCopy": [
+   "src/components/financial/FinancialVoucherModal.tsx",
+   "src/components/links/LinkCard.tsx",
+   "src/components/links/LinksTableView.tsx"
+  ],
+  "activeNotes": [
+   "src/components/knowledge/AIAssistantModal.tsx",
+   "src/components/knowledge/NotesDashboard.tsx",
+   "src/utils/notes.ts"
+  ],
+  "updatedTasks": [
+   "src/components/knowledge/KnowledgeModule.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/workos/WorkOSModule.tsx"
+  ],
+  "isNew": [
+   "src/components/knowledge/NoteEditorModal.tsx",
+   "src/services/crm/CustomerService.ts",
+   "src/services/crm/DoctorService.ts",
+   "src/services/custody/CustodyService.ts",
+   "src/services/debts/DebtService.ts",
+   "src/services/financial/FinancialService.ts",
+   "src/services/work/TaskService.ts"
+  ],
+  "categories": [
+   "src/components/knowledge/TemplatesLibraryModal.tsx",
+   "src/components/routines/HabitsStreakView.tsx",
+   "src/components/routines/RoutineTemplatesModal.tsx",
+   "src/components/settings/tabs/SecurityPermissionsTab.tsx"
+  ],
+  "routine": [
+   "src/components/routines/RoutineAIAssistantModal.tsx",
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/components/routines/RoutineOccurrencesList.tsx",
+   "src/components/routines/RoutinesModule.tsx"
+  ],
+  "routineMap": [
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/components/routines/RoutineOccurrencesList.tsx",
+   "src/utils/routines.ts"
+  ],
+  "dateStr": [
+   "src/components/routines/RoutineCalendarView.tsx",
+   "src/components/settings/tabs/DatabasesTab.tsx",
+   "src/data/defaultRecords.ts",
+   "src/utils/excel.ts",
+   "src/utils/routines.ts"
+  ],
+  "completionRate": [
+   "src/components/routines/RoutineDetailModal.tsx",
+   "src/components/routines/RoutineTimerModal.tsx",
+   "src/components/workos/WorkOSDashboard.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/components/workos/WorkOSTeamWorkloadTab.tsx",
+   "src/utils/doctors.ts",
+   "src/utils/tasks.ts"
+  ],
+  "handleSave": [
+   "src/components/routines/RoutineWizardModal.tsx",
+   "src/components/taskflow/TaskFlowProjectsModal.tsx",
+   "src/components/workos/WorkOSTaskDetailModal.tsx",
+   "src/components/workos/WorkOSTaskDrawer.tsx"
+  ],
+  "rows": [
+   "src/components/routines/RoutinesModule.tsx",
+   "src/utils/custodyExport.ts",
+   "src/utils/debts.ts",
+   "src/utils/doctors.ts",
+   "src/utils/excelExport.ts",
+   "src/utils/linksExport.ts",
+   "src/utils/notes.ts",
+   "src/utils/universalImporters.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "exportData": [
+   "src/components/routines/RoutinesModule.tsx",
+   "src/utils/doctors.ts",
+   "src/utils/linksExport.ts"
+  ],
+  "duration": [
+   "src/components/routines/RoutinesModule.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx",
+   "src/utils/universalImporters.ts"
+  ],
+  "jsonStr": [
+   "src/components/settings/tabs/DatabasesTab.tsx",
+   "src/utils/excel.ts",
+   "src/utils/linksExport.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "projectMap": [
+   "src/components/taskflow/TaskFlowBoardView.tsx",
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/components/taskflow/TaskFlowTimelineView.tsx",
+   "src/components/workos/WorkOSKanbanTab.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx",
+   "src/components/workos/WorkOSPrioritiesTab.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx",
+   "src/utils/taskflowStorage.ts"
+  ],
+  "memberMap": [
+   "src/components/taskflow/TaskFlowBoardView.tsx",
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/components/taskflow/TaskFlowTimelineView.tsx",
+   "src/utils/taskflowStorage.ts"
+  ],
+  "project": [
+   "src/components/taskflow/TaskFlowBoardView.tsx",
+   "src/components/taskflow/TaskFlowTimelineView.tsx",
+   "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "src/components/workos/WorkOSKanbanTab.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx"
+  ],
+  "overdue": [
+   "src/components/taskflow/TaskFlowBoardView.tsx",
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/taskflow/TaskFlowTimelineView.tsx",
+   "src/utils/taskflowStorage.ts"
+  ],
+  "title": [
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/utils/settingsStorage.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "statusRaw": [
+   "src/components/taskflow/TaskFlowImportExportModal.tsx",
+   "src/utils/doctors.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "filteredTasks": [
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/components/tasks/TasksModule.tsx",
+   "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/components/workos/WorkOSTeamWorkloadTab.tsx"
+  ],
+  "total": [
+   "src/components/taskflow/TaskFlowModule.tsx",
+   "src/utils/doctors.ts",
+   "src/utils/notes.ts",
+   "src/utils/storage.ts"
+  ],
+  "projectTasks": [
+   "src/components/taskflow/TaskFlowProjectsModal.tsx",
+   "src/components/workos/WorkOSProjectsTab.tsx",
+   "src/components/workos/WorkOSProjectsView.tsx"
+  ],
+  "completedTasks": [
+   "src/components/taskflow/TaskFlowProjectsModal.tsx",
+   "src/components/workos/WorkOSDashboard.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSProjectsTab.tsx",
+   "src/components/workos/WorkOSReportsView.tsx",
+   "src/components/workos/WorkOSTeamWorkloadTab.tsx"
+  ],
+  "overdueTasks": [
+   "src/components/workos/WorkOSAICopilotModal.tsx",
+   "src/components/workos/WorkOSDashboard.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx",
+   "src/components/workos/WorkOSProjectsTab.tsx",
+   "src/components/workos/WorkOSReportsView.tsx",
+   "src/components/workos/WorkOSTeamWorkloadTab.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx"
+  ],
+  "dueTodayTasks": [
+   "src/components/workos/WorkOSDashboard.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx"
+  ],
+  "activeProjects": [
+   "src/components/workos/WorkOSDashboard.tsx",
+   "src/components/workos/WorkOSModule.tsx",
+   "src/components/workos/WorkOSOverviewTab.tsx"
+  ],
+  "assignee": [
+   "src/components/workos/WorkOSEisenhowerMatrix.tsx",
+   "src/components/workos/WorkOSKanbanTab.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx",
+   "src/components/workos/WorkOSTasksView.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx"
+  ],
+  "teamMap": [
+   "src/components/workos/WorkOSKanbanTab.tsx",
+   "src/components/workos/WorkOSTasksTab.tsx",
+   "src/components/workos/WorkOSTimelineTab.tsx"
+  ],
+  "completedCount": [
+   "src/components/workos/WorkOSOverviewTab.tsx",
+   "src/components/workos/WorkOSTaskDrawer.tsx",
+   "src/utils/routines.ts"
+  ],
+  "diffDays": [
+   "src/components/workos/WorkOSTimelineTab.tsx",
+   "src/utils/debts.ts",
+   "src/utils/dueAlerts.ts",
+   "src/utils/notes.ts",
+   "src/utils/routines.ts"
+  ],
+  "subId": [
+   "src/data/defaultRecords.ts",
+   "src/utils/excel.ts",
+   "src/utils/stock.ts"
+  ],
+  "status": [
+   "src/data/defaultRecords.ts",
+   "src/sync/SyncEngine.ts",
+   "src/utils/excel.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "endStr": [
+   "src/data/defaultTasks.ts",
+   "src/utils/financial.ts",
+   "src/utils/tasks.ts"
+  ],
+  "queue": [
+   "src/sync/Inbox.ts",
+   "src/sync/Outbox.ts",
+   "src/sync/SyncEngine.ts"
+  ],
+  "headers": [
+   "src/utils/custodyExport.ts",
+   "src/utils/debts.ts",
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/linksExport.ts",
+   "src/utils/notes.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "csvContent": [
+   "src/utils/custodyExport.ts",
+   "src/utils/debts.ts",
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/linksExport.ts",
+   "src/utils/notes.ts",
+   "src/utils/workosStorage.ts"
+  ],
+  "days": [
+   "src/utils/customers.ts",
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts"
+  ],
+  "dayIndex": [
+   "src/utils/customers.ts",
+   "src/utils/doctors.ts",
+   "src/utils/formatters.ts"
+  ],
+  "dayOfMonth": [
+   "src/utils/customers.ts",
+   "src/utils/doctors.ts",
+   "src/utils/routines.ts"
+  ],
+  "resp": [
+   "src/utils/customers.ts",
+   "src/utils/doctors.ts",
+   "src/utils/storage.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "dueDate": [
+   "src/utils/debts.ts",
+   "src/utils/dueAlerts.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "categoryDistribution": [
+   "src/utils/debts.ts",
+   "src/utils/notes.ts",
+   "src/utils/tasks.ts"
+  ],
+  "name": [
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/settingsStorage.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "region": [
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "route": [
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "responsible": [
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "phone": [
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "notes": [
+   "src/utils/doctors.ts",
+   "src/utils/excel.ts",
+   "src/utils/universalImporters.ts"
+  ],
+  "clean": [
+   "src/utils/notes.ts",
+   "src/utils/stock.ts",
+   "src/utils/workosStorage.ts"
+  ]
+ },
+ "relationFields": {
+  "projectId": 99,
+  "taskId": 55,
+  "customerId": 15,
+  "noteId": 13,
+  "doctorId": 11,
+  "commitmentId": 10,
+  "debtId": 7,
+  "parentId": 1
+ }
+}

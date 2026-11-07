@@ -1,0 +1,45 @@
+{
+ "totalArbitrary": 19,
+ "belowFloor": 6,
+ "belowHardFloor": 0,
+ "minSize": 11.0,
+ "bySize": {
+  "11.0": 6,
+  "12.0": 9,
+  "13.0": 4
+ },
+ "perModule": {
+  "financial": 6,
+  "debts": 2,
+  "routines": 2,
+  "Header.tsx": 1,
+  "InventoryView.tsx": 1,
+  "RecordsView.tsx": 1,
+  "custody": 1,
+  "customers": 1,
+  "doctors": 1,
+  "notifications": 1,
+  "tasks": 1,
+  "workos": 1
+ },
+ "perFile": {
+  "src/components/financial/FinancialModule.tsx": 6,
+  "src/components/Header.tsx": 1,
+  "src/components/InventoryView.tsx": 1,
+  "src/components/RecordsView.tsx": 1,
+  "src/components/custody/CustodyIssuesTable.tsx": 1,
+  "src/components/customers/CustomerDirectory.tsx": 1,
+  "src/components/debts/CommitmentsTable.tsx": 1,
+  "src/components/debts/DebtLedgerTable.tsx": 1,
+  "src/components/doctors/DoctorDirectory.tsx": 1,
+  "src/components/notifications/DueAlertsToast.tsx": 1,
+  "src/components/routines/RoutineOccurrencesList.tsx": 1,
+  "src/components/routines/RoutineWizardModal.tsx": 1,
+  "src/components/tasks/TasksModule.tsx": 1,
+  "src/components/workos/WorkOSUnifiedTopBar.tsx": 1
+ },
+ "filesTouched": 14,
+ "violationsOutsideSmallBox": [],
+ "floor": 12.0,
+ "hardFloor": 11.0
+}
