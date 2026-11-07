@@ -41,9 +41,9 @@ const TAB_TITLES: Record<ActiveModuleTab, { title: string; subtitle: string; ico
     icon: '📦',
   },
   tasks: {
-    title: 'إدارة العمل',
-    subtitle: 'متابعة المشاريع والمهام وأداء العمل',
-    icon: '⚡',
+    title: 'ادارة الاعمال والالتزامات المستقلة',
+    subtitle: 'متابعة المهام التشغيلية، الالتزامات المالية والتعهدات، والجدول الزمني الميداني',
+    icon: '💼',
   },
   taskflow: {
     title: 'إدارة العمل',

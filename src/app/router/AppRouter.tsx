@@ -31,6 +31,7 @@ import { RoutinesModule } from '../../components/routines/RoutinesModule';
 import { CustodyIssuesModule } from '../../components/custody/CustodyIssuesModule';
 import { LinksLibraryModule } from '../../components/links/LinksLibraryModule';
 import { WorkOSModule } from '../../components/workos/WorkOSModule';
+import { TasksModule } from '../../components/tasks/TasksModule';
 import { UnifiedSettings } from '../../components/settings/UnifiedSettings';
 import { UnifiedDashboard } from '../../components/dashboard/UnifiedDashboard';
 
@@ -135,9 +136,9 @@ export const AppRouter: React.FC<AppRouterProps> = (props) => {
     );
   }
 
-  // Canonical tab representation (workos, tasks, and taskflow share the WorkOS module)
-  const canonicalTab = activeTab === 'tasks' || activeTab === 'taskflow' ? 'workos' : activeTab;
-  const isWorkOSActive = activeTab === 'workos' || activeTab === 'tasks' || activeTab === 'taskflow';
+  // Canonical tab representation (taskflow shares the WorkOS module view)
+  const canonicalTab = activeTab === 'taskflow' ? 'workos' : activeTab;
+  const isWorkOSActive = activeTab === 'workos' || activeTab === 'taskflow';
 
   // Keep-Alive tab cache: mounts each tab once on first visit, keeps it alive in DOM for 0ms instant switching
   const [visitedTabs, setVisitedTabs] = React.useState<Set<string>>(() => {
@@ -160,6 +161,8 @@ export const AppRouter: React.FC<AppRouterProps> = (props) => {
       setVisitedTabs((prev) => {
         const allTabs = [
           'dashboard',
+          'stock',
+          'tasks',
           'workos',
           'links',
           'custody',
@@ -167,7 +170,6 @@ export const AppRouter: React.FC<AppRouterProps> = (props) => {
           'financial',
           'debts',
           'knowledge',
-          'stock',
           'customers',
           'doctors',
           'settings',
@@ -252,9 +254,7 @@ export const AppRouter: React.FC<AppRouterProps> = (props) => {
           aria-hidden={!isWorkOSActive}
         >
           <WorkOSModule
-            initialView={
-              activeTab === 'taskflow' ? 'taskflow' : activeTab === 'tasks' ? 'tasks' : 'overview'
-            }
+            initialView={activeTab === 'taskflow' ? 'taskflow' : 'overview'}
             onNavigateToERP={(tab) => setActiveTab(tab as any)}
             tasks={props.tasks}
             commitments={props.commitments}
@@ -274,6 +274,39 @@ export const AppRouter: React.FC<AppRouterProps> = (props) => {
               props.setTaskAuditLogs([]);
             }}
           />
+        </div>
+      )}
+
+      {/* 2b. STANDALONE: إدارة الأعمال والالتزامات المستقلة */}
+      {visitedTabs.has('tasks') && (
+        <div
+          key="tab-pane-tasks"
+          id="tab-pane-tasks"
+          className={activeTab === 'tasks' ? 'block' : 'hidden'}
+          style={{ display: activeTab === 'tasks' ? 'block' : 'none' }}
+          aria-hidden={activeTab !== 'tasks'}
+        >
+          <div className="bg-white dark:bg-slate-900 p-3 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+            <TasksModule
+              tasks={props.tasks}
+              commitments={props.commitments}
+              categories={props.taskCategories}
+              operations={props.taskOperations}
+              assignees={props.taskAssignees}
+              auditLogs={props.taskAuditLogs}
+              onSaveTask={props.onSaveTask}
+              onDeleteTask={props.onDeleteTask}
+              onToggleCompleteTask={props.onToggleCompleteTask}
+              onSaveCommitment={props.onSaveCommitment}
+              onDeleteCommitment={props.onDeleteCommitment}
+              onToggleCompleteCommitment={props.onToggleCompleteCommitment}
+              onClearCompletedTasks={props.onClearCompletedTasks}
+              onClearAuditLogs={() => {
+                saveTaskAuditLogs([]);
+                props.setTaskAuditLogs([]);
+              }}
+            />
+          </div>
         </div>
       )}
 
