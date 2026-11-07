@@ -43,6 +43,8 @@ import { recordOutboxMutation } from '../utils/syncOutbox';
 import { loadTasks } from '../utils/workosStorage';
 import { syncMovementToFinancialJournal, removeMovementFromFinancialJournal } from '../utils/autoJournaling';
 import { getDueAlerts, DueAlertsSummary } from '../utils/dueAlerts';
+import { markDataExported } from '../utils/storagePersistence';
+import { canDeleteProduct } from '../utils/stock';
 import {
   loadAuditLogs,
   loadCategories,
@@ -176,6 +178,16 @@ export const MainApp: React.FC = () => {
    * فيُجمعان مرة واحدة لكل مخزن بلا تضاعف.
    * يُعاد الحساب عند تبديل الوحدة (أي عند الكتابة داخل إدارة العمل ثم الخروج منها).
    */
+  /**
+   * عدد مهام مخزن التطبيق (Suite) المفتوحة — يُستخدم في شارة «إدارة العمل».
+   * الشارة تعرض: مهام إدارة العمل المفتوحة + مهام مخزن التطبيق المفتوحة، مرة واحدة لكل مخزن
+   * (عرض `classic_tasks` داخل إدارة العمل يعرض نفس المهام، فالعدّ يعكس ما يراه المستخدم هناك).
+   */
+  const openSuiteTasksCount = useMemo(
+    () => tasks.filter((t) => t.status !== 'تم الانجاز').length,
+    [tasks]
+  );
+
   const workosOpenCount = useMemo(() => {
     try {
       return loadTasks().filter((t) => !['completed', 'cancelled', 'archived'].includes(t.status)).length;
@@ -276,6 +288,22 @@ export const MainApp: React.FC = () => {
   };
 
   const handleDeleteProduct = (product: Item) => {
+    /**
+     * التكامل المرجعي (إصلاح R14): حذف صنف له حركات مخزنية كان يترك أذوناً تشير إلى اسم
+     * غير موجود، فيُعاد إنشاء رصيد افتراضي أثناء الحساب وتظهر أرصدة وهمية.
+     * السياسة: RESTRICT — يُمنع الحذف مع إتاحة بديل «إيقاف الصنف».
+     */
+    const guard = canDeleteProduct(records, product.name);
+
+    if (!guard.allowed) {
+      window.alert(
+        `لا يمكن حذف الصنف «${product.name}».\n\n` +
+          `${guard.reason}.\n` +
+          `الحل: استخدم «إيقاف الصنف» لإخفائه من الإدخال الجديد مع الحفاظ على التاريخ المحاسبي.`
+      );
+      return;
+    }
+
     const updated = products.filter((p) => p.name !== product.name);
     setProducts(updated);
     saveProducts(updated);
@@ -453,7 +481,10 @@ export const MainApp: React.FC = () => {
 
   // Backup & Reset Handlers
   const handleExportBackup = (): UnifiedBackupState => {
-    return BackupService.createBackup();
+    const backup = BackupService.createBackup();
+    // تسجيل تاريخ آخر تصدير ناجح لتذكير المستخدم دورياً (إصلاح R13)
+    markDataExported();
+    return backup;
   };
 
   const handleImportBackup = (backup: UnifiedBackupState) => {
@@ -505,8 +536,8 @@ export const MainApp: React.FC = () => {
           linksCount,
           routinesCount,
           stockCount: records.length,
-          tasksCount: tasks.filter((t) => t.status !== 'تم الانجاز').length,
-          workosCount: workosOpenCount,
+          tasksCount: openSuiteTasksCount,
+          workosCount: workosOpenCount + openSuiteTasksCount,
           customersCount: customers.length,
           doctorsCount: doctors.length,
           custodyCount,

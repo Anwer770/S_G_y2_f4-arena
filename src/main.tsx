@@ -4,6 +4,7 @@ import App from './App.tsx';
 import './index.css';
 import { ThemeProvider } from './context/ThemeContext.tsx';
 import { indexedDBStorage } from './database/adapters/IndexedDBAdapter';
+import { requestPersistentStorage } from './utils/storagePersistence';
 
 const container = document.getElementById('root')!;
 
@@ -34,5 +35,7 @@ function renderApp() {
   } catch (err) {
     console.warn('Data safety gate: readiness failed, rendering with current cache', err);
   }
+  // طلب تخزين دائم حتى لا يُخلي المتصفح البيانات عند ضغط المساحة (إصلاح R13)
+  void requestPersistentStorage();
   renderApp();
 })();

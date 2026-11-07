@@ -312,7 +312,7 @@ export const RoutineWizardModal: React.FC<RoutineWizardModalProps> = ({
                   : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
-              <span className="w-4 h-4 rounded-full flex items-center justify-center text-[11px] border border-current">
+              <span className="w-4 h-4 rounded-full flex items-center justify-center text-xs border border-current">
                 {step > st ? '✓' : st}
               </span>
               <span className="hidden sm:inline">

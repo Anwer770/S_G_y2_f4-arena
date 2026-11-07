@@ -273,7 +273,8 @@ export const WorkOSDailyPlannerView: React.FC<WorkOSDailyPlannerViewProps> = ({
               e.preventDefault();
               dropOn(col.id);
             }}
-            className={`bg-white dark:bg-slate-900 rounded-xl border shadow-2xs p-4 space-y-3 transition ${
+            data-planner-column={col.id}
+            className={`bg-white dark:bg-slate-900 rounded-2xl border shadow-2xs p-4 space-y-3 transition ${
               dragOverBucket === col.id ? toneRing[col.tone] : 'border-slate-200/80 dark:border-slate-700/80'
             }`}
           >

@@ -290,11 +290,11 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
             <div>
               <h3 className="font-black text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <span>الشاشة الموحدة للإدخال السريع (+ Quick Add المركزية)</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-200 border border-teal-300 dark:border-teal-700">
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-200 border border-teal-300 dark:border-teal-700">
                   Work OS v3.0
                 </span>
               </h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 إدخال مركزي متكامل مع الربط التلقائي بين الطلبيات والمهام والالتزامات المالية
               </p>
             </div>
@@ -338,7 +338,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
         <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs max-h-[calc(85vh-130px)] overflow-y-auto scrollbar-thin">
           {/* SECTION A: الحقول المشتركة الثابتة (تظهر دائماً في كل الأنواع) */}
           <div className="space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/70 dark:border-slate-700">
-            <div className="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-slate-200/50 dark:border-slate-700/50">
+            <div className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-slate-200/50 dark:border-slate-700/50">
               <Sparkles className="w-3.5 h-3.5 text-teal-600" />
               <span>الحقول الأساسية المشتركة (لكل أنواع المدخلات)</span>
             </div>
@@ -469,7 +469,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   <ShoppingCart className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   <span>بيانات الطلبية ونظام الربط الثلاثي الآلي</span>
                 </span>
-                <span className="text-[11px] font-bold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/60 px-2.5 py-0.5 rounded-full border border-blue-300">
+                <span className="text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/60 px-2.5 py-0.5 rounded-full border border-blue-300">
                   ربط تلقائي
                 </span>
               </div>
@@ -556,7 +556,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                       <span className="font-bold block text-slate-800 dark:text-slate-200">
                         + إنشاء مهمة تسليم وتوزيع مرتبطة آلياً
                       </span>
-                      <span className="text-[10px] text-slate-400 block">
+                      <span className="text-xs text-slate-400 block">
                         تتضمن 4 مهام فرعية (تجهيز، مطابقة، شحن، وتوقيع استلام)
                       </span>
                     </div>
@@ -573,7 +573,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                       <span className="font-bold block text-slate-800 dark:text-slate-200">
                         + إنشاء التزام مالي / فاتورة تحصيل مرتبطة
                       </span>
-                      <span className="text-[10px] text-slate-400 block">
+                      <span className="text-xs text-slate-400 block">
                         ربط المبلغ وتاريخ الاستحقاق آلياً بجدول الديون والالتزامات
                       </span>
                     </div>
@@ -583,7 +583,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                 {generateFinancialCommitment && (
                   <div className="grid grid-cols-2 gap-2.5 pt-1.5 border-t border-slate-100 dark:border-slate-700">
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">
+                      <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-0.5">
                         طريقة السداد
                       </label>
                       <select
@@ -600,7 +600,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">
+                      <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-0.5">
                         رقم الفاتورة المتعلقة
                       </label>
                       <input
@@ -711,7 +711,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   <CheckSquare className="w-4 h-4 text-emerald-600" />
                   <span>المشروع التابع والمهام الفرعية (Sub-tasks)</span>
                 </span>
-                <span className="text-[11px] font-mono font-bold text-emerald-700">
+                <span className="text-xs font-mono font-bold text-emerald-700">
                   {subtasks.length} مهام فرعية
                 </span>
               </div>
@@ -920,7 +920,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
 
           {/* Action Buttons */}
           <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-700">
-            <span className="text-[11px] text-slate-400">
+            <span className="text-xs text-slate-400">
               * سيتم حفظ البيانات وتحديث لوحة القيادة المركزية والمزامنة فوراً.
             </span>
 

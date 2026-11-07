@@ -360,7 +360,7 @@ export const RoutineOccurrencesList: React.FC<RoutineOccurrencesListProps> = ({
                         key={st.id || i}
                         className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium flex items-center gap-1"
                       >
-                        <span className="w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 text-[11px] flex items-center justify-center font-bold">
+                        <span className="w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700 text-xs flex items-center justify-center font-bold">
                           {i + 1}
                         </span>
                         {st.title} ({st.duration} د)

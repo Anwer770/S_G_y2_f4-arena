@@ -188,7 +188,7 @@ export const DebtPrintModal: React.FC<DebtPrintModalProps> = ({
           {/* Statement Table */}
           <div className="space-y-2">
             <div className="overflow-x-auto">
-              <table className="w-full text-right text-xs border-collapse">
+              <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0">
                 <thead>
                   <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-300">
                     <th className="py-2.5 px-3">#</th>

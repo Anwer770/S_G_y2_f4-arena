@@ -12,6 +12,7 @@ import { ImportFinancialModal } from './ImportFinancialModal';
 import {
   Search,
   Plus,
+  AlertTriangle,
   FileSpreadsheet,
   Printer,
   Edit2,
@@ -636,6 +637,23 @@ export const FinancialModule: React.FC<Props> = ({
         </div>
       </div>
 
+      {/* تنبيه القيود ذات التصنيف غير المعروف (إصلاح R12) */}
+      {periodSummary.unclassifiedCount > 0 && (
+        <div
+          role="status"
+          className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200"
+        >
+          <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            يوجد{' '}
+            <span className="font-black font-mono">{periodSummary.unclassifiedCount.toLocaleString()}</span>{' '}
+            قيداً بمبلغ{' '}
+            <span className="font-black font-mono">{periodSummary.unclassifiedYER.toLocaleString()}</span>{' '}
+            بتصنيف حركة غير معروف، ولم تُحتسب في الوارد أو المصروف. صحّح حقل «نوع الحركة» فيها لتظهر في المجاميع.
+          </p>
+        </div>
+      )}
+
       {/* 3. SUB-TABS SWITCHER */}
       <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-1.5">
         <button
@@ -885,7 +903,7 @@ export const FinancialModule: React.FC<Props> = ({
                 <SlidersHorizontal className="w-3.5 h-3.5" />
                 <span>فلاتر متقدمة</span>
                 {activeAdvancedFilterCount > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-teal-600 text-white text-[11px] flex items-center justify-center font-bold">
+                  <span className="w-4 h-4 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-bold">
                     {activeAdvancedFilterCount}
                   </span>
                 )}

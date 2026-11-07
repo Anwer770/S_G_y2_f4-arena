@@ -35,7 +35,7 @@ export const DueAlertsToast: React.FC<DueAlertsToastProps> = ({
             ) : (
               <Clock className="w-5 h-5" />
             )}
-            <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-rose-600 text-white text-[11px] font-black ring-2 ring-white dark:ring-slate-900">
+            <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-rose-600 text-white text-xs font-black ring-2 ring-white dark:ring-slate-900">
               {summary.total}
             </span>
           </div>

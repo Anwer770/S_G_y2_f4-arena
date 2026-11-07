@@ -233,7 +233,7 @@ export const WorkOSPrintReportModal: React.FC<WorkOSPrintReportModalProps> = ({
                 ملخص إنجاز المشاريع الكبرى ({projects.length})
               </h3>
               <div className="overflow-x-auto">
-                <table className="w-full text-right text-xs border-collapse">
+                <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0">
                   <thead>
                     <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-300">
                       <th className="py-2 px-3">كود المشروع</th>
@@ -289,7 +289,7 @@ export const WorkOSPrintReportModal: React.FC<WorkOSPrintReportModalProps> = ({
               كشف المهام التشغيلية التفصيلي ({tasks.length})
             </h3>
             <div className="overflow-x-auto">
-              <table className="w-full text-right text-xs border-collapse">
+              <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0">
                 <thead>
                   <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-300">
                     <th className="py-2 px-3">رقم المهمة</th>

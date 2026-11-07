@@ -1,4 +1,5 @@
 import { FinancialTransaction } from '../../types';
+import { classifyFinancialMovement } from '../../utils/financial';
 import { financialRepository, FinancialRepository } from '../../database/repositories/FinancialRepository';
 import { auditService } from '../../core/audit/AuditService';
 import { Outbox } from '../../sync/Outbox';
@@ -10,6 +11,9 @@ export interface FinancialSummary {
   totalSAR: number;
   totalUSD: number;
   transactionsCount: number;
+  /** حركات ذات تصنيف غير معروف — لا تُحتسب في المقبوضات/المدفوعات (إصلاح R12) */
+  unclassifiedYER: number;
+  unclassifiedCount: number;
 }
 
 export class FinancialService {
@@ -28,13 +32,20 @@ export class FinancialService {
     let totalPaymentsYER = 0;
     let totalSAR = 0;
     let totalUSD = 0;
+    let unclassifiedYER = 0;
+    let unclassifiedCount = 0;
 
     for (const t of transactions) {
       const yer = Number(t.amountYER) || 0;
-      if (t.restriction?.includes('قبض') || t.movement === 'ايرادات') {
+      // تصنيف موحّد مع utils/financial.ts — لا «كل ما ليس قبضاً = مدفوع»
+      const bucket = classifyFinancialMovement(t.movement);
+      if (bucket === 'income') {
         totalReceiptsYER += yer;
-      } else {
+      } else if (bucket === 'expense') {
         totalPaymentsYER += yer;
+      } else {
+        unclassifiedYER += yer;
+        unclassifiedCount += 1;
       }
       totalSAR += Number(t.amountSAR) || 0;
       totalUSD += Number(t.amountUSD) || 0;
@@ -47,6 +58,8 @@ export class FinancialService {
       totalSAR,
       totalUSD,
       transactionsCount: transactions.length,
+      unclassifiedYER,
+      unclassifiedCount,
     };
   }
 

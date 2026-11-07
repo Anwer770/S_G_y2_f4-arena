@@ -180,7 +180,10 @@ export const WorkOSVisitsView: React.FC = () => {
       )}
 
       {/* القائمة */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs p-4 space-y-2">
+      <div
+        data-visits-log={kind}
+        className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs p-4 space-y-2"
+      >
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
           <h3 className="text-xs font-black text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />

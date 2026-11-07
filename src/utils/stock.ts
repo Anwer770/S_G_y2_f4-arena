@@ -199,3 +199,42 @@ export function cascadeRenameProduct(
 
   return { updatedProducts, updatedRecords };
 }
+
+// ---------------------------------------------------------------------------
+// سياسة حذف الأصناف (إصلاح R14) — منطق نقي قابل للاختبار
+// ---------------------------------------------------------------------------
+
+/**
+ * كل أذون الحركة التي تشير إلى صنف معيّن بالاسم.
+ * ضروري لأن `MovementRecord.items` قاموس بالاسم لا بالمعرّف، فحذف الصنف
+ * يترك أذوناً «يتيمة» يعيد محرك الأرصدة إنشاء رصيد افتراضي لها.
+ */
+export function getMovementsForProduct(
+  records: MovementRecord[],
+  productName: string
+): MovementRecord[] {
+  const name = (productName || '').trim();
+  if (!name) return [];
+  return records.filter(
+    (r) => r && r.items && Object.prototype.hasOwnProperty.call(r.items, name)
+  );
+}
+
+/**
+ * هل يُسمح بحذف الصنف؟ (السياسة: RESTRICT — لا حذف إن له تاريخ حركة)
+ * البديل للمستخدم: «إيقاف الصنف» (isActive=false) للحفاظ على التاريخ.
+ */
+export function canDeleteProduct(
+  records: MovementRecord[],
+  productName: string
+): { allowed: boolean; linkedCount: number; reason?: string } {
+  const linked = getMovementsForProduct(records, productName);
+  if (linked.length === 0) {
+    return { allowed: true, linkedCount: 0 };
+  }
+  return {
+    allowed: false,
+    linkedCount: linked.length,
+    reason: `مرتبط به ${linked.length} إذن حركة مخزنية — استخدم «إيقاف الصنف» بدلاً من الحذف`,
+  };
+}

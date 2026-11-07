@@ -344,3 +344,35 @@ export function generateNextCustomerId(
 
   return { id: nextId, subId: nextSubId };
 }
+
+// ---------------------------------------------------------------------------
+// خطة حذف العميل (إصلاح R14) — منطق نقي قابل للاختبار
+// ---------------------------------------------------------------------------
+
+/**
+ * خطة حذف عميل مع زياراته:
+ * - لا وجود → found=false
+ * - بلا زيارات → requiresCascade=false (تأكيد واحد)
+ * - بزيارات → requiresCascade=true (يجب حذف الزيارات معه بتأكيد مزدوج)
+ *
+ * يمنع بقاء زيارات «يتيمة» بمعرّف عميل غير موجود تُلوّث تقارير الزيارات والتحصيل.
+ */
+export function planCustomerDeletion(
+  customers: Customer[],
+  visits: CustomerVisitRecord[],
+  customerId: string
+): {
+  found: boolean;
+  customer: Customer | null;
+  relatedVisits: CustomerVisitRecord[];
+  requiresCascade: boolean;
+} {
+  const customer = customers.find((c) => c.id === customerId) || null;
+  const relatedVisits = visits.filter((v) => v.customerId === customerId);
+  return {
+    found: Boolean(customer),
+    customer,
+    relatedVisits,
+    requiresCascade: relatedVisits.length > 0,
+  };
+}

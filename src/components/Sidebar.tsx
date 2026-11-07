@@ -262,7 +262,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <h1 className="text-sm font-black text-slate-900 dark:text-white truncate tracking-tight flex items-center gap-1.5" title="المنظومة-الإدارية-المتكاملة">
                   <span>المنظومة-الإدارية-المتكاملة</span>
                 </h1>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate mt-0.5 font-medium">
+                <p className="text-xs text-slate-400 dark:text-slate-500 truncate mt-0.5 font-medium">
                   نظام الإدارة والتشغيل الموحد
                 </p>
               </div>
@@ -359,7 +359,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!isCollapsed ? (
             <>
               {/* Date & Time */}
-              <div className="text-[11px] font-mono font-medium text-slate-400 dark:text-slate-500 px-1 text-center truncate">
+              <div className="text-xs font-mono font-medium text-slate-400 dark:text-slate-500 px-1 text-center truncate">
                 {currentTimeStr || 'جاري تحديث الوقت...'}
               </div>
 
@@ -379,7 +379,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <div className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-teal-600 transition-colors">
                       {currentUser?.name || userProfile.name || 'محمد العولقي'}
                     </div>
-                    <div className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
+                    <div className="text-xs text-slate-400 dark:text-slate-500 font-medium truncate">
                       {currentUser?.role === 'admin'
                         ? 'مدير النظام التنفيذي'
                         : currentUser?.role === 'accountant'

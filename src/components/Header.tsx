@@ -8,8 +8,10 @@ import {
   Search,
   Bell,
   LogOut,
+  HardDrive,
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { getExportReminderState } from '../utils/storagePersistence';
 
 interface HeaderProps {
   activeTab: ActiveModuleTab;
@@ -100,6 +102,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAlertsModal,
 }) => {
   const { toggleTheme, isDark } = useTheme();
+  // تذكير التصدير: قراءة متزامنة خفيفة من الذاكرة عند كل رسم (إصلاح R13)
+  const exportReminder = getExportReminderState();
   const { currentUser, logout } = useAuth();
   const currentTabMeta = TAB_TITLES[activeTab] || TAB_TITLES.dashboard;
 
@@ -136,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
               {currentTabMeta.title}
             </h1>
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden lg:block mt-0.5 max-w-sm truncate">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium hidden lg:block mt-0.5 max-w-sm truncate">
             {currentTabMeta.subtitle}
           </p>
         </div>
@@ -156,7 +160,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-slate-100 block">
                 {currentUser?.name || 'محمد العولقي'}
               </span>
-              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 block">
                 {currentUser?.role === 'admin' ? 'مدير النظام التنفيذي' : 'المحاسب المالي'}
               </span>
             </div>
@@ -172,6 +176,24 @@ export const Header: React.FC<HeaderProps> = ({
             <LogOut className="w-4 h-4" />
           </button>
 
+          {/* تذكير النسخ الاحتياطي (إصلاح R13): يظهر إن لم يُصدَّر ملف منذ 7 أيام */}
+          {exportReminder.due && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('settings')}
+              className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all cursor-pointer border border-amber-300/70 dark:border-amber-800 shadow-2xs"
+              title={
+                exportReminder.daysSinceExport === null
+                  ? 'لم تُصدَّر نسخة احتياطية بعد — اضغط للانتقال إلى النسخ الاحتياطي'
+                  : `آخر تصدير قبل ${exportReminder.daysSinceExport} يوماً — النسخة الاحتياطية مستحقة`
+              }
+              aria-label="تذكير بالنسخة الاحتياطية"
+            >
+              <HardDrive className="w-4 h-4" />
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900" />
+            </button>
+          )}
+
           {/* Notification Bell with Dynamic Alerts */}
           <div className="relative">
             <button
@@ -183,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
               <Bell className="w-4 h-4" />
             </button>
             {alertsCount > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-[#EF4444] text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white dark:ring-slate-900 animate-in zoom-in">
+              <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-[#EF4444] text-white text-xs font-black flex items-center justify-center ring-2 ring-white dark:ring-slate-900 animate-in zoom-in">
                 {alertsCount > 99 ? '99+' : alertsCount}
               </span>
             )}

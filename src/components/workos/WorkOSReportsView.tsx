@@ -302,7 +302,7 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-slate-400">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
                     <span>المدير: {p.manager}</span>
                     <span>المهام: {pDone.length} من {pTasks.length} مكتملة</span>
                     <span>التسليم: {p.dueDate}</span>

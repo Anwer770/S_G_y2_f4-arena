@@ -173,7 +173,7 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
                 <X className="w-3.5 h-3.5" />
               </button>
             ) : (
-              <span className="hidden sm:inline-block absolute left-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono text-slate-400 dark:text-slate-500 bg-slate-200/70 dark:bg-slate-800 rounded border border-slate-300/60 dark:border-slate-700 pointer-events-none">
+              <span className="hidden sm:inline-block absolute left-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-xs font-mono text-slate-400 dark:text-slate-500 bg-slate-200/70 dark:bg-slate-800 rounded border border-slate-300/60 dark:border-slate-700 pointer-events-none">
                 ⌘K
               </span>
             )}
@@ -205,7 +205,7 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
             >
               <Plus className="w-4 h-4" />
               <span>+ إضافة</span>
-              <span className="hidden sm:inline-block px-1 py-0.2 text-[9px] font-mono bg-teal-800 text-teal-200 rounded">N</span>
+              <span className="hidden sm:inline-block px-1 py-0.2 text-xs font-mono bg-teal-800 text-teal-200 rounded">N</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isAddMenuOpen ? 'rotate-180' : ''}`} />
             </button>
 
@@ -355,7 +355,7 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
             >
               <Bell className="w-4 h-4" />
               {totalAlerts > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-600 text-white text-[11px] font-bold font-mono flex items-center justify-center animate-pulse">
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-600 text-white text-xs font-bold font-mono flex items-center justify-center animate-pulse">
                   {totalAlerts > 9 ? '9+' : totalAlerts}
                 </span>
               )}

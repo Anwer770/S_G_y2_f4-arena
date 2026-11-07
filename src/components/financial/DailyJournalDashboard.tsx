@@ -644,7 +644,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                   <span className="font-bold text-sm tracking-wide text-white block">
                     المنظومة المحاسبية
                   </span>
-                  <span className="text-[11px] text-[#A7F3D0] block font-medium">
+                  <span className="text-xs text-[#A7F3D0] block font-medium">
                     إدارة السجل اليومي • v2.6
                   </span>
                 </div>
@@ -676,7 +676,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
               >
                 <div className="flex items-center gap-2.5 truncate">
                   <span
-                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold shrink-0 ${
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-mono font-bold shrink-0 ${
                       item.active ? 'bg-white/20 text-white' : 'bg-[#06201C] text-emerald-300'
                     }`}
                   >
@@ -695,12 +695,12 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
 
         {/* Sidebar Footer Info */}
         {!isSidebarCollapsed && (
-          <div className="p-3.5 border-t border-[#134E48]/60 bg-[#07201D]/90 text-[11px] text-emerald-200/70 space-y-1">
+          <div className="p-3.5 border-t border-[#134E48]/60 bg-[#07201D]/90 text-xs text-emerald-200/70 space-y-1">
             <div className="flex items-center justify-between">
               <span className="font-bold text-white">الخزينة النشطة:</span>
               <span className="text-emerald-300 font-mono font-bold">الرئيسية (YER)</span>
             </div>
-            <div className="text-[10px] text-emerald-300/60 flex items-center gap-1">
+            <div className="text-xs text-emerald-300/60 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>تزامن السحاب مفعّل • فوري</span>
             </div>
@@ -721,18 +721,18 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                 <h1 className="text-base font-bold text-slate-900 dark:text-slate-100">
                   إدارة السجل اليومي والقيود المحاسبية
                 </h1>
-                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#ECFDF5] text-[#065F46] dark:bg-emerald-950/40 dark:text-emerald-300 border-0">
+                <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#ECFDF5] text-[#065F46] dark:bg-emerald-950/40 dark:text-emerald-300 border-0">
                   مباشر
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+              <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
                 دفتر اليومية العامة • تتبع الوارد والمنصرف والقيود المتوازنة
               </p>
             </div>
 
             <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-800/80 rounded-full text-xs text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700">
               <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-              <span className="font-medium text-[11px]">النظام متصل • تحديث لحظي</span>
+              <span className="font-medium text-xs">النظام متصل • تحديث لحظي</span>
             </div>
           </div>
 
@@ -757,7 +757,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                   <X className="w-3.5 h-3.5" />
                 </button>
               ) : (
-                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-400 bg-white dark:bg-slate-700 px-1 rounded border border-slate-200 dark:border-slate-600 pointer-events-none">
+                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-400 bg-white dark:bg-slate-700 px-1 rounded border border-slate-200 dark:border-slate-600 pointer-events-none">
                   ⌘K
                 </span>
               )}
@@ -790,7 +790,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                 <div className="absolute left-0 mt-2 w-72 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 p-3 z-50 text-xs animate-in fade-in zoom-in-95 duration-150">
                   <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-slate-800">
                     <span className="font-bold text-slate-800 dark:text-slate-200">تنبيهات السجل المالي</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold">
                       {kpiStats.draftCount} مسودة
                     </span>
                   </div>
@@ -833,7 +833,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                   </div>
                 )}
               </div>
-              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px]">
+              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
                 <span className="flex items-center gap-1 text-[#059669] font-bold">
                   <TrendingUp className="w-3.5 h-3.5" />
                   +18.4% نمو التدفق
@@ -861,7 +861,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                   </div>
                 )}
               </div>
-              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px]">
+              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
                 <span className="flex items-center gap-1 text-[#DC2626] font-bold">
                   <TrendingDown className="w-3.5 h-3.5" />
                   -6.2% انخفاض المصروف
@@ -892,7 +892,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                   نسبة السيولة النقدية: 68.4%
                 </div>
               </div>
-              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px]">
+              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
                 <span className="text-emerald-700 dark:text-emerald-400 font-bold">
                   مركز مالي إيجابي مستقر
                 </span>
@@ -924,7 +924,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                   )}
                 </div>
               </div>
-              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
+              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
                 <span>توازن القيد المزدوج: 100%</span>
                 <span className="text-emerald-600 font-bold">مطابق دفترياً</span>
               </div>
@@ -1083,7 +1083,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                 >
                   <Plus className="w-4 h-4" />
                   <span>+ قيد جديد</span>
-                  <span className="hidden sm:inline-block px-1 py-0.2 text-[10px] font-mono bg-white/20 rounded text-emerald-50">
+                  <span className="hidden sm:inline-block px-1 py-0.2 text-xs font-mono bg-white/20 rounded text-emerald-50">
                     Alt+N
                   </span>
                 </button>
@@ -1097,7 +1097,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
           {viewMode === 'table' ? (
             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs overflow-hidden">
               <div className="overflow-x-auto max-h-[calc(100vh-360px)] min-h-[380px] overflow-y-auto scrollbar-thin">
-                <table className="w-full text-right text-xs border-collapse min-w-[1000px]">
+                <table className="w-full text-right text-xs border-collapse min-w-[1000px] print:min-w-0">
                   {/* Table Header */}
                   <thead className="sticky top-0 z-20">
                     <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold select-none h-9">
@@ -1169,14 +1169,14 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                             </td>
 
                             {/* Date & Day */}
-                            <td className="px-3 text-slate-600 dark:text-slate-400 font-mono text-[11px] truncate">
+                            <td className="px-3 text-slate-600 dark:text-slate-400 font-mono text-xs truncate">
                               {t.date} <span className="text-slate-400 font-sans">({t.day})</span>
                             </td>
 
                             {/* Movement Type */}
                             <td className="px-3 font-medium">
                               <span
-                                className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-bold ${
+                                className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${
                                   isInflow
                                     ? 'bg-[#ECFDF5] text-[#065F46] dark:bg-emerald-950/40 dark:text-emerald-300'
                                     : isExpense
@@ -1229,18 +1229,18 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                             </td>
 
                             {/* Currency */}
-                            <td className="px-3 text-center font-mono text-[11px] font-bold text-slate-500">
+                            <td className="px-3 text-center font-mono text-xs font-bold text-slate-500">
                               {t.amountUSD > 0 ? 'USD' : t.amountSAR > 0 ? 'SAR' : 'YER'}
                             </td>
 
                             {/* Status Tag (Soft pill without harsh border) */}
                             <td className="px-3 text-center">
                               {t.isDraft ? (
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                                <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
                                   مسودة
                                 </span>
                               ) : (
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] dark:bg-emerald-950/40 dark:text-emerald-300">
+                                <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#ECFDF5] text-[#065F46] dark:bg-emerald-950/40 dark:text-emerald-300">
                                   معتمد
                                 </span>
                               )}
@@ -1318,15 +1318,15 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
 
                 <div className="flex items-center gap-4 font-mono font-bold">
                   <div>
-                    <span className="text-slate-500 font-sans ml-1 text-[11px]">إجمالي الوارد:</span>
+                    <span className="text-slate-500 font-sans ml-1 text-xs">إجمالي الوارد:</span>
                     <span className="text-[#059669]">{formatCurrency(kpiStats.totalInflowYER)} YER</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 font-sans ml-1 text-[11px]">إجمالي المنصرف:</span>
+                    <span className="text-slate-500 font-sans ml-1 text-xs">إجمالي المنصرف:</span>
                     <span className="text-[#DC2626]">{formatCurrency(kpiStats.totalExpenseYER)} YER</span>
                   </div>
                   <div className="border-r border-slate-300 dark:border-slate-600 pr-3">
-                    <span className="text-slate-500 font-sans ml-1 text-[11px]">الصافي:</span>
+                    <span className="text-slate-500 font-sans ml-1 text-xs">الصافي:</span>
                     <span className={kpiStats.netYER >= 0 ? 'text-slate-900 dark:text-white' : 'text-[#DC2626]'}>
                       {formatCurrency(kpiStats.netYER)} YER
                     </span>
@@ -1351,7 +1351,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                         {t.number || t.id}
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        className={`px-2 py-0.5 rounded-full text-xs font-bold ${
                           isInflow
                             ? 'bg-[#ECFDF5] text-[#065F46]'
                             : isExpense
@@ -1368,7 +1368,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                     </p>
 
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                      <span className="text-[11px] text-slate-400 font-mono">{t.date}</span>
+                      <span className="text-xs text-slate-400 font-mono">{t.date}</span>
                       <div className="font-mono font-bold text-sm">
                         {isInflow && (
                           <span className="text-[#059669]">
@@ -1406,7 +1406,7 @@ export const DailyJournalDashboard: React.FC<DailyJournalDashboardProps> = ({
                   <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                     {editingTxn ? 'تعديل القيد المالي' : 'إضافة قيد مالي جديد بالسجل اليومي'}
                   </h3>
-                  <span className="text-[11px] text-slate-400">إدخال معتمد • Alt+N</span>
+                  <span className="text-xs text-slate-400">إدخال معتمد • Alt+N</span>
                 </div>
               </div>
 

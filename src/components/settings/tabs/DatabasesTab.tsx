@@ -4,6 +4,14 @@ import { UnifiedBackupState } from '../../../types';
 import { BackupService } from '../../../services/backup/BackupService';
 import { dbStorage } from '../../../database/dbStorage';
 import {
+  getStorageHealth,
+  requestPersistentStorage,
+  markDataExported,
+  formatBytes,
+  EXPORT_REMINDER_DAYS,
+  type StorageHealth,
+} from '../../../utils/storagePersistence';
+import {
   getOutboxStats,
   markAllOutboxSynced,
   clearSyncedOutbox,
@@ -78,6 +86,7 @@ export const DatabasesTab: React.FC<Props> = ({
 
   const [storageStats, setStorageStats] = useState(() => dbStorage.getStats());
   const [outboxStats, setOutboxStats] = useState(() => getOutboxStats());
+  const [health, setHealth] = useState<StorageHealth | null>(null);
 
   useEffect(() => {
     try {
@@ -90,6 +99,16 @@ export const DatabasesTab: React.FC<Props> = ({
     } catch (e) {
       console.error(e);
     }
+    // صحة التخزين (ديمومة/حصة/آخر تصدير) — إصلاح R13
+    let cancelled = false;
+    getStorageHealth()
+      .then((h) => {
+        if (!cancelled) setHealth(h);
+      })
+      .catch((err) => console.warn('تعذّر قراءة صحة التخزين', err));
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const saveSnapshots = (updated: CloudSnapshot[]) => {
@@ -259,6 +278,125 @@ export const DatabasesTab: React.FC<Props> = ({
         </div>
       </div>
 
+      {/* Storage Continuity & Quota Card (إصلاح R13) */}
+      <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-xs">
+              <HardDrive className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-sm font-black text-slate-900 dark:text-white">
+                  استمرارية التخزين وحصة الجهاز
+                </h3>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-xs font-bold border ${
+                    health?.persisted
+                      ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+                      : 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                  }`}
+                >
+                  {health === null
+                    ? 'جارٍ الفحص...'
+                    : health.persisted
+                      ? 'تخزين دائم (محمي من الإخلاء)'
+                      : health.supported
+                        ? 'تخزين مؤقت — قد يُخلي المتصفح البيانات'
+                        : 'المتصفح لا يدعم طلب الديمومة'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+                التخزين المحلي محمي بطلب ديمومة عند الإقلاع. النسخة التلقائية داخل نفس المتصفح
+                <span className="font-bold"> ليست </span>
+                نسخة احتياطية: صدّر ملفاً كل {EXPORT_REMINDER_DAYS} أيام على الأقل.
+              </p>
+            </div>
+          </div>
+
+          {!health?.persisted && (
+            <button
+              type="button"
+              onClick={async () => {
+                await requestPersistentStorage();
+                const updated = await getStorageHealth();
+                setHealth(updated);
+                setStatusMessage(
+                  updated.persisted
+                    ? 'تم تفعيل التخزين الدائم بنجاح.'
+                    : 'لم يمنح المتصفح التخزين الدائم — صدّر نسخة احتياطية دورياً.'
+                );
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>طلب تخزين دائم</span>
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60">
+            <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">المستخدم من الحصة</span>
+            <span className="font-mono font-bold text-sm text-slate-800 dark:text-slate-200">
+              {health ? formatBytes(health.usage) : '—'}
+              {health && health.quota > 0 ? (
+                <span className="text-xs font-normal text-slate-400"> / {formatBytes(health.quota)}</span>
+              ) : null}
+            </span>
+            {health && health.quota > 0 && (
+              <div className="mt-1.5 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    health.usageRatio >= 0.8
+                      ? 'bg-rose-500'
+                      : health.usageRatio >= 0.6
+                        ? 'bg-amber-500'
+                        : 'bg-emerald-500'
+                  }`}
+                  style={{ width: `${Math.max(Math.round(health.usageRatio * 100), 1)}%` }}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60">
+            <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">آخر تصدير ناجح</span>
+            <span className="font-mono font-bold text-xs text-slate-700 dark:text-slate-300 block truncate">
+              {health?.lastExportAt
+                ? new Date(health.lastExportAt).toLocaleString('ar-EG', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })
+                : 'لم يُصدَّر بعد'}
+            </span>
+            <span
+              className={`text-xs font-bold ${
+                health?.exportReminderDue
+                  ? 'text-amber-600 dark:text-amber-400'
+                  : 'text-emerald-600 dark:text-emerald-400'
+              }`}
+            >
+              {health?.exportReminderDue
+                ? health.daysSinceExport === null
+                  ? 'النسخة مستحقة الآن'
+                  : `مستحقة — مرّ ${health.daysSinceExport} يوماً`
+                : 'النسخة حديثة'}
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60">
+            <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">حالة الطلب</span>
+            <span className="font-mono font-bold text-xs text-slate-700 dark:text-slate-300 block">
+              {health ? health.state : '—'}
+            </span>
+            <span className="text-xs text-slate-400 dark:text-slate-500">
+              {health?.supported ? 'navigator.storage متاح' : 'غير مدعوم في هذا المتصفح'}
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* Sync Outbox Engine Card */}
       <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
         <div className="flex items-center justify-between flex-wrap gap-2">
@@ -358,6 +496,10 @@ export const DatabasesTab: React.FC<Props> = ({
               if (data) {
                 const dateStr = new Date().toISOString().split('T')[0];
                 triggerDownload(data, `qeema_erp_backup_${dateStr}.json`);
+                markDataExported();
+                getStorageHealth()
+                  .then(setHealth)
+                  .catch(() => undefined);
               }
             }}
             className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold shadow-xs transition-all cursor-pointer"
