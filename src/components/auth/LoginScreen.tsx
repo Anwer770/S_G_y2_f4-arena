@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { APP_NAME, APP_TAGLINE, APP_VERSION_LABEL } from '../../constants/appMeta';
 import { SystemUser, UserRole } from '../../types/settings';
 import {
   ShieldCheck,
@@ -130,10 +131,10 @@ export const LoginScreen: React.FC = () => {
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl font-black tracking-tight">
-                  المنظومة الإدارية والمالية الشاملة
+                  {APP_NAME}
                 </h1>
                 <p className="text-xs sm:text-sm text-teal-200/90 font-medium mt-0.5">
-                  القيصر الذهبي • نظام إدارة العمليات والمخزون والحسابات
+                  {APP_TAGLINE}
                 </p>
               </div>
             </div>
@@ -342,7 +343,9 @@ export const LoginScreen: React.FC = () => {
             <span>متوافق تماماً مع شاشات الهواتف وأجهزة التابلت</span>
           </div>
           <div className="flex items-center gap-1 text-xs font-mono">
-            <span>المنظومة v2.4.0 • IndexedDB Offline</span>
+            <span>
+              {APP_NAME} {APP_VERSION_LABEL} • IndexedDB Offline
+            </span>
           </div>
         </div>
       </div>

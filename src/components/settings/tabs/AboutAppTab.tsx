@@ -1,5 +1,6 @@
 import React from 'react';
 import { Info, ExternalLink, ShieldCheck, Youtube, Phone, Globe, Mail, Sparkles, Award } from 'lucide-react';
+import { APP_NAME, APP_VERSION_LABEL } from '../../../constants/appMeta';
 
 export const AboutAppTab: React.FC = () => {
   return (
@@ -22,11 +23,11 @@ export const AboutAppTab: React.FC = () => {
         <div className="relative z-10 max-w-2xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 dark:bg-slate-900/10 backdrop-blur-md text-emerald-400 text-xs font-bold border border-white/10">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>نظام قيمة المحاسبي الموحد - الإصدار v1.4.2</span>
+            <span>{APP_NAME} — الإصدار {APP_VERSION_LABEL}</span>
           </div>
 
           <h3 className="text-xl sm:text-2xl font-black text-white leading-tight">
-            منظومة قيمة المتكاملة لإدارة الحسابات والمخزون والمبيعات
+            {APP_NAME}
           </h3>
 
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -40,7 +41,7 @@ export const AboutAppTab: React.FC = () => {
             </span>
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              تشفير البيانات محلياً وسحابياً
+              تخزين محلي على الجهاز (IndexedDB) بلا خادم مزامنة
             </span>
           </div>
         </div>
@@ -131,7 +132,7 @@ export const AboutAppTab: React.FC = () => {
             <div className="flex items-center gap-2">
               <Youtube className="w-5 h-5 text-rose-600 dark:text-rose-400" />
               <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                شروحات لطريقة استخدام برنامج قيمة المحاسبي
+                شروحات لطريقة استخدام {APP_NAME}
               </h4>
             </div>
 

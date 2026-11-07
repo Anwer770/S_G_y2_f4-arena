@@ -12,6 +12,12 @@ import {
   type StorageHealth,
 } from '../../../utils/storagePersistence';
 import {
+  encryptSnapshot,
+  decryptSnapshot,
+  isEncryptedSnapshotPayload,
+  type EncryptedSnapshotPayload,
+} from '../../../utils/snapshotCrypto';
+import {
   getOutboxStats,
   markAllOutboxSynced,
   clearSyncedOutbox,
@@ -63,7 +69,10 @@ interface CloudSnapshot {
   totalRecords: number;
   sizeKb: number;
   isEncrypted: boolean;
-  data: UnifiedBackupState;
+  /** نقطة غير مشفّرة (السلوك القديم — تُحفظ كما هي) */
+  data?: UnifiedBackupState | null;
+  /** نقطة مشفّرة فعلياً (AES-GCM) — لا تحتوي أي بيانات صريحة */
+  payload?: EncryptedSnapshotPayload | null;
 }
 
 const SNAPSHOTS_STORAGE_KEY = 'nova_erp_cloud_snapshots_v2';
@@ -117,7 +126,7 @@ export const DatabasesTab: React.FC<Props> = ({
     setStorageStats(dbStorage.getStats());
   };
 
-  const handleCreateSnapshot = () => {
+  const handleCreateSnapshot = async () => {
     const backupData = onExportBackup();
     if (!backupData) return;
 
@@ -130,7 +139,28 @@ export const DatabasesTab: React.FC<Props> = ({
       counts.customersCount +
       counts.debtsCount;
 
-    const jsonStr = JSON.stringify(backupData);
+    // تشفير حقيقي عند اختيار PIN (R17): لا تُخزَّن أي بيانات صريحة في هذه الحالة.
+    const wantsPin = usePin && pinCode.trim().length > 0;
+    if (wantsPin && !/^\d{4}$/.test(pinCode.trim())) {
+      setStatusMessage('رمز PIN يجب أن يكون 4 أرقام بالضبط');
+      setTimeout(() => setStatusMessage(null), 4000);
+      return;
+    }
+
+    let payload: EncryptedSnapshotPayload | null = null;
+    let storedData: UnifiedBackupState | null = backupData;
+    if (wantsPin) {
+      try {
+        payload = await encryptSnapshot(backupData, pinCode.trim());
+        storedData = null;
+      } catch (err: any) {
+        setStatusMessage(`تعذّر تشفير نقطة الاستعادة: ${err?.message || err}`);
+        setTimeout(() => setStatusMessage(null), 5000);
+        return;
+      }
+    }
+
+    const jsonStr = JSON.stringify(payload ?? backupData);
     const sizeKb = Math.round(new Blob([jsonStr]).size / 1024);
 
     const newSnapshot: CloudSnapshot = {
@@ -142,8 +172,9 @@ export const DatabasesTab: React.FC<Props> = ({
       }),
       totalRecords,
       sizeKb,
-      isEncrypted: usePin && pinCode.trim().length > 0,
-      data: backupData,
+      isEncrypted: !!payload,
+      data: storedData,
+      payload,
     };
 
     saveSnapshots([newSnapshot, ...snapshots]);
@@ -151,14 +182,34 @@ export const DatabasesTab: React.FC<Props> = ({
     setPinCode('');
     setUsePin(false);
     setIsCreatingSnapshot(false);
-    setStatusMessage('تم إنشاء نقطة الاستعادة وحفظها بنجاح!');
+    setStatusMessage(
+      payload
+        ? 'تم إنشاء نقطة الاستعادة وتشفيرها (AES-GCM) وحفظها بنجاح!'
+        : 'تم إنشاء نقطة الاستعادة وحفظها بنجاح!'
+    );
     setTimeout(() => setStatusMessage(null), 3000);
   };
 
-  const handleRestoreSnapshot = (snap: CloudSnapshot) => {
-    if (snap.isEncrypted) {
+  const handleRestoreSnapshot = async (snap: CloudSnapshot) => {
+    let restoreData: UnifiedBackupState | null = snap.data ?? null;
+
+    if (isEncryptedSnapshotPayload(snap.payload)) {
       const enteredPin = prompt('الرجاء إدخال رمز PIN المكون من 4 أرقام لفك تشفير النسخة:');
       if (!enteredPin) return;
+      try {
+        // رمز خاطئ ⇒ فشل تحقق AES-GCM ⇒ لا استعادة ولا استبدال بيانات
+        restoreData = await decryptSnapshot<UnifiedBackupState>(snap.payload, enteredPin.trim());
+      } catch (err: any) {
+        setStatusMessage(`تعذّرت الاستعادة: ${err?.message || err}`);
+        setTimeout(() => setStatusMessage(null), 6000);
+        return;
+      }
+    }
+
+    if (!restoreData) {
+      setStatusMessage('نقطة الاستعادة تالفة: لا تحوي بيانات صريحة ولا مغلّفاً مشفّراً');
+      setTimeout(() => setStatusMessage(null), 6000);
+      return;
     }
 
     if (
@@ -166,7 +217,7 @@ export const DatabasesTab: React.FC<Props> = ({
         `هل أنت متأكد من استعادة نقطة "${snap.name}"؟ سيتم استبدال البيانات الحالية ببيانات النسخة.`
       )
     ) {
-      onImportBackup(snap.data);
+      onImportBackup(restoreData);
       setStatusMessage(`تمت استعادة نقطة "${snap.name}" بنجاح!`);
       setTimeout(() => setStatusMessage(null), 3000);
     }
@@ -231,7 +282,7 @@ export const DatabasesTab: React.FC<Props> = ({
         <div>
           <h2 className="text-base font-bold text-slate-900 dark:text-white">قواعد البيانات والنسخ الاحتياطي</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            تصدير واستيراد قواعد البيانات، ونقاط الاستعادة السحابية، والربط مع Google Drive
+            تصدير واستيراد قواعد البيانات، ونقاط استعادة محلية (اختيارياً مشفّرة بـ PIN) — بلا خادم ولا ربط سحابي
           </p>
         </div>
       </div>
@@ -407,7 +458,7 @@ export const DatabasesTab: React.FC<Props> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-black text-slate-900 dark:text-white">
-                  طابور المزامنة السحابية (sync_outbox)
+                  طابور المزامنة المحلي (sync_outbox)
                 </h3>
                 <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
                   outboxStats.pending > 0
@@ -485,7 +536,7 @@ export const DatabasesTab: React.FC<Props> = ({
         </div>
 
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          حفظ نسخة كاملة مشفرة من كافة القيود والحسابات والمخزون والعملاء على جهازك بصيغة ملف JSON.
+          حفظ نسخة كاملة من كافة القيود والحسابات والمخزون والعملاء في ملف JSON (غير مشفّر — احفظه في مكان آمن؛ نقاط الاستعادة داخل التطبيق وحدها يمكن تشفيرها بـ PIN).
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -527,65 +578,25 @@ export const DatabasesTab: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Google Drive Integration */}
-      <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-        <div className="flex items-center justify-between">
+      {/* التصدير الخارجي — لا ربط سحابي مبرمج (R17) */}
+      <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
-            <Cloud className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <Cloud className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             <h3 className="text-xs font-bold text-slate-900 dark:text-white">
-              النسخ الاحتياطي على Google Drive
+              النسخ الاحتياطي الخارجي (يدوي)
             </h3>
           </div>
           <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
-            {databaseConfig.isGoogleDriveConnected ? 'متصل' : 'غير متصل'}
+            غير مربوط بخدمة سحابية
           </span>
         </div>
 
-        <div className="space-y-3">
-          <div>
-            <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">
-              Google Client ID:
-            </label>
-            <input
-              type="text"
-              dir="ltr"
-              value={databaseConfig.googleDriveClientId}
-              onChange={(e) =>
-                onChangeConfig({ ...databaseConfig, googleDriveClientId: e.target.value })
-              }
-              placeholder="xxxxxxxxxxxx-xxxxxxxxxxxx.apps.googleusercontent.com"
-              className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono text-left"
-            />
-          </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              const nextConnected = !databaseConfig.isGoogleDriveConnected;
-              onChangeConfig({
-                ...databaseConfig,
-                isGoogleDriveConnected: nextConnected,
-              });
-              alert(
-                nextConnected
-                  ? 'تم تجهيز اتصال حساب Google Drive بنجاح للحفظ الآمن للملفات'
-                  : 'تم إلغاء الاتصال بـ Google Drive'
-              );
-            }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              databaseConfig.isGoogleDriveConnected
-                ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                : 'bg-slate-800 hover:bg-slate-900 text-white'
-            }`}
-          >
-            <Cloud className="w-3.5 h-3.5" />
-            <span>
-              {databaseConfig.isGoogleDriveConnected
-                ? 'إلغاء ربط Google Drive'
-                : 'ربط حساب Google Drive الآن'}
-            </span>
-          </button>
-        </div>
+        <p className="text-xs text-slate-500 dark:text-slate-400 leading-5">
+          <strong>لا يوجد ربط مبرمج بـ Google Drive ولا بأي خدمة سحابية.</strong> الزر السابق كان يبدّل حالة
+          في الإعدادات فقط دون أي تنفيذ فعلي. للنسخ الخارجي: صدّر نسخة JSON من الزر أعلاه واحفظها في
+          خدمتك السحابية أو على قرص خارجي بنفسك — هذا هو المسار المعتمد والموثّق.
+        </p>
       </div>
 
       {/* Cloud Snapshots */}
@@ -633,7 +644,7 @@ export const DatabasesTab: React.FC<Props> = ({
                     onChange={(e) => setUsePin(e.target.checked)}
                     className="rounded-sm"
                   />
-                  <span>حماية بـ PIN</span>
+                  <span>حماية بـ PIN (تشفير AES-GCM)</span>
                 </label>
                 {usePin && (
                   <input
@@ -703,14 +714,23 @@ export const DatabasesTab: React.FC<Props> = ({
                         >
                           استعادة
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => triggerDownload(snap.data, `${snap.name}.json`)}
-                          className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white"
-                          title="تنزيل JSON"
-                        >
-                          <Download className="w-3.5 h-3.5" />
-                        </button>
+                        {snap.data ? (
+                          <button
+                            type="button"
+                            onClick={() => triggerDownload(snap.data, `${snap.name}.json`)}
+                            className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white"
+                            title="تنزيل JSON"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                          </button>
+                        ) : (
+                          <span
+                            className="p-1 text-teal-600 dark:text-teal-400"
+                            title="نقطة مشفّرة — تُفتح بالـ PIN فقط داخل التطبيق"
+                          >
+                            <Lock className="w-3.5 h-3.5" />
+                          </span>
+                        )}
                         <button
                           type="button"
                           onClick={() => handleDeleteSnapshot(snap.id)}

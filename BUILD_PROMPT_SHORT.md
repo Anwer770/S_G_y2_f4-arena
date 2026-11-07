@@ -37,8 +37,9 @@ src/database/dbStorage.ts → src/utils/storage.ts → ملف الوحدة ال�
 npx tsc --noEmit        → 0 أخطاء
 npm run build           → نجاح + PWA
 npm run integrity       → 33/33 (سلامة الحسابات/الحذف/التخزين)
+npm run identity        → 16/16 (اسم وإصدار واحد · لا ادعاء AI · لا نسخة يتيمة)
 npm run regression      → لا انحدار + 0 أخطاء JS
-+ حسب الحاجة: data-loss · auth · darkmode · typography · tables · workos
++ حسب الحاجة: data-loss · auth · darkmode · typography · tables · workos · snapshots
 إن نقص أي رقم ناجح عن خط الأساس: أصلح قبل المتابعة ولا تُخفِ الفشل.
 
 ── 6) التسليم ──

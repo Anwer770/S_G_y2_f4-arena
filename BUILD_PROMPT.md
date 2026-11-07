@@ -2,7 +2,7 @@
 
 | البند | القيمة |
 |---|---|
-| **الإصدار** | `3.2.0` — 2026-11-08 |
+| **الإصدار** | `3.3.0` — 2026-11-08 |
 | **الاستخدام** | يُلصق كاملاً في بداية جلسة بناء من الصفر أو إعادة بناء النظام |
 | **الطول** | ~340 سطراً (يستهلك سياقاً معتبراً). للاستخدام اليومي: [`BUILD_PROMPT_SHORT.md`](./BUILD_PROMPT_SHORT.md) |
 | **المرجع الحاكم** | [`PRD.md`](./PRD.md) — عند التعارض، الـ PRD يَحكم |
@@ -209,7 +209,7 @@ UnifiedBackupState { app, version, exportedAt, checksum, modules:{stock, financi
 المرحلة 4: tasks + workos + taskflow.
 المرحلة 5: routines + custody + knowledge + links.
 المرحلة 6: settings + backup + PWA + طباعة + تصدير + تدقيق.
-المرحلة 7: الاختبارات (tsc, regression, data-loss, auth, darkmode, typography, tables) + التوثيق.
+المرحلة 7: الاختبارات (tsc, regression, data-loss, auth, darkmode, typography, tables, workos, identity, snapshots) + التوثيق.
 بعد كل مرحلة: شغّل البوابة وأبلغ بالنتيجة قبل المتابعة.
 
 ════════════════════════════════════════════════════════════

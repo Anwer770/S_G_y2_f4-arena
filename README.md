@@ -1,37 +1,109 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+
+# المنظومة الإدارية المتكاملة — «القيصر ERP»
+
+**تطبيق ويب عربي (RTL) لإدارة العمليات والمخزون والحسابات والعهد والديون والعملاء والمهام — يعمل بلا خادم، وكل البيانات محلية في متصفحك.**
+
+الإصدار الحالي: **v3.3.0**
+
 </div>
-
-# Run and deploy your AI Studio app
-
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/8f3e52d9-5d3a-43ad-9117-df1d7a32e9fd
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
 
 ---
 
-## 📚 التوثيق (Documentation)
+## ١. ما هذا؟
+
+منظومة إدارية ومالية متكاملة تُبنى بـ **Vite 6 + React 19 + TypeScript 5.8 + Tailwind 4**، وتُثبَّت كتطبيق PWA يعمل دون إنترنت:
+
+| المجموعة | الوحدات |
+|---|---|
+| المال والمخزون | السجل المالي والمحاسبي · دفتر صرف وتوريد الأصناف · دفتر الدين والالتزامات |
+| العلاقات | العملاء والزيارات · الأطباء والزيارات · دفتر العهد والإشكاليات |
+| العمل والإنتاجية | Work OS (إدارة العمل) · المهام والمشاريع · الروتين والعادات |
+| المعرفة | الملاحظات وإدارة المعرفة · مكتبة الروابط |
+
+**14 تبويباً** في القائمة الجانبية، و**95 مفتاح تخزين** محلي، وحفظ فوري بلا «زر حفظ» في معظم الوحدات.
+
+## ٢. التشغيل محلياً
+
+**المتطلَّبات:** Node.js 20+ فقط. **لا حاجة لأي مفتاح API ولا لأي حساب سحابي** — لا يوجد أي استدعاء لخدمة خارجية وقت التشغيل.
+
+```bash
+npm install
+npm run dev      # http://localhost:3000
+```
+
+حساب الدخول الافتراضي: **«مدير النظام»** بضغطة «دخول سريع» (لا PIN افتراضي). رمز PIN اختياري من الإعدادات.
+
+### بناء الإنتاج
+
+```bash
+npm run build    # ينتج dist/ + Service Worker (24 ملفاً مُخزَّناً مسبقاً)
+npm run preview
+```
+
+## ٣. البوابات (Quality Gates)
+
+```bash
+npm run verify   # كل ما يلي متسلسلاً — يجب أن يكون أخضر قبل أي تسليم
+```
+
+| البوابة | ما تتحقق منه | النتيجة الحالية |
+|---|---|---|
+| `npx tsc --noEmit` | أنواع صارمة | ✅ 0 أخطاء |
+| `npm run build` | بناء إنتاجي + PWA | ✅ ناجح |
+| `npm run integrity` | تصنيف الحركة المالية · ديمومة التخزين · سلامة الحذف | ✅ 33/33 |
+| `npm run data-loss` | الحفظ بعد إقلاع بارد | ✅ 8/8 |
+| `npm run auth` | المصادقة وحارس المسارات | ✅ 9/9 |
+| `npm run workos` | تكامل إدارة العمل | ✅ 17/17 |
+| `npm run outbox` | سقف طابور المزامنة | ✅ 7/7 |
+| `npm run darkmode` | تغطية الوضع الليلي | ✅ 18/18 |
+| `npm run typography` | سلّم النصوص (لا أصغر من 12px) | ✅ 7/7 |
+| `npm run tables:assert` | عرض أدنى + تصفير طباعة لكل جدول | ✅ 38/38 |
+| `npm run snapshots` | تشفير نقاط الاستعادة + صدق الادعاءات | ✅ 13/13 |
+| `npm run identity` | مصدر واحد للاسم والإصدار | ✅ 16/16 |
+| `npm run regression` | تنقّل 23 تبويباً + CRUD | ✅ لا انحدار |
+
+## ٤. الهوية والإصدار — مصدر واحد
+
+الاسم والإصدار والشعار النصي تُعرَّف **مرة واحدة** في [`src/constants/appMeta.ts`](./src/constants/appMeta.ts)، ويقرأها:
+
+- `package.json` و`metadata.json` (تطابق يفرضه `npm run identity`)
+- بيانات PWA في `vite.config.ts` (الاسم والوصف)
+- شاشة الدخول (`LoginScreen`) و«عن التطبيق» (`AboutAppTab`) وعنوان الصفحة (`main.tsx`)
+
+> **قاعدة:** لا تكتب رقم إصدار أو اسم منتج نصّياً خارج هذا الملف — البوابة تفشل إن فعلت.
+
+## ٥. البنية
+
+```text
+src/
+├─ app/App.tsx              # التبويبات والتوجيه وحالة الجلسة
+├─ components/              # 14 وحدة + مكوّنات مشتركة (workos/ · financial/ · customers/ …)
+├─ services/                # طبقة الخدمات (financial · backup · …)
+├─ utils/                   # التخزين (storage.ts · storagePersistence · syncOutbox · snapshotCrypto)
+├─ database/                # IndexedDBAdapter + dbStorage (مع بديل ذاكرة)
+├─ constants/appMeta.ts     # الهوية الوحيدة
+└─ types/                   # نماذج البيانات
+tools/regression/*.test.mjs # بوابات الانحدار (jsdom + esbuild)
+legacy/                     # نسخة v2.7 المؤرشفة (غير مدعومة، غير مستوردة)
+```
+
+## ٦. الخصوصية والبيانات
+
+- **لا خادم ولا مزامنة سحابية**: البيانات في `IndexedDB` على جهازك، و«طابور المزامنة» محلي بلا مُرسِل.
+- **التصدير** ملف JSON عادي (غير مشفّر) — احفظه في مكان آمن.
+- **نقاط الاستعادة** داخل التطبيق يمكن تشفيرها فعلياً بـ PIN (AES-GCM 256 · PBKDF2-SHA256 · 150,000 دورة). الرمز الخاطئ لا يفتح النسخة.
+
+## ٧. التوثيق
 
 | الملف | الغرض |
 |---|---|
-| [`PRD.md`](./PRD.md) | **المرجع المعتمد**: النطاق، 14 تبويباً، نموذج البيانات، قواعد الأعمال، معايير القبول |
-| [`BUILD_PROMPT_SHORT.md`](./BUILD_PROMPT_SHORT.md) | عقد التشغيل اليومي للوكيل/المطوّر (~90 سطراً) |
+| [`PRD.md`](./PRD.md) | **المرجع المعتمد**: النطاق، التبويبات، نموذج البيانات، قواعد الأعمال، المخاطر، معايير القبول |
+| [`BUILD_PROMPT_SHORT.md`](./BUILD_PROMPT_SHORT.md) | عقد التشغيل اليومي للوكيل/المطوّر (~77 سطراً) |
 | [`BUILD_PROMPT.md`](./BUILD_PROMPT.md) | برومت البناء من الصفر (كامل) |
 | [`PROMPTS_LIBRARY.md`](./PROMPTS_LIBRARY.md) | برومتات: تطوير، 14 وحدة، مراجعة أمنية، اختبارات، بيانات |
-| [`QA_CHECKLISTS.md`](./QA_CHECKLISTS.md) | بوابات الجودة ونتائجها المقيسة وقوائم ما قبل التسليم |
+| [`QA_CHECKLISTS.md`](./QA_CHECKLISTS.md) | البوابات ونتائجها المقيسة وقوائم ما قبل التسليم |
 | [`PRD_v2.7_archive.md`](./PRD_v2.7_archive.md) | وثيقة المنتج القديمة (مؤرشفة) |
-| [`PRD_PROMPT_MASTER.md`](./PRD_PROMPT_MASTER.md) | النسخة المجمّعة القديمة (مؤرشفة) |
 | [`تقرير-الفحص.md`](./تقرير-الفحص.md) | تقرير الفحص التقني والثغرات الأصلية |
 
-**قبل أي تسليم:** `npx tsc --noEmit && npm run build && npm run integrity && npm run regression`
+**قبل أي تسليم:** `npm run verify` أخضر بالكامل.
