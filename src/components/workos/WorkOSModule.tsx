@@ -61,6 +61,7 @@ import { WorkOSNotesMeetingsView } from './WorkOSNotesMeetingsView';
 import { WorkOSAutomationView } from './WorkOSAutomationView';
 import { WorkOSReportsView } from './WorkOSReportsView';
 import { TasksModule } from '../tasks/TasksModule';
+import { CentralUnifiedLedger } from './CentralUnifiedLedger';
 
 // Modals
 import { WorkOSAICopilotModal } from './WorkOSAICopilotModal';
@@ -82,6 +83,7 @@ import {
   Inbox,
   Kanban,
   LayoutDashboard,
+  ShoppingCart,
   Sparkles,
   Sun,
   Target,
@@ -700,6 +702,7 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
     { id: 'overview', label: 'نظرة عامة', icon: LayoutDashboard, group: 'work' },
     { id: 'projects', label: 'المشاريع', icon: FolderKanban, count: data.projects.length, group: 'work' },
     { id: 'tasks', label: 'المهام', icon: CheckSquare, count: data.tasks.length, group: 'work' },
+    { id: 'orders', label: 'الدفتر المركزي والطلبيات', icon: ShoppingCart, count: data.orders?.length || 0, group: 'work' },
     { id: 'kanban', label: 'كانبان', icon: Kanban, group: 'views' },
     { id: 'timeline', label: 'الجدول الزمني', icon: Clock, group: 'views' },
     { id: 'priorities', label: 'الأولويات', icon: Flame, group: 'insights' },
@@ -1472,6 +1475,28 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
                 />
               )}
 
+              {currentTab === 'orders' && (
+                <CentralUnifiedLedger
+                  orders={data.orders || []}
+                  tasks={data.tasks}
+                  commitments={data.commitments}
+                  team={data.team}
+                  onOpenQuickAdd={(type) => {
+                    setQuickAddInitialType(type || 'order');
+                    setIsQuickAddOpen(true);
+                  }}
+                  onUpdateOrders={(updatedOrders) => {
+                    setData((prev) => ({ ...prev, orders: updatedOrders }));
+                  }}
+                  onUpdateTasks={(updatedTasks) => {
+                    setData((prev) => ({ ...prev, tasks: updatedTasks }));
+                  }}
+                  onUpdateCommitments={(updatedCommitments) => {
+                    setData((prev) => ({ ...prev, commitments: updatedCommitments }));
+                  }}
+                />
+              )}
+
               {currentTab === 'kanban' && (
                 <WorkOSKanbanTab
                   tasks={filteredTasks}
@@ -1639,6 +1664,14 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
         projects={data.projects}
         team={data.team}
         onAddTask={handleAddTask}
+        onAddOrder={(order) => {
+          setData((prev) => ({
+            ...prev,
+            orders: [order, ...(prev.orders || [])],
+          }));
+          setCurrentTab('orders');
+          setSecondaryView(null);
+        }}
         onAddProject={(p) => {
           const newP: WorkProject = {
             id: `prj_${Date.now()}`,

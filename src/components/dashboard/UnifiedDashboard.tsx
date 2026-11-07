@@ -19,7 +19,14 @@ import { calculateTaskStats } from '../../utils/tasks';
 import { calculateCustomerStats, getTodayArabicDay } from '../../utils/customers';
 import { calculateDoctorStats } from '../../utils/doctors';
 import { calculateDebtStats } from '../../utils/debts';
-import { loadTasks as loadWorkOSTasks } from '../../utils/workosStorage';
+import {
+  loadTasks as loadWorkOSTasks,
+  loadOrders as loadWorkOSOrders,
+  loadWorkOSData,
+} from '../../utils/workosStorage';
+import { WorkOrder } from '../../types/workos';
+import { CentralUnifiedLedger } from '../workos/CentralUnifiedLedger';
+import { WorkOSQuickAddModal } from '../workos/WorkOSQuickAddModal';
 import {
   loadDebts,
   loadDebtCommitments,
@@ -185,10 +192,19 @@ export const UnifiedDashboard: React.FC<Props> = ({
   const [selectedCustomerForVisit, setSelectedCustomerForVisit] = useState<Customer | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [isCommitmentModalOpen, setIsCommitmentModalOpen] = useState(false);
+  const [isWorkOSQuickAddOpen, setIsWorkOSQuickAddOpen] = useState(false);
+  const [workOSQuickAddType, setWorkOSQuickAddType] = useState('order');
+  const [dashboardOrders, setDashboardOrders] = useState<WorkOrder[]>(() => loadWorkOSOrders());
+  const [workOSData, setWorkOSData] = useState(() => loadWorkOSData());
 
-  // Operations Tab state: 'today' | 'overdue' | 'visits' | 'commitments'
-  const [activeOpsTab, setActiveOpsTab] = useState<'today' | 'overdue' | 'visits' | 'commitments'>('today');
+  // Operations Tab state: 'today' | 'overdue' | 'visits' | 'commitments' | 'orders_ledger'
+  const [activeOpsTab, setActiveOpsTab] = useState<'today' | 'overdue' | 'visits' | 'commitments' | 'orders_ledger'>('today');
   const [workOSTasksVersion, setWorkOSTasksVersion] = useState(0);
+
+  useEffect(() => {
+    setDashboardOrders(loadWorkOSOrders());
+    setWorkOSData(loadWorkOSData());
+  }, [workOSTasksVersion]);
 
   // Financial metrics
   const finSummary = useMemo(() => calculateFinancialSummary(financialTransactions), [financialTransactions]);
@@ -427,11 +443,23 @@ export const UnifiedDashboard: React.FC<Props> = ({
             </span>
           </div>
           <span className="text-xs text-[#0D9488] dark:text-teal-400 font-bold">
-            7 إجراءات فورية
+            8 إجراءات فورية (الطلبيات، المهام، السندات، والمخزون)
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+          {/* + طلبية / توريد (أزرق ملكي #3B82F6) */}
+          <button
+            onClick={() => {
+              setWorkOSQuickAddType('order');
+              setIsWorkOSQuickAddOpen(true);
+            }}
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-950 dark:text-blue-200 border border-blue-200/80 dark:border-blue-800/80 text-xs font-bold transition-all cursor-pointer shadow-2xs"
+          >
+            <ShoppingCart className="w-4 h-4 text-[#3B82F6] shrink-0" />
+            <span>+ طلبية / توريد</span>
+          </button>
+
           {/* + مهمة (أخضر زمردي) */}
           <button
             onClick={() => setIsTaskModalOpen(true)}
@@ -489,7 +517,7 @@ export const UnifiedDashboard: React.FC<Props> = ({
           {/* + موعد (برونزي #B45309) */}
           <button
             onClick={() => setIsCommitmentModalOpen(true)}
-            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-orange-50 dark:bg-orange-950/60 hover:bg-orange-100 dark:hover:bg-orange-900/60 text-orange-950 dark:text-orange-200 border border-orange-200/80 dark:border-orange-800/80 text-xs font-bold transition-all cursor-pointer shadow-2xs col-span-2 sm:col-span-1"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-orange-50 dark:bg-orange-950/60 hover:bg-orange-100 dark:hover:bg-orange-900/60 text-orange-950 dark:text-orange-200 border border-orange-200/80 dark:border-orange-800/80 text-xs font-bold transition-all cursor-pointer shadow-2xs"
           >
             <Calendar className="w-4 h-4 text-[#B45309] shrink-0" />
             <span>+ موعد / التزام</span>
@@ -708,6 +736,23 @@ export const UnifiedDashboard: React.FC<Props> = ({
             >
               <Coins className="w-3.5 h-3.5" />
               <span>الالتزامات والديون</span>
+            </button>
+
+            <button
+              onClick={() => setActiveOpsTab('orders_ledger')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                activeOpsTab === 'orders_ledger'
+                  ? 'bg-blue-700 text-white shadow-2xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <ShoppingCart className="w-3.5 h-3.5" />
+              <span>الدفتر المركزي (الطلبيات والربط الثلاثي)</span>
+              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                activeOpsTab === 'orders_ledger' ? 'bg-blue-800 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+              }`}>
+                {dashboardOrders.length}
+              </span>
             </button>
           </div>
 
@@ -1057,6 +1102,33 @@ export const UnifiedDashboard: React.FC<Props> = ({
                 ))}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* TAB 5: الدفتر المركزي والطلبيات والربط الثلاثي */}
+        {activeOpsTab === 'orders_ledger' && (
+          <div className="pt-2">
+            <CentralUnifiedLedger
+              orders={dashboardOrders}
+              tasks={workOSData.tasks}
+              commitments={workOSData.commitments}
+              team={workOSData.team}
+              onOpenQuickAdd={(type) => {
+                setWorkOSQuickAddType(type || 'order');
+                setIsWorkOSQuickAddOpen(true);
+              }}
+              onUpdateOrders={(updated) => {
+                setDashboardOrders(updated);
+                setWorkOSData((prev) => ({ ...prev, orders: updated }));
+              }}
+              onUpdateTasks={(updated) => {
+                setWorkOSData((prev) => ({ ...prev, tasks: updated }));
+                setWorkOSTasksVersion((v) => v + 1);
+              }}
+              onUpdateCommitments={(updated) => {
+                setWorkOSData((prev) => ({ ...prev, commitments: updated }));
+              }}
+            />
           </div>
         )}
       </div>
@@ -1631,6 +1703,49 @@ export const UnifiedDashboard: React.FC<Props> = ({
             setIsCommitmentModalOpen(false);
           }}
           existingCommitments={commitments}
+        />
+      )}
+
+      {/* Unified Work OS Quick Add Modal (+ طلبية، مهمة، التزام، موعد، مشروع...) */}
+      {isWorkOSQuickAddOpen && (
+        <WorkOSQuickAddModal
+          isOpen={isWorkOSQuickAddOpen}
+          onClose={() => setIsWorkOSQuickAddOpen(false)}
+          initialType={workOSQuickAddType}
+          projects={workOSData.projects}
+          team={workOSData.team}
+          onAddTask={() => {
+            setWorkOSTasksVersion((v) => v + 1);
+            setWorkOSData(loadWorkOSData());
+            setIsWorkOSQuickAddOpen(false);
+          }}
+          onAddOrder={() => {
+            setDashboardOrders(loadWorkOSOrders());
+            setWorkOSData(loadWorkOSData());
+            setWorkOSTasksVersion((v) => v + 1);
+            setIsWorkOSQuickAddOpen(false);
+            setActiveOpsTab('orders_ledger');
+          }}
+          onAddProject={() => {
+            setWorkOSData(loadWorkOSData());
+            setIsWorkOSQuickAddOpen(false);
+          }}
+          onAddNote={() => {
+            setIsWorkOSQuickAddOpen(false);
+          }}
+          onAddAppointment={() => {
+            setIsWorkOSQuickAddOpen(false);
+          }}
+          onAddCommitment={() => {
+            setWorkOSData(loadWorkOSData());
+            setIsWorkOSQuickAddOpen(false);
+          }}
+          onAddHabit={() => {
+            setIsWorkOSQuickAddOpen(false);
+          }}
+          onAddGoal={() => {
+            setIsWorkOSQuickAddOpen(false);
+          }}
         />
       )}
     </div>

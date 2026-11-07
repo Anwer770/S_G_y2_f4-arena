@@ -11,6 +11,8 @@ import {
   Calendar,
   Target,
   FileText,
+  ShoppingCart,
+  Coins,
   Clock,
   Play,
   Pause,
@@ -24,7 +26,7 @@ import { ActiveTimerState, WorkTask, WorkProject } from '../../types/workos';
 interface WorkOSUnifiedTopBarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  onOpenQuickAdd?: (type: 'project' | 'task' | 'meeting' | 'appointment' | 'goal' | 'note') => void;
+  onOpenQuickAdd?: (type: 'project' | 'task' | 'meeting' | 'appointment' | 'goal' | 'note' | 'order' | 'commitment' | 'habit') => void;
   onOpenAddModal?: (type: any) => void;
   tasks?: WorkTask[];
   projects?: WorkProject[];
@@ -81,7 +83,7 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
   const settingsRef = useRef<HTMLDivElement>(null);
 
   // Safe handler for opening quick add modal
-  const handleOpenAdd = (type: 'project' | 'task' | 'meeting' | 'appointment' | 'goal' | 'note') => {
+  const handleOpenAdd = (type: 'project' | 'task' | 'meeting' | 'appointment' | 'goal' | 'note' | 'order' | 'commitment' | 'habit') => {
     if (typeof onOpenQuickAdd === 'function') {
       onOpenQuickAdd(type);
     } else if (typeof onOpenAddModal === 'function') {
@@ -226,6 +228,38 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
                   <div>
                     <span className="font-bold block">مشروع جديد</span>
                     <span className="text-xs text-slate-400 dark:text-slate-500">مبادرة أو مشروع تنفيذي</span>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setIsAddMenuOpen(false);
+                    handleOpenAdd('order');
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-700 dark:hover:text-blue-300 rounded-xl transition cursor-pointer text-right"
+                >
+                  <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
+                    <ShoppingCart className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="font-bold block">طلبية / توريد (ربط ثلاثي)</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">طلبية عميل + مهمة تسليم + التزام</span>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setIsAddMenuOpen(false);
+                    handleOpenAdd('commitment');
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-700 dark:hover:text-amber-300 rounded-xl transition cursor-pointer text-right"
+                >
+                  <div className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400">
+                    <Coins className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="font-bold block">التزام مالي ومستحقات</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">تحصيل / سداد / فواتير</span>
                   </div>
                 </button>
 

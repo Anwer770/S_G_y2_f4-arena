@@ -137,6 +137,8 @@ export interface WorkTask {
   timeEntries?: TimeEntry[];
   customerRef?: string;
   invoiceRef?: string;
+  linkedOrderId?: string;
+  linkedCommitmentId?: string;
   workspaceId?: string;
   activityLog?: any[];
   createdAt: string;
@@ -196,11 +198,42 @@ export interface InboxItem {
   status?: 'unprocessed' | 'processed' | 'archived' | string;
 }
 
+export type OrderStatus = 'processing' | 'shipped' | 'delivered' | 'pending' | 'cancelled';
+
+export interface WorkOrder {
+  id: string;
+  orderNumber: string;
+  title: string;
+  customerName: string;
+  orderType: string;
+  regionBranch: string;
+  totalAmount: number;
+  currency: string;
+  status: OrderStatus;
+  priority: TaskPriority;
+  startDate: string;
+  deliveryDate: string;
+  assignedRep: string;
+  notes?: string;
+  linkedTaskId?: string;
+  linkedCommitmentId?: string;
+  linkedTaskProgress?: number;
+  items?: Array<{
+    name: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface WorkOSData {
   workspaces: Workspace[];
   currentWorkspaceId: string;
   projects: WorkProject[];
   tasks: WorkTask[];
+  orders: WorkOrder[];
   inbox: InboxItem[];
   dailyRoutine: DailyRoutineBlock[];
   dailyReviews: DailyReviewRecord[];
@@ -294,6 +327,11 @@ export interface WorkCommitment {
   notes: string;
   amount?: number;
   currency?: string;
+  paymentMethod?: string;
+  invoiceNumbers?: string;
+  commitmentType?: 'receivable' | 'payable' | 'contractual';
+  linkedOrderId?: string;
+  linkedTaskId?: string;
 }
 
 export interface MeetingActionItem {

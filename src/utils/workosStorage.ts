@@ -2,6 +2,7 @@ import {
   Workspace,
   WorkProject,
   WorkTask,
+  WorkOrder,
   InboxItem,
   DailyRoutineBlock,
   DailyReviewRecord,
@@ -27,6 +28,7 @@ const KEYS = {
   CURRENT_WORKSPACE: `${STORAGE_PREFIX}current_workspace`,
   PROJECTS: `${STORAGE_PREFIX}projects`,
   TASKS: `${STORAGE_PREFIX}tasks`,
+  ORDERS: `${STORAGE_PREFIX}orders`,
   INBOX: `${STORAGE_PREFIX}inbox`,
   ROUTINES: `${STORAGE_PREFIX}routines`,
   REVIEWS: `${STORAGE_PREFIX}reviews`,
@@ -441,6 +443,73 @@ const SEED_INBOX: InboxItem[] = [
   },
 ];
 
+// Seed Orders (الطلبيات المدمجة مع الربط الثلاثي)
+export const SEED_ORDERS: WorkOrder[] = [
+  {
+    id: 'ord_101',
+    orderNumber: 'ORD-2026-001',
+    title: 'طلبية مستحضرات وأدوية شهرية لصيدلية النور',
+    customerName: 'صيدلية النور الحديثة - د. عادل',
+    orderType: 'طلبيات صيدليات',
+    regionBranch: 'منطقة الحصبة - صنعاء',
+    totalAmount: 485000,
+    currency: 'YER',
+    status: 'processing',
+    priority: 'urgent',
+    startDate: '2026-11-06',
+    deliveryDate: '2026-11-08',
+    assignedRep: 'د. سامي الميداني',
+    notes: 'تجهيز 80 عبوة سيروم فيتامين سي وسيروم الهيالورونيك مع عينات ترويجية مجانية',
+    linkedTaskId: 'tsk_101',
+    linkedCommitmentId: 'cmt_1',
+    linkedTaskProgress: 60,
+    createdAt: '2026-11-06T09:00:00Z',
+    updatedAt: '2026-11-06T12:00:00Z',
+  },
+  {
+    id: 'ord_102',
+    orderNumber: 'ORD-2026-002',
+    title: 'توريد عينات ومستلزمات العناية التخصصية لمستشفى الأمل',
+    customerName: 'مستشفى الأمل التخصصي',
+    orderType: 'عينات',
+    regionBranch: 'شارع تعز - تعز',
+    totalAmount: 195000,
+    currency: 'YER',
+    status: 'shipped',
+    priority: 'high',
+    startDate: '2026-11-05',
+    deliveryDate: '2026-11-07',
+    assignedRep: 'خالد أمين المخزن',
+    notes: 'شحن الحصة المعتمدة مع بوليصة الشحن رقم BL-904 ونقليات المزن',
+    linkedTaskId: 'tsk_102',
+    linkedCommitmentId: 'cmt_2',
+    linkedTaskProgress: 80,
+    createdAt: '2026-11-05T10:00:00Z',
+    updatedAt: '2026-11-06T15:00:00Z',
+  },
+  {
+    id: 'ord_103',
+    orderNumber: 'ORD-2026-003',
+    title: 'طلبية شحنة مستحضرات التفتيح المستوردة - دفعة الجملة',
+    customerName: 'مؤسسة البركة الدوائية والتوزيع',
+    orderType: 'منتجات مستوردة',
+    regionBranch: 'فرع الحوبان - تعز',
+    totalAmount: 920000,
+    currency: 'YER',
+    status: 'delivered',
+    priority: 'medium',
+    startDate: '2026-11-01',
+    deliveryDate: '2026-11-04',
+    assignedRep: 'أحمد نبيل المحاسبي',
+    notes: 'تم التسليم وتوقيع سند الاستلام ومطابقة الفاتورة رقم INV-4102',
+    linkedTaskId: 'tsk_103',
+    linkedCommitmentId: 'cmt_3',
+    linkedTaskProgress: 100,
+    createdAt: '2026-11-01T08:00:00Z',
+    updatedAt: '2026-11-04T16:00:00Z',
+  },
+];
+
 // Seed Daily Routine
 const SEED_ROUTINE: DailyRoutineBlock[] = [
   {
@@ -833,6 +902,15 @@ export function saveTasks(data: WorkTask[]): void {
   saveSafe(KEYS.TASKS, data);
 }
 
+// Orders (الطلبيات)
+export function loadOrders(): WorkOrder[] {
+  const loaded = loadSafe<WorkOrder[]>(KEYS.ORDERS, SEED_ORDERS);
+  return Array.isArray(loaded) ? loaded : SEED_ORDERS;
+}
+export function saveOrders(data: WorkOrder[]): void {
+  saveSafe(KEYS.ORDERS, data);
+}
+
 // Inbox
 export function loadInbox(): InboxItem[] {
   const loaded = loadSafe<InboxItem[]>(KEYS.INBOX, SEED_INBOX);
@@ -1072,6 +1150,7 @@ export function resetWorkOSToDefault(): void {
   saveCurrentWorkspaceId('ws_main');
   saveProjects(SEED_PROJECTS);
   saveTasks(SEED_TASKS);
+  saveOrders(SEED_ORDERS);
   saveInbox(SEED_INBOX);
   saveRoutine(SEED_ROUTINE);
   saveHabits(SEED_HABITS);
@@ -1091,6 +1170,7 @@ export function loadWorkOSData(): WorkOSData {
   const ws = loadWorkspaces();
   const prj = loadProjects();
   const tsk = loadTasks();
+  const ord = loadOrders();
   const inb = loadInbox();
   const rtn = loadRoutine();
   const rev = loadDailyReviews();
@@ -1109,6 +1189,7 @@ export function loadWorkOSData(): WorkOSData {
     currentWorkspaceId: loadCurrentWorkspaceId() || 'ws_main',
     projects: Array.isArray(prj) ? prj : SEED_PROJECTS,
     tasks: Array.isArray(tsk) ? tsk : SEED_TASKS,
+    orders: Array.isArray(ord) ? ord : SEED_ORDERS,
     inbox: Array.isArray(inb) ? inb : SEED_INBOX,
     dailyRoutine: Array.isArray(rtn) ? rtn : SEED_ROUTINE,
     dailyReviews: Array.isArray(rev) ? rev : [],
@@ -1130,6 +1211,7 @@ export function saveWorkOSData(data: WorkOSData): void {
   if (data.currentWorkspaceId) saveCurrentWorkspaceId(data.currentWorkspaceId);
   if (data.projects) saveProjects(data.projects);
   if (data.tasks) saveTasks(data.tasks);
+  if (data.orders) saveOrders(data.orders);
   if (data.inbox) saveInbox(data.inbox);
   if (data.dailyRoutine) saveRoutine(data.dailyRoutine);
   if (data.dailyReviews) saveDailyReviews(data.dailyReviews);
@@ -1383,3 +1465,432 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
     reader.readAsArrayBuffer(file);
   });
 }
+
+// ============================================================================
+// TRIPLE INTEGRATION ENGINE (الربط الثلاثي الآلي: مهمة + طلبية + التزام مالي)
+// ============================================================================
+
+export interface TripleOrderInput {
+  title: string;
+  customerName: string;
+  orderType: string;
+  regionBranch: string;
+  totalAmount: number;
+  priority: any;
+  startDate: string;
+  deliveryDate: string;
+  assignedRep: string;
+  notes?: string;
+  generateTask?: boolean;
+  generateCommitment?: boolean;
+  paymentMethod?: string;
+  invoiceNumber?: string;
+}
+
+export function createTripleLinkOrder(input: TripleOrderInput): {
+  order: WorkOrder;
+  task?: WorkTask;
+  commitment?: WorkCommitment;
+} {
+  const currentOrders = loadOrders();
+  const currentTasks = loadTasks();
+  const currentCommitments = loadCommitments();
+
+  const timestamp = Date.now();
+  const orderNum = `ORD-${new Date().getFullYear()}-${String(currentOrders.length + 1).padStart(3, '0')}`;
+  const orderId = `ord_${timestamp}`;
+  const taskId = input.generateTask !== false ? `tsk_dlv_${timestamp}` : undefined;
+  const commitmentId = input.generateCommitment !== false ? `cmt_ord_${timestamp}` : undefined;
+
+  let createdTask: WorkTask | undefined;
+  let createdCommitment: WorkCommitment | undefined;
+
+  // 1. Create Linked Task if requested
+  if (taskId) {
+    const taskNum = `TSK-${1000 + currentTasks.length + 1}`;
+    createdTask = {
+      id: taskId,
+      taskNumber: taskNum,
+      title: `توصيل وتسليم طلبية: ${input.title} - ${input.customerName}`,
+      description: `مهمة تسليم تنفيذية لطلبية رقم ${orderNum}.\nالمنطقة: ${input.regionBranch}\nالملاحظات: ${input.notes || 'تسليم فوري ومطابقة الفاتورة'}`,
+      status: 'in_progress',
+      priority: input.priority || 'high',
+      category: 'طلبيات وتوزيع',
+      tags: ['طلبية', 'توزيع', input.regionBranch],
+      assigneeId: input.assignedRep || 'mem_3',
+      startDate: input.startDate || new Date().toISOString().slice(0, 10),
+      dueDate: input.deliveryDate || new Date().toISOString().slice(0, 10),
+      progress: 0,
+      subtasks: [
+        { id: `sub_${timestamp}_1`, title: 'تجهيز أصناف الطلبية من المستودع المركزي', completed: false },
+        { id: `sub_${timestamp}_2`, title: 'مطابقة الفاتورة وإذن الصرف مع أمين المخزن', completed: false },
+        { id: `sub_${timestamp}_3`, title: `نقل وإيصال الطلبية إلى ${input.customerName} (${input.regionBranch})`, completed: false },
+        { id: `sub_${timestamp}_4`, title: 'توقيع سند الاستلام وتأكيد سداد/تحصيل القيمة', completed: false },
+      ],
+      checklist: [
+        { id: `chk_${timestamp}_1`, text: 'التأكد من سلامة التغليف وتاريخ الصلاحية', completed: false },
+        { id: `chk_${timestamp}_2`, text: 'إرفاق نسخة الفاتورة وسند القبض', completed: false },
+      ],
+      comments: [],
+      timeEntries: [],
+      customerRef: input.customerName,
+      linkedOrderId: orderId,
+      linkedCommitmentId: commitmentId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  // 2. Create Linked Financial Commitment if requested
+  if (commitmentId) {
+    createdCommitment = {
+      id: commitmentId,
+      title: `تحصيل قيمة طلبية ${orderNum} (${input.customerName})`,
+      entity: input.customerName,
+      person: input.assignedRep,
+      description: `مستحقات مالية عن طلبية توريد رقم ${orderNum} بمبلغ ${input.totalAmount.toLocaleString()} ريال يمني.\nطريقة السداد: ${input.paymentMethod || 'نقداً عند التسليم'}\nرقم الفاتورة: ${input.invoiceNumber || 'INV-' + timestamp.toString().slice(-4)}`,
+      commitmentDate: input.startDate || new Date().toISOString().slice(0, 10),
+      dueDate: input.deliveryDate || new Date().toISOString().slice(0, 10),
+      status: 'pending',
+      importance: input.priority === 'urgent' ? 'A' : input.priority === 'high' ? 'B' : 'C',
+      notes: input.notes || 'التزام مالي مرتبط بطلبية عميل',
+      amount: input.totalAmount,
+      currency: 'YER',
+      paymentMethod: input.paymentMethod || 'نقداً عند التسليم',
+      invoiceNumbers: input.invoiceNumber || `INV-${timestamp.toString().slice(-4)}`,
+      commitmentType: 'receivable',
+      linkedOrderId: orderId,
+      linkedTaskId: taskId,
+    };
+  }
+
+  // 3. Create Main Order
+  const newOrder: WorkOrder = {
+    id: orderId,
+    orderNumber: orderNum,
+    title: input.title,
+    customerName: input.customerName,
+    orderType: input.orderType || 'طلبيات صيدليات',
+    regionBranch: input.regionBranch || 'منطقة الحصبة',
+    totalAmount: Number(input.totalAmount) || 0,
+    currency: 'YER',
+    status: 'processing',
+    priority: input.priority || 'high',
+    startDate: input.startDate || new Date().toISOString().slice(0, 10),
+    deliveryDate: input.deliveryDate || new Date().toISOString().slice(0, 10),
+    assignedRep: input.assignedRep || 'مندوب التوزيع',
+    notes: input.notes || '',
+    linkedTaskId: taskId,
+    linkedCommitmentId: commitmentId,
+    linkedTaskProgress: 0,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Persist all together
+  saveOrders([newOrder, ...currentOrders]);
+  if (createdTask) saveTasks([createdTask, ...currentTasks]);
+  if (createdCommitment) saveCommitments([createdCommitment, ...currentCommitments]);
+
+  logWorkActivity('محمد العولقي', 'إضافة طلبية جديدة مع الربط الثلاثي', 'order', orderNum, '', input.title);
+
+  return {
+    order: newOrder,
+    task: createdTask,
+    commitment: createdCommitment,
+  };
+}
+
+// ============================================================================
+// AUTOMATION & INTELLIGENT ALERTS ENGINE (محرك الأتمتة والتنبيهات الذكية)
+// ============================================================================
+
+export interface AutomationCheckResult {
+  updatedOrdersCount: number;
+  triggeredAlerts: Array<{
+    id: string;
+    type: 'order_delay' | 'order_delivered' | 'commitment_due' | 'task_blocker';
+    severity: 'critical' | 'warning' | 'info';
+    title: string;
+    message: string;
+    entityId: string;
+    entityType: 'order' | 'task' | 'commitment';
+    dueDate?: string;
+  }>;
+}
+
+export function runSmartAutomationEngine(
+  tasks: WorkTask[],
+  orders: WorkOrder[],
+  commitments: WorkCommitment[]
+): AutomationCheckResult {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  let updatedOrdersCount = 0;
+  const triggeredAlerts: AutomationCheckResult['triggeredAlerts'] = [];
+
+  const updatedOrders = orders.map((ord) => {
+    let orderCopy = { ...ord };
+
+    // 1. Check Linked Task Progress & Auto-Update
+    if (ord.linkedTaskId) {
+      const linkedTask = tasks.find((t) => t.id === ord.linkedTaskId);
+      if (linkedTask) {
+        orderCopy.linkedTaskProgress = linkedTask.progress;
+
+        // Auto Delivery Trigger: If task is completed (100% or status === 'completed')
+        const allSubtasksDone =
+          Array.isArray(linkedTask.subtasks) &&
+          linkedTask.subtasks.length > 0 &&
+          linkedTask.subtasks.every((st) => st.completed);
+
+        if (
+          (linkedTask.progress === 100 || linkedTask.status === 'completed' || allSubtasksDone) &&
+          orderCopy.status !== 'delivered' &&
+          orderCopy.status !== 'cancelled'
+        ) {
+          orderCopy.status = 'delivered';
+          orderCopy.updatedAt = new Date().toISOString();
+          updatedOrdersCount++;
+
+          triggeredAlerts.push({
+            id: `alt_del_${ord.id}`,
+            type: 'order_delivered',
+            severity: 'info',
+            title: `تم إنجاز وتسليم الطلبية تلقائياً: ${ord.orderNumber}`,
+            message: `اكتملت المهام الفرعية لطلبية ${ord.customerName} بنسبة 100%، وتم تحويل حالة الطلبية إلى "تم التسليم" آلياً.`,
+            entityId: ord.id,
+            entityType: 'order',
+          });
+        }
+      }
+    }
+
+    // 2. Check Order Delivery Delay
+    if (orderCopy.status !== 'delivered' && orderCopy.status !== 'cancelled') {
+      if (orderCopy.deliveryDate && orderCopy.deliveryDate < todayStr) {
+        triggeredAlerts.push({
+          id: `alt_ovd_${ord.id}`,
+          type: 'order_delay',
+          severity: 'critical',
+          title: `تنبيه حرج: تأخر موعد تسليم الطلبية ${ord.orderNumber}`,
+          message: `الطلبية مخصصة لـ (${ord.customerName} - ${ord.regionBranch}) وكان موعد تسليمها في ${ord.deliveryDate}. يتطلب تدخل وتنسيق فوري.`,
+          entityId: ord.id,
+          entityType: 'order',
+          dueDate: ord.deliveryDate,
+        });
+      }
+    }
+
+    // 3. Check Linked Commitment Due
+    if (ord.linkedCommitmentId) {
+      const linkedCommitment = commitments.find((c) => c.id === ord.linkedCommitmentId);
+      if (linkedCommitment && linkedCommitment.status !== 'fulfilled') {
+        if (linkedCommitment.dueDate && linkedCommitment.dueDate <= todayStr) {
+          triggeredAlerts.push({
+            id: `alt_cmt_${linkedCommitment.id}`,
+            type: 'commitment_due',
+            severity: 'critical',
+            title: `تنبيه مالي: استحقاق تحصيل فاتورة طلبية ${ord.orderNumber}`,
+            message: `مبلغ ${Number(ord.totalAmount).toLocaleString()} ريال يمني مستحق السداد من (${ord.customerName}) بتاريخ ${linkedCommitment.dueDate}.`,
+            entityId: linkedCommitment.id,
+            entityType: 'commitment',
+            dueDate: linkedCommitment.dueDate,
+          });
+        }
+      }
+    }
+
+    return orderCopy;
+  });
+
+  if (updatedOrdersCount > 0) {
+    saveOrders(updatedOrders);
+  }
+
+  return {
+    updatedOrdersCount,
+    triggeredAlerts,
+  };
+}
+
+// ============================================================================
+// UNIFIED IMPORT & EXPORT (استيراد وتصدير موحد للطلبيات والمهام والالتزامات)
+// ============================================================================
+
+export function exportUnifiedWorkOSToExcel(
+  tasks: WorkTask[],
+  orders: WorkOrder[],
+  commitments: WorkCommitment[],
+  projects: WorkProject[] = []
+): void {
+  const wb = XLSX.utils.book_new();
+
+  // 1. Orders Sheet
+  const orderRows = orders.map((o) => ({
+    'رقم الطلبية': o.orderNumber,
+    'عنوان الطلبية': o.title,
+    'اسم العميل / الصيدلية': o.customerName,
+    'نوع الطلبية': o.orderType,
+    'المنطقة / الفرع': o.regionBranch,
+    'المبلغ الإجمالي (ريال)': o.totalAmount,
+    'العملة': o.currency,
+    'الحالة': o.status,
+    'الأولوية': o.priority,
+    'تاريخ البدء': o.startDate,
+    'تاريخ التسليم': o.deliveryDate,
+    'المندوب / المسؤول': o.assignedRep,
+    'نسبة إنجاز مهمة التسليم %': o.linkedTaskProgress || 0,
+    'الملاحظات': o.notes || '',
+  }));
+  const wsOrders = XLSX.utils.json_to_sheet(orderRows);
+  XLSX.utils.book_append_sheet(wb, wsOrders, 'الطلبيات وعقود التوريد');
+
+  // 2. Tasks Sheet
+  const taskRows = tasks.map((t) => ({
+    'رقم المهمة': t.taskNumber,
+    'عنوان المهمة': t.title,
+    'الوصف': t.description,
+    'الحالة': t.status,
+    'الأولوية': t.priority,
+    'الفئة': t.category,
+    'تاريخ الاستحقاق': t.dueDate,
+    'نسبة الإنجاز %': t.progress,
+    'المسؤول': t.assigneeId,
+    'معرف الطلبية المرتبطة': t.linkedOrderId || '',
+  }));
+  const wsTasks = XLSX.utils.json_to_sheet(taskRows);
+  XLSX.utils.book_append_sheet(wb, wsTasks, 'المهام التنفيذية');
+
+  // 3. Commitments Sheet
+  const cmtRows = commitments.map((c) => ({
+    'معرف الالتزام': c.id,
+    'عنوان الالتزام': c.title,
+    'الجهة / العميل': c.entity,
+    'المسؤول': c.person,
+    'المبلغ': c.amount || 0,
+    'العملة': c.currency || 'YER',
+    'الحالة': c.status,
+    'طريقة السداد': c.paymentMethod || 'نقداً',
+    'أرقام الفواتير': c.invoiceNumbers || '',
+    'تاريخ الاستحقاق': c.dueDate,
+    'معرف الطلبية المرتبطة': c.linkedOrderId || '',
+  }));
+  const wsCmts = XLSX.utils.json_to_sheet(cmtRows);
+  XLSX.utils.book_append_sheet(wb, wsCmts, 'الالتزامات المالية والتحصيل');
+
+  XLSX.writeFile(wb, `workos-unified-triple-data-${new Date().toISOString().slice(0, 10)}.xlsx`);
+}
+
+export function downloadUnifiedWorkOSTemplate(): void {
+  const sampleOrders = [
+    {
+      'عنوان الطلبية': 'توريد دفعة سيرومات ومستحضرات طبية',
+      'اسم العميل / الصيدلية': 'صيدلية النور - الحصبة',
+      'نوع الطلبية': 'طلبيات صيدليات',
+      'المنطقة / الفرع': 'منطقة الحصبة',
+      'المبلغ الإجمالي (ريال)': 450000,
+      'العملة': 'YER',
+      'الأولوية': 'urgent',
+      'تاريخ البدء': new Date().toISOString().slice(0, 10),
+      'تاريخ التسليم': new Date(Date.now() + 86400000 * 2).toISOString().slice(0, 10),
+      'المندوب / المسؤول': 'د. سامي الميداني',
+      'طريقة السداد': 'نقداً عند التسليم',
+      'رقم الفاتورة': 'INV-8891',
+      'الملاحظات': 'تسليم الأصناف مع عينات مجانية',
+    },
+    {
+      'عنوان الطلبية': 'طلبية عينات ترويجية للمركز الاستشاري',
+      'اسم العميل / الصيدلية': 'مستشفى الأمل التخصصي',
+      'نوع الطلبية': 'عينات',
+      'المنطقة / الفرع': 'شارع تعز',
+      'المبلغ الإجمالي (ريال)': 180000,
+      'العملة': 'YER',
+      'الأولوية': 'high',
+      'تاريخ البدء': new Date().toISOString().slice(0, 10),
+      'تاريخ التسليم': new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 10),
+      'المندوب / المسؤول': 'خالد أمين المخزن',
+      'طريقة السداد': 'آجل 30 يوم',
+      'رقم الفاتورة': 'INV-8892',
+      'الملاحظات': 'عقد توريد دوري',
+    },
+  ];
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(sampleOrders);
+  XLSX.utils.book_append_sheet(wb, ws, 'قالب الطلبيات الموحد');
+  XLSX.writeFile(wb, `workos-unified-template.xlsx`);
+}
+
+export function importUnifiedWorkOSFromExcel(
+  file: File
+): Promise<{ success: boolean; message: string; count?: number }> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+        if (!rawJson || rawJson.length === 0) {
+          resolve({ success: false, message: 'الملف فارغ أو لا يحتوي على أسطر صالحة.' });
+          return;
+        }
+
+        let importedCount = 0;
+        rawJson.forEach((row) => {
+          const title = String(row['عنوان الطلبية'] || row['العنوان'] || row['Title'] || '').trim();
+          const customerName = String(row['اسم العميل / الصيدلية'] || row['العميل'] || row['Customer'] || 'عميل نقدي').trim();
+          if (!title) return;
+
+          const totalAmount = Number(row['المبلغ الإجمالي (ريال)'] || row['المبلغ'] || row['Amount'] || 0);
+          const orderType = String(row['نوع الطلبية'] || 'طلبيات صيدليات').trim();
+          const regionBranch = String(row['المنطقة / الفرع'] || 'عام').trim();
+          const deliveryDate = String(row['تاريخ التسليم'] || row['DueDate'] || new Date().toISOString().slice(0, 10)).trim();
+          const assignedRep = String(row['المندوب / المسؤول'] || row['المسؤول'] || 'مندوب التوزيع').trim();
+          const notes = String(row['الملاحظات'] || '').trim();
+          const paymentMethod = String(row['طريقة السداد'] || 'نقداً عند التسليم').trim();
+          const invoiceNumber = String(row['رقم الفاتورة'] || '').trim();
+
+          createTripleLinkOrder({
+            title,
+            customerName,
+            orderType,
+            regionBranch,
+            totalAmount,
+            priority: 'high',
+            startDate: new Date().toISOString().slice(0, 10),
+            deliveryDate,
+            assignedRep,
+            notes,
+            generateTask: true,
+            generateCommitment: true,
+            paymentMethod,
+            invoiceNumber,
+          });
+
+          importedCount++;
+        });
+
+        if (importedCount === 0) {
+          resolve({ success: false, message: 'لم يتم العثور على أسطر صالحة في القالب.' });
+          return;
+        }
+
+        resolve({
+          success: true,
+          message: `تم استيراد ${importedCount} طلبية مع إنشاء مهامها والتزاماتها المالية المرتبطة آلياً!`,
+          count: importedCount,
+        });
+      } catch (err: any) {
+        console.error('Unified Import Error:', err);
+        resolve({ success: false, message: `فشل قراءة الملف: ${err?.message || 'تنسيق غير صالح'}` });
+      }
+    };
+    reader.onerror = () => resolve({ success: false, message: 'تعذر قراءة ملف الإكسل.' });
+    reader.readAsArrayBuffer(file);
+  });
+}
+
