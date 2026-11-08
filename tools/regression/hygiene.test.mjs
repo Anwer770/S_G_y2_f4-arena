@@ -82,6 +82,15 @@ const big = srcFiles
   .sort((a, b) => b.kb - a.kb);
 check('H6 · لا ملف يتجاوز 100KB', big.length === 0, big.map((x) => `${x.f} ${x.kb}KB`).join(' · '));
 
+
+/* H7 — ميزانية any: لا تتجاوز السقف (تُخفَّض تدريجياً) */
+const ANY_BUDGET = 110;
+const anyCount = srcFiles.reduce(
+  (sum, f) => sum + (fs.readFileSync(f, 'utf8').match(/:\s*any\b|as any\b/g) || []).length,
+  0
+);
+check(`H7 · ميزانية any (${anyCount}/${ANY_BUDGET})`, anyCount <= ANY_BUDGET, anyCount > ANY_BUDGET ? 'تجاوز السقف' : '');
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);

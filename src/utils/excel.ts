@@ -426,7 +426,7 @@ export async function parseExcelForImport(
 ): Promise<ImportPreviewResult> {
   assertFileSize(file);
   const buffer = await file.arrayBuffer();
-  const rawRows: any[][] = readFirstSheetAoaSafe(buffer, 'array').rows as any[][];
+  const rawRows = readFirstSheetAoaSafe(buffer, 'array').rows;
 
   if (!rawRows || rawRows.length < 2) {
     throw new Error('الملف فارغ أو لا يحتوي على صفوف بيانات صالحة.');
@@ -555,15 +555,15 @@ export async function parseExcelForImport(
 }
 
 export function exportFullBackupJSON(
-  backupStateOrProducts: any,
-  records?: any,
-  categories?: any,
-  statuses?: any,
-  settings?: any,
-  seq?: any,
-  auditLogs?: any
+  backupStateOrProducts: unknown,
+  records?: unknown,
+  categories?: unknown,
+  statuses?: unknown,
+  settings?: unknown,
+  seq?: unknown,
+  auditLogs?: unknown
 ) {
-  let backupData: any;
+  let backupData: unknown;
   if (records !== undefined) {
     backupData = {
       app: 'دفتر صرف وتوريد الأصناف',
@@ -663,7 +663,7 @@ export async function parseCustomersExcelFile(
 }> {
   const data = await file.arrayBuffer();
   const safeSheet = readFirstSheetSafe<any>(data, 'array');
-  const rawRows: any[] = safeSheet.rows;
+  const rawRows = safeSheet.rows;
 
   const customers: Customer[] = [];
   const warnings: string[] = [IMPORT_FIDELITY_BANNER];
@@ -967,7 +967,7 @@ export async function parseFinancialExcelOrCSV(
       try {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
         const safeSheet = readFirstSheetSafe<any>(data, 'array');
-        const rawJson: any[] = safeSheet.rows;
+        const rawJson = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({
@@ -1103,12 +1103,12 @@ export async function parseFinancialExcelOrCSV(
           duplicateCount,
           warnings,
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err);
         resolve({
           success: false,
           transactions: [],
-          errors: ['حدث خطأ أثناء قراءة ملف الإكسل: ' + (err?.message || 'تنسيق الملف غير صالح')],
+          errors: ['حدث خطأ أثناء قراءة ملف الإكسل: ' + ((err instanceof Error ? err.message : String(err)) || 'تنسيق الملف غير صالح')],
           totalRows: 0,
           validRows: 0,
           duplicateCount: 0,

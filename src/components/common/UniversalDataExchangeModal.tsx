@@ -139,8 +139,8 @@ export const UniversalDataExchangeModal: React.FC<UniversalDataExchangeModalProp
         setErrorMessage(result.message || 'فشل استيراد الملف. يرجى التأكد من الأعمدة.');
         setStatusMessage(null);
       }
-    } catch (err: any) {
-      setErrorMessage(`حدث خطأ أثناء قراءة الملف: ${err?.message || 'خطأ غير معروف'}`);
+    } catch (err: unknown) {
+      setErrorMessage(`حدث خطأ أثناء قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'خطأ غير معروف'}`);
       setStatusMessage(null);
     } finally {
       setIsLoading(false);

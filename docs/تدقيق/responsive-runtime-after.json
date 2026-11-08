@@ -2,8 +2,162 @@
  "tag": "after",
  "tables": [
   {
+   "where": "اللوحة التحكم",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
    "where": "ادارة السجل اليومي5",
    "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الديون والالتزامات126",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة صرف وتوريد301",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاعمال والالتزامات المستقلة63",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "إدارة العمل67",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العملاء وزيارات26",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاطباء وزيارات10",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الروتين والعادات6",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الملاحظات6",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العهد والاشكاليات40",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "مكتبة الروابط52",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "الاعدادات",
+   "cols": 16,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "اللوحة التحكم",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة السجل اليومي5",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الديون والالتزامات126",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة صرف وتوريد301",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاعمال والالتزامات المستقلة63",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "إدارة العمل67",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العملاء وزيارات26",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاطباء وزيارات10",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الروتين والعادات6",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الملاحظات6",
+   "cols": 11,
    "minw": "960",
    "printOk": true,
    "hasScroll": true
@@ -16,6 +170,62 @@
    "hasScroll": true
   },
   {
+   "where": "مكتبة الروابط52",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "الاعدادات",
+   "cols": 11,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "اللوحة التحكم",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة السجل اليومي5",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الديون والالتزامات126",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة صرف وتوريد301",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاعمال والالتزامات المستقلة63",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "إدارة العمل67",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
    "where": "ادارة العملاء وزيارات26",
    "cols": 10,
    "minw": "960",
@@ -23,7 +233,70 @@
    "hasScroll": true
   },
   {
-   "where": "ادارة السجل اليومي5 › نافذة",
+   "where": "ادارة الاطباء وزيارات10",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الروتين والعادات6",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الملاحظات6",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العهد والاشكاليات40",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "مكتبة الروابط52",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "الاعدادات",
+   "cols": 10,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "اللوحة التحكم",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "اللوحة التحكم",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة السجل اليومي5",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة السجل اليومي5",
    "cols": 9,
    "minw": "820",
    "printOk": true,
@@ -37,9 +310,72 @@
    "hasScroll": true
   },
   {
+   "where": "ادارة الديون والالتزامات126",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة صرف وتوريد301",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
    "where": "ادارة صرف وتوريد301",
    "cols": 9,
    "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاعمال والالتزامات المستقلة63",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاعمال والالتزامات المستقلة63",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "إدارة العمل67",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "إدارة العمل67",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العملاء وزيارات26",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العملاء وزيارات26",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الاطباء وزيارات10",
+   "cols": 9,
+   "minw": "960",
    "printOk": true,
    "hasScroll": true
   },
@@ -49,17 +385,82 @@
    "minw": "820",
    "printOk": true,
    "hasScroll": true
+  },
+  {
+   "where": "ادارة الروتين والعادات6",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الروتين والعادات6",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الملاحظات6",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة الملاحظات6",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العهد والاشكاليات40",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "ادارة العهد والاشكاليات40",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "مكتبة الروابط52",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "مكتبة الروابط52",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "الاعدادات",
+   "cols": 9,
+   "minw": "960",
+   "printOk": true,
+   "hasScroll": true
+  },
+  {
+   "where": "الاعدادات",
+   "cols": 9,
+   "minw": "820",
+   "printOk": true,
+   "hasScroll": true
   }
  ],
  "errors": [],
- "navErrors": [
-  "jsdomError: Not implemented: navigation (except hash changes)",
-  "jsdomError: Not implemented: navigation (except hash changes)",
-  "jsdomError: Not implemented: navigation (except hash changes)",
-  "jsdomError: Not implemented: navigation (except hash changes)"
- ],
+ "navErrors": [],
  "counts": {
-  "total": 7,
+  "total": 65,
   "noScroll": 0,
   "noMin": 0,
   "noPrint": 0

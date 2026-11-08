@@ -153,8 +153,8 @@ export const DatabasesTab: React.FC<Props> = ({
       try {
         payload = await encryptSnapshot(backupData, pinCode.trim());
         storedData = null;
-      } catch (err: any) {
-        setStatusMessage(`تعذّر تشفير نقطة الاستعادة: ${err?.message || err}`);
+      } catch (err: unknown) {
+        setStatusMessage(`تعذّر تشفير نقطة الاستعادة: ${(err instanceof Error ? err.message : String(err)) || err}`);
         setTimeout(() => setStatusMessage(null), 5000);
         return;
       }
@@ -199,8 +199,8 @@ export const DatabasesTab: React.FC<Props> = ({
       try {
         // رمز خاطئ ⇒ فشل تحقق AES-GCM ⇒ لا استعادة ولا استبدال بيانات
         restoreData = await decryptSnapshot<UnifiedBackupState>(snap.payload, enteredPin.trim());
-      } catch (err: any) {
-        setStatusMessage(`تعذّرت الاستعادة: ${err?.message || err}`);
+      } catch (err: unknown) {
+        setStatusMessage(`تعذّرت الاستعادة: ${(err instanceof Error ? err.message : String(err)) || err}`);
         setTimeout(() => setStatusMessage(null), 6000);
         return;
       }
@@ -252,8 +252,8 @@ export const DatabasesTab: React.FC<Props> = ({
           setStatusMessage('تم فحص واستيراد النسخة الاحتياطية بنجاح مع أخذ لقطة أمان احتياطية!');
           setTimeout(() => setStatusMessage(null), 4000);
         }
-      } catch (err: any) {
-        alert('خطأ في استيراد الملف: ' + err.message);
+      } catch (err: unknown) {
+        alert('خطأ في استيراد الملف: ' + (err instanceof Error ? err.message : String(err)));
       }
     };
     reader.readAsText(file);

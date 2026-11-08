@@ -580,11 +580,11 @@ export async function parseDoctorsExcelOrCSV(
           duplicateCount,
           warnings: [IMPORT_FIDELITY_BANNER, ...report.summary()],
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         resolve({
           success: false,
           doctors: [],
-          errors: [`فشل تحليل ملف Excel/CSV: ${err.message || err}`],
+          errors: [`فشل تحليل ملف Excel/CSV: ${(err instanceof Error ? err.message : String(err)) || err}`],
           duplicateCount: 0,
           warnings: [],
         });

@@ -115,388 +115,105 @@ import {
 } from '../data/defaultCustodyIssues';
 import { getLookups as loadLookupsForBackup, setLookups as setLookupsFromBackup } from './lookupsStore';
 
-const STORAGE_KEYS = {
-  // Stock
-  STOCK_PRODUCTS: 'suite_stock_products_v2',
-  STOCK_RECORDS: 'suite_stock_records_v2',
-  STOCK_CATEGORIES: 'suite_stock_categories_v2',
-  STOCK_STATUSES: 'suite_stock_statuses_v2',
-  STOCK_SEQ: 'suite_stock_seq_v2',
+// ── إعادة التصدير من الوحدات المفكّكة (R24): كل المستوردين الحاليين يعملون بلا تغيير
+import { STORAGE_KEYS } from './storage/keys';
+import { DEFAULT_STOCK_SEQ } from './storage/stock';
+import { DEFAULT_APP_SETTINGS } from './storage/settings';
+import {
+  loadProducts,
+  saveProducts,
+  loadStockRecords,
+  saveStockRecords,
+  loadStockCategories,
+  saveStockCategories,
+  loadStockStatuses,
+  saveStockStatuses,
+  loadStockSeq,
+  saveStockSeq,
+  loadRecords,
+  saveRecords,
+  loadCategories,
+  saveCategories,
+  loadStatuses,
+  saveStatuses,
+  loadSeq,
+  saveSeq,
+} from './storage/stock';
+import {
+  loadFinancialTransactions,
+  saveFinancialTransactions,
+  loadFinancialMovements,
+  saveFinancialMovements,
+  loadFinancialRestrictions,
+  saveFinancialRestrictions,
+  loadFinancialMovementTypes,
+  saveFinancialMovementTypes,
+  loadFinancialImportanceList,
+  saveFinancialImportanceList,
+  loadFinancialCategoryAccounts,
+  saveFinancialCategoryAccounts,
+  loadFinancialRestrictionAccounts,
+  saveFinancialRestrictionAccounts,
+  loadFinancialAccountNames,
+  saveFinancialAccountNames,
+} from './storage/financial';
+import {
+  loadDebts,
+  saveDebts,
+  loadDebtCommitments,
+  saveDebtCommitments,
+  loadDebtCategories,
+  saveDebtCategories,
+  loadDebtOwners,
+  saveDebtOwners,
+  loadDebtAuditLogs,
+  saveDebtAuditLogs,
+  logDebtAudit,
+} from './storage/debts';
+import {
+  loadSettings,
+  saveSettings,
+} from './storage/settings';
+export { STORAGE_KEYS, STORAGE_KEY_MANIFEST } from './storage/keys';
+export * from './storage/stock';
+export * from './storage/financial';
+export * from './storage/debts';
+export * from './storage/settings';
 
-  // Financial (دفتر السجل المالي اليومي)
-  FIN_TRANSACTIONS: 'suite_fin_transactions_v2',
-  FIN_MOVEMENTS: 'suite_fin_movements_v2',
-  FIN_RESTRICTIONS: 'suite_fin_restrictions_v2',
-  FIN_MOVEMENT_TYPES: 'suite_fin_movement_types_v2',
-  FIN_IMPORTANCE: 'suite_fin_importance_v2',
-  FIN_CATEGORY_ACCOUNTS: 'suite_fin_category_accounts_v2',
-  FIN_RESTRICTION_ACCOUNTS: 'suite_fin_restriction_accounts_v2',
-  FIN_ACCOUNT_NAMES: 'suite_fin_account_names_v2',
 
-  // Custody & Issues (دفتر العهد والاشكاليات المعلقة v1.0)
-  CUSTODY_RECORDS: 'suite_custody_records_v1',
-  CUSTODY_CATEGORIES: 'suite_custody_categories_v1',
-  CUSTODY_RESPONSIBLES: 'suite_custody_responsibles_v1',
-  CUSTODY_STATUSES: 'suite_custody_statuses_v1',
-  CUSTODY_PRIORITIES: 'suite_custody_priorities_v1',
-  CUSTODY_AUDIT: 'suite_custody_audit_v1',
 
-  // Tasks & Commitments (دفتر المها v2.0)
-  TASKS_ITEMS: 'suite_tasks_items_v2',
-  TASKS_COMMITMENTS: 'suite_tasks_commitments_v2',
-  TASKS_CATEGORIES: 'suite_tasks_categories_v2',
-  TASKS_OPERATIONS: 'suite_tasks_operations_v2',
-  TASKS_ASSIGNEES: 'suite_tasks_assignees_v2',
-  TASKS_AUDIT: 'suite_tasks_audit_v2',
-
-  // Customers & Visits (دفتر إدارة العملاء والزيارات - القيصر الذهبي)
-  CUSTOMERS_ITEMS: 'suite_customers_items_v2',
-  CUSTOMERS_VISITS: 'suite_customers_visits_v2',
-  CUSTOMERS_SOURCES: 'suite_customers_sources_v2',
-  CUSTOMERS_REGIONS: 'suite_customers_regions_v2',
-  CUSTOMERS_ROUTES: 'suite_customers_routes_v2',
-  CUSTOMERS_RESPONSIBLES: 'suite_customers_responsibles_v2',
-  CUSTOMERS_AUDIT: 'suite_customers_audit_v2',
-
-  // Doctors & Medical Visits (دفتر إدارة زيارات الأطباء)
-  DOCTORS_ITEMS: 'suite_doctors_items_v1',
-  DOCTORS_VISITS: 'suite_doctors_visits_v1',
-  DOCTORS_REGIONS: 'suite_doctors_regions_v1',
-  DOCTORS_ROUTES: 'suite_doctors_routes_v1',
-  DOCTORS_RESPONSIBLES: 'suite_doctors_responsibles_v1',
-  DOCTORS_SPECIALTIES: 'suite_doctors_specialties_v1',
-  DOCTORS_AUDIT: 'suite_doctors_audit_v1',
-
-  // Debts & Commitments Ledger (دفتر الدين والالتزامات)
-  DEBTS_RECORDS: 'suite_debts_records_v1',
-  DEBTS_COMMITMENTS: 'suite_debts_commitments_v1',
-  DEBTS_CATEGORIES: 'suite_debts_categories_v1',
-  DEBTS_OWNERS: 'suite_debts_owners_v1',
-  DEBTS_AUDIT: 'suite_debts_audit_v1',
-
-  // Notes & Knowledge Management (إدارة الملاحظات والمعرفة - NKM v1.0)
-  KNOWLEDGE_NOTES: 'suite_knowledge_notes_v1',
-  KNOWLEDGE_FOLDERS: 'suite_knowledge_folders_v1',
-  KNOWLEDGE_TAGS: 'suite_knowledge_tags_v1',
-  KNOWLEDGE_TEMPLATES: 'suite_knowledge_templates_v1',
-  KNOWLEDGE_AUDIT: 'suite_knowledge_audit_v1',
-
-  // Routines & Habit Management (وحدة إدارة الروتين والعادات v1.0)
-  ROUTINES_ITEMS: 'suite_routines_items_v1',
-  ROUTINES_OCCURRENCES: 'suite_routines_occurrences_v1',
-  ROUTINES_EXECUTIONS: 'suite_routines_executions_v1',
-  ROUTINES_CATEGORIES: 'suite_routines_categories_v1',
-  ROUTINES_TAGS: 'suite_routines_tags_v1',
-  ROUTINES_TEMPLATES: 'suite_routines_templates_v1',
-  ROUTINES_EXCEPTIONS: 'suite_routines_exceptions_v1',
-  ROUTINES_AUDIT: 'suite_routines_audit_v1',
-  ROUTINES_SETTINGS: 'suite_routines_settings_v1',
-
-  // Smart Links Library (مكتبة الروابط الذكية v1.0)
-  LINKS_RECORDS: 'suite_links_records_v1',
-  LINKS_CLASSIFICATIONS: 'suite_links_classifications_v1',
-  LINKS_CATEGORIES: 'suite_links_categories_v1',
-  LINKS_TYPES: 'suite_links_types_v1',
-  LINKS_IMPORTANCES: 'suite_links_importances_v1',
-
-  // System Unified
-  SETTINGS: 'suite_unified_settings_v2',
-  SYSTEM_AUDIT: 'suite_unified_audit_v2',
-  UNIFIED_BACKUP: 'suite_unified_autobackup_v2',
-};
-
-export const DEFAULT_APP_SETTINGS: AppSettings = {
-  defaultYear: 2024,
-  skipCancelled: true,
-  defaultCurrency: 'ريال',
-  enableNotifications: true,
-};
-
-export const DEFAULT_STOCK_SEQ = {
-  IN: 4,
-  OUT: 299,
-};
 
 // ============================================================================
 // 1. STOCK STORAGE HANDLERS
 // ============================================================================
-export function loadProducts(): Product[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_PRODUCTS) || dbStorage.getItem('stock_ledger_products_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading products:', e);
-  }
-  return DEFAULT_PRODUCTS;
-}
 
-export function saveProducts(products: Product[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_PRODUCTS, JSON.stringify(products));
-  } catch (e) {
-    console.error('Error saving products:', e);
-  }
-}
 
-export function loadStockRecords(): MovementRecord[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_RECORDS) || dbStorage.getItem('stock_ledger_records_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading stock records:', e);
-  }
-  return INITIAL_RECORDS;
-}
 
-export function saveStockRecords(records: MovementRecord[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_RECORDS, JSON.stringify(records));
-  } catch (e) {
-    console.error('Error saving stock records:', e);
-  }
-}
 
-export function loadStockCategories(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_CATEGORIES) || dbStorage.getItem('stock_ledger_categories_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading stock categories:', e);
-  }
-  return DEFAULT_STOCK_CATEGORIES;
-}
 
-export function saveStockCategories(cats: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_CATEGORIES, JSON.stringify(cats));
-  } catch (e) {
-    console.error('Error saving stock categories:', e);
-  }
-}
 
-export function loadStockStatuses(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_STATUSES) || dbStorage.getItem('stock_ledger_statuses_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading stock statuses:', e);
-  }
-  return DEFAULT_STOCK_STATUSES;
-}
 
-export function saveStockStatuses(stats: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_STATUSES, JSON.stringify(stats));
-  } catch (e) {
-    console.error('Error saving stock statuses:', e);
-  }
-}
 
-export function loadStockSeq(): { IN: number; OUT: number } {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_SEQ) || dbStorage.getItem('stock_ledger_seq_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed.IN === 'number' && typeof parsed.OUT === 'number') {
-        return parsed;
-      }
-    }
-  } catch (e) {
-    console.error('Error loading stock seq:', e);
-  }
-  return DEFAULT_STOCK_SEQ;
-}
 
-export function saveStockSeq(seq: { IN: number; OUT: number }): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_SEQ, JSON.stringify(seq));
-  } catch (e) {
-    console.error('Error saving stock seq:', e);
-  }
-}
 
 // ============================================================================
 // 2. FINANCIAL STORAGE HANDLERS (دفتر السجل المالي اليومي)
 // ============================================================================
-export function loadFinancialTransactions(): FinancialTransaction[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_TRANSACTIONS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial transactions:', e);
-  }
-  return DEFAULT_FINANCIAL_TRANSACTIONS;
-}
 
-export function saveFinancialTransactions(txns: FinancialTransaction[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_TRANSACTIONS, JSON.stringify(txns));
-  } catch (e) {
-    console.error('Error saving financial transactions:', e);
-  }
-}
 
-export function loadFinancialMovements(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_MOVEMENTS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial movements:', e);
-  }
-  return DEFAULT_MOVEMENTS;
-}
 
-export function saveFinancialMovements(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_MOVEMENTS, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial movements:', e);
-  }
-}
 
-export function loadFinancialRestrictions(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_RESTRICTIONS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial restrictions:', e);
-  }
-  return DEFAULT_RESTRICTIONS;
-}
 
-export function saveFinancialRestrictions(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_RESTRICTIONS, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial restrictions:', e);
-  }
-}
 
-export function loadFinancialMovementTypes(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_MOVEMENT_TYPES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial movement types:', e);
-  }
-  return DEFAULT_MOVEMENT_TYPES;
-}
 
-export function saveFinancialMovementTypes(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_MOVEMENT_TYPES, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial movement types:', e);
-  }
-}
 
-export function loadFinancialImportanceList(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_IMPORTANCE);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial importance list:', e);
-  }
-  return DEFAULT_IMPORTANCE_LIST;
-}
 
-export function saveFinancialImportanceList(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_IMPORTANCE, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial importance list:', e);
-  }
-}
 
-export function loadFinancialCategoryAccounts(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_CATEGORY_ACCOUNTS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial category accounts:', e);
-  }
-  return DEFAULT_CATEGORY_ACCOUNTS;
-}
 
-export function saveFinancialCategoryAccounts(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_CATEGORY_ACCOUNTS, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial category accounts:', e);
-  }
-}
 
-export function loadFinancialRestrictionAccounts(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_RESTRICTION_ACCOUNTS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial restriction accounts:', e);
-  }
-  return DEFAULT_RESTRICTION_ACCOUNTS;
-}
 
-export function saveFinancialRestrictionAccounts(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_RESTRICTION_ACCOUNTS, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial restriction accounts:', e);
-  }
-}
 
-export function loadFinancialAccountNames(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_ACCOUNT_NAMES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial account names:', e);
-  }
-  return DEFAULT_ACCOUNT_NAMES;
-}
 
-export function saveFinancialAccountNames(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_ACCOUNT_NAMES, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial account names:', e);
-  }
-}
 
 // Backward-compatibility aliases
 export function loadFinancialCategories(): string[] {
@@ -672,28 +389,7 @@ export function logTaskAudit(
 // ============================================================================
 // 4. UNIFIED SETTINGS & SYSTEM LOGS
 // ============================================================================
-export function loadSettings(): AppSettings {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.SETTINGS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed.defaultYear === 'number') {
-        return { ...DEFAULT_APP_SETTINGS, ...parsed };
-      }
-    }
-  } catch (e) {
-    console.error('Error loading settings:', e);
-  }
-  return DEFAULT_APP_SETTINGS;
-}
 
-export function saveSettings(settings: AppSettings): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
-  } catch (e) {
-    console.error('Error saving settings:', e);
-  }
-}
 
 export function loadSystemAuditLogs(): AuditLog[] {
   try {
@@ -756,37 +452,13 @@ export function saveAuditLogs(logs: AuditLog[]): void {
   saveSystemAuditLogs(logs);
 }
 
-export function loadRecords(): MovementRecord[] {
-  return loadStockRecords();
-}
 
-export function saveRecords(records: MovementRecord[]): void {
-  saveStockRecords(records);
-}
 
-export function loadCategories(): string[] {
-  return loadStockCategories();
-}
 
-export function saveCategories(cats: string[]): void {
-  saveStockCategories(cats);
-}
 
-export function loadStatuses(): string[] {
-  return loadStockStatuses();
-}
 
-export function saveStatuses(stats: string[]): void {
-  saveStockStatuses(stats);
-}
 
-export function loadSeq(): { IN: number; OUT: number } {
-  return loadStockSeq();
-}
 
-export function saveSeq(seq: { IN: number; OUT: number }): void {
-  saveStockSeq(seq);
-}
 
 // ============================================================================
 // 4. CUSTOMERS & VISITS STORAGE HANDLERS (دفتر إدارة العملاء والزيارات)
@@ -1141,138 +813,16 @@ export function logDoctorAudit(
 // ============================================================================
 // 6. DEBTS & COMMITMENTS STORAGE HANDLERS (دفتر الدين والالتزامات)
 // ============================================================================
-export function loadDebts(): DebtRecord[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DEBTS_RECORDS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading debt records:', e);
-  }
-  return DEFAULT_DEBT_RECORDS;
-}
 
-export function saveDebts(records: DebtRecord[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DEBTS_RECORDS, JSON.stringify(records));
-  } catch (e) {
-    console.error('Error saving debt records:', e);
-  }
-}
 
-export function loadDebtCommitments(): DebtCommitment[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DEBTS_COMMITMENTS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading debt commitments:', e);
-  }
-  return DEFAULT_DEBT_COMMITMENTS;
-}
 
-export function saveDebtCommitments(commitments: DebtCommitment[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DEBTS_COMMITMENTS, JSON.stringify(commitments));
-  } catch (e) {
-    console.error('Error saving debt commitments:', e);
-  }
-}
 
-export function loadDebtCategories(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DEBTS_CATEGORIES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading debt categories:', e);
-  }
-  return DEBT_CATEGORIES;
-}
 
-export function saveDebtCategories(categories: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DEBTS_CATEGORIES, JSON.stringify(categories));
-  } catch (e) {
-    console.error('Error saving debt categories:', e);
-  }
-}
 
-export function loadDebtOwners(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DEBTS_OWNERS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading debt owners:', e);
-  }
-  return DEBT_OWNERS;
-}
 
-export function saveDebtOwners(owners: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DEBTS_OWNERS, JSON.stringify(owners));
-  } catch (e) {
-    console.error('Error saving debt owners:', e);
-  }
-}
 
-export function loadDebtAuditLogs(): DebtAuditLog[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DEBTS_AUDIT);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading debt audit logs:', e);
-  }
-  return [
-    {
-      id: 'LOG-DEBT-1',
-      time: new Date().toLocaleString('ar-YE'),
-      action: 'استيراد',
-      entity: 'دفتر',
-      title: 'دفتر الدين والالتزامات',
-      details: 'تمت تهيئة دفاتر الدين الأربعة وسجل الالتزامات بنجاح وفق وثيقة PRD',
-    },
-  ];
-}
 
-export function saveDebtAuditLogs(logs: DebtAuditLog[]): void {
-  try {
-    const trimmed = logs.slice(0, 500);
-    dbStorage.setItem(STORAGE_KEYS.DEBTS_AUDIT, JSON.stringify(trimmed));
-  } catch (e) {
-    console.error('Error saving debt audit logs:', e);
-  }
-}
 
-export function logDebtAudit(
-  action: DebtAuditLog['action'],
-  entity: DebtAuditLog['entity'],
-  title: string,
-  details: string
-): void {
-  const current = loadDebtAuditLogs();
-  const newLog: DebtAuditLog = {
-    id: `LOG-DBT-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
-    time: new Date().toLocaleString('ar-YE'),
-    action,
-    entity,
-    title,
-    details,
-  };
-  saveDebtAuditLogs([newLog, ...current]);
-}
 
 // ============================================================================
 // 7. NOTES & KNOWLEDGE MANAGEMENT (إدارة الملاحظات والمعرفة - NKM v1.0)
