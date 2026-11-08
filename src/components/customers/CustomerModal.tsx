@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Customer,
-  CustomerSignificance,
-  CustomerSource,
-  VisitStatus,
-} from '../../types';
+import { Customer, CustomerSignificance, CustomerSource, VisitStatus } from '../../types';
 import {
   CUSTOMER_REGIONS,
   CUSTOMER_RESPONSIBLES,
@@ -38,13 +33,7 @@ interface Props {
   existingCustomers: Customer[];
 }
 
-export const CustomerModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  onSave,
-  customer,
-  existingCustomers,
-}) => {
+export const CustomerModal: React.FC<Props> = ({ isOpen, onClose, onSave, customer, existingCustomers }) => {
   const isEdit = !!customer;
 
   const [id, setId] = useState('');
@@ -263,7 +252,9 @@ export const CustomerModal: React.FC<Props> = ({
 
               {/* Main ID */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">المعرف الرئيسي (Main_ID)</label>
+                <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">
+                  المعرف الرئيسي (Main_ID)
+                </label>
                 <input
                   type="text"
                   value={id}
@@ -274,7 +265,9 @@ export const CustomerModal: React.FC<Props> = ({
 
               {/* Sub ID */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">المعرف الفرعي (Sub_ID)</label>
+                <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">
+                  المعرف الفرعي (Sub_ID)
+                </label>
                 <input
                   type="text"
                   value={subId}
@@ -421,7 +414,9 @@ export const CustomerModal: React.FC<Props> = ({
 
               {/* Date End */}
               <div className="col-span-2">
-                <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">تاريخ انتهاء المهمة / الاستحقاق</label>
+                <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">
+                  تاريخ انتهاء المهمة / الاستحقاق
+                </label>
                 <input
                   type="date"
                   value={dateEnd}
@@ -433,7 +428,9 @@ export const CustomerModal: React.FC<Props> = ({
 
             {/* Task Description */}
             <div>
-              <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">وصف المهمة / الغرض من الزيارة</label>
+              <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">
+                وصف المهمة / الغرض من الزيارة
+              </label>
               <textarea
                 rows={2}
                 value={taskDesc}

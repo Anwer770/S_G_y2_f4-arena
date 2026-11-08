@@ -129,9 +129,7 @@ export const TaskModal: React.FC<Props> = ({
               <CheckSquare className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-lg">
-                {editingTask ? 'تعديل مهمة عمل' : 'إضافة مهمة جديدة'}
-              </h3>
+              <h3 className="font-bold text-lg">{editingTask ? 'تعديل مهمة عمل' : 'إضافة مهمة جديدة'}</h3>
               <p className="text-xs text-slate-300">دفتر المهام والأعمال والخطط والأهداف (المها v2.0)</p>
             </div>
           </div>
@@ -189,7 +187,9 @@ export const TaskModal: React.FC<Props> = ({
           {/* Row 2: Start Date & End Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">تاريخ البداية (إلزامي)</label>
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                تاريخ البداية (إلزامي)
+              </label>
               <input
                 type="date"
                 value={start}
@@ -199,7 +199,9 @@ export const TaskModal: React.FC<Props> = ({
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">تاريخ الانتهاء / الاستحقاق</label>
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                تاريخ الانتهاء / الاستحقاق
+              </label>
               <input
                 type="date"
                 value={end}
@@ -227,7 +229,9 @@ export const TaskModal: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">العملية (8 عمليات)</label>
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                العملية (8 عمليات)
+              </label>
               <select
                 value={op}
                 onChange={(e) => setOp(e.target.value)}
@@ -242,7 +246,9 @@ export const TaskModal: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">المسؤول (12 مسؤول)</label>
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                المسؤول (12 مسؤول)
+              </label>
               <select
                 value={resp}
                 onChange={(e) => setResp(e.target.value)}
@@ -290,7 +296,9 @@ export const TaskModal: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">المبلغ المالي (إن وجد)</label>
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                المبلغ المالي (إن وجد)
+              </label>
               <input
                 type="number"
                 min="0"

@@ -46,7 +46,9 @@ export const NotesDashboard: React.FC<NotesDashboardProps> = ({
   const activeNotes = notes.filter((n) => !n.isArchived && !n.isDeleted);
   const pinnedNotes = activeNotes.filter((n) => n.isPinned);
   const favoriteNotes = activeNotes.filter((n) => n.isFavorite);
-  const recentNotes = [...activeNotes].sort((a, b) => (b.updatedAt || b.date).localeCompare(a.updatedAt || a.date)).slice(0, 6);
+  const recentNotes = [...activeNotes]
+    .sort((a, b) => (b.updatedAt || b.date).localeCompare(a.updatedAt || a.date))
+    .slice(0, 6);
 
   // Overdue or needing review
   const today = new Date().toISOString().split('T')[0];
@@ -68,7 +70,9 @@ export const NotesDashboard: React.FC<NotesDashboardProps> = ({
           </div>
           <div className="mt-3">
             <span className="text-2xl font-black text-slate-800 dark:text-white">{stats.totalActive}</span>
-            <span className="text-xs text-slate-400 dark:text-slate-500 block mt-0.5">من أصل {stats.totalNotes} مدونة</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500 block mt-0.5">
+              من أصل {stats.totalNotes} مدونة
+            </span>
           </div>
         </div>
 
@@ -114,7 +118,9 @@ export const NotesDashboard: React.FC<NotesDashboardProps> = ({
               <span className="text-xs text-slate-400 dark:text-slate-500">/ {stats.totalTasks}</span>
             </div>
             <span className="text-xs text-slate-400 dark:text-slate-500 block mt-0.5">
-              {stats.totalTasks > 0 ? `${Math.round((stats.completedTasks / stats.totalTasks) * 100)}% إنجاز` : 'لا توجد مهام'}
+              {stats.totalTasks > 0
+                ? `${Math.round((stats.completedTasks / stats.totalTasks) * 100)}% إنجاز`
+                : 'لا توجد مهام'}
             </span>
           </div>
         </div>
@@ -236,23 +242,24 @@ export const NotesDashboard: React.FC<NotesDashboardProps> = ({
 
           {/* Type distribution bars */}
           <div className="space-y-3">
-            {Object.entries(stats.byType).slice(0, 6).map(([typeName, count]) => {
-              const pct = stats.totalActive > 0 ? Math.round((count / stats.totalActive) * 100) : 0;
-              return (
-                <div key={typeName} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-slate-700 dark:text-slate-300">{typeName}</span>
-                    <span className="text-slate-400 dark:text-slate-500 font-mono">{count} ({pct}%)</span>
+            {Object.entries(stats.byType)
+              .slice(0, 6)
+              .map(([typeName, count]) => {
+                const pct = stats.totalActive > 0 ? Math.round((count / stats.totalActive) * 100) : 0;
+                return (
+                  <div key={typeName} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">{typeName}</span>
+                      <span className="text-slate-400 dark:text-slate-500 font-mono">
+                        {count} ({pct}%)
+                      </span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${pct}%` }} />
+                    </div>
                   </div>
-                  <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-indigo-500 rounded-full"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
 
           {/* Tag Cloud */}
@@ -296,9 +303,7 @@ export const NotesDashboard: React.FC<NotesDashboardProps> = ({
                     <h4 className="text-xs font-bold text-slate-800 dark:text-white group-hover:text-amber-600 transition-colors truncate">
                       {note.title}
                     </h4>
-                    <span className="text-xs text-amber-600 dark:text-amber-400 font-bold shrink-0">
-                      {note.type}
-                    </span>
+                    <span className="text-xs text-amber-600 dark:text-amber-400 font-bold shrink-0">{note.type}</span>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                     {note.summary || note.content}

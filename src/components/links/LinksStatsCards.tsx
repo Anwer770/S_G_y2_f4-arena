@@ -1,13 +1,6 @@
 import React from 'react';
 import { LinksKPIs } from '../../types/linksLibrary';
-import {
-  Link2,
-  Sparkles,
-  Star,
-  FileSpreadsheet,
-  ShieldCheck,
-  Share2,
-} from 'lucide-react';
+import { Link2, Sparkles, Star, FileSpreadsheet, ShieldCheck, Share2 } from 'lucide-react';
 
 interface LinksStatsCardsProps {
   kpis: LinksKPIs;
@@ -25,11 +18,7 @@ interface LinksStatsCardsProps {
   }) => void;
 }
 
-export const LinksStatsCards: React.FC<LinksStatsCardsProps> = ({
-  kpis,
-  activeFilter,
-  onFilterChange,
-}) => {
+export const LinksStatsCards: React.FC<LinksStatsCardsProps> = ({ kpis, activeFilter, onFilterChange }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
       {/* 1. Total Links */}
@@ -112,10 +101,7 @@ export const LinksStatsCards: React.FC<LinksStatsCardsProps> = ({
       <div
         onClick={() =>
           onFilterChange({
-            classification:
-              activeFilter.classification === 'الاوفس الاكسل'
-                ? 'الكل'
-                : 'الاوفس الاكسل',
+            classification: activeFilter.classification === 'الاوفس الاكسل' ? 'الكل' : 'الاوفس الاكسل',
           })
         }
         className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer group"
@@ -136,10 +122,7 @@ export const LinksStatsCards: React.FC<LinksStatsCardsProps> = ({
       <div
         onClick={() =>
           onFilterChange({
-            classification:
-              activeFilter.classification === 'الامن سيبراني'
-                ? 'الكل'
-                : 'الامن سيبراني',
+            classification: activeFilter.classification === 'الامن سيبراني' ? 'الكل' : 'الامن سيبراني',
           })
         }
         className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs hover:shadow-md hover:border-rose-500 transition-all cursor-pointer group"
@@ -171,9 +154,7 @@ export const LinksStatsCards: React.FC<LinksStatsCardsProps> = ({
       >
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-slate-700 dark:text-slate-200">درجة الأهمية (A)</span>
-          <div className="px-2 py-0.5 bg-purple-700 text-white text-xs font-black rounded-lg">
-            A
-          </div>
+          <div className="px-2 py-0.5 bg-purple-700 text-white text-xs font-black rounded-lg">A</div>
         </div>
         <div className="mt-2 flex items-baseline justify-between">
           <span className="text-xl font-black text-indigo-950 font-mono">{kpis.importanceCounts.A}</span>

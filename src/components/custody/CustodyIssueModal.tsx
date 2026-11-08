@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CustodyIssueRecord, CustodySection, CustodyPriority, CustodyStatus } from '../../types/custodyIssues';
-import {
-  X,
-  Save,
-  AlertTriangle,
-  FileText,
-  Calendar,
-  User,
-  Tag,
-  Shield,
-  Layers,
-  Coins,
-  Link2,
-} from 'lucide-react';
+import { X, Save, AlertTriangle, FileText, Calendar, User, Tag, Shield, Layers, Coins, Link2 } from 'lucide-react';
 
 interface CustodyIssueModalProps {
   isOpen: boolean;
@@ -67,7 +55,9 @@ export const CustodyIssueModal: React.FC<CustodyIssueModalProps> = ({
       setCurrency(initialRecord.currency || 'ريال يمني');
       setNotes(initialRecord.notes || '');
       setLink(initialRecord.link || '');
-      setIsCorrupted(!!initialRecord.isCorruptedReference || (initialRecord.desc && initialRecord.desc.includes('Schedule!')));
+      setIsCorrupted(
+        !!initialRecord.isCorruptedReference || (initialRecord.desc && initialRecord.desc.includes('Schedule!'))
+      );
       setCorruptedText(initialRecord.corruptedRefText || '');
     } else {
       setSection(defaultSection);
@@ -115,7 +105,7 @@ export const CustodyIssueModal: React.FC<CustodyIssueModalProps> = ({
       notes: notes.trim(),
       link: link.trim(),
       isCorruptedReference: stillHasCorruptedRef,
-      corruptedRefText: stillHasCorruptedRef ? (corruptedText || cleanedDesc) : '',
+      corruptedRefText: stillHasCorruptedRef ? corruptedText || cleanedDesc : '',
       updatedAt: new Date().toISOString(),
       ...(initialRecord?.createdAt ? { createdAt: initialRecord.createdAt } : { createdAt: new Date().toISOString() }),
     };
@@ -169,7 +159,8 @@ export const CustodyIssueModal: React.FC<CustodyIssueModalProps> = ({
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>
-                  <strong>تنبيه مرجع تالف:</strong> هذا السجل مستورد من Excel بمرجع معطوب ({corruptedText || 'Schedule!'}). يرجى استبدال الوصف بالنص الحقيقي الصحيح.
+                  <strong>تنبيه مرجع تالف:</strong> هذا السجل مستورد من Excel بمرجع معطوب (
+                  {corruptedText || 'Schedule!'}). يرجى استبدال الوصف بالنص الحقيقي الصحيح.
                 </span>
               </div>
               <button
@@ -305,14 +296,14 @@ export const CustodyIssueModal: React.FC<CustodyIssueModalProps> = ({
                     {p === 'A'
                       ? 'A (عاجل جداً)'
                       : p === 'B'
-                      ? 'B (عالي)'
-                      : p === 'C'
-                      ? 'C (متوسط)'
-                      : p === 'D'
-                      ? 'D (منخفض)'
-                      : p === '√'
-                      ? '√ (مكتمل / منجز)'
-                      : p}
+                        ? 'B (عالي)'
+                        : p === 'C'
+                          ? 'C (متوسط)'
+                          : p === 'D'
+                            ? 'D (منخفض)'
+                            : p === '√'
+                              ? '√ (مكتمل / منجز)'
+                              : p}
                   </option>
                 ))}
               </select>
@@ -342,9 +333,7 @@ export const CustodyIssueModal: React.FC<CustodyIssueModalProps> = ({
           {/* Status & Financial Amount */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-slate-700 dark:text-slate-200 font-bold mb-1">
-                الحالة
-              </label>
+              <label className="block text-slate-700 dark:text-slate-200 font-bold mb-1">الحالة</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
@@ -375,9 +364,7 @@ export const CustodyIssueModal: React.FC<CustodyIssueModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-slate-700 dark:text-slate-200 font-bold mb-1">
-                العملة
-              </label>
+              <label className="block text-slate-700 dark:text-slate-200 font-bold mb-1">العملة</label>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
@@ -393,9 +380,7 @@ export const CustodyIssueModal: React.FC<CustodyIssueModalProps> = ({
           {/* Notes & Link */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-slate-700 dark:text-slate-200 font-bold mb-1">
-                ملاحظات إضافية
-              </label>
+              <label className="block text-slate-700 dark:text-slate-200 font-bold mb-1">ملاحظات إضافية</label>
               <input
                 type="text"
                 value={notes}

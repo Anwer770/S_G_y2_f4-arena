@@ -12,13 +12,7 @@ import {
   MoreHorizontal,
   Plus,
 } from 'lucide-react';
-import {
-  WorkTask,
-  WorkProject,
-  TeamMember,
-  TaskStatus,
-  TaskPriority,
-} from '../../types/workos';
+import { WorkTask, WorkProject, TeamMember, TaskStatus, TaskPriority } from '../../types/workos';
 
 interface WorkOSKanbanTabProps {
   tasks: WorkTask[];
@@ -59,10 +53,30 @@ export const WorkOSKanbanTab: React.FC<WorkOSKanbanTabProps> = ({
   // 5. متأخرة (Delayed)
   const columns: { id: TaskStatus; label: string; headerColor: string; borderColor: string }[] = [
     { id: 'planned', label: 'لم تبدأ', headerColor: 'bg-slate-100 text-slate-800', borderColor: 'border-slate-200' },
-    { id: 'in_progress', label: 'قيد التنفيذ', headerColor: 'bg-blue-50 text-blue-800 border-blue-200', borderColor: 'border-blue-200' },
-    { id: 'review', label: 'قيد المراجعة', headerColor: 'bg-purple-50 text-purple-800 border-purple-200', borderColor: 'border-purple-200' },
-    { id: 'completed', label: 'مكتملة', headerColor: 'bg-emerald-50 text-emerald-800 border-emerald-200', borderColor: 'border-emerald-200' },
-    { id: 'delayed', label: 'متأخرة', headerColor: 'bg-rose-50 text-rose-800 border-rose-200', borderColor: 'border-rose-200' },
+    {
+      id: 'in_progress',
+      label: 'قيد التنفيذ',
+      headerColor: 'bg-blue-50 text-blue-800 border-blue-200',
+      borderColor: 'border-blue-200',
+    },
+    {
+      id: 'review',
+      label: 'قيد المراجعة',
+      headerColor: 'bg-purple-50 text-purple-800 border-purple-200',
+      borderColor: 'border-purple-200',
+    },
+    {
+      id: 'completed',
+      label: 'مكتملة',
+      headerColor: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+      borderColor: 'border-emerald-200',
+    },
+    {
+      id: 'delayed',
+      label: 'متأخرة',
+      headerColor: 'bg-rose-50 text-rose-800 border-rose-200',
+      borderColor: 'border-rose-200',
+    },
   ];
 
   // Group tasks into these 5 columns
@@ -151,7 +165,9 @@ export const WorkOSKanbanTab: React.FC<WorkOSKanbanTabProps> = ({
               className="bg-slate-50/70 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 p-3 min-h-[480px] flex flex-col space-y-2.5 transition"
             >
               {/* Column Header */}
-              <div className={`p-2.5 rounded-xl border flex items-center justify-between font-bold text-xs ${col.headerColor}`}>
+              <div
+                className={`p-2.5 rounded-xl border flex items-center justify-between font-bold text-xs ${col.headerColor}`}
+              >
                 <span className="flex items-center gap-1.5">
                   <span>{col.label}</span>
                 </span>
@@ -163,10 +179,7 @@ export const WorkOSKanbanTab: React.FC<WorkOSKanbanTabProps> = ({
               {/* Tasks List */}
               <div className="space-y-2.5 flex-1 overflow-y-auto max-h-[700px] no-scrollbar">
                 {tasksInCol.map((task) => {
-                  const isOverdue =
-                    task.dueDate &&
-                    task.dueDate < todayStr &&
-                    task.status !== 'completed';
+                  const isOverdue = task.dueDate && task.dueDate < todayStr && task.status !== 'completed';
                   const project = task.projectId ? projectMap.get(task.projectId) : undefined;
                   const assignee = task.assigneeId ? teamMap.get(task.assigneeId) : undefined;
 
@@ -182,22 +195,24 @@ export const WorkOSKanbanTab: React.FC<WorkOSKanbanTabProps> = ({
                     >
                       {/* Priority & Overdue Indicator */}
                       <div className="flex items-center justify-between gap-1">
-                        <span className={`px-2 py-0.5 rounded text-xs font-bold ${
-                          task.priority === 'urgent'
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                            : task.priority === 'high'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : task.priority === 'medium'
-                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                            : 'bg-slate-100 text-slate-600'
-                        }`}>
+                        <span
+                          className={`px-2 py-0.5 rounded text-xs font-bold ${
+                            task.priority === 'urgent'
+                              ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                              : task.priority === 'high'
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                : task.priority === 'medium'
+                                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                  : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
                           {task.priority === 'urgent'
                             ? 'حرجة'
                             : task.priority === 'high'
-                            ? 'عالية'
-                            : task.priority === 'medium'
-                            ? 'متوسطة'
-                            : 'منخفضة'}
+                              ? 'عالية'
+                              : task.priority === 'medium'
+                                ? 'متوسطة'
+                                : 'منخفضة'}
                         </span>
 
                         {isOverdue && (
@@ -243,12 +258,12 @@ export const WorkOSKanbanTab: React.FC<WorkOSKanbanTabProps> = ({
                           <div className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center justify-center shrink-0">
                             {assignee ? assignee.name.charAt(0) : '?'}
                           </div>
-                          <span className="text-xs truncate max-w-[80px]">
-                            {assignee ? assignee.name : 'غير محدد'}
-                          </span>
+                          <span className="text-xs truncate max-w-[80px]">{assignee ? assignee.name : 'غير محدد'}</span>
                         </div>
 
-                        <span className={`text-xs font-mono ${isOverdue ? 'text-rose-600 font-bold' : 'text-slate-400'}`}>
+                        <span
+                          className={`text-xs font-mono ${isOverdue ? 'text-rose-600 font-bold' : 'text-slate-400'}`}
+                        >
                           {task.dueDate || '—'}
                         </span>
                       </div>

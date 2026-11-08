@@ -251,17 +251,13 @@ export function calculateRoutineKPIs(
   ).length;
 
   const todayCompletionRate =
-    todayOccurrences.length > 0
-      ? Math.round((completedToday / todayOccurrences.length) * 100)
-      : 0;
+    todayOccurrences.length > 0 ? Math.round((completedToday / todayOccurrences.length) * 100) : 0;
 
   // Global completed vs planned stats
   const totalPlannedOccurrences = occurrences.length;
   const totalCompletedOccurrences = occurrences.filter((o) => o.status === 'COMPLETED').length;
   const globalCompletionRate =
-    totalPlannedOccurrences > 0
-      ? Math.round((totalCompletedOccurrences / totalPlannedOccurrences) * 100)
-      : 0;
+    totalPlannedOccurrences > 0 ? Math.round((totalCompletedOccurrences / totalPlannedOccurrences) * 100) : 0;
 
   // Streaks calculation
   let totalActiveStreaks = 0;
@@ -299,9 +295,7 @@ export function calculateRoutineKPIs(
   const avgEnergyLevel = validEnergyCount > 0 ? Number((energySum / validEnergyCount).toFixed(1)) : 4.5;
   const avgFocusLevel = validEnergyCount > 0 ? Number((focusSum / validEnergyCount).toFixed(1)) : 4.5;
   const avgDurationVariance =
-    executions.length > 0
-      ? Math.round((totalActualMinutes - totalPlannedMinutes) / executions.length)
-      : 0;
+    executions.length > 0 ? Math.round((totalActualMinutes - totalPlannedMinutes) / executions.length) : 0;
 
   const totalCompleted = occurrences.filter((o) => o.status === 'COMPLETED').length;
   const totalActualHours = Number((totalActualMinutes / 60).toFixed(1));
@@ -388,8 +382,7 @@ export function calculateHabitStreaksList(
 
       const totalScheduled = history.filter((h) => h.status !== 'none').length;
       const completedCount = history.filter((h) => h.status === 'completed').length;
-      const consistencyRate =
-        totalScheduled > 0 ? Math.round((completedCount / totalScheduled) * 100) : 100;
+      const consistencyRate = totalScheduled > 0 ? Math.round((completedCount / totalScheduled) * 100) : 100;
 
       return {
         routineId: routine.id,
@@ -446,7 +439,13 @@ export function parseAIPromptToRoutine(prompt: string): Partial<RoutineRecord> {
       { id: 'st-3', order: 3, title: 'إجراء اتصالات المتابعة وتأكيد التحصيل', duration: 20, isRequired: true },
       { id: 'st-4', order: 4, title: 'تدوين نتائج المحادثات وتحديث السجل', duration: 10, isRequired: true },
     ];
-  } else if (text.includes('مال') || text.includes('صندوق') || text.includes('محاسب') || text.includes('إغلاق') || text.includes('جرد')) {
+  } else if (
+    text.includes('مال') ||
+    text.includes('صندوق') ||
+    text.includes('محاسب') ||
+    text.includes('إغلاق') ||
+    text.includes('جرد')
+  ) {
     name = 'مطابقة الصندوق والإغلاق المالي اليومي';
     categoryName = 'مالي ومحاسبي';
     startTime = '18:30';
@@ -454,7 +453,13 @@ export function parseAIPromptToRoutine(prompt: string): Partial<RoutineRecord> {
     icon = '💰';
     color = 'amber';
     steps = [
-      { id: 'st-1', order: 1, title: 'مطابقة النقد الفعلي مع رصيد السجل المالي اليومي', duration: 10, isRequired: true },
+      {
+        id: 'st-1',
+        order: 1,
+        title: 'مطابقة النقد الفعلي مع رصيد السجل المالي اليومي',
+        duration: 10,
+        isRequired: true,
+      },
       { id: 'st-2', order: 2, title: 'تسجيل وتدقيق سندات الصرف والقبض المعلقة', duration: 10, isRequired: true },
       { id: 'st-3', order: 3, title: 'حفظ وتصدير نسخة احتياطية آمنة', duration: 5, isRequired: true },
       { id: 'st-4', order: 4, title: 'إرسال ملخص السيولة والموقف المالي للإدارة', duration: 10, isRequired: false },
@@ -562,7 +567,7 @@ export function getAIRoutineOptimizationAdvice(routine: RoutineRecord): {
     score -= 10;
   }
 
-  if (!(routine.reminderSettings?.enabled)) {
+  if (!routine.reminderSettings?.enabled) {
     tips.push('تفعيل التنبيهات المسبقة (قبل 10 دقائق) يرفع معدل الالتزام بالروتين بنسبة 40%.');
   }
 

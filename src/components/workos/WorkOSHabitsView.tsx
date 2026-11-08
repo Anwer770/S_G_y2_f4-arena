@@ -36,8 +36,12 @@ export const WorkOSHabitsView: React.FC<WorkOSHabitsViewProps> = ({
             <Flame className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">سجل العادات اليومية والانضباط المهني</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">تتبع استمرارية العادات وسلاسل الالتزام (Streaks) لتحقيق الكفاءة</p>
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              سجل العادات اليومية والانضباط المهني
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              تتبع استمرارية العادات وسلاسل الالتزام (Streaks) لتحقيق الكفاءة
+            </p>
           </div>
         </div>
 
@@ -106,7 +110,9 @@ export const WorkOSHabitsView: React.FC<WorkOSHabitsViewProps> = ({
 
               <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 pt-1">
                 <span>الهدف: {habit.targetDaysPerWeek} أيام أسبوعياً</span>
-                <span className="font-mono font-bold text-slate-600 dark:text-slate-300">أفضل سلسلة: {habit.bestStreak} يوم</span>
+                <span className="font-mono font-bold text-slate-600 dark:text-slate-300">
+                  أفضل سلسلة: {habit.bestStreak} يوم
+                </span>
               </div>
             </div>
           );

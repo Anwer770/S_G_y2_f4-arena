@@ -85,16 +85,28 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
 
   /** «القادم» (§10): تجميع عرض فقط لبيانات قائمة — بلا كيانات جديدة */
   const upcomingFeed = useMemo(() => {
-    type FeedRow = { key: string; date: string; time?: string; kind: string; title: string; meta?: string; task?: WorkTask };
+    type FeedRow = {
+      key: string;
+      date: string;
+      time?: string;
+      kind: string;
+      title: string;
+      meta?: string;
+      task?: WorkTask;
+    };
     const rows: FeedRow[] = [];
 
     tasks
       .filter((t) => t.status !== 'completed' && t.status !== 'cancelled' && !!t.dueDate && t.dueDate >= todayStr)
-      .forEach((t) => rows.push({ key: 'task_' + t.id, date: t.dueDate, time: t.dueTime, kind: 'مهمة', title: t.title, task: t }));
+      .forEach((t) =>
+        rows.push({ key: 'task_' + t.id, date: t.dueDate, time: t.dueTime, kind: 'مهمة', title: t.title, task: t })
+      );
 
     appointments
       .filter((a) => a.status === 'scheduled' && a.date >= todayStr)
-      .forEach((a) => rows.push({ key: 'apt_' + a.id, date: a.date, time: a.time, kind: 'موعد', title: a.title, meta: a.person }));
+      .forEach((a) =>
+        rows.push({ key: 'apt_' + a.id, date: a.date, time: a.time, kind: 'موعد', title: a.title, meta: a.person })
+      );
 
     meetings
       .filter((m) => !!m.date && m.date >= todayStr)
@@ -102,9 +114,13 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
 
     commitments
       .filter((c) => !!c.dueDate && c.dueDate >= todayStr && c.status !== 'fulfilled')
-      .forEach((c) => rows.push({ key: 'cmt_' + c.id, date: c.dueDate, kind: 'التزام', title: c.title, meta: c.entity }));
+      .forEach((c) =>
+        rows.push({ key: 'cmt_' + c.id, date: c.dueDate, kind: 'التزام', title: c.title, meta: c.entity })
+      );
 
-    return rows.sort((a, b) => (a.date === b.date ? (a.time || '').localeCompare(b.time || '') : a.date.localeCompare(b.date))).slice(0, 8);
+    return rows
+      .sort((a, b) => (a.date === b.date ? (a.time || '').localeCompare(b.time || '') : a.date.localeCompare(b.date)))
+      .slice(0, 8);
   }, [tasks, appointments, meetings, commitments, todayStr]);
 
   // Filter and sort tasks according to the strict priority rules requested by the user:
@@ -137,9 +153,7 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
       return d.toISOString().split('T')[0];
     }
 
-    return [...uncompleted]
-      .sort((a, b) => getTaskRank(a) - getTaskRank(b))
-      .slice(0, 10);
+    return [...uncompleted].sort((a, b) => getTaskRank(a) - getTaskRank(b)).slice(0, 10);
   }, [tasks, todayStr]);
 
   // Active Projects
@@ -182,7 +196,9 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black font-mono text-teal-900">{overallProgress}%</span>
-            <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">من إجمالي {tasks.length} مهمة</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
+              من إجمالي {tasks.length} مهمة
+            </span>
           </div>
           <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
             <div
@@ -191,8 +207,13 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
             />
           </div>
           <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 pt-1">
-            <span>مكتملة: <strong className="text-emerald-700 dark:text-emerald-300 font-mono">{completedCount}</strong></span>
-            <span>متبقية: <strong className="text-blue-700 dark:text-blue-300 font-mono">{tasks.length - completedCount}</strong></span>
+            <span>
+              مكتملة: <strong className="text-emerald-700 dark:text-emerald-300 font-mono">{completedCount}</strong>
+            </span>
+            <span>
+              متبقية:{' '}
+              <strong className="text-blue-700 dark:text-blue-300 font-mono">{tasks.length - completedCount}</strong>
+            </span>
           </div>
         </div>
 
@@ -208,7 +229,9 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
             </span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black font-mono text-rose-700 dark:text-rose-300">{overdueTasks.length}</span>
+            <span className="text-3xl font-black font-mono text-rose-700 dark:text-rose-300">
+              {overdueTasks.length}
+            </span>
             <span className="text-xs text-slate-400 dark:text-slate-500">تجاوزت موعد التسليم</span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
@@ -228,7 +251,9 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
             </span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black font-mono text-amber-800 dark:text-amber-200">{dueTodayTasks.length}</span>
+            <span className="text-3xl font-black font-mono text-amber-800 dark:text-amber-200">
+              {dueTodayTasks.length}
+            </span>
             <span className="text-xs text-slate-400 dark:text-slate-500">مطلوب إنهاؤها بحلول المساء</span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
@@ -240,16 +265,42 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
       {/* 1.b مؤشرات سريعة (§6) — أربعة مؤشرات كانت بياناتها متاحة بلا عرض */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { id: 'q_delayed_projects', label: 'المشاريع المتأخرة', value: quickStats.delayedProjects, tone: 'rose', tab: 'projects' },
-          { id: 'q_upcoming_appointments', label: 'المواعيد القادمة', value: quickStats.upcomingAppointments, tone: 'sky', tab: 'calendar' },
-          { id: 'q_active_goals', label: 'الأهداف النشطة', value: quickStats.activeGoals, tone: 'violet', tab: 'goals' },
-          { id: 'q_upcoming_visits', label: 'الزيارات القادمة', value: quickStats.upcomingVisits, tone: 'amber', tab: null },
+          {
+            id: 'q_delayed_projects',
+            label: 'المشاريع المتأخرة',
+            value: quickStats.delayedProjects,
+            tone: 'rose',
+            tab: 'projects',
+          },
+          {
+            id: 'q_upcoming_appointments',
+            label: 'المواعيد القادمة',
+            value: quickStats.upcomingAppointments,
+            tone: 'sky',
+            tab: 'calendar',
+          },
+          {
+            id: 'q_active_goals',
+            label: 'الأهداف النشطة',
+            value: quickStats.activeGoals,
+            tone: 'violet',
+            tab: 'goals',
+          },
+          {
+            id: 'q_upcoming_visits',
+            label: 'الزيارات القادمة',
+            value: quickStats.upcomingVisits,
+            tone: 'amber',
+            tab: null,
+          },
         ].map((kpi) => {
           const tones: Record<string, string> = {
             rose: 'text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800',
             sky: 'text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-800',
-            violet: 'text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-950/40 border-violet-200 dark:border-violet-800',
-            amber: 'text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800',
+            violet:
+              'text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-950/40 border-violet-200 dark:border-violet-800',
+            amber:
+              'text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800',
           };
           return (
             <button
@@ -273,7 +324,9 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
             <Calendar className="w-4 h-4 text-teal-600 dark:text-teal-400" />
             <span>القادم</span>
           </h3>
-          <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">مهام · مواعيد · اجتماعات · التزامات</span>
+          <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
+            مهام · مواعيد · اجتماعات · التزامات
+          </span>
         </div>
         {upcomingFeed.length === 0 ? (
           <p className="text-xs text-slate-400 dark:text-slate-500 py-2">لا يوجد عمل قادم مُجدول.</p>
@@ -293,7 +346,8 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
                   {row.meta && <span className="text-xs text-slate-400 dark:text-slate-500 truncate">{row.meta}</span>}
                 </div>
                 <span className="text-xs font-mono text-slate-500 dark:text-slate-400 shrink-0">
-                  {row.date}{row.time ? ' · ' + row.time : ''}
+                  {row.date}
+                  {row.time ? ' · ' + row.time : ''}
                 </span>
               </div>
             ))}
@@ -376,9 +430,7 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className={`px-2 py-0.5 rounded-lg text-xs border ${badgeColor}`}>
-                      {badgeText}
-                    </span>
+                    <span className={`px-2 py-0.5 rounded-lg text-xs border ${badgeColor}`}>{badgeText}</span>
                     <ChevronLeft className="w-4 h-4 text-slate-300 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition" />
                   </div>
                 </div>
@@ -419,13 +471,12 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{p.name}</span>
-                    <span className="font-mono text-xs font-bold text-indigo-700 dark:text-indigo-300">{p.progress}%</span>
+                    <span className="font-mono text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                      {p.progress}%
+                    </span>
                   </div>
                   <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
-                    <div
-                      className="bg-indigo-600 h-full rounded-full"
-                      style={{ width: `${p.progress}%` }}
-                    />
+                    <div className="bg-indigo-600 h-full rounded-full" style={{ width: `${p.progress}%` }} />
                   </div>
                   <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
                     <span>المدير: {p.manager}</span>
@@ -453,10 +504,15 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
 
             <div className="space-y-2">
               {appointments.slice(0, 3).map((a) => (
-                <div key={a.id} className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 text-xs">
+                <div
+                  key={a.id}
+                  className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 text-xs"
+                >
                   <div className="font-bold text-slate-800 dark:text-slate-200">{a.title}</div>
                   <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 mt-1 font-mono">
-                    <span>{a.date} ({a.time})</span>
+                    <span>
+                      {a.date} ({a.time})
+                    </span>
                     <span>{a.person}</span>
                   </div>
                 </div>
@@ -481,7 +537,10 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
 
             <div className="space-y-2.5 max-h-64 overflow-y-auto no-scrollbar">
               {activities.slice(0, 5).map((act) => (
-                <div key={act.id} className="p-2.5 bg-slate-50/70 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 text-xs space-y-1">
+                <div
+                  key={act.id}
+                  className="p-2.5 bg-slate-50/70 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800 text-xs space-y-1"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-slate-800 dark:text-slate-200 text-xs">{act.user}</span>
                     <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
@@ -489,7 +548,8 @@ export const WorkOSOverviewTab: React.FC<WorkOSOverviewTabProps> = ({
                     </span>
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-xs">
-                    <span className="text-teal-700 dark:text-teal-300 font-semibold">{act.action}</span>: {act.entityTitle}
+                    <span className="text-teal-700 dark:text-teal-300 font-semibold">{act.action}</span>:{' '}
+                    {act.entityTitle}
                   </p>
                 </div>
               ))}

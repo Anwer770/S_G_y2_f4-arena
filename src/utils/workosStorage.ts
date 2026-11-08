@@ -222,7 +222,8 @@ const SEED_TASKS: WorkTask[] = [
     id: 'tsk_101',
     taskNumber: 'TSK-101',
     title: 'مراجعة ومطابقة كشف حساب صيدلية النور والرواد لشهر سبتمبر',
-    description: 'التواصل مع المدير المالي لصيدلية النور، تدقيق مبالغ التحصيلات المسلمة للمندوب وتأكيد استلام السندات الأصلية.',
+    description:
+      'التواصل مع المدير المالي لصيدلية النور، تدقيق مبالغ التحصيلات المسلمة للمندوب وتأكيد استلام السندات الأصلية.',
     status: 'in_progress',
     priority: 'urgent',
     projectId: 'prj_2',
@@ -608,7 +609,12 @@ const SEED_GOALS: GoalItem[] = [
     status: 'on_track',
     visionDescription: 'الوصول إلى تغطية شاملة لـ 120 نقطة بيع صيدلانية ومراكز تجميل في صنعاء والمحافظات المجاورة.',
     objectives: [
-      { id: 'obj_1', title: 'إضافة 25 صيدلية كبرى جديدة لقائمة العملاء النشطين', progress: 80, linkedProjectId: 'prj_1' },
+      {
+        id: 'obj_1',
+        title: 'إضافة 25 صيدلية كبرى جديدة لقائمة العملاء النشطين',
+        progress: 80,
+        linkedProjectId: 'prj_1',
+      },
       { id: 'obj_2', title: 'تخفيض الديون المتأخرة فوق 60 يوماً بنسبة 50%', progress: 65, linkedProjectId: 'prj_2' },
       { id: 'obj_3', title: 'تفعيل نظام الحوافز والعمولات للمندوبين الميدانيين', progress: 70 },
     ],
@@ -765,7 +771,8 @@ const SEED_AUTOMATIONS: AutomationRule[] = [
   {
     id: 'aut_1',
     name: 'تنبيه فوري عند تأخر موعد تسليم المهمة',
-    description: 'عند تجاوز تاريخ استحقاق المهمة وهي غير مكتملة، يتم إرسال إشعار للمسؤول ومدير المشروع وتلوينها بالأحمر.',
+    description:
+      'عند تجاوز تاريخ استحقاق المهمة وهي غير مكتملة، يتم إرسال إشعار للمسؤول ومدير المشروع وتلوينها بالأحمر.',
     triggerEvent: 'task_overdue',
     actionType: 'notify_team',
     isActive: true,
@@ -775,7 +782,8 @@ const SEED_AUTOMATIONS: AutomationRule[] = [
   {
     id: 'aut_2',
     name: 'إكمال المهمة التلقائي عند إنجاز 100% من المهام الفرعية',
-    description: 'عند وضع علامة صح على جميع Subtasks وChecklist، يتم اقتراح وضع المهمة كـ "جاهزة للمراجعة" أو "مكتملة".',
+    description:
+      'عند وضع علامة صح على جميع Subtasks وChecklist، يتم اقتراح وضع المهمة كـ "جاهزة للمراجعة" أو "مكتملة".',
     triggerEvent: 'all_subtasks_completed',
     actionType: 'create_followup_task',
     isActive: true,
@@ -785,7 +793,8 @@ const SEED_AUTOMATIONS: AutomationRule[] = [
   {
     id: 'aut_3',
     name: 'أرشفة المشاريع وإغلاقها عند وصول الإنجاز إلى 100%',
-    description: 'عند اكتمال كافة مهام المشروع وبلوغ نسبة 100% يتم إشعار الإدارة لاقتراح الإغلاق والأرشفة وحفظ التقارير.',
+    description:
+      'عند اكتمال كافة مهام المشروع وبلوغ نسبة 100% يتم إشعار الإدارة لاقتراح الإغلاق والأرشفة وحفظ التقارير.',
     triggerEvent: 'project_100_percent',
     actionType: 'mark_project_completed',
     isActive: true,
@@ -1064,7 +1073,7 @@ export interface ParsedTaskResult {
 export function parseNaturalLanguageTask(text: string): ParsedTaskResult {
   const clean = text.trim();
   const today = new Date();
-  let targetDate = new Date(today);
+  const targetDate = new Date(today);
   let dueTime = '10:00';
   let priority: 'urgent' | 'high' | 'medium' | 'low' = 'medium';
   let category = 'أعمال عامة';
@@ -1262,7 +1271,7 @@ export function exportWorkOSToCSV(data?: WorkOSData): void {
   const payload = data || loadWorkOSData();
   const tasks = payload.tasks || [];
   const headers = ['رقم المهمة', 'العنوان', 'الحالة', 'الأولوية', 'المشروع', 'المسؤول', 'تاريخ الاستحقاق', 'التقدم %'];
-  
+
   const rows = tasks.map((t) => [
     `"${t.taskNumber || ''}"`,
     `"${(t.title || '').replace(/"/g, '""')}"`,
@@ -1298,25 +1307,25 @@ export function exportWorkOSToExcel(data?: WorkOSData): void {
     return {
       'رقم المهمة': t.taskNumber || '',
       'عنوان المهمة': t.title || '',
-      'الوصف': t.description || '',
-      'الحالة': t.status || '',
-      'الأولوية': t.priority || '',
-      'المشروع': proj ? proj.name : '',
-      'المسؤول': member ? member.name : '',
+      الوصف: t.description || '',
+      الحالة: t.status || '',
+      الأولوية: t.priority || '',
+      المشروع: proj ? proj.name : '',
+      المسؤول: member ? member.name : '',
       'تاريخ الاستحقاق': t.dueDate || '',
       'نسبة الإنجاز %': t.progress || 0,
       'الساعات التقديرية': t.estimatedHours || 0,
       'الساعات الفعلية': t.actualHours || 0,
-      'الوسوم': (t.tags || []).join(', '),
+      الوسوم: (t.tags || []).join(', '),
     };
   });
 
   const projectRows = projects.map((p) => ({
     'كود المشروع': p.code || '',
     'اسم المشروع': p.name || '',
-    'الوصف': p.description || '',
-    'الحالة': p.status || '',
-    'الفئة': p.category || '',
+    الوصف: p.description || '',
+    الحالة: p.status || '',
+    الفئة: p.category || '',
     'تاريخ البدء': p.startDate || '',
     'تاريخ الاستحقاق': p.dueDate || '',
     'نسبة الإنجاز %': p.progress || 0,
@@ -1336,27 +1345,27 @@ export function downloadWorkOSTasksTemplate(): void {
   const sampleRows = [
     {
       'عنوان المهمة': 'إعداد التقرير المالي للربع الأول',
-      'الوصف': 'مراجعة قيود الصرف والقبض وإصدار الميزان',
-      'الحالة': 'in_progress',
-      'الأولوية': 'high',
+      الوصف: 'مراجعة قيود الصرف والقبض وإصدار الميزان',
+      الحالة: 'in_progress',
+      الأولوية: 'high',
       'اسم المشروع': 'تطوير المنظومة',
       'اسم المسؤول': 'أحمد السعيد',
       'تاريخ الاستحقاق': new Date().toISOString().slice(0, 10),
       'نسبة الإنجاز %': 50,
       'الساعات التقديرية': 8,
-      'الوسوم': 'مالية, تقارير',
+      الوسوم: 'مالية, تقارير',
     },
     {
       'عنوان المهمة': 'متابعة استلام شحنة مستودع صنعاء',
-      'الوصف': 'مطابقة أذونات الاستلام مع بوليصة الشحن',
-      'الحالة': 'planned',
-      'الأولوية': 'urgent',
+      الوصف: 'مطابقة أذونات الاستلام مع بوليصة الشحن',
+      الحالة: 'planned',
+      الأولوية: 'urgent',
       'اسم المشروع': 'سلسلة التوريد',
       'اسم المسؤول': 'خالد محمد',
       'تاريخ الاستحقاق': new Date(Date.now() + 86400000).toISOString().slice(0, 10),
       'نسبة الإنجاز %': 10,
       'الساعات التقديرية': 4,
-      'الوسوم': 'مستودع, شحنات',
+      الوسوم: 'مستودع, شحنات',
     },
   ];
 
@@ -1398,7 +1407,8 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
           const rawPri = String(row['الأولوية'] || row['Priority'] || '').trim();
           const projectName = String(row['المشروع'] || row['اسم المشروع'] || row['Project'] || '').trim();
           const memberName = String(row['المسؤول'] || row['اسم المسؤول'] || row['Assignee'] || '').trim();
-          const dueDate = String(row['تاريخ الاستحقاق'] || row['DueDate'] || '').trim() || new Date().toISOString().slice(0, 10);
+          const dueDate =
+            String(row['تاريخ الاستحقاق'] || row['DueDate'] || '').trim() || new Date().toISOString().slice(0, 10);
           const progress = Number(row['نسبة الإنجاز %'] || row['Progress'] || 0) || 0;
           const estimatedHours = Number(row['الساعات التقديرية'] || row['EstimatedHours'] || 0) || 0;
           const rawTags = String(row['الوسوم'] || row['Tags'] || '').trim();
@@ -1433,7 +1443,12 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
             progress: Math.min(100, Math.max(0, progress)),
             estimatedHours,
             actualHours: 0,
-            tags: rawTags ? rawTags.split(/[,،]/).map((t) => t.trim()).filter(Boolean) : [],
+            tags: rawTags
+              ? rawTags
+                  .split(/[,،]/)
+                  .map((t) => t.trim())
+                  .filter(Boolean)
+              : [],
             subtasks: [],
             checklist: [],
             timeEntries: [],
@@ -1456,7 +1471,10 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
         resolve({ success: true, message: `تم استيراد ${importedCount} مهمة جديدة بنجاح!`, count: importedCount });
       } catch (err: unknown) {
         console.error('WorkOS Excel Import Error:', err);
-        resolve({ success: false, message: `فشل قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'تنسيق غير صالح'}` });
+        resolve({
+          success: false,
+          message: `فشل قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'تنسيق غير صالح'}`,
+        });
       }
     };
 
@@ -1526,7 +1544,11 @@ export function createTripleLinkOrder(input: TripleOrderInput): {
       subtasks: [
         { id: `sub_${timestamp}_1`, title: 'تجهيز أصناف الطلبية من المستودع المركزي', completed: false },
         { id: `sub_${timestamp}_2`, title: 'مطابقة الفاتورة وإذن الصرف مع أمين المخزن', completed: false },
-        { id: `sub_${timestamp}_3`, title: `نقل وإيصال الطلبية إلى ${input.customerName} (${input.regionBranch})`, completed: false },
+        {
+          id: `sub_${timestamp}_3`,
+          title: `نقل وإيصال الطلبية إلى ${input.customerName} (${input.regionBranch})`,
+          completed: false,
+        },
         { id: `sub_${timestamp}_4`, title: 'توقيع سند الاستلام وتأكيد سداد/تحصيل القيمة', completed: false },
       ],
       checklist: [
@@ -1631,7 +1653,7 @@ export function runSmartAutomationEngine(
   const triggeredAlerts: AutomationCheckResult['triggeredAlerts'] = [];
 
   const updatedOrders = orders.map((ord) => {
-    let orderCopy = { ...ord };
+    const orderCopy = { ...ord };
 
     // 1. Check Linked Task Progress & Auto-Update
     if (ord.linkedTaskId) {
@@ -1735,14 +1757,14 @@ export function exportUnifiedWorkOSToExcel(
     'نوع الطلبية': o.orderType,
     'المنطقة / الفرع': o.regionBranch,
     'المبلغ الإجمالي (ريال)': o.totalAmount,
-    'العملة': o.currency,
-    'الحالة': o.status,
-    'الأولوية': o.priority,
+    العملة: o.currency,
+    الحالة: o.status,
+    الأولوية: o.priority,
     'تاريخ البدء': o.startDate,
     'تاريخ التسليم': o.deliveryDate,
     'المندوب / المسؤول': o.assignedRep,
     'نسبة إنجاز مهمة التسليم %': o.linkedTaskProgress || 0,
-    'الملاحظات': o.notes || '',
+    الملاحظات: o.notes || '',
   }));
   const wsOrders = XLSX.utils.json_to_sheet(orderRows);
   XLSX.utils.book_append_sheet(wb, wsOrders, 'الطلبيات وعقود التوريد');
@@ -1751,13 +1773,13 @@ export function exportUnifiedWorkOSToExcel(
   const taskRows = tasks.map((t) => ({
     'رقم المهمة': t.taskNumber,
     'عنوان المهمة': t.title,
-    'الوصف': t.description,
-    'الحالة': t.status,
-    'الأولوية': t.priority,
-    'الفئة': t.category,
+    الوصف: t.description,
+    الحالة: t.status,
+    الأولوية: t.priority,
+    الفئة: t.category,
     'تاريخ الاستحقاق': t.dueDate,
     'نسبة الإنجاز %': t.progress,
-    'المسؤول': t.assigneeId,
+    المسؤول: t.assigneeId,
     'معرف الطلبية المرتبطة': t.linkedOrderId || '',
   }));
   const wsTasks = XLSX.utils.json_to_sheet(taskRows);
@@ -1768,10 +1790,10 @@ export function exportUnifiedWorkOSToExcel(
     'معرف الالتزام': c.id,
     'عنوان الالتزام': c.title,
     'الجهة / العميل': c.entity,
-    'المسؤول': c.person,
-    'المبلغ': c.amount || 0,
-    'العملة': c.currency || 'YER',
-    'الحالة': c.status,
+    المسؤول: c.person,
+    المبلغ: c.amount || 0,
+    العملة: c.currency || 'YER',
+    الحالة: c.status,
     'طريقة السداد': c.paymentMethod || 'نقداً',
     'أرقام الفواتير': c.invoiceNumbers || '',
     'تاريخ الاستحقاق': c.dueDate,
@@ -1791,14 +1813,14 @@ export function downloadUnifiedWorkOSTemplate(): void {
       'نوع الطلبية': 'طلبيات صيدليات',
       'المنطقة / الفرع': 'منطقة الحصبة',
       'المبلغ الإجمالي (ريال)': 450000,
-      'العملة': 'YER',
-      'الأولوية': 'urgent',
+      العملة: 'YER',
+      الأولوية: 'urgent',
       'تاريخ البدء': new Date().toISOString().slice(0, 10),
       'تاريخ التسليم': new Date(Date.now() + 86400000 * 2).toISOString().slice(0, 10),
       'المندوب / المسؤول': 'د. سامي الميداني',
       'طريقة السداد': 'نقداً عند التسليم',
       'رقم الفاتورة': 'INV-8891',
-      'الملاحظات': 'تسليم الأصناف مع عينات مجانية',
+      الملاحظات: 'تسليم الأصناف مع عينات مجانية',
     },
     {
       'عنوان الطلبية': 'طلبية عينات ترويجية للمركز الاستشاري',
@@ -1806,14 +1828,14 @@ export function downloadUnifiedWorkOSTemplate(): void {
       'نوع الطلبية': 'عينات',
       'المنطقة / الفرع': 'شارع تعز',
       'المبلغ الإجمالي (ريال)': 180000,
-      'العملة': 'YER',
-      'الأولوية': 'high',
+      العملة: 'YER',
+      الأولوية: 'high',
       'تاريخ البدء': new Date().toISOString().slice(0, 10),
       'تاريخ التسليم': new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 10),
       'المندوب / المسؤول': 'خالد أمين المخزن',
       'طريقة السداد': 'آجل 30 يوم',
       'رقم الفاتورة': 'INV-8892',
-      'الملاحظات': 'عقد توريد دوري',
+      الملاحظات: 'عقد توريد دوري',
     },
   ];
 
@@ -1843,13 +1865,17 @@ export function importUnifiedWorkOSFromExcel(
         let importedCount = 0;
         rawJson.forEach((row) => {
           const title = String(row['عنوان الطلبية'] || row['العنوان'] || row['Title'] || '').trim();
-          const customerName = String(row['اسم العميل / الصيدلية'] || row['العميل'] || row['Customer'] || 'عميل نقدي').trim();
+          const customerName = String(
+            row['اسم العميل / الصيدلية'] || row['العميل'] || row['Customer'] || 'عميل نقدي'
+          ).trim();
           if (!title) return;
 
           const totalAmount = Number(row['المبلغ الإجمالي (ريال)'] || row['المبلغ'] || row['Amount'] || 0);
           const orderType = String(row['نوع الطلبية'] || 'طلبيات صيدليات').trim();
           const regionBranch = String(row['المنطقة / الفرع'] || 'عام').trim();
-          const deliveryDate = String(row['تاريخ التسليم'] || row['DueDate'] || new Date().toISOString().slice(0, 10)).trim();
+          const deliveryDate = String(
+            row['تاريخ التسليم'] || row['DueDate'] || new Date().toISOString().slice(0, 10)
+          ).trim();
           const assignedRep = String(row['المندوب / المسؤول'] || row['المسؤول'] || 'مندوب التوزيع').trim();
           const notes = String(row['الملاحظات'] || '').trim();
           const paymentMethod = String(row['طريقة السداد'] || 'نقداً عند التسليم').trim();
@@ -1887,11 +1913,13 @@ export function importUnifiedWorkOSFromExcel(
         });
       } catch (err: unknown) {
         console.error('Unified Import Error:', err);
-        resolve({ success: false, message: `فشل قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'تنسيق غير صالح'}` });
+        resolve({
+          success: false,
+          message: `فشل قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'تنسيق غير صالح'}`,
+        });
       }
     };
     reader.onerror = () => resolve({ success: false, message: 'تعذر قراءة ملف الإكسل.' });
     reader.readAsArrayBuffer(file);
   });
 }
-

@@ -37,7 +37,13 @@ import { TasksModule } from '../../components/tasks/TasksModule';
 import { UnifiedSettings } from '../../components/settings/UnifiedSettings';
 import { UnifiedDashboard } from '../../components/dashboard/UnifiedDashboard';
 
-import { loadDebts, loadDebtCommitments, loadCustodyIssues, loadLinksRecords, saveTaskAuditLogs } from '../../utils/storage';
+import {
+  loadDebts,
+  loadDebtCommitments,
+  loadCustodyIssues,
+  loadLinksRecords,
+  saveTaskAuditLogs,
+} from '../../utils/storage';
 
 export interface AppRouterProps {
   activeTab: ActiveModuleTab;
@@ -113,31 +119,6 @@ export const AppRouter: React.FC<AppRouterProps> = (props) => {
   const { activeTab, setActiveTab } = props;
   const { canAccessModule, currentUser } = useAuth();
 
-  if (!canAccessModule(activeTab)) {
-    return (
-      <div className="py-20 px-4 text-center max-w-md mx-auto space-y-4" dir="rtl">
-        <div className="w-16 h-16 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-[#EF4444] dark:text-rose-400 border border-rose-200 dark:border-rose-900/60 flex items-center justify-center mx-auto shadow-sm">
-          <ShieldAlert className="w-8 h-8" />
-        </div>
-        <div className="space-y-1">
-          <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
-            غير مصرح لحسابك بالوصول إلى هذا القسم
-          </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            المستخدم الحالي ({currentUser?.name || 'مستخدم'} - {currentUser?.role}) ليس لديه الصلاحيات المقررة لعرض قسم "{activeTab}". تم تأمين السجلات المالية والإدارية الحساسة.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setActiveTab('dashboard')}
-          className="px-4 py-2 bg-[#0D9488] hover:bg-[#059669] text-white font-bold rounded-lg text-xs transition cursor-pointer shadow-xs"
-        >
-          العودة إلى لوحة التحكم
-        </button>
-      </div>
-    );
-  }
-
   // Canonical tab representation (taskflow shares the WorkOS module view)
   const canonicalTab = activeTab === 'taskflow' ? 'workos' : activeTab;
   const isWorkOSActive = activeTab === 'workos' || activeTab === 'taskflow';
@@ -190,12 +171,36 @@ export const AppRouter: React.FC<AppRouterProps> = (props) => {
 
   // Fresh memoized data for dashboard & auxiliary counters
   const debtsData = React.useMemo(() => loadDebts(), [activeTab, props.debtsCount]);
-  const debtCommitmentsData = React.useMemo(
-    () => loadDebtCommitments(),
-    [activeTab, props.debtCommitmentsCount]
-  );
+  const debtCommitmentsData = React.useMemo(() => loadDebtCommitments(), [activeTab, props.debtCommitmentsCount]);
   const custodyCountMemo = React.useMemo(() => loadCustodyIssues().length, [activeTab]);
   const linksCountMemo = React.useMemo(() => loadLinksRecords().length, [activeTab]);
+
+  // حارس الصلاحيات — يُقيَّم بعد كل الخطافات حتى لا تُنادى خطافات بشرط (rules-of-hooks)
+  if (!canAccessModule(activeTab)) {
+    return (
+      <div className="py-20 px-4 text-center max-w-md mx-auto space-y-4" dir="rtl">
+        <div className="w-16 h-16 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-[#EF4444] dark:text-rose-400 border border-rose-200 dark:border-rose-900/60 flex items-center justify-center mx-auto shadow-sm">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+            غير مصرح لحسابك بالوصول إلى هذا القسم
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            المستخدم الحالي ({currentUser?.name || 'مستخدم'} - {currentUser?.role}) ليس لديه الصلاحيات المقررة لعرض قسم
+            "{activeTab}". تم تأمين السجلات المالية والإدارية الحساسة.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setActiveTab('dashboard')}
+          className="px-4 py-2 bg-[#0D9488] hover:bg-[#059669] text-white font-bold rounded-lg text-xs transition cursor-pointer shadow-xs"
+        >
+          العودة إلى لوحة التحكم
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full">

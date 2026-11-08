@@ -195,8 +195,8 @@ export const CustomerDetailsModal: React.FC<Props> = ({
                 customer.balanceYER < 0
                   ? 'bg-rose-50/70 border-rose-200'
                   : customer.balanceYER > 0
-                  ? 'bg-emerald-50/70 border-emerald-200'
-                  : 'bg-slate-50 border-slate-200'
+                    ? 'bg-emerald-50/70 border-emerald-200'
+                    : 'bg-slate-50 border-slate-200'
               }`}
             >
               <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-bold mb-1">
@@ -208,8 +208,8 @@ export const CustomerDetailsModal: React.FC<Props> = ({
                   (customer.balanceYER || 0) < 0
                     ? 'text-rose-600'
                     : (customer.balanceYER || 0) > 0
-                    ? 'text-emerald-700'
-                    : 'text-slate-700'
+                      ? 'text-emerald-700'
+                      : 'text-slate-700'
                 }`}
               >
                 {(customer.balanceYER || 0).toLocaleString('ar-YE')} ريال
@@ -277,15 +277,17 @@ export const CustomerDetailsModal: React.FC<Props> = ({
                     {customer.significance === 'A'
                       ? '⭐ A - عالي الأهمية'
                       : customer.significance === 'B'
-                      ? 'B - متوسط'
-                      : customer.significance === 'C'
-                      ? 'C - عادي'
-                      : '√ - مؤكد'}
+                        ? 'B - متوسط'
+                        : customer.significance === 'C'
+                          ? 'C - عادي'
+                          : '√ - مؤكد'}
                   </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
                   <span className="text-slate-500 dark:text-slate-400">العنوان:</span>
-                  <span className="font-medium text-slate-800 dark:text-slate-200">{customer.address || 'غير محدد'}</span>
+                  <span className="font-medium text-slate-800 dark:text-slate-200">
+                    {customer.address || 'غير محدد'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -303,7 +305,9 @@ export const CustomerDetailsModal: React.FC<Props> = ({
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
                   <span className="text-slate-500 dark:text-slate-400">حالة الزيارة:</span>
-                  <span className={`px-2 py-0.5 rounded-md font-bold text-xs border ${getStatusBadgeColor(customer.status)}`}>
+                  <span
+                    className={`px-2 py-0.5 rounded-md font-bold text-xs border ${getStatusBadgeColor(customer.status)}`}
+                  >
                     {customer.status}
                   </span>
                 </div>
@@ -361,40 +365,40 @@ export const CustomerDetailsModal: React.FC<Props> = ({
             ) : (
               <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-2xs">
                 <div className="w-full overflow-x-auto print:overflow-visible">
-                <table className="w-full text-right border-collapse min-w-[600px] print:min-w-0">
-                  <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs">
-                    <tr>
-                      <th className="p-2.5">التاريخ / اليوم</th>
-                      <th className="p-2.5">المندوب</th>
-                      <th className="p-2.5">الحالة</th>
-                      <th className="p-2.5">المبلغ المحصل</th>
-                      <th className="p-2.5">النتائج والملاحظات</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                    {customerVisits.map((v) => (
-                      <tr key={v.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60">
-                        <td className="p-2.5 font-medium text-slate-800 dark:text-slate-200">
-                          {v.date} ({v.dayOfWeek})
-                        </td>
-                        <td className="p-2.5 font-bold text-indigo-700 dark:text-indigo-300">{v.responsible}</td>
-                        <td className="p-2.5">
-                          <span
-                            className={`px-2 py-0.5 rounded-md font-bold text-xs border ${getStatusBadgeColor(
-                              v.status
-                            )}`}
-                          >
-                            {v.status}
-                          </span>
-                        </td>
-                        <td className="p-2.5 font-mono font-bold text-emerald-700 dark:text-emerald-300">
-                          {v.amountCollectedYER ? `${v.amountCollectedYER.toLocaleString()} ريال` : '—'}
-                        </td>
-                        <td className="p-2.5 text-slate-600 dark:text-slate-300 font-medium">{v.notes || '—'}</td>
+                  <table className="w-full text-right border-collapse min-w-[600px] print:min-w-0">
+                    <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs">
+                      <tr>
+                        <th className="p-2.5">التاريخ / اليوم</th>
+                        <th className="p-2.5">المندوب</th>
+                        <th className="p-2.5">الحالة</th>
+                        <th className="p-2.5">المبلغ المحصل</th>
+                        <th className="p-2.5">النتائج والملاحظات</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                      {customerVisits.map((v) => (
+                        <tr key={v.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60">
+                          <td className="p-2.5 font-medium text-slate-800 dark:text-slate-200">
+                            {v.date} ({v.dayOfWeek})
+                          </td>
+                          <td className="p-2.5 font-bold text-indigo-700 dark:text-indigo-300">{v.responsible}</td>
+                          <td className="p-2.5">
+                            <span
+                              className={`px-2 py-0.5 rounded-md font-bold text-xs border ${getStatusBadgeColor(
+                                v.status
+                              )}`}
+                            >
+                              {v.status}
+                            </span>
+                          </td>
+                          <td className="p-2.5 font-mono font-bold text-emerald-700 dark:text-emerald-300">
+                            {v.amountCollectedYER ? `${v.amountCollectedYER.toLocaleString()} ريال` : '—'}
+                          </td>
+                          <td className="p-2.5 text-slate-600 dark:text-slate-300 font-medium">{v.notes || '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             )}

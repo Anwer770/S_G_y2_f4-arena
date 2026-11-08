@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  DebtBookId,
-  DebtCommitment,
-  DebtCommitmentPayment,
-  DebtRecord,
-  DebtAuditLog,
-} from '../../types';
+import { DebtBookId, DebtCommitment, DebtCommitmentPayment, DebtRecord, DebtAuditLog } from '../../types';
 import {
   calculateCommitmentRemaining,
   calculateDebtStats,
@@ -108,7 +102,12 @@ export const DebtsModule: React.FC = () => {
     setCommitments(newCommitments);
     saveDebtCommitments(newCommitments);
 
-    logDebtAudit('استيراد', 'نظام', 'استيراد إكسل', `تم استيراد ${result.debts.length} قيد دين و ${result.commitments.length} التزام مالي`);
+    logDebtAudit(
+      'استيراد',
+      'نظام',
+      'استيراد إكسل',
+      `تم استيراد ${result.debts.length} قيد دين و ${result.commitments.length} التزام مالي`
+    );
     setAuditLogs(loadDebtAuditLogs());
 
     return {
@@ -197,15 +196,18 @@ export const DebtsModule: React.FC = () => {
     saveDebts(updated);
     const target = records.find((r) => r.id === id);
     if (target) {
-      logDebtAudit('تعديل', 'قيد دين', target.name, `تغيير حالة الاكتمال للقيد إلى: ${!target.isCompleted ? 'مكتمل' : 'نشط'}`);
+      logDebtAudit(
+        'تعديل',
+        'قيد دين',
+        target.name,
+        `تغيير حالة الاكتمال للقيد إلى: ${!target.isCompleted ? 'مكتمل' : 'نشط'}`
+      );
     }
     setAuditLogs(loadDebtAuditLogs());
   };
 
   const handleChangeRecordIcon = (id: string, icon: string) => {
-    const updated = records.map((r) =>
-      r.id === id ? { ...r, icon, updatedAt: new Date().toISOString() } : r
-    );
+    const updated = records.map((r) => (r.id === id ? { ...r, icon, updatedAt: new Date().toISOString() } : r));
     setRecords(updated);
     saveDebts(updated);
   };
@@ -255,9 +257,7 @@ export const DebtsModule: React.FC = () => {
   };
 
   const handleChangeCommitmentIcon = (id: string, icon: string) => {
-    const updated = commitments.map((c) =>
-      c.id === id ? { ...c, icon, updatedAt: new Date().toISOString() } : c
-    );
+    const updated = commitments.map((c) => (c.id === id ? { ...c, icon, updatedAt: new Date().toISOString() } : c));
     setCommitments(updated);
     saveDebtCommitments(updated);
   };
@@ -314,12 +314,7 @@ export const DebtsModule: React.FC = () => {
 
     const target = commitments.find((c) => c.id === commitmentId);
     if (target) {
-      logDebtAudit(
-        'حذف',
-        'دفعة سداد',
-        `${target.id}: ${target.name}`,
-        'تم حذف دفعة سداد سابقة'
-      );
+      logDebtAudit('حذف', 'دفعة سداد', `${target.id}: ${target.name}`, 'تم حذف دفعة سداد سابقة');
       setSelectedPaymentCommitment(updated.find((c) => c.id === commitmentId) || null);
     }
     setAuditLogs(loadDebtAuditLogs());
@@ -598,9 +593,7 @@ export const DebtsModule: React.FC = () => {
         />
       )}
 
-      {activeTab === 'audit' && (
-        <DebtAuditView logs={auditLogs} onClearLogs={handleClearAuditLogs} />
-      )}
+      {activeTab === 'audit' && <DebtAuditView logs={auditLogs} onClearLogs={handleClearAuditLogs} />}
 
       {/* Modals */}
       <DebtRecordModal

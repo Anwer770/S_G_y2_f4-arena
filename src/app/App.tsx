@@ -187,10 +187,7 @@ export const MainApp: React.FC = () => {
    * الشارة تعرض: مهام إدارة العمل المفتوحة + مهام مخزن التطبيق المفتوحة، مرة واحدة لكل مخزن
    * (عرض `classic_tasks` داخل إدارة العمل يعرض نفس المهام، فالعدّ يعكس ما يراه المستخدم هناك).
    */
-  const openSuiteTasksCount = useMemo(
-    () => tasks.filter((t) => t.status !== 'تم الانجاز').length,
-    [tasks]
-  );
+  const openSuiteTasksCount = useMemo(() => tasks.filter((t) => t.status !== 'تم الانجاز').length, [tasks]);
 
   const workosOpenCount = useMemo(() => {
     try {
@@ -244,11 +241,7 @@ export const MainApp: React.FC = () => {
     setRecords(updatedRecords);
 
     // Auto-Journaling
-    const { updatedTxns, createdEntry } = syncMovementToFinancialJournal(
-      saved,
-      financialTransactions,
-      products
-    );
+    const { updatedTxns, createdEntry } = syncMovementToFinancialJournal(saved, financialTransactions, products);
     setFinancialTransactions(updatedTxns);
     saveFinancialTransactions(updatedTxns);
     recordOutboxMutation('financial', 'UPDATE', createdEntry.id, createdEntry);
@@ -336,9 +329,7 @@ export const MainApp: React.FC = () => {
   };
 
   const handleToggleProductActive = (product: Item) => {
-    const updated = products.map((p) =>
-      p.name === product.name ? { ...p, isActive: !p.isActive } : p
-    );
+    const updated = products.map((p) => (p.name === product.name ? { ...p, isActive: !p.isActive } : p));
     setProducts(updated);
     saveProducts(updated);
     broadcastDataChange('STOCK_UPDATED');
@@ -359,10 +350,7 @@ export const MainApp: React.FC = () => {
     broadcastDataChange('FINANCIAL_UPDATED');
   };
 
-  const handleImportFinancialTxns = (
-    imported: FinancialTransaction[],
-    mode: 'append' | 'replace'
-  ) => {
+  const handleImportFinancialTxns = (imported: FinancialTransaction[], mode: 'append' | 'replace') => {
     let updated: FinancialTransaction[];
     if (mode === 'replace') {
       updated = imported;
@@ -377,10 +365,7 @@ export const MainApp: React.FC = () => {
     broadcastDataChange('FINANCIAL_UPDATED');
   };
 
-  const handleAddFinancialOption = (
-    type: FinancialOptionType,
-    value: string
-  ) => {
+  const handleAddFinancialOption = (type: FinancialOptionType, value: string) => {
     if (type === 'restrictionAccount') {
       const updated = [...restrictionAccounts, value];
       setRestrictionAccounts(updated);
@@ -491,7 +476,16 @@ export const MainApp: React.FC = () => {
 
   const logDoctorAudit = (action: string, entity: string, name: string, details?: string) => {
     const logs = loadDoctorAuditLogs();
-    const validActions: DoctorAuditLog['action'][] = ['إضافة', 'تعديل', 'حذف', 'زيارة', 'استيراد', 'تصدير', 'تحديث حالة', 'نظام'];
+    const validActions: DoctorAuditLog['action'][] = [
+      'إضافة',
+      'تعديل',
+      'حذف',
+      'زيارة',
+      'استيراد',
+      'تصدير',
+      'تحديث حالة',
+      'نظام',
+    ];
     const safeAction: DoctorAuditLog['action'] = (validActions as string[]).includes(action)
       ? (action as DoctorAuditLog['action'])
       : 'نظام';
@@ -667,7 +661,7 @@ export const MainApp: React.FC = () => {
         }}
         onToggleCompleteTask={handleToggleCompleteTask}
         systemAlerts={systemAlerts}
-          onToggleCompleteCommitment={handleToggleCompleteCommitment}
+        onToggleCompleteCommitment={handleToggleCompleteCommitment}
       />
     </>
   );

@@ -164,9 +164,7 @@ export const DebtPrintModal: React.FC<DebtPrintModalProps> = ({
           <div className="grid grid-cols-3 gap-3 print:grid-cols-3">
             <div className="p-3 rounded-xl border border-rose-200 bg-rose-50/50">
               <span className="text-xs font-bold text-rose-800 block mb-1">إجمالي المدين (عليه):</span>
-              <span className="text-lg font-black font-mono text-rose-700">
-                {formatDebtAmount(totalDebit, 'YER')}
-              </span>
+              <span className="text-lg font-black font-mono text-rose-700">{formatDebtAmount(totalDebit, 'YER')}</span>
             </div>
 
             <div className="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50">
@@ -178,7 +176,9 @@ export const DebtPrintModal: React.FC<DebtPrintModalProps> = ({
 
             <div className="p-3 rounded-xl border border-slate-300 bg-slate-50">
               <span className="text-xs font-bold text-slate-700 block mb-1">صافي الرصيد الحالي:</span>
-              <span className={`text-lg font-black font-mono ${netBalance >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+              <span
+                className={`text-lg font-black font-mono ${netBalance >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}
+              >
                 {netBalance >= 0 ? 'له ' : 'عليه '}
                 {formatDebtAmount(Math.abs(netBalance), 'YER')}
               </span>
@@ -231,9 +231,7 @@ export const DebtPrintModal: React.FC<DebtPrintModalProps> = ({
                     <td colSpan={4} className="py-2.5 px-3 text-right">
                       المجموع الكلي ({records.length} قيد)
                     </td>
-                    <td className="py-2.5 px-3 text-left font-mono text-rose-400">
-                      {totalDebit.toLocaleString()} YER
-                    </td>
+                    <td className="py-2.5 px-3 text-left font-mono text-rose-400">{totalDebit.toLocaleString()} YER</td>
                     <td className="py-2.5 px-3 text-left font-mono text-emerald-400">
                       {totalCredit.toLocaleString()} YER
                     </td>

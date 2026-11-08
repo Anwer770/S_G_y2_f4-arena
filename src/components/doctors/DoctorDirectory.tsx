@@ -1,10 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  DoctorFilterState,
-  DoctorRecord,
-  DoctorSignificance,
-  DoctorVisitStatus,
-} from '../../types';
+import { DoctorFilterState, DoctorRecord, DoctorSignificance, DoctorVisitStatus } from '../../types';
 import { filterDoctors, isDoctorVisitDueToday } from '../../utils/doctors';
 import {
   Search,
@@ -94,9 +89,7 @@ export const DoctorDirectory: React.FC<Props> = ({
   };
 
   const handleToggleSelect = (id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   };
 
   const handleBulkStatusChange = (newStatus: DoctorVisitStatus) => {
@@ -418,7 +411,9 @@ export const DoctorDirectory: React.FC<Props> = ({
         <div className="px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 font-bold">
           <div className="flex items-center gap-2">
             <Stethoscope className="w-4 h-4 text-teal-700 dark:text-teal-300" />
-            <span>سجل أطباء وزيارات المنظومة ({filteredDoctors.length} من {doctors.length})</span>
+            <span>
+              سجل أطباء وزيارات المنظومة ({filteredDoctors.length} من {doctors.length})
+            </span>
           </div>
           <div className="flex items-center gap-3">
             {/* View Mode Toggle: Table vs Mobile Cards */}
@@ -515,7 +510,9 @@ export const DoctorDirectory: React.FC<Props> = ({
                         <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                           <div className="flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-slate-400 dark:text-slate-500" />
-                            <span>{d.region} ({d.route})</span>
+                            <span>
+                              {d.region} ({d.route})
+                            </span>
                           </div>
                           <span className="font-bold text-teal-800 dark:text-teal-200">{d.responsible}</span>
                         </div>
@@ -620,211 +617,210 @@ export const DoctorDirectory: React.FC<Props> = ({
         ) : (
           <div className="overflow-x-auto max-h-[calc(100vh-270px)] min-h-[380px] overflow-y-auto scrollbar-thin">
             <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0" dir="rtl">
-            <thead className="sticky top-0 z-20">
-              <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700 shadow-2xs select-none">
-                <th className="py-2.5 px-3 text-center w-10 sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
-                  <button onClick={handleSelectAll} className="cursor-pointer">
-                    {selectedIds.length === filteredDoctors.length && filteredDoctors.length > 0 ? (
-                      <CheckSquare className="w-4 h-4 text-teal-700 dark:text-teal-300" />
-                    ) : (
-                      <Square className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                    )}
-                  </button>
-                </th>
-                <th className="py-2.5 px-2 text-center w-14">الأهمية</th>
-                <th className="py-2.5 px-2.5 min-w-[170px]">اسم الطبيب / المركز</th>
-                <th className="py-2.5 px-2.5 w-36">التخصص والعيادة</th>
-                <th className="py-2.5 px-2.5 w-32">المنطقة والمسار</th>
-                <th className="py-2.5 px-2.5 w-24">المندوب</th>
-                <th className="py-2.5 px-2.5 min-w-[150px]">وصف المهمة</th>
-                <th className="py-2.5 px-2 text-center w-28">حالة الزيارة</th>
-                <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-32">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
-              {filteredDoctors.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-400 dark:text-slate-500">
-                    <Stethoscope className="w-10 h-10 mx-auto mb-2 opacity-40 text-teal-700 dark:text-teal-300" />
-                    <p className="text-sm font-bold text-slate-600 dark:text-slate-300">لا توجد سجلات أطباء مطابقة لشروط البحث</p>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                      جرب تغيير خيارات التصفية أو إضافة طبيب جديد
-                    </p>
-                  </td>
+              <thead className="sticky top-0 z-20">
+                <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700 shadow-2xs select-none">
+                  <th className="py-2.5 px-3 text-center w-10 sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                    <button onClick={handleSelectAll} className="cursor-pointer">
+                      {selectedIds.length === filteredDoctors.length && filteredDoctors.length > 0 ? (
+                        <CheckSquare className="w-4 h-4 text-teal-700 dark:text-teal-300" />
+                      ) : (
+                        <Square className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                      )}
+                    </button>
+                  </th>
+                  <th className="py-2.5 px-2 text-center w-14">الأهمية</th>
+                  <th className="py-2.5 px-2.5 min-w-[170px]">اسم الطبيب / المركز</th>
+                  <th className="py-2.5 px-2.5 w-36">التخصص والعيادة</th>
+                  <th className="py-2.5 px-2.5 w-32">المنطقة والمسار</th>
+                  <th className="py-2.5 px-2.5 w-24">المندوب</th>
+                  <th className="py-2.5 px-2.5 min-w-[150px]">وصف المهمة</th>
+                  <th className="py-2.5 px-2 text-center w-28">حالة الزيارة</th>
+                  <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-32">
+                    الإجراءات
+                  </th>
                 </tr>
-              ) : (
-                filteredDoctors.map((doc) => {
-                  const isSelected = selectedIds.includes(doc.id);
-                  const isDueToday = isDoctorVisitDueToday(doc.route);
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
+                {filteredDoctors.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="py-12 text-center text-slate-400 dark:text-slate-500">
+                      <Stethoscope className="w-10 h-10 mx-auto mb-2 opacity-40 text-teal-700 dark:text-teal-300" />
+                      <p className="text-sm font-bold text-slate-600 dark:text-slate-300">
+                        لا توجد سجلات أطباء مطابقة لشروط البحث
+                      </p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                        جرب تغيير خيارات التصفية أو إضافة طبيب جديد
+                      </p>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredDoctors.map((doc) => {
+                    const isSelected = selectedIds.includes(doc.id);
+                    const isDueToday = isDoctorVisitDueToday(doc.route);
 
-                  return (
-                    <tr
-                      key={doc.id}
-                      className={`hover:bg-teal-50/40 dark:hover:bg-teal-950/40 transition-colors text-[12px] group ${
-                        isSelected ? 'bg-teal-50/70' : ''
-                      }`}
-                    >
-                      {/* Checkbox */}
-                      <td className="py-2 px-3 text-center sticky right-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/60 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
-                        <button
-                          onClick={() => handleToggleSelect(doc.id)}
-                          className="cursor-pointer"
-                        >
-                          {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-teal-700 dark:text-teal-300" />
-                          ) : (
-                            <Square className="w-4 h-4 text-slate-300 hover:text-slate-400 dark:hover:text-slate-500" />
-                          )}
-                        </button>
-                      </td>
-
-                      {/* Significance */}
-                      <td className="py-2 px-2 text-center">
-                        <span
-                          className={`inline-block px-1.5 py-0.5 rounded text-xs font-bold border ${getSignificanceBadge(
-                            doc.significance
-                          )}`}
-                        >
-                          {doc.significance}
-                        </span>
-                      </td>
-
-                      {/* Doctor Name */}
-                      <td className="py-2 px-2.5">
-                        <div className="flex items-center gap-1.5">
-                          <button
-                            onClick={() => onViewDoctor(doc)}
-                            className="font-bold text-slate-900 dark:text-slate-100 hover:text-teal-700 dark:hover:text-teal-300 transition-colors text-right cursor-pointer"
-                          >
-                            {doc.name}
+                    return (
+                      <tr
+                        key={doc.id}
+                        className={`hover:bg-teal-50/40 dark:hover:bg-teal-950/40 transition-colors text-[12px] group ${
+                          isSelected ? 'bg-teal-50/70' : ''
+                        }`}
+                      >
+                        {/* Checkbox */}
+                        <td className="py-2 px-3 text-center sticky right-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/60 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                          <button onClick={() => handleToggleSelect(doc.id)} className="cursor-pointer">
+                            {isSelected ? (
+                              <CheckSquare className="w-4 h-4 text-teal-700 dark:text-teal-300" />
+                            ) : (
+                              <Square className="w-4 h-4 text-slate-300 hover:text-slate-400 dark:hover:text-slate-500" />
+                            )}
                           </button>
-                          {isDueToday && (
-                            <span
-                              title="موعد الزيارة اليوم"
-                              className="w-2 h-2 rounded-full bg-teal-500 animate-ping shrink-0"
-                            />
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-mono mt-0.5">
-                          <span>{doc.id}</span>
-                          {doc.phone && (
-                            <a
-                              href={`tel:${doc.phone}`}
-                              className="text-teal-700 dark:text-teal-300 hover:underline flex items-center gap-0.5"
+                        </td>
+
+                        {/* Significance */}
+                        <td className="py-2 px-2 text-center">
+                          <span
+                            className={`inline-block px-1.5 py-0.5 rounded text-xs font-bold border ${getSignificanceBadge(
+                              doc.significance
+                            )}`}
+                          >
+                            {doc.significance}
+                          </span>
+                        </td>
+
+                        {/* Doctor Name */}
+                        <td className="py-2 px-2.5">
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={() => onViewDoctor(doc)}
+                              className="font-bold text-slate-900 dark:text-slate-100 hover:text-teal-700 dark:hover:text-teal-300 transition-colors text-right cursor-pointer"
                             >
-                              <Phone className="w-2.5 h-2.5" />
-                              <span>{doc.phone}</span>
-                            </a>
-                          )}
-                        </div>
-                      </td>
+                              {doc.name}
+                            </button>
+                            {isDueToday && (
+                              <span
+                                title="موعد الزيارة اليوم"
+                                className="w-2 h-2 rounded-full bg-teal-500 animate-ping shrink-0"
+                              />
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-mono mt-0.5">
+                            <span>{doc.id}</span>
+                            {doc.phone && (
+                              <a
+                                href={`tel:${doc.phone}`}
+                                className="text-teal-700 dark:text-teal-300 hover:underline flex items-center gap-0.5"
+                              >
+                                <Phone className="w-2.5 h-2.5" />
+                                <span>{doc.phone}</span>
+                              </a>
+                            )}
+                          </div>
+                        </td>
 
-                      {/* Specialty & Clinic */}
-                      <td className="py-2 px-2.5">
-                        <span className="font-bold text-slate-800 dark:text-slate-200 block text-xs">
-                          {doc.specialty || 'عام'}
-                        </span>
-                        <span className="text-xs text-slate-500 dark:text-slate-400 block truncate max-w-[140px]">
-                          {doc.clinicName || 'عيادة خاصة'}
-                        </span>
-                      </td>
+                        {/* Specialty & Clinic */}
+                        <td className="py-2 px-2.5">
+                          <span className="font-bold text-slate-800 dark:text-slate-200 block text-xs">
+                            {doc.specialty || 'عام'}
+                          </span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400 block truncate max-w-[140px]">
+                            {doc.clinicName || 'عيادة خاصة'}
+                          </span>
+                        </td>
 
-                      {/* Region & Route */}
-                      <td className="py-2 px-2.5">
-                        <span className="text-slate-700 dark:text-slate-200 block truncate max-w-[130px] text-xs">
-                          {doc.region}
-                        </span>
-                        <span
-                          className={`text-xs px-1.5 py-0.5 rounded font-bold inline-block mt-0.5 ${
-                            isDueToday
-                              ? 'bg-teal-100 text-teal-900 border border-teal-300'
-                              : 'bg-slate-100 text-slate-600'
-                          }`}
-                        >
-                          مسار: {doc.route}
-                        </span>
-                      </td>
+                        {/* Region & Route */}
+                        <td className="py-2 px-2.5">
+                          <span className="text-slate-700 dark:text-slate-200 block truncate max-w-[130px] text-xs">
+                            {doc.region}
+                          </span>
+                          <span
+                            className={`text-xs px-1.5 py-0.5 rounded font-bold inline-block mt-0.5 ${
+                              isDueToday
+                                ? 'bg-teal-100 text-teal-900 border border-teal-300'
+                                : 'bg-slate-100 text-slate-600'
+                            }`}
+                          >
+                            مسار: {doc.route}
+                          </span>
+                        </td>
 
-                      {/* Responsible */}
-                      <td className="py-2 px-2.5 font-bold text-slate-800 dark:text-slate-200">
-                        <span className="inline-flex items-center gap-1 bg-slate-50 dark:bg-slate-800/60 px-1.5 py-0.5 rounded text-xs border border-slate-200 dark:border-slate-700">
-                          <User className="w-3 h-3 text-slate-400 dark:text-slate-500" />
-                          {doc.responsible}
-                        </span>
-                      </td>
+                        {/* Responsible */}
+                        <td className="py-2 px-2.5 font-bold text-slate-800 dark:text-slate-200">
+                          <span className="inline-flex items-center gap-1 bg-slate-50 dark:bg-slate-800/60 px-1.5 py-0.5 rounded text-xs border border-slate-200 dark:border-slate-700">
+                            <User className="w-3 h-3 text-slate-400 dark:text-slate-500" />
+                            {doc.responsible}
+                          </span>
+                        </td>
 
-                      {/* Task Description */}
-                      <td className="py-2 px-2.5 max-w-[180px]">
-                        <p className="text-xs text-slate-700 dark:text-slate-200 truncate" title={doc.taskDesc}>
-                          {doc.taskDesc || '—'}
-                        </p>
-                        {doc.samplesGiven && (
-                          <p className="text-xs text-teal-800 dark:text-teal-200 truncate" title={doc.samplesGiven}>
-                            🎁 {doc.samplesGiven}
+                        {/* Task Description */}
+                        <td className="py-2 px-2.5 max-w-[180px]">
+                          <p className="text-xs text-slate-700 dark:text-slate-200 truncate" title={doc.taskDesc}>
+                            {doc.taskDesc || '—'}
                           </p>
-                        )}
-                      </td>
+                          {doc.samplesGiven && (
+                            <p className="text-xs text-teal-800 dark:text-teal-200 truncate" title={doc.samplesGiven}>
+                              🎁 {doc.samplesGiven}
+                            </p>
+                          )}
+                        </td>
 
-                      {/* Status Selector */}
-                      <td className="py-2 px-2 text-center">
-                        <select
-                          value={doc.status}
-                          onChange={(e) =>
-                            onUpdateStatus(doc.id, e.target.value as DoctorVisitStatus)
-                          }
-                          className={`text-xs px-1.5 py-0.5 rounded border font-bold focus:outline-hidden focus:ring-2 focus:ring-teal-500 cursor-pointer ${getStatusBadge(
-                            doc.status
-                          )}`}
-                        >
-                          <option value="مخطط">🟣 مخطط</option>
-                          <option value="قيد تنفيذ">🔵 قيد تنفيذ</option>
-                          <option value="مكتمل">🟢 مكتمل</option>
-                          <option value="متابعة">🟠 متابعة</option>
-                          <option value="مرحل">⚪ مرحل</option>
-                          <option value="ملغي">🔴 ملغي</option>
-                        </select>
-                      </td>
+                        {/* Status Selector */}
+                        <td className="py-2 px-2 text-center">
+                          <select
+                            value={doc.status}
+                            onChange={(e) => onUpdateStatus(doc.id, e.target.value as DoctorVisitStatus)}
+                            className={`text-xs px-1.5 py-0.5 rounded border font-bold focus:outline-hidden focus:ring-2 focus:ring-teal-500 cursor-pointer ${getStatusBadge(
+                              doc.status
+                            )}`}
+                          >
+                            <option value="مخطط">🟣 مخطط</option>
+                            <option value="قيد تنفيذ">🔵 قيد تنفيذ</option>
+                            <option value="مكتمل">🟢 مكتمل</option>
+                            <option value="متابعة">🟠 متابعة</option>
+                            <option value="مرحل">⚪ مرحل</option>
+                            <option value="ملغي">🔴 ملغي</option>
+                          </select>
+                        </td>
 
-                      {/* Actions */}
-                      <td className="py-2 px-3 text-center sticky left-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/60 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)]">
-                        <div className="flex items-center justify-center gap-1">
-                          <button
-                            onClick={() => onRecordVisit(doc)}
-                            title="توثيق زيارة"
-                            className="p-1 text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-900/40 rounded transition-colors cursor-pointer"
-                          >
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => onViewDoctor(doc)}
-                            title="عرض التفاصيل"
-                            className="p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors cursor-pointer"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => onEditDoctor(doc)}
-                            title="تعديل"
-                            className="p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded transition-colors cursor-pointer"
-                          >
-                            <Edit className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => onDeleteDoctor(doc.id)}
-                            title="حذف"
-                            className="p-1 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded transition-colors cursor-pointer"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                        {/* Actions */}
+                        <td className="py-2 px-3 text-center sticky left-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/60 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                          <div className="flex items-center justify-center gap-1">
+                            <button
+                              onClick={() => onRecordVisit(doc)}
+                              title="توثيق زيارة"
+                              className="p-1 text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-900/40 rounded transition-colors cursor-pointer"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => onViewDoctor(doc)}
+                              title="عرض التفاصيل"
+                              className="p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors cursor-pointer"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => onEditDoctor(doc)}
+                              title="تعديل"
+                              className="p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded transition-colors cursor-pointer"
+                            >
+                              <Edit className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => onDeleteDoctor(doc.id)}
+                              title="حذف"
+                              className="p-1 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

@@ -1,9 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { FinancialTransaction } from '../../types';
-import {
-  parseFinancialExcelOrCSV,
-  downloadFinancialExcelTemplate,
-} from '../../utils/excel';
+import { parseFinancialExcelOrCSV, downloadFinancialExcelTemplate } from '../../utils/excel';
 import {
   X,
   UploadCloud,
@@ -21,10 +18,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   existingTransactions: FinancialTransaction[];
-  onImportTransactions: (
-    transactions: FinancialTransaction[],
-    mode: 'append' | 'replace'
-  ) => void;
+  onImportTransactions: (transactions: FinancialTransaction[], mode: 'append' | 'replace') => void;
 }
 
 export const ImportFinancialModal: React.FC<Props> = ({
@@ -56,10 +50,7 @@ export const ImportFinancialModal: React.FC<Props> = ({
     setIsParsing(true);
     setParseResult(null);
 
-    const result = await parseFinancialExcelOrCSV(
-      selectedFile,
-      existingTransactions
-    );
+    const result = await parseFinancialExcelOrCSV(selectedFile, existingTransactions);
     setParseResult(result);
     setIsParsing(false);
   };
@@ -100,9 +91,7 @@ export const ImportFinancialModal: React.FC<Props> = ({
               <FileSpreadsheet className="w-5 h-5 text-teal-200" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-black">
-                استيراد القيود والحركات المالية
-              </h2>
+              <h2 className="text-base sm:text-lg font-black">استيراد القيود والحركات المالية</h2>
               <p className="text-xs text-teal-200">
                 استيراد ملفات Excel (.xlsx, .xls) أو CSV متوافقة مع الـ 15 عمود للسجل المالي اليومي
               </p>
@@ -161,9 +150,7 @@ export const ImportFinancialModal: React.FC<Props> = ({
               <UploadCloud className="w-6 h-6" />
             </div>
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">
-              {file
-                ? file.name
-                : 'اسحب ملف Excel / CSV وأفلته هنا، أو اضغط للاختيار'}
+              {file ? file.name : 'اسحب ملف Excel / CSV وأفلته هنا، أو اضغط للاختيار'}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               يدعم ملفات السجل المالي والقيود اليومية (.xlsx, .xls, .csv)
@@ -259,9 +246,7 @@ export const ImportFinancialModal: React.FC<Props> = ({
                         <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
                           معاينة أول {Math.min(5, parseResult.transactions.length)} قيود:
                         </span>
-                        <span className="text-xs text-slate-400 dark:text-slate-500">
-                          15 عمود معتمد
-                        </span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500">15 عمود معتمد</span>
                       </div>
                       <div className="max-h-40 overflow-x-auto overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-xl">
                         <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0">
@@ -272,7 +257,9 @@ export const ImportFinancialModal: React.FC<Props> = ({
                               <th className="p-2 border-b border-slate-200 dark:border-slate-700">الحركة</th>
                               <th className="p-2 border-b border-slate-200 dark:border-slate-700">اسم الحساب</th>
                               <th className="p-2 border-b border-slate-200 dark:border-slate-700">البيان</th>
-                              <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">ريال يمني</th>
+                              <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">
+                                ريال يمني
+                              </th>
                               <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">سعودي</th>
                               <th className="p-2 border-b border-slate-200 dark:border-slate-700 text-left">دولار</th>
                             </tr>
@@ -284,7 +271,9 @@ export const ImportFinancialModal: React.FC<Props> = ({
                                 <td className="p-2">{txn.date}</td>
                                 <td className="p-2">{txn.movement}</td>
                                 <td className="p-2 font-bold">{txn.accountName}</td>
-                                <td className="p-2 max-w-[120px] truncate" title={txn.description}>{txn.description || '-'}</td>
+                                <td className="p-2 max-w-[120px] truncate" title={txn.description}>
+                                  {txn.description || '-'}
+                                </td>
                                 <td className="p-2 text-left font-mono">{formatCurrency(txn.amountYER)}</td>
                                 <td className="p-2 text-left font-mono">{formatCurrency(txn.amountSAR)}</td>
                                 <td className="p-2 text-left font-mono">{formatCurrency(txn.amountUSD)}</td>

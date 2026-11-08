@@ -22,7 +22,7 @@ export interface FinancialSummary {
   movementBreakdown: { movement: string; amountYER: number; amountSAR: number; amountUSD: number; count: number }[];
   categoryBreakdown: { category: string; amountYER: number; count: number }[];
   accountBreakdown: { account: string; amountYER: number; amountSAR: number; amountUSD: number; count: number }[];
-  
+
   // Legacy compatibility helpers
   totalIncome: number;
   totalExpense: number;
@@ -36,19 +36,9 @@ export interface FinancialSummary {
  * سابقاً: أي حركة غير معروفة كانت تُحتسب «مقبوضاً» في `else`، فيتضخّم الوارد والصافي
  * بصمت. الآن تُصنَّف في دلو ثالث صريح `unclassified` يظهر في التقارير بشارة تحذير.
  */
-export const INCOME_MOVEMENTS = [
-  'ايرادات',
-  'الصندوق',
-  'حساب له',
-  'حساب دائن (له)',
-] as const;
+export const INCOME_MOVEMENTS = ['ايرادات', 'الصندوق', 'حساب له', 'حساب دائن (له)'] as const;
 
-export const EXPENSE_MOVEMENTS = [
-  'منصرف',
-  'حساب عليه',
-  'سلفه',
-  'حساب مدين (ع)',
-] as const;
+export const EXPENSE_MOVEMENTS = ['منصرف', 'حساب عليه', 'سلفه', 'حساب مدين (ع)'] as const;
 
 export type MovementBucket = 'income' | 'expense' | 'unclassified';
 
@@ -59,9 +49,7 @@ export function classifyFinancialMovement(movement: string | undefined | null): 
   return 'unclassified';
 }
 
-export function calculateFinancialSummary(
-  transactions: FinancialTransaction[]
-): FinancialSummary {
+export function calculateFinancialSummary(transactions: FinancialTransaction[]): FinancialSummary {
   let totalIncomeYER = 0;
   let totalExpenseYER = 0;
   let totalSAR = 0;
@@ -192,7 +180,17 @@ export function filterFinancialTransactions(
       const matchMov = txn.movement ? txn.movement.toLowerCase().includes(q) : false;
       const matchDay = txn.day ? txn.day.toLowerCase().includes(q) : false;
 
-      if (!matchId && !matchNumber && !matchAccountName && !matchRestAccount && !matchCat && !matchDesc && !matchRest && !matchMov && !matchDay) {
+      if (
+        !matchId &&
+        !matchNumber &&
+        !matchAccountName &&
+        !matchRestAccount &&
+        !matchCat &&
+        !matchDesc &&
+        !matchRest &&
+        !matchMov &&
+        !matchDay
+      ) {
         return false;
       }
     }

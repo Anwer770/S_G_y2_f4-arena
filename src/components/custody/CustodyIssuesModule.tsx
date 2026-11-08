@@ -1,9 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  CustodyIssueRecord,
-  CustodySection,
-  CustodyFilterState,
-} from '../../types/custodyIssues';
+import { CustodyIssueRecord, CustodySection, CustodyFilterState } from '../../types/custodyIssues';
 import {
   calculateCustodyKPIs,
   loadCustodyCategories,
@@ -184,9 +180,15 @@ export const CustodyIssuesModule: React.FC = () => {
   const handleSaveRecord = (recordData: Partial<CustodyIssueRecord>) => {
     if (recordData.id) {
       // Edit existing
-      const updated = records.map((r) => (r.id === recordData.id ? ({ ...r, ...recordData } as CustodyIssueRecord) : r));
+      const updated = records.map((r) =>
+        r.id === recordData.id ? ({ ...r, ...recordData } as CustodyIssueRecord) : r
+      );
       updateRecords(updated);
-      logCustodyAudit('تعديل', `تم تعديل السجل ${recordData.id}: ${recordData.name || ''} - ${recordData.desc || ''}`, recordData.id);
+      logCustodyAudit(
+        'تعديل',
+        `تم تعديل السجل ${recordData.id}: ${recordData.name || ''} - ${recordData.desc || ''}`,
+        recordData.id
+      );
     } else {
       // Add new
       const newId = `CI-${String(records.length + 1).padStart(2, '0')}`;
@@ -252,12 +254,18 @@ export const CustodyIssuesModule: React.FC = () => {
     const target = records.find((r) => r.id === recordToDelete);
     const updated = records.filter((r) => r.id !== recordToDelete);
     updateRecords(updated);
-    logCustodyAudit('حذف', `تم حذف السجل ${recordToDelete}: ${target?.name || ''} - ${target?.desc || ''}`, recordToDelete);
+    logCustodyAudit(
+      'حذف',
+      `تم حذف السجل ${recordToDelete}: ${target?.name || ''} - ${target?.desc || ''}`,
+      recordToDelete
+    );
     setRecordToDelete(null);
   };
 
   const handleChangeStatus = (id: string, newStatus: string) => {
-    const updated = records.map((r) => (r.id === id ? { ...r, status: newStatus, updatedAt: new Date().toISOString() } : r));
+    const updated = records.map((r) =>
+      r.id === id ? { ...r, status: newStatus, updatedAt: new Date().toISOString() } : r
+    );
     updateRecords(updated);
     logCustodyAudit('تغيير حالة', `تم تغيير حالة السجل ${id} إلى "${newStatus}"`, id);
   };
@@ -334,8 +342,8 @@ export const CustodyIssuesModule: React.FC = () => {
           filterState.section === 'custody'
             ? 'قسم العهد وحسابات'
             : filterState.section === 'issues'
-            ? 'قسم الاشكاليات المعلقة'
-            : 'كافة الأقسام'
+              ? 'قسم الاشكاليات المعلقة'
+              : 'كافة الأقسام'
         }
       />
     );
@@ -351,9 +359,7 @@ export const CustodyIssuesModule: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">
-                ادارة العهد والاشكاليات
-              </h1>
+              <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">ادارة العهد والاشكاليات</h1>
               <span className="bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300 font-black text-xs px-2.5 py-0.5 rounded-full border border-teal-200/50 dark:border-teal-800/50">
                 الحسابات المعلقة
               </span>
@@ -462,7 +468,9 @@ export const CustodyIssuesModule: React.FC = () => {
           <div>
             <select
               value={filterState.section}
-              onChange={(e) => setFilterState((prev) => ({ ...prev, section: e.target.value as CustodyFilterState['section'] }))}
+              onChange={(e) =>
+                setFilterState((prev) => ({ ...prev, section: e.target.value as CustodyFilterState['section'] }))
+              }
               className="w-full px-3 py-2 text-xs font-bold border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
             >
               <option value="all">جميع الأقسام ({records.length})</option>
@@ -575,8 +583,8 @@ export const CustodyIssuesModule: React.FC = () => {
           {/* Results Count & Clear Button */}
           <div className="flex items-center gap-3">
             <span className="text-slate-500 dark:text-slate-400 font-bold">
-              عرض <strong className="text-slate-900 dark:text-slate-100 font-mono">{filteredRecords.length}</strong> من أصل{' '}
-              <strong className="text-slate-900 dark:text-slate-100 font-mono">{records.length}</strong> سجل
+              عرض <strong className="text-slate-900 dark:text-slate-100 font-mono">{filteredRecords.length}</strong> من
+              أصل <strong className="text-slate-900 dark:text-slate-100 font-mono">{records.length}</strong> سجل
             </span>
 
             {hasActiveFilters && (
@@ -628,12 +636,7 @@ export const CustodyIssuesModule: React.FC = () => {
           <label className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
             <Upload className="w-3.5 h-3.5" />
             <span>استيراد JSON</span>
-            <input
-              type="file"
-              accept=".json"
-              onChange={handleImportJSON}
-              className="hidden"
-            />
+            <input type="file" accept=".json" onChange={handleImportJSON} className="hidden" />
           </label>
 
           {/* Restore Original 40 records */}
@@ -698,7 +701,8 @@ export const CustodyIssuesModule: React.FC = () => {
               <h3 className="text-base font-black text-slate-900 dark:text-slate-100">استعادة بيانات Excel الأصلية</h3>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-              سيتم استبدال السجلات الحالية بالبيانات الـ 40 الأساسية المنظفة المستوردة من ملف Excel الأصلي. هل تريد الاستمرار؟
+              سيتم استبدال السجلات الحالية بالبيانات الـ 40 الأساسية المنظفة المستوردة من ملف Excel الأصلي. هل تريد
+              الاستمرار؟
             </p>
             <div className="flex items-center justify-end gap-2 pt-2">
               <button

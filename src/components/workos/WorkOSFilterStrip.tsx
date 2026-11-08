@@ -135,7 +135,10 @@ export const WorkOSFilterStrip: React.FC<WorkOSFilterStripProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs overflow-hidden" dir="rtl">
+    <div
+      className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs overflow-hidden"
+      dir="rtl"
+    >
       {/* Header of Filter Bar */}
       <div className="px-4 py-2.5 flex items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/60">
         <div className="flex items-center gap-2">
@@ -149,9 +152,7 @@ export const WorkOSFilterStrip: React.FC<WorkOSFilterStripProps> = ({
             </span>
           )}
           {typeof totalResults === 'number' && (
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              ({totalResults} عنصر)
-            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">({totalResults} عنصر)</span>
           )}
         </div>
 
@@ -392,7 +393,9 @@ export const WorkOSFilterStrip: React.FC<WorkOSFilterStripProps> = ({
 
             {/* 5. Due Date From & To */}
             <div>
-              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">تاريخ الاستحقاق (من):</label>
+              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">
+                تاريخ الاستحقاق (من):
+              </label>
               <input
                 type="date"
                 value={dueDateFrom}
@@ -402,7 +405,9 @@ export const WorkOSFilterStrip: React.FC<WorkOSFilterStripProps> = ({
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">تاريخ الاستحقاق (إلى):</label>
+              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">
+                تاريخ الاستحقاق (إلى):
+              </label>
               <input
                 type="date"
                 value={dueDateTo}

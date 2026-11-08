@@ -110,7 +110,8 @@ export const WorkOSDailyPlannerView: React.FC<WorkOSDailyPlannerViewProps> = ({
         time: b.timeSlot.split('-')[0].trim(),
         title: b.title || b.plannedActivity,
         kind: 'روتين',
-        tone: b.status === 'completed' ? 'emerald' : b.status === 'postponed' || b.status === 'delayed' ? 'amber' : 'teal',
+        tone:
+          b.status === 'completed' ? 'emerald' : b.status === 'postponed' || b.status === 'delayed' ? 'amber' : 'teal',
       });
     });
 
@@ -367,7 +368,9 @@ export const WorkOSDailyPlannerView: React.FC<WorkOSDailyPlannerViewProps> = ({
                   <span className="font-mono text-xs font-bold text-slate-500 dark:text-slate-400 w-14 shrink-0">
                     {row.time}
                   </span>
-                  <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md shrink-0 ${toneBadge[row.tone] || toneBadge.sky}`}>
+                  <span
+                    className={`text-xs font-bold px-1.5 py-0.5 rounded-md shrink-0 ${toneBadge[row.tone] || toneBadge.sky}`}
+                  >
                     {row.kind}
                   </span>
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">{row.title}</span>
@@ -378,7 +381,8 @@ export const WorkOSDailyPlannerView: React.FC<WorkOSDailyPlannerViewProps> = ({
 
           <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
             <span>
-              إجمالي المهام المفتوحة: <strong className="font-mono text-slate-600 dark:text-slate-300">{totalOpen}</strong>
+              إجمالي المهام المفتوحة:{' '}
+              <strong className="font-mono text-slate-600 dark:text-slate-300">{totalOpen}</strong>
             </span>
             <button
               type="button"

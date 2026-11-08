@@ -51,16 +51,7 @@ export const DEFAULT_LINK_TYPES: string[] = [
   'تلجرام',
 ];
 
-export const DEFAULT_LINK_IMPORTANCES: string[] = [
-  'A',
-  'B',
-  'C',
-  'D',
-  'مفيد',
-  'غير مفيد',
-  'ملغي',
-  'غير نشط',
-];
+export const DEFAULT_LINK_IMPORTANCES: string[] = ['A', 'B', 'C', 'D', 'مفيد', 'غير مفيد', 'ملغي', 'غير نشط'];
 
 export const DEFAULT_LINKS_RECORDS: LinkRecord[] = [
   // 1. AI & LLM Models (Claude, Gemini, DeepSeek, ChatGPT, AI aggregators)

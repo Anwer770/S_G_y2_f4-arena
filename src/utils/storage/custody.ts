@@ -8,17 +8,9 @@ import {
   DEFAULT_CUSTODY_RESPONSIBLES,
   DEFAULT_CUSTODY_STATUSES,
 } from '../../data/defaultCustodyIssues';
-import {
-  dbStorage,
-} from '../../database/dbStorage';
-import {
-  AuditLog,
-  CustodyIssueRecord,
-  CustodyKPIs,
-} from '../../types';
-import {
-  STORAGE_KEYS,
-} from './keys';
+import { dbStorage } from '../../database/dbStorage';
+import { AuditLog, CustodyIssueRecord, CustodyKPIs } from '../../types';
+import { STORAGE_KEYS } from './keys';
 
 export function loadCustodyIssues(): CustodyIssueRecord[] {
   try {

@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
 import { WorkTask, WorkProject, AppointmentItem, DailyRoutineBlock } from '../../types/workos';
 import type { ParsedTaskResult } from '../../utils/workosStorage';
-import {
-  Sparkles,
-  X,
-  Send,
-  CheckCircle2,
-  AlertTriangle,
-  Calendar,
-  Clock,
-  ArrowRight,
-  Bot,
-} from 'lucide-react';
+import { Sparkles, X, Send, CheckCircle2, AlertTriangle, Calendar, Clock, ArrowRight, Bot } from 'lucide-react';
 import { parseNaturalLanguageTask } from '../../utils/workosStorage';
 
 interface WorkOSAICopilotModalProps {
@@ -181,12 +171,19 @@ export const WorkOSAICopilotModal: React.FC<WorkOSAICopilotModalProps> = ({
               </div>
 
               <div className="space-y-2">
-                <span className="font-bold text-slate-800 dark:text-slate-200 block text-xs">قائمة المهام التي تجاوزت تاريخ استحقاقها:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 block text-xs">
+                  قائمة المهام التي تجاوزت تاريخ استحقاقها:
+                </span>
                 {overdueTasks.map((t) => (
-                  <div key={t.id} className="p-3 rounded-lg bg-rose-50/50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 flex items-center justify-between">
+                  <div
+                    key={t.id}
+                    className="p-3 rounded-lg bg-rose-50/50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 flex items-center justify-between"
+                  >
                     <div>
                       <div className="font-bold text-rose-900">{t.title}</div>
-                      <div className="text-xs text-rose-600 dark:text-rose-400 font-mono">تاريخ الاستحقاق: {t.dueDate}</div>
+                      <div className="text-xs text-rose-600 dark:text-rose-400 font-mono">
+                        تاريخ الاستحقاق: {t.dueDate}
+                      </div>
                     </div>
                     <span className="px-2 py-1 rounded bg-rose-200 text-rose-800 dark:text-rose-200 text-xs font-bold">
                       متأخرة
@@ -206,7 +203,8 @@ export const WorkOSAICopilotModal: React.FC<WorkOSAICopilotModalProps> = ({
           {activeTab === 'chat' && (
             <div className="space-y-4">
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-xs">
-                اكتب أي أمر بلغة طبيعية مباشرة (مثال: "تجهيز طلبية صيدلية القدس غداً الساعة 10 صباحاً بأولوية عاجلة")، وسيقوم النظام الذكي باستخراج العنوان والتاريخ والوقت والتصنيف تلقائياً:
+                اكتب أي أمر بلغة طبيعية مباشرة (مثال: "تجهيز طلبية صيدلية القدس غداً الساعة 10 صباحاً بأولوية عاجلة")،
+                وسيقوم النظام الذكي باستخراج العنوان والتاريخ والوقت والتصنيف تلقائياً:
               </p>
 
               <form onSubmit={handleNaturalLanguageCreate} className="space-y-3">

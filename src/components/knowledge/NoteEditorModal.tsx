@@ -501,7 +501,9 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60">
           <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400`}>
+            <div
+              className={`p-2.5 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400`}
+            >
               <FileText className="w-5 h-5" />
             </div>
             <div>
@@ -557,7 +559,9 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               {aiAnalysisResult.suggestedSummary && (
                 <div className="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-purple-100 dark:border-purple-900">
                   <div className="font-semibold text-slate-700 dark:text-slate-200 mb-1">الملخص المقترح:</div>
-                  <p className="text-slate-600 dark:text-slate-400 mb-2 line-clamp-2">{aiAnalysisResult.suggestedSummary}</p>
+                  <p className="text-slate-600 dark:text-slate-400 mb-2 line-clamp-2">
+                    {aiAnalysisResult.suggestedSummary}
+                  </p>
                   <button
                     type="button"
                     onClick={applyAiSummary}
@@ -576,7 +580,9 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   </div>
                   <ul className="text-slate-600 dark:text-slate-400 mb-2 space-y-0.5">
                     {aiAnalysisResult.extractedTasks.slice(0, 2).map((t, idx) => (
-                      <li key={idx} className="truncate">• {t.text}</li>
+                      <li key={idx} className="truncate">
+                        • {t.text}
+                      </li>
                     ))}
                   </ul>
                   <button
@@ -779,11 +785,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() =>
-                    insertFormatting(
-                      '\n| البند | البيان | القيمة |\n|:---|:---|:---:|\n| 1 |  |  |\n'
-                    )
-                  }
+                  onClick={() => insertFormatting('\n| البند | البيان | القيمة |\n|:---|:---|:---:|\n| 1 |  |  |\n')}
                   title="إدراج جدول"
                   className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
                 >
@@ -848,7 +850,9 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
           <div className="space-y-1.5">
             <label className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
               <span>الملخص التنفيذي (Executive Summary)</span>
-              <span className="text-slate-400 dark:text-slate-500 text-xs">اختياري — يظهر في كروت العرض والبحث السريع</span>
+              <span className="text-slate-400 dark:text-slate-500 text-xs">
+                اختياري — يظهر في كروت العرض والبحث السريع
+              </span>
             </label>
             <input
               type="text"
@@ -886,7 +890,9 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                         onChange={() => handleToggleTask(task.id)}
                         className="w-4 h-4 rounded text-emerald-600 dark:text-emerald-400 focus:ring-emerald-500 cursor-pointer"
                       />
-                      <span className={`truncate ${task.completed ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200 font-medium'}`}>
+                      <span
+                        className={`truncate ${task.completed ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200 font-medium'}`}
+                      >
                         {task.text}
                       </span>
                     </div>
@@ -1029,11 +1035,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                     className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-xs font-medium rounded-full"
                   >
                     #{tag}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveTag(tag)}
-                      className="hover:text-rose-500"
-                    >
+                    <button type="button" onClick={() => handleRemoveTag(tag)} className="hover:text-rose-500">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -1155,9 +1157,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   >
                     <div className="flex items-center gap-2 truncate flex-1">
                       <Paperclip className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-                      <span className="truncate text-slate-700 dark:text-slate-300 font-medium">
-                        {att.name}
-                      </span>
+                      <span className="truncate text-slate-700 dark:text-slate-300 font-medium">{att.name}</span>
                     </div>
                     <button
                       type="button"

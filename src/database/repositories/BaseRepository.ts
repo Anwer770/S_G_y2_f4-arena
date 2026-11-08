@@ -16,11 +16,7 @@ export class BaseRepository<T extends Identifiable> {
   protected defaultData: T[];
   protected storage: IStorageEngine;
 
-  constructor(
-    storageKey: string,
-    defaultData: T[] = [],
-    storage: IStorageEngine = indexedDBStorage
-  ) {
+  constructor(storageKey: string, defaultData: T[] = [], storage: IStorageEngine = indexedDBStorage) {
     this.storageKey = storageKey;
     this.defaultData = defaultData;
     this.storage = storage;

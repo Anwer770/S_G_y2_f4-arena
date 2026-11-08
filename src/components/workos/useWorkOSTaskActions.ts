@@ -159,27 +159,21 @@ export const useWorkOSTaskActions = ({
   const handleUpdateTaskPriority = (taskId: string, priority: TaskPriority) => {
     setData((prev) => ({
       ...prev,
-      tasks: prev.tasks.map((t) =>
-        t.id === taskId ? { ...t, priority, updatedAt: new Date().toISOString() } : t
-      ),
+      tasks: prev.tasks.map((t) => (t.id === taskId ? { ...t, priority, updatedAt: new Date().toISOString() } : t)),
     }));
   };
 
   const handleUpdateTaskAssignee = (taskId: string, assigneeId: string) => {
     setData((prev) => ({
       ...prev,
-      tasks: prev.tasks.map((t) =>
-        t.id === taskId ? { ...t, assigneeId, updatedAt: new Date().toISOString() } : t
-      ),
+      tasks: prev.tasks.map((t) => (t.id === taskId ? { ...t, assigneeId, updatedAt: new Date().toISOString() } : t)),
     }));
   };
 
   const handleUpdateTaskDueDate = (taskId: string, dueDate: string) => {
     setData((prev) => ({
       ...prev,
-      tasks: prev.tasks.map((t) =>
-        t.id === taskId ? { ...t, dueDate, updatedAt: new Date().toISOString() } : t
-      ),
+      tasks: prev.tasks.map((t) => (t.id === taskId ? { ...t, dueDate, updatedAt: new Date().toISOString() } : t)),
     }));
   };
 
@@ -214,9 +208,7 @@ export const useWorkOSTaskActions = ({
       category: task.category || 'عام',
     };
 
-    const updatedTasks = data.tasks.map((t) =>
-      t.id === task.id ? { ...t, projectId: newProject.id } : t
-    );
+    const updatedTasks = data.tasks.map((t) => (t.id === task.id ? { ...t, projectId: newProject.id } : t));
 
     const generatedSubtasks: WorkTask[] = (task.subtasks || []).map((st, idx) => ({
       id: `task_${Date.now()}_${idx}`,

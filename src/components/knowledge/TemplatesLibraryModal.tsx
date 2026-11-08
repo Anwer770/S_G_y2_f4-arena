@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
 import { NoteFolder, NoteRecord, NoteTemplate, NoteType } from '../../types';
-import {
-  X,
-  Plus,
-  FileText,
-  Sparkles,
-  Check,
-  Tag,
-  Folder,
-  Trash2,
-  Edit2,
-  Copy,
-} from 'lucide-react';
+import { X, Plus, FileText, Sparkles, Check, Tag, Folder, Trash2, Edit2, Copy } from 'lucide-react';
 
 interface TemplatesLibraryModalProps {
   isOpen: boolean;
@@ -127,10 +116,11 @@ export const TemplatesLibraryModal: React.FC<TemplatesLibraryModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {showAddForm ? (
             /* Add Template Form */
-            <form onSubmit={handleCreateTemplate} className="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                تصميم قالب ملاحظة جديد
-              </h3>
+            <form
+              onSubmit={handleCreateTemplate}
+              className="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700"
+            >
+              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">تصميم قالب ملاحظة جديد</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2 space-y-1">
@@ -148,9 +138,7 @@ export const TemplatesLibraryModal: React.FC<TemplatesLibraryModalProps> = ({
                 </div>
 
                 <div className="space-y-1">
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    الأيقونة
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">الأيقونة</label>
                   <input
                     type="text"
                     value={newIcon}
@@ -163,9 +151,7 @@ export const TemplatesLibraryModal: React.FC<TemplatesLibraryModalProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    التصنيف
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">التصنيف</label>
                   <input
                     type="text"
                     value={newCategory}
@@ -196,9 +182,7 @@ export const TemplatesLibraryModal: React.FC<TemplatesLibraryModalProps> = ({
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  الوصف الموجز
-                </label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">الوصف الموجز</label>
                 <input
                   type="text"
                   value={newDesc}

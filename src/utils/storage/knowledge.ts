@@ -7,19 +7,9 @@ import {
   DEFAULT_NOTE_TAGS,
   DEFAULT_NOTE_TEMPLATES,
 } from '../../data/defaultNotes';
-import {
-  dbStorage,
-} from '../../database/dbStorage';
-import {
-  NoteAuditLog,
-  NoteFolder,
-  NoteRecord,
-  NoteTagItem,
-  NoteTemplate,
-} from '../../types';
-import {
-  STORAGE_KEYS,
-} from './keys';
+import { dbStorage } from '../../database/dbStorage';
+import { NoteAuditLog, NoteFolder, NoteRecord, NoteTagItem, NoteTemplate } from '../../types';
+import { STORAGE_KEYS } from './keys';
 
 export function loadNotes(): NoteRecord[] {
   try {

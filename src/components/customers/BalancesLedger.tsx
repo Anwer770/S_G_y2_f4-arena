@@ -24,11 +24,7 @@ interface Props {
   onOpenStatement: (customer: Customer) => void;
 }
 
-export const BalancesLedger: React.FC<Props> = ({
-  customers,
-  onViewDetails,
-  onOpenStatement,
-}) => {
+export const BalancesLedger: React.FC<Props> = ({ customers, onViewDetails, onOpenStatement }) => {
   const [activeTab, setActiveTab] = useState<'debtors' | 'all' | 'internal' | 'sources'>('debtors');
   const [search, setSearch] = useState('');
   const [selectedSource, setSelectedSource] = useState<string>('الكل');
@@ -37,9 +33,7 @@ export const BalancesLedger: React.FC<Props> = ({
 
   // Negative debtors (مديونيات بالسالب)
   const debtorCustomers = useMemo(() => {
-    return customers
-      .filter((c) => c.balanceYER < 0)
-      .sort((a, b) => a.balanceYER - b.balanceYER);
+    return customers.filter((c) => c.balanceYER < 0).sort((a, b) => a.balanceYER - b.balanceYER);
   }, [customers]);
 
   // Internal accounts (حسابات داخلية، عهد، بضاعة تالفة)
@@ -123,10 +117,11 @@ export const BalancesLedger: React.FC<Props> = ({
             </span>
           </div>
           <div className="text-xl font-black font-mono text-purple-800">
-            {(internalAccounts.reduce((sum, c) => sum + (c.balanceYER || 0), 0) || 0).toLocaleString('ar-YE')}{' '}
-            ريال
+            {(internalAccounts.reduce((sum, c) => sum + (c.balanceYER || 0), 0) || 0).toLocaleString('ar-YE')} ريال
           </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">تشمل بضاعة تالفة، عهد مندوبين، وتوالف</p>
+          <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
+            تشمل بضاعة تالفة، عهد مندوبين، وتوالف
+          </p>
         </div>
       </div>
 
@@ -138,9 +133,7 @@ export const BalancesLedger: React.FC<Props> = ({
             <button
               onClick={() => setActiveTab('debtors')}
               className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'debtors'
-                  ? 'bg-rose-500 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                activeTab === 'debtors' ? 'bg-rose-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <AlertTriangle className="w-3.5 h-3.5" />
@@ -150,9 +143,7 @@ export const BalancesLedger: React.FC<Props> = ({
             <button
               onClick={() => setActiveTab('all')}
               className={`px-4 py-2 rounded-xl transition-all cursor-pointer ${
-                activeTab === 'all'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                activeTab === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               كافة الأرصدة ({customers.length})
@@ -161,9 +152,7 @@ export const BalancesLedger: React.FC<Props> = ({
             <button
               onClick={() => setActiveTab('internal')}
               className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'internal'
-                  ? 'bg-purple-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                activeTab === 'internal' ? 'bg-purple-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -173,9 +162,7 @@ export const BalancesLedger: React.FC<Props> = ({
             <button
               onClick={() => setActiveTab('sources')}
               className={`px-4 py-2 rounded-xl transition-all cursor-pointer ${
-                activeTab === 'sources'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                activeTab === 'sources' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               توزيع المصادر
@@ -295,7 +282,9 @@ export const BalancesLedger: React.FC<Props> = ({
                       <td className="p-3 font-mono font-bold text-slate-800 dark:text-slate-200">{c.id}</td>
                       <td className="p-3">
                         <div className="font-bold text-slate-900 dark:text-slate-100">{c.name}</div>
-                        {c.notes && <p className="text-xs text-slate-400 dark:text-slate-500 line-clamp-1">{c.notes}</p>}
+                        {c.notes && (
+                          <p className="text-xs text-slate-400 dark:text-slate-500 line-clamp-1">{c.notes}</p>
+                        )}
                       </td>
                       <td className="p-3">
                         <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800">

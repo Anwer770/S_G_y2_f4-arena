@@ -1,10 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  DoctorAuditLog,
-  DoctorRecord,
-  DoctorVisitLog,
-  DoctorVisitStatus,
-} from '../../types';
+import { DoctorAuditLog, DoctorRecord, DoctorVisitLog, DoctorVisitStatus } from '../../types';
 import { DoctorDirectory } from './DoctorDirectory';
 import { DoctorVisitsPlanner } from './DoctorVisitsPlanner';
 import { DoctorReports } from './DoctorReports';
@@ -48,9 +43,7 @@ export const DoctorsModule: React.FC<Props> = ({
   onUpdateVisits,
   onAddAuditLog,
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<
-    'directory' | 'planner' | 'reports' | 'audit'
-  >('directory');
+  const [activeSubTab, setActiveSubTab] = useState<'directory' | 'planner' | 'reports' | 'audit'>('directory');
 
   // Modals state
   const [isDoctorModalOpen, setIsDoctorModalOpen] = useState(false);
@@ -101,11 +94,7 @@ export const DoctorsModule: React.FC<Props> = ({
       logDoctorAudit('تعديل', saved.name, `تم تعديل بيانات الطبيب ${saved.name} (${saved.id})`);
     } else {
       updated = [saved, ...doctors];
-      logDoctorAudit(
-        'إضافة',
-        saved.name,
-        `تم إضافة طبيب جديد ${saved.name} (${saved.id}) للتخصص ${saved.specialty}`
-      );
+      logDoctorAudit('إضافة', saved.name, `تم إضافة طبيب جديد ${saved.name} (${saved.id}) للتخصص ${saved.specialty}`);
     }
     onUpdateDoctors(updated);
   };
@@ -182,11 +171,7 @@ export const DoctorsModule: React.FC<Props> = ({
       doctors.forEach((d) => map.set(d.id, d));
       importedDoctors.forEach((d) => map.set(d.id, d));
       finalDoctors = Array.from(map.values());
-      logDoctorAudit(
-        'استيراد',
-        'دفتر الأطباء',
-        `تم دمج واستيراد ${importedDoctors.length} سجل طبيب جديد في المنظومة`
-      );
+      logDoctorAudit('استيراد', 'دفتر الأطباء', `تم دمج واستيراد ${importedDoctors.length} سجل طبيب جديد في المنظومة`);
     }
     onUpdateDoctors(finalDoctors);
   };
@@ -202,9 +187,7 @@ export const DoctorsModule: React.FC<Props> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">
-                  ادارة الاطباء وزيارات
-                </h1>
+                <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">ادارة الاطباء وزيارات</h1>
                 <span className="bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300 font-black text-xs px-2.5 py-0.5 rounded-full border border-teal-200/50 dark:border-teal-800/50">
                   العيادات والمراكز
                 </span>
@@ -219,7 +202,9 @@ export const DoctorsModule: React.FC<Props> = ({
           <div className="flex items-center gap-2.5 flex-wrap">
             <div className="bg-slate-50 dark:bg-slate-800/60 px-3.5 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700 text-center">
               <span className="text-xs text-slate-500 dark:text-slate-400 block font-bold">إجمالي الأطباء</span>
-              <span className="text-base font-black font-mono text-slate-900 dark:text-slate-100">{stats.totalDoctors}</span>
+              <span className="text-base font-black font-mono text-slate-900 dark:text-slate-100">
+                {stats.totalDoctors}
+              </span>
             </div>
 
             <div className="bg-slate-50 dark:bg-slate-800/60 px-3.5 py-2 rounded-xl border border-slate-200/80 dark:border-slate-700 text-center">
@@ -272,7 +257,9 @@ export const DoctorsModule: React.FC<Props> = ({
             <span>دليل الأطباء والمراكز</span>
             <span
               className={`px-2 py-0.5 rounded-full text-xs font-mono ${
-                activeSubTab === 'directory' ? 'bg-teal-700 dark:bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                activeSubTab === 'directory'
+                  ? 'bg-teal-700 dark:bg-teal-600 text-white'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
               }`}
             >
               {doctors.length}
@@ -316,7 +303,9 @@ export const DoctorsModule: React.FC<Props> = ({
             {auditLogs.length > 0 && (
               <span
                 className={`px-2 py-0.5 rounded-full text-xs font-mono ${
-                  activeSubTab === 'audit' ? 'bg-teal-700 dark:bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  activeSubTab === 'audit'
+                    ? 'bg-teal-700 dark:bg-teal-600 text-white'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                 }`}
               >
                 {auditLogs.length}
@@ -410,12 +399,12 @@ export const DoctorsModule: React.FC<Props> = ({
                           log.action === 'إضافة'
                             ? 'bg-emerald-100 text-emerald-800'
                             : log.action === 'تعديل'
-                            ? 'bg-blue-100 text-blue-800'
-                            : log.action === 'حذف'
-                            ? 'bg-rose-100 text-rose-800'
-                            : log.action === 'استيراد'
-                            ? 'bg-purple-100 text-purple-800'
-                            : 'bg-teal-100 text-teal-800'
+                              ? 'bg-blue-100 text-blue-800'
+                              : log.action === 'حذف'
+                                ? 'bg-rose-100 text-rose-800'
+                                : log.action === 'استيراد'
+                                  ? 'bg-purple-100 text-purple-800'
+                                  : 'bg-teal-100 text-teal-800'
                         }`}
                       >
                         {log.action}

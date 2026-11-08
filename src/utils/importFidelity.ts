@@ -106,8 +106,7 @@ export const cellNumber = (
  * مفتاح داخلي مولّد — بوسم `AUTO-` ظاهر حتى لا يُظنّ أنه معرّف قادم من الملف.
  * مثال: `autoKey('CUST', 12) === 'AUTO-CUST-0012'`
  */
-export const autoKey = (prefix: string, line: number): string =>
-  `AUTO-${prefix}-${String(line).padStart(4, '0')}`;
+export const autoKey = (prefix: string, line: number): string => `AUTO-${prefix}-${String(line).padStart(4, '0')}`;
 
 /** هل المفتاح مولّد من التطبيق (لا من الملف)؟ */
 export const isAutoKey = (value: string): boolean => /^AUTO-/.test(value);

@@ -1,11 +1,5 @@
 import * as XLSX from 'xlsx';
-import {
-  ImportReport,
-  cellText,
-  cellNumber,
-  autoKey,
-  IMPORT_FIDELITY_BANNER,
-} from './importFidelity';
+import { ImportReport, cellText, cellNumber, autoKey, IMPORT_FIDELITY_BANNER } from './importFidelity';
 import { assertFileSize, readFirstSheetSafe, readFirstSheetAoaSafe } from './xlsxSafe';
 import {
   AppSettings,
@@ -68,10 +62,7 @@ export function exportRecordsToExcel(
   productsList: Product[] = [],
   filename: string = 'دفتر_صرف_وتوريد_الأصناف.xlsx'
 ) {
-  const productNames =
-    productsList.length > 0
-      ? productsList.map((p) => p.name)
-      : DEFAULT_62_PRODUCT_NAMES;
+  const productNames = productsList.length > 0 ? productsList.map((p) => p.name) : DEFAULT_62_PRODUCT_NAMES;
 
   const headers = [...BASE_EXCEL_HEADERS, ...productNames];
 
@@ -127,10 +118,7 @@ export function exportRecordsToCSV(
   productsList: Product[] = [],
   filename: string = 'سجل_حركات_المخزون.csv'
 ) {
-  const productNames =
-    productsList.length > 0
-      ? productsList.map((p) => p.name)
-      : DEFAULT_62_PRODUCT_NAMES;
+  const productNames = productsList.length > 0 ? productsList.map((p) => p.name) : DEFAULT_62_PRODUCT_NAMES;
 
   const headers = [...BASE_EXCEL_HEADERS, ...productNames];
   const lines: string[] = [];
@@ -183,18 +171,18 @@ export function exportFinancialToExcel(
   ];
 
   const dataRows = transactions.map((t) => ({
-    'ID': t.id,
-    'اليوم': t.day || '',
-    'التاريخ': t.date || '',
+    ID: t.id,
+    اليوم: t.day || '',
+    التاريخ: t.date || '',
     'درجة الأهمية': t.importance || '',
-    'الحركة': t.movement || '',
-    'القيد': t.restriction || '',
+    الحركة: t.movement || '',
+    القيد: t.restriction || '',
     'طريقة الدفع': t.movementType || '',
     'فئة الحساب': t.categoryAccount || '',
     'حساب التقييد': t.restrictionAccount || '',
     'اسم الحساب': t.accountName || '',
-    'الوصف': t.description || '',
-    'الرقم': t.number || '',
+    الوصف: t.description || '',
+    الرقم: t.number || '',
     'المبلغ (ريال يمني)': t.amountYER || 0,
     'المبلغ (ريال سعودي)': t.amountSAR || 0,
     'المبلغ (دولار)': t.amountUSD || 0,
@@ -263,13 +251,13 @@ export function exportTasksToExcel(
     'تاريخ البداية': t.start,
     'تاريخ الانتهاء': t.end || '',
     'عنوان المهمة': t.title,
-    'الوصف': t.desc || '',
-    'الفئة': t.cat,
-    'العملية': t.op,
-    'الأولوية': t.pri,
-    'الحالة': t.status,
-    'المسؤول': t.resp,
-    'المبلغ': t.amount !== undefined ? t.amount : '',
+    الوصف: t.desc || '',
+    الفئة: t.cat,
+    العملية: t.op,
+    الأولوية: t.pri,
+    الحالة: t.status,
+    المسؤول: t.resp,
+    المبلغ: t.amount !== undefined ? t.amount : '',
   }));
 
   const taskSheet = XLSX.utils.json_to_sheet(taskRows, { header: taskHeaders });
@@ -302,12 +290,12 @@ export function exportTasksToExcel(
     ];
 
     const commitmentRows = commitments.map((c) => ({
-      'المعرف': c.id,
+      المعرف: c.id,
       'الالتزام / الجهة': c.name,
-      'المبلغ': c.amount,
-      'الأهمية': c.pri,
+      المبلغ: c.amount,
+      الأهمية: c.pri,
       'تاريخ الاستحقاق': c.due || '',
-      'الحالة': c.status,
+      الحالة: c.status,
       'الوصف / ملاحظات': c.desc || '',
     }));
 
@@ -327,21 +315,15 @@ export function exportTasksToExcel(
   // Sheet 3: سجل التعديلات (Audit Log)
   const auditHeaders = ['الوقت', 'العملية', 'القسم', 'العنصر', 'التفاصيل'];
   const auditRows = auditLogs.map((l) => ({
-    'الوقت': l.time,
-    'العملية': l.action,
-    'القسم': l.entity,
-    'العنصر': l.title,
-    'التفاصيل': l.details,
+    الوقت: l.time,
+    العملية: l.action,
+    القسم: l.entity,
+    العنصر: l.title,
+    التفاصيل: l.details,
   }));
 
   const auditSheet = XLSX.utils.json_to_sheet(auditRows, { header: auditHeaders });
-  auditSheet['!cols'] = [
-    { wch: 22 },
-    { wch: 14 },
-    { wch: 14 },
-    { wch: 25 },
-    { wch: 40 },
-  ];
+  auditSheet['!cols'] = [{ wch: 22 }, { wch: 14 }, { wch: 14 }, { wch: 25 }, { wch: 40 }];
   XLSX.utils.book_append_sheet(workbook, auditSheet, 'سجل التعديلات');
 
   const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
@@ -458,9 +440,7 @@ export async function parseExcelForImport(
     else if (h.includes('category') || h.includes('فئة')) categoryIdx = idx;
     else if (h.includes('note') || h.includes('ملاحظ')) noteIdx = idx;
     else {
-      const matchedName = knownProducts.find(
-        (p) => p.name.trim() === header.trim()
-      )?.name || header.trim();
+      const matchedName = knownProducts.find((p) => p.name.trim() === header.trim())?.name || header.trim();
 
       if (matchedName && matchedName.length > 1) {
         productColMap.push({ colIndex: idx, productName: matchedName });
@@ -597,7 +577,7 @@ export function exportCustomersToExcel(
   filename: string = 'سجل_العملاء_والزيارات_القيصر_الذهبي.xlsx'
 ) {
   const customerRows = customers.map((c, index) => ({
-    'م': index + 1,
+    م: index + 1,
     'المعرف الرئيسي (Main_ID)': c.id || `CUST-${1001 + index}`,
     'المعرف الفرعي (Sub_ID)': c.subId || '',
     'اسم العميل / المنشأة': c.name || '',
@@ -618,18 +598,18 @@ export function exportCustomersToExcel(
     'حساب داخلي / خاص': c.isInternalAccount ? 'نعم' : 'لا',
     'آخر زيارة': c.lastVisitDate || '',
     'نتيجة الزيارة': c.visitResult || '',
-    'ملاحظات': c.notes || '',
+    ملاحظات: c.notes || '',
   }));
 
   const visitsRows = visits.map((v, index) => ({
-    'م': index + 1,
+    م: index + 1,
     'رقم الزيارة': v.id,
     'رقم العميل': v.customerId,
     'اسم العميل': v.customerName,
-    'التاريخ': v.date,
-    'اليوم': v.dayOfWeek,
-    'المندوب': v.responsible,
-    'الحالة': v.status,
+    التاريخ: v.date,
+    اليوم: v.dayOfWeek,
+    المندوب: v.responsible,
+    الحالة: v.status,
     'المبلغ المحصل (ريال)': v.amountCollectedYER || 0,
     'المبلغ المحصل (سعودي)': v.amountCollectedSAR || 0,
     'المبلغ المحصل (دولار)': v.amountCollectedUSD || 0,
@@ -653,9 +633,7 @@ export function exportCustomersToExcel(
   triggerDownload(blob, filename);
 }
 
-export async function parseCustomersExcelFile(
-  file: File
-): Promise<{
+export async function parseCustomersExcelFile(file: File): Promise<{
   totalRows: number;
   validRows: number;
   customers: Customer[];
@@ -671,14 +649,7 @@ export async function parseCustomersExcelFile(
 
   rawRows.forEach((row, idx) => {
     const line = idx + 2; // رقم السطر الحقيقي في Excel (1 = الترويسة)
-    const name = cellText(row, [
-      'اسم العميل / المنشأة',
-      'Name',
-      'اسم العميل',
-      'العميل',
-      'اسم المنشأة',
-      'name',
-    ]);
+    const name = cellText(row, ['اسم العميل / المنشأة', 'Name', 'اسم العميل', 'العميل', 'اسم المنشأة', 'name']);
 
     if (name === '') {
       warnings.push(`السطر ${line}: تم تخطيه لعدم وجود اسم العميل`);
@@ -782,10 +753,10 @@ export function downloadFinancialExcelTemplate() {
   const templateData = [
     {
       'رقم القيد (ID)': 'ACC-1001',
-      'اليوم': 'السبت',
-      'التاريخ': new Date().toISOString().split('T')[0],
+      اليوم: 'السبت',
+      التاريخ: new Date().toISOString().split('T')[0],
       'درجة الأهمية': 'A',
-      'الحركة': 'ايرادات',
+      الحركة: 'ايرادات',
       'نوع القيد': 'سند قبض',
       'طريقة الدفع': 'نقدا',
       'فئة الحساب': 'تحصيل',
@@ -799,10 +770,10 @@ export function downloadFinancialExcelTemplate() {
     },
     {
       'رقم القيد (ID)': 'ACC-1002',
-      'اليوم': 'الأحد',
-      'التاريخ': new Date().toISOString().split('T')[0],
+      اليوم: 'الأحد',
+      التاريخ: new Date().toISOString().split('T')[0],
       'درجة الأهمية': 'B',
-      'الحركة': 'منصرف',
+      الحركة: 'منصرف',
       'نوع القيد': 'سند صرف',
       'طريقة الدفع': 'كريمي',
       'فئة الحساب': 'مصاريف تشغيلية',
@@ -867,7 +838,7 @@ export function downloadCustomersExcelTemplate() {
       'الرصيد بالدولار': 0,
       'رقم الهاتف': '777000111',
       'العنوان / الموقع': 'شارع علي عبدالمغني - جوار البريد',
-      'ملاحظات': 'عميل نشط ومنتظم',
+      ملاحظات: 'عميل نشط ومنتظم',
     },
   ];
 
@@ -886,20 +857,18 @@ export function downloadCustomersExcelTemplate() {
  */
 export function downloadStockRecordsExcelTemplate(productsList: Product[] = []) {
   const productNames =
-    productsList.length > 0
-      ? productsList.slice(0, 15).map((p) => p.name)
-      : DEFAULT_62_PRODUCT_NAMES.slice(0, 15);
+    productsList.length > 0 ? productsList.slice(0, 15).map((p) => p.name) : DEFAULT_62_PRODUCT_NAMES.slice(0, 15);
 
   const row1: Record<string, string | number> = {
-    'Main_ID': 'Categ-1001',
-    'Sub_ID': 'IN-1001',
-    'date': new Date().toISOString().split('T')[0],
+    Main_ID: 'Categ-1001',
+    Sub_ID: 'IN-1001',
+    date: new Date().toISOString().split('T')[0],
     'Beneficiary Name': 'مؤسسة الدواء والمستلزمات',
-    'Description': 'توريد دفعة مخزنية جديدة من المصنع',
-    'Movement': 'توريد',
-    'Cases': 'تم التنفيذ',
-    'Category': 'مستودع صنعاء',
-    'note': 'تم الفحص والمطابقة',
+    Description: 'توريد دفعة مخزنية جديدة من المصنع',
+    Movement: 'توريد',
+    Cases: 'تم التنفيذ',
+    Category: 'مستودع صنعاء',
+    note: 'تم الفحص والمطابقة',
   };
 
   productNames.forEach((pName, idx) => {
@@ -907,19 +876,19 @@ export function downloadStockRecordsExcelTemplate(productsList: Product[] = []) 
   });
 
   const row2: Record<string, string | number> = {
-    'Main_ID': 'Categ-1002',
-    'Sub_ID': 'OUT-1001',
-    'date': new Date().toISOString().split('T')[0],
+    Main_ID: 'Categ-1002',
+    Sub_ID: 'OUT-1001',
+    date: new Date().toISOString().split('T')[0],
     'Beneficiary Name': 'صيدلية الشفاء',
-    'Description': 'صرف فاتورة مبيعات رقم 402',
-    'Movement': 'صرف',
-    'Cases': 'تم التنفيذ',
-    'Category': 'مبيعات',
-    'note': 'تسليم مندوب التوزيع',
+    Description: 'صرف فاتورة مبيعات رقم 402',
+    Movement: 'صرف',
+    Cases: 'تم التنفيذ',
+    Category: 'مبيعات',
+    note: 'تسليم مندوب التوزيع',
   };
 
   productNames.forEach((pName, idx) => {
-    row2[pName] = (idx % 2 === 0) ? (idx + 2) : 0;
+    row2[pName] = idx % 2 === 0 ? idx + 2 : 0;
   });
 
   const worksheet = XLSX.utils.json_to_sheet([row1, row2]);
@@ -1108,7 +1077,10 @@ export async function parseFinancialExcelOrCSV(
         resolve({
           success: false,
           transactions: [],
-          errors: ['حدث خطأ أثناء قراءة ملف الإكسل: ' + ((err instanceof Error ? err.message : String(err)) || 'تنسيق الملف غير صالح')],
+          errors: [
+            'حدث خطأ أثناء قراءة ملف الإكسل: ' +
+              ((err instanceof Error ? err.message : String(err)) || 'تنسيق الملف غير صالح'),
+          ],
           totalRows: 0,
           validRows: 0,
           duplicateCount: 0,
@@ -1132,5 +1104,3 @@ export async function parseFinancialExcelOrCSV(
     reader.readAsArrayBuffer(file);
   });
 }
-
-

@@ -13,9 +13,7 @@ export function generateJournalEntryFromMovement(
   products: Item[] = []
 ): FinancialTransaction {
   // Check if an entry already exists for this movement
-  const existing = existingTxns.find(
-    (t) => t.number === movement.subId || t.attachmentUrl === movement.subId
-  );
+  const existing = existingTxns.find((t) => t.number === movement.subId || t.attachmentUrl === movement.subId);
 
   const day = calculateArabicDay(movement.date);
 

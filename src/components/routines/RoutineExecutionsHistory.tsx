@@ -52,7 +52,10 @@ export const RoutineExecutionsHistory: React.FC<RoutineExecutionsHistoryProps> =
       {/* Search & Filter Bar */}
       <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="relative flex-1 w-full">
-          <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+          <Search
+            size={16}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
+          />
           <input
             type="text"
             value={searchTerm}
@@ -80,9 +83,7 @@ export const RoutineExecutionsHistory: React.FC<RoutineExecutionsHistoryProps> =
       {sortedExecutions.length === 0 ? (
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-12 text-center space-y-2">
           <FileText size={32} className="mx-auto text-slate-300 dark:text-slate-600" />
-          <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200">
-            لا توجد سجلات تنفيذ مطابقة
-          </h3>
+          <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200">لا توجد سجلات تنفيذ مطابقة</h3>
           <p className="text-xs text-slate-400 dark:text-slate-500">
             سوف تظهر هنا جلسات المؤقت والتوثيق فور إتمام جلسات الروتين اليومية.
           </p>
@@ -104,9 +105,7 @@ export const RoutineExecutionsHistory: React.FC<RoutineExecutionsHistoryProps> =
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-slate-800 dark:text-white">
-                          {ex.routineName}
-                        </h4>
+                        <h4 className="text-sm font-bold text-slate-800 dark:text-white">{ex.routineName}</h4>
                         <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
                           {ex.completionRate}% إنجاز
                         </span>
@@ -194,9 +193,7 @@ export const RoutineExecutionsHistory: React.FC<RoutineExecutionsHistoryProps> =
 
                       <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800">
                         <span className="text-slate-400 dark:text-slate-500 block">مرات الإيقاف المؤقت:</span>
-                        <span className="font-bold text-slate-800 dark:text-slate-200">
-                          {ex.pauseCount || 0}
-                        </span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{ex.pauseCount || 0}</span>
                       </div>
                     </div>
                   </div>

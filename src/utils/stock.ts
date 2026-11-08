@@ -52,11 +52,7 @@ export function normalizeDate(dateInput: string, defaultYear: number = 2024): st
 }
 
 // Compute live stock calculation for all products
-export function calculateStock(
-  products: Product[],
-  records: MovementRecord[],
-  settings: AppSettings
-): ProductStock[] {
+export function calculateStock(products: Product[], records: MovementRecord[], settings: AppSettings): ProductStock[] {
   const stockMap: Record<
     string,
     {
@@ -142,7 +138,7 @@ export function getNextSubId(
   seq: { IN: number; OUT: number }
 ): { subId: string; nextSeq: { IN: number; OUT: number } } {
   const prefix = movementType === 'توريد' ? 'IN' : 'OUT';
-  
+
   // Find highest existing numerical sequence for that prefix
   let maxSeq = movementType === 'توريد' ? seq.IN : seq.OUT;
   const regex = new RegExp(`^${prefix}-(\\d+)$`, 'i');
@@ -175,9 +171,7 @@ export function cascadeRenameProduct(
   products: Product[],
   records: MovementRecord[]
 ): { updatedProducts: Product[]; updatedRecords: MovementRecord[] } {
-  const updatedProducts = products.map((p) =>
-    p.name === oldName ? { ...p, name: newName } : p
-  );
+  const updatedProducts = products.map((p) => (p.name === oldName ? { ...p, name: newName } : p));
 
   const updatedRecords = records.map((record) => {
     if (!record.items || !(oldName in record.items)) {
@@ -209,15 +203,10 @@ export function cascadeRenameProduct(
  * ضروري لأن `MovementRecord.items` قاموس بالاسم لا بالمعرّف، فحذف الصنف
  * يترك أذوناً «يتيمة» يعيد محرك الأرصدة إنشاء رصيد افتراضي لها.
  */
-export function getMovementsForProduct(
-  records: MovementRecord[],
-  productName: string
-): MovementRecord[] {
+export function getMovementsForProduct(records: MovementRecord[], productName: string): MovementRecord[] {
   const name = (productName || '').trim();
   if (!name) return [];
-  return records.filter(
-    (r) => r && r.items && Object.prototype.hasOwnProperty.call(r.items, name)
-  );
+  return records.filter((r) => r && r.items && Object.prototype.hasOwnProperty.call(r.items, name));
 }
 
 /**

@@ -115,9 +115,7 @@ export const parseDebtsExcelFile = async (
 // =========================================================================
 // 3. Stock Movements Importer
 // =========================================================================
-export const parseStockExcelFile = async (
-  file: File
-): Promise<{ movements: MovementRecord[]; count: number }> => {
+export const parseStockExcelFile = async (file: File): Promise<{ movements: MovementRecord[]; count: number }> => {
   const rows = await readFileToRows(file);
   const movements: MovementRecord[] = [];
   const nowStr = new Date().toISOString();
@@ -161,9 +159,7 @@ export const parseStockExcelFile = async (
 // =========================================================================
 // 4. Daily Tasks Importer
 // =========================================================================
-export const parseDailyTasksExcelFile = async (
-  file: File
-): Promise<{ tasks: Task[]; count: number }> => {
+export const parseDailyTasksExcelFile = async (file: File): Promise<{ tasks: Task[]; count: number }> => {
   const rows = await readFileToRows(file);
   const tasks: Task[] = [];
   const nowStr = new Date().toISOString();
@@ -207,15 +203,15 @@ export const parseDailyTasksExcelFile = async (
 // =========================================================================
 // 5. Customers Importer
 // =========================================================================
-export const parseCustomersExcelFile = async (
-  file: File
-): Promise<{ customers: Customer[]; count: number }> => {
+export const parseCustomersExcelFile = async (file: File): Promise<{ customers: Customer[]; count: number }> => {
   const rows = await readFileToRows(file);
   const customers: Customer[] = [];
   const nowStr = new Date().toISOString();
 
   rows.forEach((row, idx) => {
-    const code = String(row['كود العميل'] || row['الكود'] || `ذهبي-${Date.now().toString().slice(-4)}-${idx + 1}`).trim();
+    const code = String(
+      row['كود العميل'] || row['الكود'] || `ذهبي-${Date.now().toString().slice(-4)}-${idx + 1}`
+    ).trim();
     const name = String(row['اسم العميل / الصيدلية'] || row['اسم العميل'] || row['الاسم'] || row['Name'] || '').trim();
     const region = String(row['المحافظة'] || row['المنطقة'] || '').trim();
     const route = String(row['المسار / اليوم'] || row['المسار'] || '').trim();
@@ -252,9 +248,7 @@ export const parseCustomersExcelFile = async (
 // =========================================================================
 // 7. Routines Importer
 // =========================================================================
-export const parseRoutinesExcelFile = async (
-  file: File
-): Promise<{ routines: RoutineRecord[]; count: number }> => {
+export const parseRoutinesExcelFile = async (file: File): Promise<{ routines: RoutineRecord[]; count: number }> => {
   const rows = await readFileToRows(file);
   const routines: RoutineRecord[] = [];
   const nowStr = new Date().toISOString();
@@ -309,9 +303,7 @@ export const parseRoutinesExcelFile = async (
 // =========================================================================
 // 8. Notes / Knowledge Importer
 // =========================================================================
-export const parseNotesExcelFile = async (
-  file: File
-): Promise<{ notes: NoteRecord[]; count: number }> => {
+export const parseNotesExcelFile = async (file: File): Promise<{ notes: NoteRecord[]; count: number }> => {
   const rows = await readFileToRows(file);
   const notes: NoteRecord[] = [];
   const nowStr = new Date().toISOString();
@@ -326,7 +318,10 @@ export const parseNotesExcelFile = async (
     const status = 'نشطة';
     const folderId = 'folder-work';
     const tagsRaw = String(row['الوسوم'] || row['Tags'] || '');
-    const tags = tagsRaw.split(/[,،]/).map((t) => t.trim()).filter(Boolean);
+    const tags = tagsRaw
+      .split(/[,،]/)
+      .map((t) => t.trim())
+      .filter(Boolean);
     const date = String(row['التاريخ'] || todayStr).substring(0, 10);
 
     notes.push({
@@ -355,9 +350,7 @@ export const parseNotesExcelFile = async (
 // =========================================================================
 // 9. Custody & Issues Importer
 // =========================================================================
-export const parseCustodyExcelFile = async (
-  file: File
-): Promise<{ records: CustodyIssueRecord[]; count: number }> => {
+export const parseCustodyExcelFile = async (file: File): Promise<{ records: CustodyIssueRecord[]; count: number }> => {
   const rows = await readFileToRows(file);
   const records: CustodyIssueRecord[] = [];
   const nowStr = new Date().toISOString();
@@ -399,15 +392,15 @@ export const parseCustodyExcelFile = async (
 // =========================================================================
 // 10. Links Library Importer
 // =========================================================================
-export const parseLinksExcelFile = async (
-  file: File
-): Promise<{ links: LinkRecord[]; count: number }> => {
+export const parseLinksExcelFile = async (file: File): Promise<{ links: LinkRecord[]; count: number }> => {
   const rows = await readFileToRows(file);
   const links: LinkRecord[] = [];
   const nowStr = new Date().toISOString();
 
   rows.forEach((row, idx) => {
-    const siteName = String(row['عنوان الرابط'] || row['اسم الموقع'] || row['العنوان'] || `رابط مستورد ${idx + 1}`).trim();
+    const siteName = String(
+      row['عنوان الرابط'] || row['اسم الموقع'] || row['العنوان'] || `رابط مستورد ${idx + 1}`
+    ).trim();
     const url = String(row['الرابط (URL)'] || row['الرابط'] || row['URL'] || '').trim();
     const classification = String(row['التصنيف الأساسي'] || '').trim();
     const category = String(row['الفئة'] || '').trim();

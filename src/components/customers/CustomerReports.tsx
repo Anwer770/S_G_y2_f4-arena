@@ -197,17 +197,19 @@ export const CustomerReports: React.FC<Props> = ({ customers, visits }) => {
           <div className="grid grid-cols-2 gap-3 pt-2">
             {/* Significance */}
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
-              <h4 className="font-bold text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-1">مستويات الأهمية:</h4>
+              <h4 className="font-bold text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-1">
+                مستويات الأهمية:
+              </h4>
               {stats.significanceBreakdown.map((s) => (
                 <div key={s.key} className="flex justify-between font-medium">
                   <span>
                     {s.key === 'A'
                       ? '⭐ فئة A (عالي)'
                       : s.key === 'B'
-                      ? 'فئة B (متوسط)'
-                      : s.key === 'C'
-                      ? 'فئة C (عادي)'
-                      : 'فئة √ (مؤكد)'}
+                        ? 'فئة B (متوسط)'
+                        : s.key === 'C'
+                          ? 'فئة C (عادي)'
+                          : 'فئة √ (مؤكد)'}
                   </span>
                   <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{s.count}</span>
                 </div>
@@ -216,7 +218,9 @@ export const CustomerReports: React.FC<Props> = ({ customers, visits }) => {
 
             {/* Status */}
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
-              <h4 className="font-bold text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-1">حالات المتابعة:</h4>
+              <h4 className="font-bold text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-1">
+                حالات المتابعة:
+              </h4>
               {stats.statusBreakdown.slice(0, 5).map((st) => (
                 <div key={st.key} className="flex justify-between font-medium">
                   <span>{st.key}</span>

@@ -78,7 +78,9 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
   const [newCommentText, setNewCommentText] = useState('');
 
   // Active sub-tab
-  const [drawerTab, setDrawerTab] = useState<'details' | 'subtasks' | 'comments' | 'attachments' | 'activity'>('details');
+  const [drawerTab, setDrawerTab] = useState<'details' | 'subtasks' | 'comments' | 'attachments' | 'activity'>(
+    'details'
+  );
 
   // Sync state if task changes
   useEffect(() => {
@@ -300,7 +302,9 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
 
               {/* Task Description */}
               <div>
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">وصف المهمة وملاحظات التنفيذ:</label>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">
+                  وصف المهمة وملاحظات التنفيذ:
+                </label>
                 <textarea
                   rows={3}
                   value={description}
@@ -350,7 +354,9 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
 
                 {/* Assignee */}
                 <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">المسؤول عن التنفيذ:</label>
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">
+                    المسؤول عن التنفيذ:
+                  </label>
                   <select
                     value={assigneeId}
                     onChange={(e) => setAssigneeId(e.target.value)}
@@ -387,7 +393,9 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
 
                 {/* Priority */}
                 <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">مستوى الأولوية:</label>
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">
+                    مستوى الأولوية:
+                  </label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as TaskPriority)}
@@ -402,7 +410,9 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
 
                 {/* Start Date */}
                 <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">تاريخ البداية:</label>
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">
+                    تاريخ البداية:
+                  </label>
                   <input
                     type="date"
                     value={startDate}
@@ -413,7 +423,9 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
 
                 {/* Due Date */}
                 <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">تاريخ الاستحقاق:</label>
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">
+                    تاريخ الاستحقاق:
+                  </label>
                   <input
                     type="date"
                     value={dueDate}
@@ -453,9 +465,7 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
                         type="button"
                         key={m.id}
                         onClick={() => {
-                          setParticipants((prev) =>
-                            isSelected ? prev.filter((id) => id !== m.id) : [...prev, m.id]
-                          );
+                          setParticipants((prev) => (isSelected ? prev.filter((id) => id !== m.id) : [...prev, m.id]));
                         }}
                         className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer border ${
                           isSelected
@@ -544,7 +554,10 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
 
               <div className="space-y-2">
                 {comments.map((c) => (
-                  <div key={c.id} className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 text-xs space-y-1">
+                  <div
+                    key={c.id}
+                    className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/80 text-xs space-y-1"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-slate-800 dark:text-slate-200">{c.author}</span>
                       <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
@@ -569,7 +582,9 @@ export const WorkOSTaskDrawer: React.FC<WorkOSTaskDrawerProps> = ({
             <div className="space-y-3">
               <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-6 text-center hover:border-teal-400 transition cursor-pointer bg-slate-50 dark:bg-slate-800/60">
                 <Paperclip className="w-6 h-6 text-slate-400 dark:text-slate-500 mx-auto mb-2" />
-                <p className="text-xs font-bold text-slate-700 dark:text-slate-200">اسحب وأفلت الملفات هنا أو انقر للإرفاق</p>
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                  اسحب وأفلت الملفات هنا أو انقر للإرفاق
+                </p>
                 <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">يدعم مستندات PDF، ملفات Excel، والصور</p>
               </div>
               <div className="text-center py-4 text-slate-400 dark:text-slate-500 text-xs">

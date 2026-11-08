@@ -24,12 +24,7 @@ interface Props {
   visits: CustomerVisitRecord[];
 }
 
-export const CustomerStatementModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  customer,
-  visits,
-}) => {
+export const CustomerStatementModal: React.FC<Props> = ({ isOpen, onClose, customer, visits }) => {
   const printRef = useRef<HTMLDivElement>(null);
   const [printMode, setPrintMode] = useState<'a4' | 'thermal80'>('a4');
   const [copied, setCopied] = useState(false);
@@ -126,7 +121,7 @@ ${lastVisit}
   };
 
   const handleSendWhatsApp = (targetPhone?: string) => {
-    const rawNumber = targetPhone !== undefined ? targetPhone : (customer.phone || customPhone);
+    const rawNumber = targetPhone !== undefined ? targetPhone : customer.phone || customPhone;
     const cleaned = cleanPhoneNumber(rawNumber);
 
     if (!cleaned) {
@@ -231,9 +226,7 @@ ${lastVisit}
             <button
               onClick={() => setPrintMode('a4')}
               className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                printMode === 'a4'
-                  ? 'bg-teal-600 text-white shadow-xs'
-                  : 'text-slate-400 hover:text-white'
+                printMode === 'a4' ? 'bg-teal-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
@@ -242,9 +235,7 @@ ${lastVisit}
             <button
               onClick={() => setPrintMode('thermal80')}
               className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                printMode === 'thermal80'
-                  ? 'bg-amber-500 text-slate-950 shadow-xs'
-                  : 'text-slate-400 hover:text-white'
+                printMode === 'thermal80' ? 'bg-amber-500 text-slate-950 shadow-xs' : 'text-slate-400 hover:text-white'
               }`}
             >
               <Receipt className="w-3.5 h-3.5" />
@@ -351,7 +342,9 @@ ${lastVisit}
               {/* Thermal Header */}
               <div className="text-center space-y-1 pb-2">
                 <div className="text-base font-black tracking-tight">{headerInfo.title}</div>
-                <div className="text-xs text-slate-600 dark:text-slate-300 font-bold">إدارة المبيعات والتوزيع الميداني</div>
+                <div className="text-xs text-slate-600 dark:text-slate-300 font-bold">
+                  إدارة المبيعات والتوزيع الميداني
+                </div>
                 <div className="text-xs font-black border-y border-dashed border-slate-800 py-1 my-1">
                   *** كشف حساب عميل معتمد (80mm) ***
                 </div>
@@ -393,22 +386,14 @@ ${lastVisit}
 
               {/* Thermal Balances Table */}
               <div className="py-2 border-b border-dashed border-slate-800 space-y-1.5">
-                <div className="text-center font-black text-xs pb-1">
-                  ================================
-                </div>
-                <div className="text-center font-black text-xs">
-                  الأرصدة والمطابقة الحالية
-                </div>
-                <div className="text-center font-black text-xs">
-                  ================================
-                </div>
+                <div className="text-center font-black text-xs pb-1">================================</div>
+                <div className="text-center font-black text-xs">الأرصدة والمطابقة الحالية</div>
+                <div className="text-center font-black text-xs">================================</div>
 
                 <div className="space-y-1.5 text-xs">
                   <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-800/60 p-1 rounded font-bold">
                     <span>ر.ي (ريال يمني):</span>
-                    <span className="font-black text-sm">
-                      {(customer.balanceYER || 0).toLocaleString('ar-YE')}
-                    </span>
+                    <span className="font-black text-sm">{(customer.balanceYER || 0).toLocaleString('ar-YE')}</span>
                   </div>
                   <div className="text-xs text-right text-slate-600 dark:text-slate-300 px-1">
                     الحالة: {(customer.balanceYER || 0) < 0 ? 'مديونية مستحقة' : 'رصيد دائن / مطابق'}
@@ -431,7 +416,10 @@ ${lastVisit}
                 <div className="py-2 border-b border-dashed border-slate-400 space-y-1 text-xs">
                   <div className="font-bold text-xs pb-1">آخر الحركات والزيارات:</div>
                   {customerVisits.slice(0, 3).map((v) => (
-                    <div key={v.id} className="flex justify-between border-b border-dotted border-slate-200 dark:border-slate-700 pb-0.5">
+                    <div
+                      key={v.id}
+                      className="flex justify-between border-b border-dotted border-slate-200 dark:border-slate-700 pb-0.5"
+                    >
                       <span>{v.date}</span>
                       <span>{v.status}</span>
                       <span className="font-bold">
@@ -459,7 +447,9 @@ ${lastVisit}
               {/* Barcode representation */}
               <div className="py-1 text-center font-mono text-xs tracking-widest text-slate-400 dark:text-slate-500">
                 ||| | |||| | ||| |||| | || | |||
-                <div className="text-xs text-slate-500 dark:text-slate-400">{customer.id} - {new Date().toISOString().split('T')[0]}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">
+                  {customer.id} - {new Date().toISOString().split('T')[0]}
+                </div>
               </div>
 
               {/* Thermal Signatures & Cut Line */}
@@ -468,9 +458,7 @@ ${lastVisit}
                   <span>توقيع المندوب: ...........</span>
                   <span>توقيع العميل: ...........</span>
                 </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">
-                  شكراً لتعاملكم • نسعد بخدمتكم دائماً
-                </div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">شكراً لتعاملكم • نسعد بخدمتكم دائماً</div>
                 <div className="text-xs text-slate-400 dark:text-slate-500 font-mono">
                   - - - - - - - - [ قص الورق هنا ] - - - - - - - -
                 </div>
@@ -481,15 +469,22 @@ ${lastVisit}
           /* ============================================================ */
           /* VIEW 2: OFFICIAL A4 CORPORATE LETTERHEAD STATEMENT */
           /* ============================================================ */
-          <div ref={printRef} className="p-6 sm:p-8 overflow-y-auto flex-1 space-y-6 text-xs text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900">
+          <div
+            ref={printRef}
+            className="p-6 sm:p-8 overflow-y-auto flex-1 space-y-6 text-xs text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900"
+          >
             {/* Official Letterhead Header */}
-            <div className={`p-6 rounded-xl bg-gradient-to-r ${headerInfo.color} text-white relative overflow-hidden shadow-xs`}>
+            <div
+              className={`p-6 rounded-xl bg-gradient-to-r ${headerInfo.color} text-white relative overflow-hidden shadow-xs`}
+            >
               <div className="flex items-center justify-between relative z-10 flex-wrap gap-4">
                 <div>
                   <h1 className="text-xl font-black tracking-tight">{headerInfo.title}</h1>
                   <p className="text-xs text-slate-200 mt-1 font-medium">{headerInfo.subtitle}</p>
                   <div className="mt-3 flex items-center gap-4 text-xs text-slate-300 font-mono flex-wrap">
-                    <span>تاريخ الكشف: {printDate} ({printTime})</span>
+                    <span>
+                      تاريخ الكشف: {printDate} ({printTime})
+                    </span>
                     <span>•</span>
                     <span>الفرع / المصدر: {customer.source}</span>
                   </div>
@@ -523,7 +518,9 @@ ${lastVisit}
               </div>
               <div>
                 <span className="text-slate-500 dark:text-slate-400 block font-bold">رقم الهاتف والتواصل:</span>
-                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{customer.phone || 'غير مسجل'}</span>
+                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+                  {customer.phone || 'غير مسجل'}
+                </span>
               </div>
             </div>
 
@@ -535,7 +532,9 @@ ${lastVisit}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
-                  <div className="text-slate-500 dark:text-slate-400 font-bold text-xs">الرصيد بالريال اليمني (YER)</div>
+                  <div className="text-slate-500 dark:text-slate-400 font-bold text-xs">
+                    الرصيد بالريال اليمني (YER)
+                  </div>
                   <div
                     className={`text-lg font-black font-mono mt-1 ${
                       (customer.balanceYER || 0) < 0 ? 'text-rose-600' : 'text-emerald-700'
@@ -549,7 +548,9 @@ ${lastVisit}
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                  <div className="text-slate-500 dark:text-slate-400 font-bold text-xs">الرصيد بالريال السعودي (SAR)</div>
+                  <div className="text-slate-500 dark:text-slate-400 font-bold text-xs">
+                    الرصيد بالريال السعودي (SAR)
+                  </div>
                   <div className="text-lg font-black font-mono text-slate-800 dark:text-slate-200 mt-1">
                     {(customer.balanceSAR || 0).toLocaleString('ar-SA')} ر.س
                   </div>
@@ -557,7 +558,9 @@ ${lastVisit}
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                  <div className="text-slate-500 dark:text-slate-400 font-bold text-xs">الرصيد بالدولار الأمريكي (USD)</div>
+                  <div className="text-slate-500 dark:text-slate-400 font-bold text-xs">
+                    الرصيد بالدولار الأمريكي (USD)
+                  </div>
                   <div className="text-lg font-black font-mono text-slate-800 dark:text-slate-200 mt-1">
                     ${(customer.balanceUSD || 0).toLocaleString()}
                   </div>
@@ -574,38 +577,38 @@ ${lastVisit}
               </h3>
               <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-2xs">
                 <div className="w-full overflow-x-auto print:overflow-visible">
-                <table className="w-full text-right border-collapse text-xs min-w-[600px] print:min-w-0">
-                  <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold">
-                    <tr>
-                      <th className="p-2.5">التاريخ</th>
-                      <th className="p-2.5">المندوب</th>
-                      <th className="p-2.5">الحالة</th>
-                      <th className="p-2.5">المبلغ المحصل</th>
-                      <th className="p-2.5">بيان المهمة والنتيجة</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {customerVisits.length === 0 ? (
+                  <table className="w-full text-right border-collapse text-xs min-w-[600px] print:min-w-0">
+                    <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold">
                       <tr>
-                        <td colSpan={5} className="p-4 text-center text-slate-400 dark:text-slate-500">
-                          لا توجد حركات تحصيل أو زيارات مسجلة حديثاً
-                        </td>
+                        <th className="p-2.5">التاريخ</th>
+                        <th className="p-2.5">المندوب</th>
+                        <th className="p-2.5">الحالة</th>
+                        <th className="p-2.5">المبلغ المحصل</th>
+                        <th className="p-2.5">بيان المهمة والنتيجة</th>
                       </tr>
-                    ) : (
-                      customerVisits.map((v) => (
-                        <tr key={v.id}>
-                          <td className="p-2.5 font-medium">{v.date}</td>
-                          <td className="p-2.5 font-bold text-slate-800 dark:text-slate-200">{v.responsible}</td>
-                          <td className="p-2.5 font-bold">{v.status}</td>
-                          <td className="p-2.5 font-mono font-bold text-emerald-700 dark:text-emerald-300">
-                            {v.amountCollectedYER ? `${v.amountCollectedYER.toLocaleString()} ريال` : '—'}
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                      {customerVisits.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="p-4 text-center text-slate-400 dark:text-slate-500">
+                            لا توجد حركات تحصيل أو زيارات مسجلة حديثاً
                           </td>
-                          <td className="p-2.5 text-slate-600 dark:text-slate-300">{v.notes || '—'}</td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      ) : (
+                        customerVisits.map((v) => (
+                          <tr key={v.id}>
+                            <td className="p-2.5 font-medium">{v.date}</td>
+                            <td className="p-2.5 font-bold text-slate-800 dark:text-slate-200">{v.responsible}</td>
+                            <td className="p-2.5 font-bold">{v.status}</td>
+                            <td className="p-2.5 font-mono font-bold text-emerald-700 dark:text-emerald-300">
+                              {v.amountCollectedYER ? `${v.amountCollectedYER.toLocaleString()} ريال` : '—'}
+                            </td>
+                            <td className="p-2.5 text-slate-600 dark:text-slate-300">{v.notes || '—'}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

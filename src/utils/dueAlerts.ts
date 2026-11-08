@@ -64,17 +64,21 @@ export function clearArchivedAlerts(): void {
  */
 export function getCalendarDayDiff(targetDateStr: string, referenceDate: Date = new Date()): number {
   if (!targetDateStr) return 999;
-  
+
   // Normalize reference date to midnight
-  const refMidnight = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate()).getTime();
-  
+  const refMidnight = new Date(
+    referenceDate.getFullYear(),
+    referenceDate.getMonth(),
+    referenceDate.getDate()
+  ).getTime();
+
   const parts = targetDateStr.split('-');
   if (parts.length !== 3) return 999;
-  
+
   const year = parseInt(parts[0], 10);
   const month = parseInt(parts[1], 10) - 1;
   const day = parseInt(parts[2], 10);
-  
+
   const targetMidnight = new Date(year, month, day).getTime();
   const diffMs = targetMidnight - refMidnight;
   return Math.round(diffMs / (1000 * 60 * 60 * 24));
@@ -227,33 +231,38 @@ export function formatDueText(diffDays: number): { text: string; badgeColor: str
     const daysAgo = Math.abs(diffDays);
     return {
       text: daysAgo === 1 ? 'متأخر منذ يوم' : daysAgo === 2 ? 'متأخر منذ يومين' : `متأخر منذ ${daysAgo} أيام`,
-      badgeColor: 'bg-rose-100 text-rose-700 dark:bg-rose-950/70 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+      badgeColor:
+        'bg-rose-100 text-rose-700 dark:bg-rose-950/70 dark:text-rose-300 border-rose-200 dark:border-rose-800',
     };
   }
 
   if (diffDays === 0) {
     return {
       text: 'مستحق اليوم!',
-      badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+      badgeColor:
+        'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-200 dark:border-amber-800',
     };
   }
 
   if (diffDays === 1) {
     return {
       text: 'مستحق غداً',
-      badgeColor: 'bg-blue-100 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+      badgeColor:
+        'bg-blue-100 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300 border-blue-200 dark:border-blue-800',
     };
   }
 
   if (diffDays === 2) {
     return {
       text: 'متبقي يومان',
-      badgeColor: 'bg-teal-100 text-teal-700 dark:bg-teal-950/70 dark:text-teal-300 border-teal-200 dark:border-teal-800',
+      badgeColor:
+        'bg-teal-100 text-teal-700 dark:bg-teal-950/70 dark:text-teal-300 border-teal-200 dark:border-teal-800',
     };
   }
 
   return {
     text: `متبقي ${diffDays} أيام`,
-    badgeColor: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+    badgeColor:
+      'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700',
   };
 }

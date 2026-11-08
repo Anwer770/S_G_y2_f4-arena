@@ -13,22 +13,8 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import {
-  TrendingUp,
-  Award,
-  Clock,
-  Zap,
-  Sparkles,
-  AlertTriangle,
-  CheckCircle2,
-  Calendar,
-  Flame,
-} from 'lucide-react';
-import {
-  RoutineKPIs,
-  RoutineRecord,
-  RoutineExecution,
-} from '../../types/routines';
+import { TrendingUp, Award, Clock, Zap, Sparkles, AlertTriangle, CheckCircle2, Calendar, Flame } from 'lucide-react';
+import { RoutineKPIs, RoutineRecord, RoutineExecution } from '../../types/routines';
 
 interface RoutineAnalyticsViewProps {
   kpis: RoutineKPIs;
@@ -38,11 +24,7 @@ interface RoutineAnalyticsViewProps {
 
 const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#14B8A6', '#6366F1'];
 
-export const RoutineAnalyticsView: React.FC<RoutineAnalyticsViewProps> = ({
-  kpis,
-  routines,
-  executions,
-}) => {
+export const RoutineAnalyticsView: React.FC<RoutineAnalyticsViewProps> = ({ kpis, routines, executions }) => {
   // Category breakdown chart data
   const categoryCountMap = new Map<string, number>();
   routines.forEach((r) => {
@@ -105,11 +87,10 @@ export const RoutineAnalyticsView: React.FC<RoutineAnalyticsViewProps> = ({
               <Clock size={18} />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-800 dark:text-white">
-            {kpis.totalActualHours ?? 0} ساعة
-          </div>
+          <div className="text-2xl font-black text-slate-800 dark:text-white">{kpis.totalActualHours ?? 0} ساعة</div>
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-            مخطط: {kpis.totalPlannedHours ?? 0} ساعة (فارق {Math.abs((kpis.totalActualHours ?? 0) - (kpis.totalPlannedHours ?? 0)).toFixed(1)} س)
+            مخطط: {kpis.totalPlannedHours ?? 0} ساعة (فارق{' '}
+            {Math.abs((kpis.totalActualHours ?? 0) - (kpis.totalPlannedHours ?? 0)).toFixed(1)} س)
           </p>
         </div>
 
@@ -213,10 +194,7 @@ export const RoutineAnalyticsView: React.FC<RoutineAnalyticsViewProps> = ({
             {categoryData.map((cat, i) => (
               <div key={cat.name} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: COLORS[i % COLORS.length] }}
-                  />
+                  <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
                   <span className="font-medium text-slate-700 dark:text-slate-300">{cat.name}</span>
                 </div>
                 <span className="font-bold text-slate-900 dark:text-white">{cat.count} روتين</span>
@@ -234,13 +212,15 @@ export const RoutineAnalyticsView: React.FC<RoutineAnalyticsViewProps> = ({
             <div className="p-3.5 rounded-xl bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-white/10 space-y-1">
               <span className="font-bold text-amber-300 block">⚡ وقت الذروة الذهبي</span>
               <p>
-                تظهر البيانات أن أعلى معدلات إنجاز الروتينات تحدث بين الساعة 08:00 صباحاً و 10:30 صباحاً، بينما تزيد نسبة التأجيل بعد 03:00 مساءً.
+                تظهر البيانات أن أعلى معدلات إنجاز الروتينات تحدث بين الساعة 08:00 صباحاً و 10:30 صباحاً، بينما تزيد
+                نسبة التأجيل بعد 03:00 مساءً.
               </p>
             </div>
             <div className="p-3.5 rounded-xl bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-white/10 space-y-1">
               <span className="font-bold text-emerald-300 block">🎯 قاعدة الـ 20 دقيقة</span>
               <p>
-                الروتينات المقسمة إلى خطوات لا تتجاوز كل منها 10 دقائق حققت معدل التزام يفوق 92% مقارنة بالروتينات الطويلة دون تقسيم.
+                الروتينات المقسمة إلى خطوات لا تتجاوز كل منها 10 دقائق حققت معدل التزام يفوق 92% مقارنة بالروتينات
+                الطويلة دون تقسيم.
               </p>
             </div>
           </div>

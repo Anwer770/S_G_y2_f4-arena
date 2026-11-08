@@ -47,10 +47,7 @@ export function generateNoteId(existingNotes: NoteRecord[]): string {
   return `NOTE-${maxNum + 1}`;
 }
 
-export function calculateNoteStats(
-  notes: NoteRecord[],
-  trashNotes: NoteRecord[] = []
-): NoteStatsResult {
+export function calculateNoteStats(notes: NoteRecord[], trashNotes: NoteRecord[] = []): NoteStatsResult {
   const activeNotes = notes.filter((n) => !n.deletedAt && !n.isDeleted);
   const total = activeNotes.length;
   const totalActive = total;
@@ -141,8 +138,7 @@ export function calculateNoteStats(
 
   const needsReview = reviewDueNotes.length;
   const overdueReviews = reviewDueNotes.filter((r) => r.isOverdue).length;
-  const taskCompletionRate =
-    totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const taskCompletionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   // Category array with colors
   const colorMap: Record<string, string> = {
@@ -168,12 +164,10 @@ export function calculateNoteStats(
     .map(([type, count]) => ({ type, count }))
     .sort((a, b) => b.count - a.count);
 
-  const priorityDistribution = Object.entries(priorityCounts).map(
-    ([priority, count]) => ({
-      priority: priority as NotePriority,
-      count,
-    })
-  );
+  const priorityDistribution = Object.entries(priorityCounts).map(([priority, count]) => ({
+    priority: priority as NotePriority,
+    count,
+  }));
 
   const tagsCloud = Object.entries(tagCounts)
     .map(([name, count]) => {
@@ -240,7 +234,10 @@ export interface AISuggestionResult {
 
 export function smartAnalyzeNoteText(text: string): AISuggestionResult {
   const clean = text.trim();
-  const lines = clean.split('\n').map((l) => l.trim()).filter(Boolean);
+  const lines = clean
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
 
   // 1. Suggested title
   let suggestedTitle = '';
@@ -277,13 +274,28 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
   ];
 
   const extractedTasks: { text: string; dueDate?: string; priority?: NotePriority }[] = [];
-  const sentences = clean.split(/[.!?،؛\n]+/).map((s) => s.trim()).filter((s) => s.length > 3);
+  const sentences = clean
+    .split(/[.!?،؛\n]+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 3);
 
   sentences.forEach((sentence) => {
-    const hasAction = actionKeywords.some((kw) => sentence.startsWith(kw) || sentence.includes(` ${kw} `) || sentence.startsWith(`- ${kw}`) || sentence.startsWith(`[ ] ${kw}`));
+    const hasAction = actionKeywords.some(
+      (kw) =>
+        sentence.startsWith(kw) ||
+        sentence.includes(` ${kw} `) ||
+        sentence.startsWith(`- ${kw}`) ||
+        sentence.startsWith(`[ ] ${kw}`)
+    );
     if (hasAction) {
       let taskPriority: NotePriority = 'متوسطة';
-      if (sentence.includes('عاجل') || sentence.includes('ضروري') || sentence.includes('فورا') || sentence.includes('اليوم') || sentence.includes('غدا')) {
+      if (
+        sentence.includes('عاجل') ||
+        sentence.includes('ضروري') ||
+        sentence.includes('فورا') ||
+        sentence.includes('اليوم') ||
+        sentence.includes('غدا')
+      ) {
         taskPriority = 'عالية';
       }
 
@@ -341,11 +353,30 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
   if (matchedAmounts) amounts.push(...matchedAmounts);
 
   // Match persons / doctors / clients
-  const personKeywords = ['د.', 'دكتور', 'دكتورة', 'أ.', 'أحمد', 'وجدان', 'أنور', 'علي', 'محمد', 'عبدالله', 'المهندس', 'الأستاذ', 'صيدلية', 'مركز', 'مستشفى'];
+  const personKeywords = [
+    'د.',
+    'دكتور',
+    'دكتورة',
+    'أ.',
+    'أحمد',
+    'وجدان',
+    'أنور',
+    'علي',
+    'محمد',
+    'عبدالله',
+    'المهندس',
+    'الأستاذ',
+    'صيدلية',
+    'مركز',
+    'مستشفى',
+  ];
   personKeywords.forEach((kw) => {
     const idx = clean.indexOf(kw);
     if (idx !== -1) {
-      const chunk = clean.slice(idx, idx + 40).split(/[.,\n،؛]/)[0].trim();
+      const chunk = clean
+        .slice(idx, idx + 40)
+        .split(/[.,\n،؛]/)[0]
+        .trim();
       if (chunk && !persons.includes(chunk)) {
         persons.push(chunk);
       }
@@ -355,7 +386,9 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
   // Detect Client / Doctor
   let detectedDoctor: string | undefined = undefined;
   let detectedClient: string | undefined = undefined;
-  const docMatch = persons.find((p) => p.startsWith('د.') || p.startsWith('دكتور') || p.includes('صيدلية') || p.includes('مركز'));
+  const docMatch = persons.find(
+    (p) => p.startsWith('د.') || p.startsWith('دكتور') || p.includes('صيدلية') || p.includes('مركز')
+  );
   if (docMatch) {
     if (docMatch.includes('صيدلية') || docMatch.includes('مركز')) {
       detectedClient = docMatch;
@@ -373,7 +406,13 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
     suggestedCategory = 'الاجتماعات';
     suggestedType = 'اجتماع';
     suggestedTags.push('اجتماع');
-  } else if (clean.includes('عميل') || clean.includes('صيدلية') || clean.includes('مبيعات') || clean.includes('طلبية') || clean.includes('زبون')) {
+  } else if (
+    clean.includes('عميل') ||
+    clean.includes('صيدلية') ||
+    clean.includes('مبيعات') ||
+    clean.includes('طلبية') ||
+    clean.includes('زبون')
+  ) {
     suggestedCategory = 'العملاء';
     suggestedType = clean.includes('اتصال') || clean.includes('هاتف') ? 'اتصال' : 'زيارة';
     suggestedTags.push('مبيعات', 'عملاء');
@@ -381,7 +420,14 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
     suggestedCategory = 'الأفكار';
     suggestedType = 'فكرة';
     suggestedTags.push('فكرة', 'تطوير');
-  } else if (clean.includes('ريال') || clean.includes('فاتورة') || clean.includes('سداد') || clean.includes('حساب') || clean.includes('سعر') || clean.includes('دين')) {
+  } else if (
+    clean.includes('ريال') ||
+    clean.includes('فاتورة') ||
+    clean.includes('سداد') ||
+    clean.includes('حساب') ||
+    clean.includes('سعر') ||
+    clean.includes('دين')
+  ) {
     suggestedCategory = 'المالية';
     suggestedType = 'مالية';
     suggestedTags.push('مالية', 'متابعة');
@@ -453,10 +499,7 @@ function getNextDayOfWeek(dayOfWeek: number): string {
 // ----------------------------------------------------------------------------
 // FILTER & SEARCH LOGIC (Full-Text & Semantic)
 // ----------------------------------------------------------------------------
-export function filterNotes(
-  notes: NoteRecord[],
-  filter: NoteFilterState
-): NoteRecord[] {
+export function filterNotes(notes: NoteRecord[], filter: NoteFilterState): NoteRecord[] {
   const filtered = notes.filter((note) => {
     // Trash / Deleted filter
     if (filter.isTrashOnly) {
@@ -604,18 +647,18 @@ export function filterNotes(
 // ----------------------------------------------------------------------------
 export function exportNotesToExcel(notes: NoteRecord[], filename = 'سجل_الملاحظات_والمعرفة.xlsx') {
   const rows = notes.map((n, idx) => ({
-    'م': idx + 1,
+    م: idx + 1,
     'كود الملاحظة': n.id,
-    'العنوان': n.title,
-    'النوع': n.type,
-    'التصنيف': n.category,
+    العنوان: n.title,
+    النوع: n.type,
+    التصنيف: n.category,
     'التصنيف الفرعي': n.subCategory || '',
-    'الأولوية': n.priority,
-    'الحالة': n.status,
-    'المجلد': n.folderId,
-    'الوسوم': (n.tags || []).join(', '),
-    'الملخص': n.summary || '',
-    'المحتوى': n.content,
+    الأولوية: n.priority,
+    الحالة: n.status,
+    المجلد: n.folderId,
+    الوسوم: (n.tags || []).join(', '),
+    الملخص: n.summary || '',
+    المحتوى: n.content,
     'العميل المرتبط': n.linkedCustomerName || '',
     'الطبيب المرتبط': n.linkedDoctorName || '',
     'المشروع المرتبط': n.linkedProject || '',
@@ -625,8 +668,8 @@ export function exportNotesToExcel(notes: NoteRecord[], filename = 'سجل_ال�
     'المهام المنجزة': (n.tasks || []).filter((t) => t.completed).length,
     'عدد المرفقات': (n.attachments || []).length,
     'ملاحظة سريعة': n.isQuickNote ? 'نعم' : 'لا',
-    'مثبتة': n.isPinned ? 'نعم' : 'لا',
-    'مفضلة': n.isFavorite ? 'نعم' : 'لا',
+    مثبتة: n.isPinned ? 'نعم' : 'لا',
+    مفضلة: n.isFavorite ? 'نعم' : 'لا',
     'تاريخ الإنشاء': n.createdAt,
     'آخر تعديل': n.updatedAt,
   }));

@@ -1,5 +1,5 @@
-import {StrictMode} from 'react';
-import {createRoot} from 'react-dom/client';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { ThemeProvider } from './context/ThemeContext.tsx';
@@ -18,7 +18,7 @@ function renderApp() {
       <ThemeProvider>
         <App />
       </ThemeProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 }
 

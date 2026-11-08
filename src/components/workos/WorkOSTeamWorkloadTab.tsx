@@ -1,19 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Users,
-  CheckCircle2,
-  AlertTriangle,
-  Flame,
-  Clock,
-  Filter,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
-import {
-  TeamMember,
-  WorkTask,
-  WorkProject,
-} from '../../types/workos';
+import { Users, CheckCircle2, AlertTriangle, Flame, Clock, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { TeamMember, WorkTask, WorkProject } from '../../types/workos';
 
 interface WorkOSTeamWorkloadTabProps {
   team: TeamMember[];
@@ -50,15 +37,11 @@ export const WorkOSTeamWorkloadTab: React.FC<WorkOSTeamWorkloadTabProps> = ({
         const memberTasks = filteredTasks.filter((t) => t.assigneeId === member.id);
         const currentTasks = memberTasks.filter((t) => t.status !== 'completed');
         const completedTasks = memberTasks.filter((t) => t.status === 'completed');
-        const overdueTasks = currentTasks.filter(
-          (t) => t.dueDate && t.dueDate < todayStr
-        );
+        const overdueTasks = currentTasks.filter((t) => t.dueDate && t.dueDate < todayStr);
         const urgentTasks = currentTasks.filter((t) => t.priority === 'urgent');
 
         const completionRate =
-          memberTasks.length > 0
-            ? Math.round((completedTasks.length / memberTasks.length) * 100)
-            : 0;
+          memberTasks.length > 0 ? Math.round((completedTasks.length / memberTasks.length) * 100) : 0;
 
         // Workload stress indicator:
         // أخضر (منخفض): 0-3 مهام نشطة
@@ -195,7 +178,9 @@ export const WorkOSTeamWorkloadTab: React.FC<WorkOSTeamWorkloadTabProps> = ({
                   </div>
                   <div>
                     <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">{item.member.name}</h3>
-                    <span className="text-xs text-slate-400 dark:text-slate-500 block">{item.member.role || 'عضو الفريق'}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500 block">
+                      {item.member.role || 'عضو الفريق'}
+                    </span>
                   </div>
                 </div>
                 {stressBadge}
@@ -205,22 +190,30 @@ export const WorkOSTeamWorkloadTab: React.FC<WorkOSTeamWorkloadTabProps> = ({
               <div className="grid grid-cols-4 gap-1.5 text-center text-xs py-1">
                 <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
                   <span className="text-xs text-slate-400 dark:text-slate-500 block font-bold">الحالية</span>
-                  <span className="font-black font-mono text-slate-900 dark:text-slate-100 text-sm">{item.currentCount}</span>
+                  <span className="font-black font-mono text-slate-900 dark:text-slate-100 text-sm">
+                    {item.currentCount}
+                  </span>
                 </div>
 
                 <div className="p-2 bg-emerald-50/60 dark:bg-emerald-950/40 rounded-xl">
                   <span className="text-xs text-emerald-700 dark:text-emerald-300 block font-bold">المكتملة</span>
-                  <span className="font-black font-mono text-emerald-700 dark:text-emerald-300 text-sm">{item.completedCount}</span>
+                  <span className="font-black font-mono text-emerald-700 dark:text-emerald-300 text-sm">
+                    {item.completedCount}
+                  </span>
                 </div>
 
                 <div className="p-2 bg-rose-50/60 dark:bg-rose-950/40 rounded-xl">
                   <span className="text-xs text-rose-700 dark:text-rose-300 block font-bold">المتأخرة</span>
-                  <span className="font-black font-mono text-rose-700 dark:text-rose-300 text-sm">{item.overdueCount}</span>
+                  <span className="font-black font-mono text-rose-700 dark:text-rose-300 text-sm">
+                    {item.overdueCount}
+                  </span>
                 </div>
 
                 <div className="p-2 bg-amber-50/60 dark:bg-amber-950/40 rounded-xl">
                   <span className="text-xs text-amber-700 dark:text-amber-300 block font-bold">العاجلة</span>
-                  <span className="font-black font-mono text-amber-700 dark:text-amber-300 text-sm">{item.urgentCount}</span>
+                  <span className="font-black font-mono text-amber-700 dark:text-amber-300 text-sm">
+                    {item.urgentCount}
+                  </span>
                 </div>
               </div>
 
@@ -257,7 +250,9 @@ export const WorkOSTeamWorkloadTab: React.FC<WorkOSTeamWorkloadTabProps> = ({
                       onClick={() => onOpenTaskDetail(t)}
                       className="p-2 bg-slate-50 dark:bg-slate-800/60 hover:bg-teal-50 dark:hover:bg-teal-950/40 rounded-lg text-xs flex items-center justify-between cursor-pointer transition"
                     >
-                      <span className="font-medium text-slate-800 dark:text-slate-200 truncate max-w-[170px]">{t.title}</span>
+                      <span className="font-medium text-slate-800 dark:text-slate-200 truncate max-w-[170px]">
+                        {t.title}
+                      </span>
                       <span className="font-mono text-xs text-slate-400 dark:text-slate-500">{t.dueDate}</span>
                     </div>
                   ))}

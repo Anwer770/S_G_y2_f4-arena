@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DoctorRecord, DoctorSignificance, DoctorVisitStatus } from '../../types';
-import {
-  DOCTOR_REGIONS,
-  DOCTOR_RESPONSIBLES,
-  DOCTOR_ROUTES,
-  DOCTOR_SPECIALTIES,
-} from '../../data/defaultDoctors';
+import { DOCTOR_REGIONS, DOCTOR_RESPONSIBLES, DOCTOR_ROUTES, DOCTOR_SPECIALTIES } from '../../data/defaultDoctors';
 import { findDoctorDuplicates, generateNextDoctorId } from '../../utils/doctors';
 import {
   X,
@@ -263,9 +258,7 @@ export const DoctorModal: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
-                المصدر (Source)
-              </label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">المصدر (Source)</label>
               <input
                 type="text"
                 value={formData.source || 'الأطباء'}
@@ -295,9 +288,7 @@ export const DoctorModal: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
-                المسار / اليوم
-              </label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">المسار / اليوم</label>
               <select
                 value={formData.route || ''}
                 onChange={(e) => setFormData({ ...formData, route: e.target.value })}
@@ -317,9 +308,7 @@ export const DoctorModal: React.FC<Props> = ({
               </label>
               <select
                 value={formData.significance || 'B'}
-                onChange={(e) =>
-                  setFormData({ ...formData, significance: e.target.value as DoctorSignificance })
-                }
+                onChange={(e) => setFormData({ ...formData, significance: e.target.value as DoctorSignificance })}
                 className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-slate-900 font-bold"
               >
                 {gradeOptions.map((g) => (
@@ -331,9 +320,7 @@ export const DoctorModal: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
-                المندوب المسؤول
-              </label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">المندوب المسؤول</label>
               <select
                 value={formData.responsible || ''}
                 onChange={(e) => setFormData({ ...formData, responsible: e.target.value })}
@@ -389,14 +376,10 @@ export const DoctorModal: React.FC<Props> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
-                  حالة الزيارة
-                </label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">حالة الزيارة</label>
                 <select
                   value={formData.status || 'مخطط'}
-                  onChange={(e) =>
-                    setFormData({ ...formData, status: e.target.value as DoctorVisitStatus })
-                  }
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as DoctorVisitStatus })}
                   className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-slate-900 font-bold"
                 >
                   <option value="مخطط">🟣 مخطط (Planned)</option>

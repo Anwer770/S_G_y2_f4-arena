@@ -44,9 +44,7 @@ export const WorkOSPrintReportModal: React.FC<WorkOSPrintReportModalProps> = ({
   const todayStr = new Date().toISOString().split('T')[0];
   const completedTasks = tasks.filter((t) => t.status === 'completed');
   const inProgressTasks = tasks.filter((t) => t.status === 'in_progress');
-  const overdueTasks = tasks.filter(
-    (t) => t.status !== 'completed' && t.dueDate && t.dueDate < todayStr
-  );
+  const overdueTasks = tasks.filter((t) => t.status !== 'completed' && t.dueDate && t.dueDate < todayStr);
   const urgentTasks = tasks.filter((t) => t.priority === 'urgent' && t.status !== 'completed');
 
   const totalEstimatedHours = tasks.reduce((sum, t) => sum + (t.estimatedHours || 0), 0);
@@ -208,20 +206,18 @@ export const WorkOSPrintReportModal: React.FC<WorkOSPrintReportModalProps> = ({
                 <span className="text-xl font-black font-mono text-rose-700">{overdueTasks.length}</span>
                 <span className="text-xs text-rose-600">متأخرة</span>
               </div>
-              <span className="text-xs text-amber-700 font-bold mt-1 block">
-                عاجلة جداً: {urgentTasks.length}
-              </span>
+              <span className="text-xs text-amber-700 font-bold mt-1 block">عاجلة جداً: {urgentTasks.length}</span>
             </div>
 
             <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40">
               <span className="text-xs font-bold text-slate-500 block mb-1">ساعات العمل الفعلية / المقدرة:</span>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black font-mono text-teal-700 dark:text-teal-400">{totalActualHours}</span>
+                <span className="text-xl font-black font-mono text-teal-700 dark:text-teal-400">
+                  {totalActualHours}
+                </span>
                 <span className="text-xs text-slate-500">ساعة</span>
               </div>
-              <span className="text-xs text-slate-500 font-bold mt-1 block">
-                المقدر: {totalEstimatedHours} س
-              </span>
+              <span className="text-xs text-slate-500 font-bold mt-1 block">المقدر: {totalEstimatedHours} س</span>
             </div>
           </div>
 
@@ -249,10 +245,13 @@ export const WorkOSPrintReportModal: React.FC<WorkOSPrintReportModalProps> = ({
                     {projects.map((proj) => {
                       const pTasks = tasks.filter((t) => t.projectId === proj.id);
                       const pDone = pTasks.filter((t) => t.status === 'completed');
-                      const rate = pTasks.length > 0 ? Math.round((pDone.length / pTasks.length) * 100) : proj.progress || 0;
+                      const rate =
+                        pTasks.length > 0 ? Math.round((pDone.length / pTasks.length) * 100) : proj.progress || 0;
                       return (
                         <tr key={proj.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                          <td className="py-2 px-3 font-mono font-bold text-slate-800 dark:text-slate-200">{proj.code || proj.id}</td>
+                          <td className="py-2 px-3 font-mono font-bold text-slate-800 dark:text-slate-200">
+                            {proj.code || proj.id}
+                          </td>
                           <td className="py-2 px-3 font-bold text-slate-900 dark:text-white">{proj.name}</td>
                           <td className="py-2 px-3 text-slate-600 dark:text-slate-400">{proj.category || 'عام'}</td>
                           <td className="py-2 px-3 text-center font-mono">{pTasks.length}</td>
@@ -263,13 +262,15 @@ export const WorkOSPrintReportModal: React.FC<WorkOSPrintReportModalProps> = ({
                             </span>
                           </td>
                           <td className="py-2 px-3">
-                            <span className={`px-2 py-0.5 rounded-md text-2xs font-bold ${
-                              proj.status === 'active'
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : proj.status === 'completed'
-                                ? 'bg-blue-100 text-blue-800'
-                                : 'bg-slate-100 text-slate-700'
-                            }`}>
+                            <span
+                              className={`px-2 py-0.5 rounded-md text-2xs font-bold ${
+                                proj.status === 'active'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : proj.status === 'completed'
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : 'bg-slate-100 text-slate-700'
+                              }`}
+                            >
                               {proj.status === 'active' ? 'نشط' : proj.status === 'completed' ? 'مكتمل' : 'مخطط'}
                             </span>
                           </td>
@@ -307,7 +308,9 @@ export const WorkOSPrintReportModal: React.FC<WorkOSPrintReportModalProps> = ({
                     const isOverdue = t.status !== 'completed' && t.dueDate && t.dueDate < todayStr;
                     return (
                       <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="py-2 px-3 font-mono font-bold text-slate-800 dark:text-slate-200">{t.taskNumber || t.id}</td>
+                        <td className="py-2 px-3 font-mono font-bold text-slate-800 dark:text-slate-200">
+                          {t.taskNumber || t.id}
+                        </td>
                         <td className="py-2 px-3 font-bold text-slate-900 dark:text-white">
                           <div>{t.title}</div>
                           {t.description && (
@@ -315,30 +318,36 @@ export const WorkOSPrintReportModal: React.FC<WorkOSPrintReportModalProps> = ({
                           )}
                         </td>
                         <td className="py-2 px-3 text-slate-700 dark:text-slate-300">{assignee?.name || 'غير محدد'}</td>
-                        <td className={`py-2 px-3 font-mono ${isOverdue ? 'text-rose-600 font-bold' : 'text-slate-600'}`}>
+                        <td
+                          className={`py-2 px-3 font-mono ${isOverdue ? 'text-rose-600 font-bold' : 'text-slate-600'}`}
+                        >
                           {t.dueDate || '—'}
                           {isOverdue && <span className="mr-1 text-2xs">(متأخرة)</span>}
                         </td>
                         <td className="py-2 px-3 text-center">
-                          <span className={`px-2 py-0.5 rounded-full text-2xs font-bold ${
-                            t.priority === 'urgent'
-                              ? 'bg-rose-100 text-rose-800'
-                              : t.priority === 'high'
-                              ? 'bg-amber-100 text-amber-800'
-                              : 'bg-slate-100 text-slate-700'
-                          }`}>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-2xs font-bold ${
+                              t.priority === 'urgent'
+                                ? 'bg-rose-100 text-rose-800'
+                                : t.priority === 'high'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-slate-100 text-slate-700'
+                            }`}
+                          >
                             {t.priority === 'urgent' ? 'حرجة' : t.priority === 'high' ? 'عالية' : 'متوسطة'}
                           </span>
                         </td>
                         <td className="py-2 px-3 text-center font-mono font-bold text-teal-800">{t.progress || 0}%</td>
                         <td className="py-2 px-3">
-                          <span className={`px-2 py-0.5 rounded-md text-2xs font-bold ${
-                            t.status === 'completed'
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : t.status === 'in_progress'
-                              ? 'bg-amber-100 text-amber-800'
-                              : 'bg-slate-100 text-slate-700'
-                          }`}>
+                          <span
+                            className={`px-2 py-0.5 rounded-md text-2xs font-bold ${
+                              t.status === 'completed'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : t.status === 'in_progress'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-slate-100 text-slate-700'
+                            }`}
+                          >
                             {t.status === 'completed' ? 'منجزة' : t.status === 'in_progress' ? 'جارية' : 'مخططة'}
                           </span>
                         </td>

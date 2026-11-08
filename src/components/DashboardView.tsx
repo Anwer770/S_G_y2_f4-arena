@@ -14,12 +14,7 @@ import {
   PieChart,
   UserCheck,
 } from 'lucide-react';
-import {
-  formatNumberLatin,
-  getCategoryBadgeStyle,
-  getMovementTypeStyle,
-  getStatusStyle,
-} from '../utils/formatters';
+import { formatNumberLatin, getCategoryBadgeStyle, getMovementTypeStyle, getStatusStyle } from '../utils/formatters';
 
 interface DashboardViewProps {
   records: MovementRecord[];
@@ -56,9 +51,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const netStock = totalOpening + totalIn - totalOut;
 
   // FR-02: Top 8 Most Dispensed Products
-  const topDispensed = [...stocks]
-    .sort((a, b) => b.totalOut - a.totalOut)
-    .slice(0, 8);
+  const topDispensed = [...stocks].sort((a, b) => b.totalOut - a.totalOut).slice(0, 8);
 
   const maxDispensed = Math.max(...topDispensed.map((p) => p.totalOut), 1);
 
@@ -119,7 +112,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <Boxes className="w-4 h-4" />
             </div>
           </div>
-          <div className={`text-xl sm:text-2xl font-black font-mono ${netStock >= 0 ? 'text-blue-900' : 'text-rose-900'}`}>
+          <div
+            className={`text-xl sm:text-2xl font-black font-mono ${netStock >= 0 ? 'text-blue-900' : 'text-rose-900'}`}
+          >
             {formatNumberLatin(netStock)}
           </div>
           <span className="text-xs text-slate-500 dark:text-slate-400">افتتاحي + توريد − صرف</span>
@@ -140,20 +135,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Negative Stock Alert */}
-        <div className={`p-4.5 rounded-xl border shadow-2xs space-y-2 col-span-2 sm:col-span-1 ${
-          negativeCount > 0
-            ? 'bg-amber-50/70 border-amber-200 text-amber-950'
-            : 'bg-white border-slate-200 text-slate-900'
-        }`}>
+        <div
+          className={`p-4.5 rounded-xl border shadow-2xs space-y-2 col-span-2 sm:col-span-1 ${
+            negativeCount > 0
+              ? 'bg-amber-50/70 border-amber-200 text-amber-950'
+              : 'bg-white border-slate-200 text-slate-900'
+          }`}
+        >
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
             <span className="text-xs font-semibold">أصناف سالبة الرصيد</span>
-            <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
-              negativeCount > 0 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
-            }`}>
+            <div
+              className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                negativeCount > 0 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
+              }`}
+            >
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
-          <div className={`text-xl sm:text-2xl font-black font-mono ${negativeCount > 0 ? 'text-amber-800' : 'text-emerald-700'}`}>
+          <div
+            className={`text-xl sm:text-2xl font-black font-mono ${negativeCount > 0 ? 'text-amber-800' : 'text-emerald-700'}`}
+          >
             {negativeCount} صنف
           </div>
           <span className="text-xs text-slate-500 dark:text-slate-400">
@@ -270,9 +271,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-slate-600 dark:text-slate-300" />
-            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              آخر الحركات المسجلة
-            </h2>
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">آخر الحركات المسجلة</h2>
           </div>
           <button
             onClick={onGoToRecords}
@@ -304,13 +303,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 return (
                   <tr key={r.subId} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
                     <td className="py-2.5 px-3 font-mono font-bold text-slate-900 dark:text-slate-100">
-                      <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-xs">
-                        {r.subId}
-                      </span>
+                      <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-xs">{r.subId}</span>
                     </td>
-                    <td className="py-2.5 px-3 text-slate-500 dark:text-slate-400 font-mono">
-                      {r.date}
-                    </td>
+                    <td className="py-2.5 px-3 text-slate-500 dark:text-slate-400 font-mono">{r.date}</td>
                     <td className="py-2.5 px-3">
                       <span className={`px-2 py-0.5 rounded-md text-xs font-bold border ${moveStyle.badge}`}>
                         {r.movementType}
@@ -321,10 +316,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </td>
                     <td className="py-2.5 px-3">
                       <div className="flex items-center gap-1.5">
-                        <span className={`px-2 py-0.5 rounded text-xs font-bold border ${getCategoryBadgeStyle(r.category)}`}>
+                        <span
+                          className={`px-2 py-0.5 rounded text-xs font-bold border ${getCategoryBadgeStyle(r.category)}`}
+                        >
                           {r.category}
                         </span>
-                        <span className={`px-1.5 py-0.5 rounded text-xs font-medium border ${getStatusStyle(r.status)}`}>
+                        <span
+                          className={`px-1.5 py-0.5 rounded text-xs font-medium border ${getStatusStyle(r.status)}`}
+                        >
                           {r.status}
                         </span>
                       </div>

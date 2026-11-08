@@ -56,13 +56,7 @@ export type RoutineCompletionRule = 'REQUIRED_ONLY' | 'ALL_STEPS';
 export type ExceptionAction = 'SKIP' | 'CHANGE_TIME' | 'RESCHEDULE' | 'DISABLE' | 'OVERRIDE';
 
 export type SkipReasonCode =
-  | 'NO_TIME'
-  | 'NOT_NEEDED'
-  | 'PRIORITY_CHANGED'
-  | 'EMERGENCY'
-  | 'FORGOT'
-  | 'UNABLE'
-  | 'OTHER';
+  'NO_TIME' | 'NOT_NEEDED' | 'PRIORITY_CHANGED' | 'EMERGENCY' | 'FORGOT' | 'UNABLE' | 'OTHER';
 
 export interface RoutineStep {
   id: string;

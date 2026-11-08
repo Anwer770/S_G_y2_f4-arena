@@ -131,7 +131,9 @@ export const CommitmentModal: React.FC<Props> = ({
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">الالتزام / الجهة المستحقة</label>
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                الالتزام / الجهة المستحقة
+              </label>
               <input
                 type="text"
                 value={name}
@@ -146,7 +148,9 @@ export const CommitmentModal: React.FC<Props> = ({
           {/* Row 2: Amount & Due Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">المبلغ المطلوب (ريال)</label>
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                المبلغ المطلوب (ريال)
+              </label>
               <input
                 type="number"
                 min="0"
@@ -172,7 +176,9 @@ export const CommitmentModal: React.FC<Props> = ({
           {/* Row 3: Priority & Status */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">الأهمية / الأولوية</label>
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
+                الأهمية / الأولوية
+              </label>
               <select
                 value={pri}
                 onChange={(e) => setPri(e.target.value as TaskPriority)}

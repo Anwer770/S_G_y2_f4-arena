@@ -9,17 +9,9 @@ import {
   DOCTOR_ROUTES,
   DOCTOR_SPECIALTIES,
 } from '../../data/defaultDoctors';
-import {
-  dbStorage,
-} from '../../database/dbStorage';
-import {
-  DoctorAuditLog,
-  DoctorRecord,
-  DoctorVisitLog,
-} from '../../types';
-import {
-  STORAGE_KEYS,
-} from './keys';
+import { dbStorage } from '../../database/dbStorage';
+import { DoctorAuditLog, DoctorRecord, DoctorVisitLog } from '../../types';
+import { STORAGE_KEYS } from './keys';
 
 export function loadDoctors(): DoctorRecord[] {
   try {
@@ -177,11 +169,7 @@ export function saveDoctorAuditLogs(logs: DoctorAuditLog[]): void {
   }
 }
 
-export function logDoctorAudit(
-  action: DoctorAuditLog['action'],
-  doctorName: string,
-  details: string
-): void {
+export function logDoctorAudit(action: DoctorAuditLog['action'], doctorName: string, details: string): void {
   const current = loadDoctorAuditLogs();
   const newLog: DoctorAuditLog = {
     id: `LOG-D-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,

@@ -1,15 +1,7 @@
 import React from 'react';
 import { ActiveModuleTab } from '../types';
 import { useAuth } from '../context/AuthContext';
-import {
-  Menu,
-  Sun,
-  Moon,
-  Search,
-  Bell,
-  LogOut,
-  HardDrive,
-} from 'lucide-react';
+import { Menu, Sun, Moon, Search, Bell, LogOut, HardDrive } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { PWAInstallButton } from './pwa/PWAInstallButton';
 import { getExportReminderState } from '../utils/storagePersistence';
@@ -237,4 +229,3 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
-

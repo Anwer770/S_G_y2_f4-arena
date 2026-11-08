@@ -11,12 +11,7 @@ interface Props {
   onSaveVisit: (visit: CustomerVisitRecord, updatedCustomerStatus?: VisitStatus, collectedAmountYER?: number) => void;
 }
 
-export const RecordVisitModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  customer,
-  onSaveVisit,
-}) => {
+export const RecordVisitModal: React.FC<Props> = ({ isOpen, onClose, customer, onSaveVisit }) => {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [dayOfWeek, setDayOfWeek] = useState(getTodayArabicDay());
   const [responsible, setResponsible] = useState(customer?.responsible || 'انور');
@@ -60,11 +55,7 @@ export const RecordVisitModal: React.FC<Props> = ({
       createdAt: new Date().toISOString(),
     };
 
-    onSaveVisit(
-      newVisit,
-      status,
-      updateCustomerBalance && amountCollectedYER ? Number(amountCollectedYER) : undefined
-    );
+    onSaveVisit(newVisit, status, updateCustomerBalance && amountCollectedYER ? Number(amountCollectedYER) : undefined);
     onClose();
   };
 
@@ -189,7 +180,9 @@ export const RecordVisitModal: React.FC<Props> = ({
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <label className="block text-xs text-emerald-800 dark:text-emerald-200 font-bold mb-1">ريال يمني (YER)</label>
+                <label className="block text-xs text-emerald-800 dark:text-emerald-200 font-bold mb-1">
+                  ريال يمني (YER)
+                </label>
                 <input
                   type="number"
                   value={amountCollectedYER}
@@ -199,7 +192,9 @@ export const RecordVisitModal: React.FC<Props> = ({
                 />
               </div>
               <div>
-                <label className="block text-xs text-emerald-800 dark:text-emerald-200 font-bold mb-1">سعودي (SAR)</label>
+                <label className="block text-xs text-emerald-800 dark:text-emerald-200 font-bold mb-1">
+                  سعودي (SAR)
+                </label>
                 <input
                   type="number"
                   value={amountCollectedSAR}
@@ -209,7 +204,9 @@ export const RecordVisitModal: React.FC<Props> = ({
                 />
               </div>
               <div>
-                <label className="block text-xs text-emerald-800 dark:text-emerald-200 font-bold mb-1">دولار (USD)</label>
+                <label className="block text-xs text-emerald-800 dark:text-emerald-200 font-bold mb-1">
+                  دولار (USD)
+                </label>
                 <input
                   type="number"
                   value={amountCollectedUSD}

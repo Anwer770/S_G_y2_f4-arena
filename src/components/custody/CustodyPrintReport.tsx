@@ -113,55 +113,60 @@ export const CustodyPrintReport: React.FC<CustodyPrintReportProps> = ({
             </h2>
           </div>
           <div className="w-full overflow-x-auto print:overflow-visible">
-          <table className="w-full text-right border-collapse border border-slate-300 dark:border-slate-600 text-xs min-w-[820px] print:min-w-0">
-            <thead>
-              <tr className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-600 font-bold">
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-12 text-center">#</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">التاريخ</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-36">الاسم/الجهة</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600">الوصف التفصيلي</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">الفئة</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-16 text-center">الأولوية</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-20 text-center">الحالة</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">المسؤول</th>
-                <th className="p-2 w-28 text-left">المبلغ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {custodyRows.map((r, idx) => (
-                <tr key={r.id} className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/60">
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-mono font-bold text-slate-500 dark:text-slate-400">
-                    {idx + 1}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 font-mono whitespace-nowrap">
-                    {r.date || '-'}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-slate-100">
-                    {r.name || '-'}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 leading-relaxed">
-                    {r.desc}
-                    {r.notes && <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ملاحظة: {r.notes}</div>}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
-                    {r.cat}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-bold">
-                    {r.pri}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-bold">
-                    {r.status}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
-                    {r.resp}
-                  </td>
-                  <td className="p-2 text-left font-mono font-bold">
-                    {r.amount ? `${(r.amount || 0).toLocaleString()} ${r.currency || 'ر.ي'}` : '-'}
-                  </td>
+            <table className="w-full text-right border-collapse border border-slate-300 dark:border-slate-600 text-xs min-w-[820px] print:min-w-0">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-600 font-bold">
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-12 text-center">#</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">التاريخ</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-36">الاسم/الجهة</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600">الوصف التفصيلي</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">الفئة</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-16 text-center">الأولوية</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-20 text-center">الحالة</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">المسؤول</th>
+                  <th className="p-2 w-28 text-left">المبلغ</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {custodyRows.map((r, idx) => (
+                  <tr
+                    key={r.id}
+                    className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                  >
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-mono font-bold text-slate-500 dark:text-slate-400">
+                      {idx + 1}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 font-mono whitespace-nowrap">
+                      {r.date || '-'}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-slate-100">
+                      {r.name || '-'}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 leading-relaxed">
+                      {r.desc}
+                      {r.notes && (
+                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ملاحظة: {r.notes}</div>
+                      )}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
+                      {r.cat}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-bold">
+                      {r.pri}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-bold">
+                      {r.status}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+                      {r.resp}
+                    </td>
+                    <td className="p-2 text-left font-mono font-bold">
+                      {r.amount ? `${(r.amount || 0).toLocaleString()} ${r.currency || 'ر.ي'}` : '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
@@ -176,55 +181,60 @@ export const CustodyPrintReport: React.FC<CustodyPrintReportProps> = ({
             </h2>
           </div>
           <div className="w-full overflow-x-auto print:overflow-visible">
-          <table className="w-full text-right border-collapse border border-slate-300 dark:border-slate-600 text-xs min-w-[820px] print:min-w-0">
-            <thead>
-              <tr className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-600 font-bold">
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-12 text-center">#</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">التاريخ</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-36">الصيدلية/العميل</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600">طبيعة الإشكالية والوصف</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">الفئة</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-16 text-center">الأولوية</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-20 text-center">الحالة</th>
-                <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">المسؤول</th>
-                <th className="p-2 w-28 text-left">المبلغ المطلوب</th>
-              </tr>
-            </thead>
-            <tbody>
-              {issuesRows.map((r, idx) => (
-                <tr key={r.id} className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/60">
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-mono font-bold text-slate-500 dark:text-slate-400">
-                    {idx + 1}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 font-mono whitespace-nowrap">
-                    {r.date || '-'}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-slate-100">
-                    {r.name || '-'}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 leading-relaxed">
-                    {r.desc}
-                    {r.notes && <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ملاحظة: {r.notes}</div>}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
-                    {r.cat}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-bold">
-                    {r.pri}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-bold">
-                    {r.status}
-                  </td>
-                  <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
-                    {r.resp}
-                  </td>
-                  <td className="p-2 text-left font-mono font-bold">
-                    {r.amount ? `${(r.amount || 0).toLocaleString()} ${r.currency || 'ر.ي'}` : '-'}
-                  </td>
+            <table className="w-full text-right border-collapse border border-slate-300 dark:border-slate-600 text-xs min-w-[820px] print:min-w-0">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-b border-slate-300 dark:border-slate-600 font-bold">
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-12 text-center">#</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">التاريخ</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-36">الصيدلية/العميل</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600">طبيعة الإشكالية والوصف</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">الفئة</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-16 text-center">الأولوية</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-20 text-center">الحالة</th>
+                  <th className="p-2 border-l border-slate-300 dark:border-slate-600 w-24">المسؤول</th>
+                  <th className="p-2 w-28 text-left">المبلغ المطلوب</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {issuesRows.map((r, idx) => (
+                  <tr
+                    key={r.id}
+                    className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                  >
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-mono font-bold text-slate-500 dark:text-slate-400">
+                      {idx + 1}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 font-mono whitespace-nowrap">
+                      {r.date || '-'}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-slate-100">
+                      {r.name || '-'}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 leading-relaxed">
+                      {r.desc}
+                      {r.notes && (
+                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ملاحظة: {r.notes}</div>
+                      )}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
+                      {r.cat}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-bold">
+                      {r.pri}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-center font-bold">
+                      {r.status}
+                    </td>
+                    <td className="p-2 border-l border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+                      {r.resp}
+                    </td>
+                    <td className="p-2 text-left font-mono font-bold">
+                      {r.amount ? `${(r.amount || 0).toLocaleString()} ${r.currency || 'ر.ي'}` : '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}

@@ -47,9 +47,7 @@ export function normalizeLookups(raw: unknown): LookupsState {
           label: String(entry.label).trim(),
           order: Number.isFinite(entry.order) ? Number(entry.order) : idx + 1,
           active: entry.active !== false,
-          ...(kind === 'grades'
-            ? { tone: (entry.tone || 'slate') as GradeTone, hint: (entry as GradeItem).hint }
-            : {}),
+          ...(kind === 'grades' ? { tone: (entry.tone || 'slate') as GradeTone, hint: (entry as GradeItem).hint } : {}),
         };
       })
       .filter((i) => i.label !== '');
@@ -85,8 +83,14 @@ export function addLookup(
   if (listOf(state, kind).some((i) => i.label.trim().toLowerCase() === clean.toLowerCase())) {
     throw new LookupError(`«${clean}» موجود بالفعل في هذه القائمة`);
   }
-  const base: LookupItem = { id: nextId(state, kind), label: clean, order: listOf(state, kind).length + 1, active: true };
-  const created: LookupItem = kind === 'grades' ? { ...base, tone: extra?.tone || 'slate', hint: extra?.hint } as GradeItem : base;
+  const base: LookupItem = {
+    id: nextId(state, kind),
+    label: clean,
+    order: listOf(state, kind).length + 1,
+    active: true,
+  };
+  const created: LookupItem =
+    kind === 'grades' ? ({ ...base, tone: extra?.tone || 'slate', hint: extra?.hint } as GradeItem) : base;
   const next: LookupsState = {
     ...state,
     [kind]: sortAll([...listOf(state, kind), created]),

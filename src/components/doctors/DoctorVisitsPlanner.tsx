@@ -129,10 +129,7 @@ export const DoctorVisitsPlanner: React.FC<Props> = ({
               <span className="text-xs text-teal-200 block">نسبة الإنجاز اليوم:</span>
               <span className="text-base font-black">
                 {todayDoctors.length > 0
-                  ? Math.round(
-                      (todayDoctors.filter((d) => d.status === 'مكتمل').length / todayDoctors.length) *
-                        100
-                    )
+                  ? Math.round((todayDoctors.filter((d) => d.status === 'مكتمل').length / todayDoctors.length) * 100)
                   : 0}
                 %
               </span>
@@ -173,9 +170,7 @@ export const DoctorVisitsPlanner: React.FC<Props> = ({
                 <div className="flex flex-col items-end gap-1.5 shrink-0">
                   <span
                     className={`text-xs px-2 py-0.5 rounded-md font-bold ${
-                      doc.status === 'مكتمل'
-                        ? 'bg-emerald-500 text-white'
-                        : 'bg-teal-700 text-teal-100'
+                      doc.status === 'مكتمل' ? 'bg-emerald-500 text-white' : 'bg-teal-700 text-teal-100'
                     }`}
                   >
                     {doc.status}
@@ -248,19 +243,15 @@ export const DoctorVisitsPlanner: React.FC<Props> = ({
                   isSelected
                     ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                     : isToday
-                    ? 'bg-teal-50 text-teal-900 border-teal-300 hover:bg-teal-100'
-                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                      ? 'bg-teal-50 text-teal-900 border-teal-300 hover:bg-teal-100'
+                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
                 <span>{route}</span>
-                {isToday && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-ping" />
-                )}
+                {isToday && <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-ping" />}
                 <span
                   className={`text-xs px-1.5 py-0.5 rounded-md font-mono ${
-                    isSelected
-                      ? 'bg-slate-800 text-teal-300'
-                      : 'bg-white text-slate-600 border border-slate-200'
+                    isSelected ? 'bg-slate-800 text-teal-300' : 'bg-white text-slate-600 border border-slate-200'
                   }`}
                 >
                   {completed}/{list.length}
@@ -292,7 +283,9 @@ export const DoctorVisitsPlanner: React.FC<Props> = ({
         {activeRouteDoctors.length === 0 ? (
           <div className="bg-white dark:bg-slate-900 p-12 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-center text-slate-400 dark:text-slate-500">
             <Calendar className="w-10 h-10 mx-auto mb-2 opacity-40 text-teal-700 dark:text-teal-300" />
-            <p className="text-sm font-bold text-slate-600 dark:text-slate-300">لا يوجد أطباء مسجلين في مسار {selectedRoute}</p>
+            <p className="text-sm font-bold text-slate-600 dark:text-slate-300">
+              لا يوجد أطباء مسجلين في مسار {selectedRoute}
+            </p>
             <button
               onClick={onAddDoctor}
               className="mt-3 px-4 py-2 bg-teal-700 text-white rounded-xl text-xs font-bold hover:bg-teal-800 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
@@ -403,9 +396,7 @@ export const DoctorVisitsPlanner: React.FC<Props> = ({
                     <div className="flex items-center gap-1.5">
                       <select
                         value={doc.status}
-                        onChange={(e) =>
-                          onUpdateStatus(doc.id, e.target.value as DoctorVisitStatus)
-                        }
+                        onChange={(e) => onUpdateStatus(doc.id, e.target.value as DoctorVisitStatus)}
                         className="text-xs px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 font-bold bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:ring-1 focus:ring-teal-500"
                       >
                         <option value="مخطط">مخطط</option>

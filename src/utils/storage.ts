@@ -61,13 +61,7 @@ import {
   DEFAULT_RESTRICTION_ACCOUNTS,
   DEFAULT_RESTRICTIONS,
 } from '../data/defaultFinancial';
-import {
-  DEFAULT_TASKS,
-  TASK_ASSIGNEES,
-  TASK_CATEGORIES,
-  TASK_OPERATIONS,
-  TASK_STATUSES,
-} from '../data/defaultTasks';
+import { DEFAULT_TASKS, TASK_ASSIGNEES, TASK_CATEGORIES, TASK_OPERATIONS, TASK_STATUSES } from '../data/defaultTasks';
 import { DEFAULT_COMMITMENTS } from '../data/defaultCommitments';
 import {
   CUSTOMER_REGIONS,
@@ -85,18 +79,8 @@ import {
   DOCTOR_ROUTES,
   DOCTOR_SPECIALTIES,
 } from '../data/defaultDoctors';
-import {
-  DEBT_CATEGORIES,
-  DEBT_OWNERS,
-  DEFAULT_DEBT_COMMITMENTS,
-  DEFAULT_DEBT_RECORDS,
-} from './debts';
-import {
-  DEFAULT_NOTE_FOLDERS,
-  DEFAULT_NOTE_TAGS,
-  DEFAULT_NOTE_TEMPLATES,
-  DEFAULT_NOTES,
-} from '../data/defaultNotes';
+import { DEBT_CATEGORIES, DEBT_OWNERS, DEFAULT_DEBT_COMMITMENTS, DEFAULT_DEBT_RECORDS } from './debts';
+import { DEFAULT_NOTE_FOLDERS, DEFAULT_NOTE_TAGS, DEFAULT_NOTE_TEMPLATES, DEFAULT_NOTES } from '../data/defaultNotes';
 import {
   DEFAULT_ROUTINE_CATEGORIES,
   DEFAULT_ROUTINE_EXECUTIONS,
@@ -170,10 +154,7 @@ import {
   saveDebtAuditLogs,
   logDebtAudit,
 } from './storage/debts';
-import {
-  loadSettings,
-  saveSettings,
-} from './storage/settings';
+import { loadSettings, saveSettings } from './storage/settings';
 export { STORAGE_KEYS, STORAGE_KEY_MANIFEST } from './storage/keys';
 export * from './storage/stock';
 export * from './storage/financial';
@@ -310,40 +291,13 @@ export * from './storage/custody';
 export * from './storage/links';
 export * from './storage/system';
 
-
-
-
 // ============================================================================
 // 1. STOCK STORAGE HANDLERS
 // ============================================================================
 
-
-
-
-
-
-
-
-
-
 // ============================================================================
 // 2. FINANCIAL STORAGE HANDLERS (دفتر السجل المالي اليومي)
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Backward-compatibility aliases
 export function loadFinancialCategories(): string[] {
@@ -363,156 +317,39 @@ export function saveFinancialAccounts(accs: string[]): void {
 // 3. TASKS & COMMITMENTS STORAGE HANDLERS (دفتر المها v2.0)
 // ============================================================================
 
-
-
-
-
-
-
-
-
-
-
-
-
 // ============================================================================
 // 4. UNIFIED SETTINGS & SYSTEM LOGS
 // ============================================================================
 
-
-
-
-
 // Backward compatibility helper
-
-
-
-
-
-
-
-
-
-
 
 // ============================================================================
 // 4. CUSTOMERS & VISITS STORAGE HANDLERS (دفتر إدارة العملاء والزيارات)
 // ============================================================================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ============================================================================
 // 5. DOCTORS & MEDICAL VISITS STORAGE HANDLERS (دفتر إدارة زيارات الأطباء)
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // ============================================================================
 // 6. DEBTS & COMMITMENTS STORAGE HANDLERS (دفتر الدين والالتزامات)
 // ============================================================================
 
-
-
-
-
-
-
-
-
-
-
 // ============================================================================
 // 7. NOTES & KNOWLEDGE MANAGEMENT (إدارة الملاحظات والمعرفة - NKM v1.0)
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
 
 // ============================================================================
 // 8. ROUTINE & HABIT STORAGE HANDLERS (وحدة إدارة الروتين والعادات v1.0)
 // ============================================================================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ============================================================================
 // 8. CUSTODY & PENDING ISSUES STORAGE HANDLERS (دفتر العهد والاشكاليات المعلقة v1.0)
 // ============================================================================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ============================================================================
 // 9. SMART LINKS LIBRARY STORAGE HANDLERS (مكتبة الروابط الذكية)
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-
 
 // ============================================================================
 // 10. UNIFIED BACKUP, RESTORE & RESET
@@ -654,8 +491,10 @@ export function restoreUnifiedBackupState(backup: UnifiedBackupState): void {
     if (backup.modules.financial.restrictions) saveFinancialRestrictions(backup.modules.financial.restrictions);
     if (backup.modules.financial.movementTypes) saveFinancialMovementTypes(backup.modules.financial.movementTypes);
     if (backup.modules.financial.importanceList) saveFinancialImportanceList(backup.modules.financial.importanceList);
-    if (backup.modules.financial.categoryAccounts) saveFinancialCategoryAccounts(backup.modules.financial.categoryAccounts);
-    if (backup.modules.financial.restrictionAccounts) saveFinancialRestrictionAccounts(backup.modules.financial.restrictionAccounts);
+    if (backup.modules.financial.categoryAccounts)
+      saveFinancialCategoryAccounts(backup.modules.financial.categoryAccounts);
+    if (backup.modules.financial.restrictionAccounts)
+      saveFinancialRestrictionAccounts(backup.modules.financial.restrictionAccounts);
     if (backup.modules.financial.accountNames) saveFinancialAccountNames(backup.modules.financial.accountNames);
   }
 
@@ -723,7 +562,11 @@ export function restoreUnifiedBackupState(backup: UnifiedBackupState): void {
   if (backup.modules.settings) saveSettings(backup.modules.settings);
   if (backup.modules.systemLogs) saveSystemAuditLogs(backup.modules.systemLogs);
 
-  logSystemAudit('نظام', 'استرجاع', 'تم استرجاع النسخة الاحتياطية الشاملة لكافة الدفاتر بما فيها وحدة إدارة العمل بنجاح');
+  logSystemAudit(
+    'نظام',
+    'استرجاع',
+    'تم استرجاع النسخة الاحتياطية الشاملة لكافة الدفاتر بما فيها وحدة إدارة العمل بنجاح'
+  );
 }
 
 export function restoreDefaultData(): void {
@@ -806,7 +649,11 @@ export function restoreDefaultData(): void {
   // Settings
   saveSettings(DEFAULT_APP_SETTINGS);
 
-  logSystemAudit('نظام', 'استرجاع', 'تمت استعادة بيانات الأساس الأولية لكافة الوحدات (المالي، المخزون، المهام، العملاء، الأطباء، الديون، الملاحظات، الروتين، دفتر العهد، ومكتبة الروابط)');
+  logSystemAudit(
+    'نظام',
+    'استرجاع',
+    'تمت استعادة بيانات الأساس الأولية لكافة الوحدات (المالي، المخزون، المهام، العملاء، الأطباء، الديون، الملاحظات، الروتين، دفتر العهد، ومكتبة الروابط)'
+  );
 }
 
 export const createUnifiedBackup = getUnifiedBackupState;
@@ -843,4 +690,3 @@ export { dbStorage } from '../database/dbStorage';
 export function getStorageEngineStats() {
   return dbStorage.getStats();
 }
-

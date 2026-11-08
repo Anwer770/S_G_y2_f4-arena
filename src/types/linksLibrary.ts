@@ -1,40 +1,23 @@
 export type LinkType =
-  | 'موقع رسمي'
-  | 'موقع مجاني'
-  | 'موقع دفع'
-  | 'موقع مهكر'
-  | 'تحميل'
-  | 'فيسبوك'
-  | 'الانستجرام'
-  | 'تلجرام'
-  | string;
+  'موقع رسمي' | 'موقع مجاني' | 'موقع دفع' | 'موقع مهكر' | 'تحميل' | 'فيسبوك' | 'الانستجرام' | 'تلجرام' | string;
 
-export type LinkImportance =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'مفيد'
-  | 'غير مفيد'
-  | 'ملغي'
-  | 'غير نشط'
-  | string;
+export type LinkImportance = 'A' | 'B' | 'C' | 'D' | 'مفيد' | 'غير مفيد' | 'ملغي' | 'غير نشط' | string;
 
 export type LinkClassification = string;
 export type LinkCategory = string;
 
 export interface LinkRecord {
   id: string;
-  siteName: string;         // اسم الموقع
-  desc: string;             // الوصف
-  url: string;              // الرابط URL
-  type: LinkType;           // النوع (فيسبوك، الانستجرام، تلجرام، موقع رسمي، موقع دفع، موقع مجاني، موقع مهكر، تحميل)
-  classification: string;   // التصنيف (23 تصنيف)
-  category: string;         // الفئة (10 فئات)
+  siteName: string; // اسم الموقع
+  desc: string; // الوصف
+  url: string; // الرابط URL
+  type: LinkType; // النوع (فيسبوك، الانستجرام، تلجرام، موقع رسمي، موقع دفع، موقع مجاني، موقع مهكر، تحميل)
+  classification: string; // التصنيف (23 تصنيف)
+  category: string; // الفئة (10 فئات)
   importance: LinkImportance; // درجة الأهمية (A, B, C, D, ...)
-  notes?: string;           // ملاحظات
-  isFavorite?: boolean;     // هل مفضل
-  visitCount?: number;      // عداد الزيارات
+  notes?: string; // ملاحظات
+  isFavorite?: boolean; // هل مفضل
+  visitCount?: number; // عداد الزيارات
   createdAt?: string;
   updatedAt?: string;
 }

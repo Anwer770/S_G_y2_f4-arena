@@ -124,7 +124,9 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">محرك الأتمتة وقواعد سير العمل (Automation Engine)</h2>
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                محرك الأتمتة وقواعد سير العمل (Automation Engine)
+              </h2>
               <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                 {automations.filter((a) => a.isActive).length} نشطة
               </span>
@@ -181,24 +183,31 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">{rule.description}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
+                  {rule.description}
+                </p>
 
                 {/* Flow Pills (When -> Then) */}
                 <div className="flex items-center gap-2 flex-wrap text-xs pt-1">
                   <div className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-medium border border-slate-200/60 dark:border-slate-700">
                     <Clock className="w-3 h-3 text-amber-600" />
-                    <span>الشرط: <strong>{getTriggerLabel(rule.triggerEvent)}</strong></span>
+                    <span>
+                      الشرط: <strong>{getTriggerLabel(rule.triggerEvent)}</strong>
+                    </span>
                   </div>
                   <ArrowRight className="w-3 h-3 text-slate-400 rotate-180 hidden sm:block" />
                   <div className="flex items-center gap-1 px-2.5 py-1 bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-200 rounded-lg font-medium border border-teal-200/60 dark:border-teal-800">
                     <ShieldCheck className="w-3 h-3 text-teal-600" />
-                    <span>الإجراء: <strong>{getActionLabel(rule.actionType)}</strong></span>
+                    <span>
+                      الإجراء: <strong>{getActionLabel(rule.actionType)}</strong>
+                    </span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs text-slate-400 dark:text-slate-500 pt-1">
                   <span>
-                    مرات التنفيذ الناجحة: <strong className="font-mono text-slate-700 dark:text-slate-200">{rule.executionsCount} مرة</strong>
+                    مرات التنفيذ الناجحة:{' '}
+                    <strong className="font-mono text-slate-700 dark:text-slate-200">{rule.executionsCount} مرة</strong>
                   </span>
                   {rule.lastExecutedAt && (
                     <>
@@ -268,7 +277,9 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
                 <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600">
                   <Zap className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">إنشاء قاعدة سير عمل وأتمتة جديدة</h3>
+                <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                  إنشاء قاعدة سير عمل وأتمتة جديدة
+                </h3>
               </div>
               <button
                 onClick={() => setIsNewModalOpen(false)}
@@ -304,7 +315,9 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">عند وقوع الحدث (Trigger):</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    عند وقوع الحدث (Trigger):
+                  </label>
                   <select
                     value={triggerEvent}
                     onChange={(e) => setTriggerEvent(e.target.value as AutomationRule['triggerEvent'])}
@@ -320,7 +333,9 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">نفذ الإجراء تلقائياً (Action):</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    نفذ الإجراء تلقائياً (Action):
+                  </label>
                   <select
                     value={actionType}
                     onChange={(e) => setActionType(e.target.value as AutomationRule['actionType'])}

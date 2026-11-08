@@ -47,9 +47,7 @@ export const FiscalYearTab: React.FC<Props> = ({ settings, onChange }) => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100 dark:border-slate-800">
           <div>
             <span className="text-xs font-bold text-slate-400 dark:text-slate-500">السنة المالية الحالية</span>
-            <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">
-              عام {settings.currentYear}
-            </div>
+            <div className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">عام {settings.currentYear}</div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -158,7 +156,8 @@ export const FiscalYearTab: React.FC<Props> = ({ settings, onChange }) => {
               تأكيد إقفال السنة المالية {settings.currentYear}
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              عند إقفال السنة المالية، سيتم منع إضافة أو تعديل أي قيود محاسبية أو حركات مخزنية للفترة السابقة، وسيقوم النظام باحتساب الأرباح والخسائر وترحيل الأرصدة الختامية كأرصدة افتتاحية للسنة الجديدة.
+              عند إقفال السنة المالية، سيتم منع إضافة أو تعديل أي قيود محاسبية أو حركات مخزنية للفترة السابقة، وسيقوم
+              النظام باحتساب الأرباح والخسائر وترحيل الأرصدة الختامية كأرصدة افتتاحية للسنة الجديدة.
             </p>
             <div className="flex gap-3 pt-2">
               <button

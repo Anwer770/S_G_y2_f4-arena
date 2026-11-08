@@ -38,7 +38,9 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
   // Search & Filter
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'active' | 'inactive' | 'negative'>('all');
-  const [sortColumn, setSortColumn] = useState<'name' | 'currentStock' | 'totalIn' | 'totalOut' | 'openingStock'>('currentStock');
+  const [sortColumn, setSortColumn] = useState<'name' | 'currentStock' | 'totalIn' | 'totalOut' | 'openingStock'>(
+    'currentStock'
+  );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   // Modal State for Add / Edit
@@ -89,9 +91,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
     }
 
     // Check duplicate name
-    const existing = products.find(
-      (p) => p.name.toLowerCase() === trimmedName.toLowerCase()
-    );
+    const existing = products.find((p) => p.name.toLowerCase() === trimmedName.toLowerCase());
 
     if (existing && (!editingProduct || existing.id !== editingProduct.id)) {
       setFormError('يوجد صنف مسجل بالفعل بهذا الاسم، يرجى اختيار اسم فريد.');
@@ -159,8 +159,18 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
 
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => {
-      const stA = stockMap[a.name] || { currentStock: a.openingStock, totalIn: 0, totalOut: 0, openingStock: a.openingStock };
-      const stB = stockMap[b.name] || { currentStock: b.openingStock, totalIn: 0, totalOut: 0, openingStock: b.openingStock };
+      const stA = stockMap[a.name] || {
+        currentStock: a.openingStock,
+        totalIn: 0,
+        totalOut: 0,
+        openingStock: a.openingStock,
+      };
+      const stB = stockMap[b.name] || {
+        currentStock: b.openingStock,
+        totalIn: 0,
+        totalOut: 0,
+        openingStock: b.openingStock,
+      };
 
       let valA: string | number = a.name;
       let valB: string | number = b.name;
@@ -190,8 +200,8 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
 
   // Overall Inventory Stats
   const stats = useMemo(() => {
-    let totalItems = products.length;
-    let activeItems = products.filter((p) => p.isActive).length;
+    const totalItems = products.length;
+    const activeItems = products.filter((p) => p.isActive).length;
     let negativeItems = 0;
     let totalStockUnits = 0;
 
@@ -215,22 +225,30 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
 
         <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
           <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">الأصناف النشطة</span>
-          <div className="text-xl font-black text-[#0D9488] dark:text-emerald-400 font-mono">{stats.activeItems} نشط</div>
+          <div className="text-xl font-black text-[#0D9488] dark:text-emerald-400 font-mono">
+            {stats.activeItems} نشط
+          </div>
           <span className="text-xs text-emerald-600 dark:text-emerald-400">متاحة في حركات التوريد والصرف</span>
         </div>
 
-        <div className={`p-4 rounded-xl border shadow-2xs ${
-          stats.negativeItems > 0 ? 'bg-amber-50/70 border-amber-200' : 'bg-white border-slate-200'
-        }`}>
+        <div
+          className={`p-4 rounded-xl border shadow-2xs ${
+            stats.negativeItems > 0 ? 'bg-amber-50/70 border-amber-200' : 'bg-white border-slate-200'
+          }`}
+        >
           <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">أصناف برصيد سالب</span>
-          <div className={`text-xl font-black font-mono ${stats.negativeItems > 0 ? 'text-amber-800' : 'text-slate-700'}`}>
+          <div
+            className={`text-xl font-black font-mono ${stats.negativeItems > 0 ? 'text-amber-800' : 'text-slate-700'}`}
+          >
             {stats.negativeItems} صنف
           </div>
           <span className="text-xs text-slate-400 dark:text-slate-500">تجاوز الصرف كميات التوريد</span>
         </div>
 
         <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">صافي الرصيد المخزني</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">
+            صافي الرصيد المخزني
+          </span>
           <div className="text-xl font-black text-[#3B82F6] dark:text-blue-400 font-mono">
             {formatNumberLatin(stats.totalStockUnits)}
           </div>
@@ -316,7 +334,9 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
           <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0">
             <thead className="sticky top-0 z-20">
               <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold select-none shadow-2xs">
-                <th className="py-2.5 px-3 w-10 text-center sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">#</th>
+                <th className="py-2.5 px-3 w-10 text-center sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                  #
+                </th>
                 <th
                   onClick={() => {
                     setSortColumn('name');
@@ -364,7 +384,9 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                   الرصيد الحالي {sortColumn === 'currentStock' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </th>
                 <th className="py-2.5 px-2.5 text-center">الحالة</th>
-                <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-24">الإجراءات</th>
+                <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-24">
+                  الإجراءات
+                </th>
               </tr>
             </thead>
 
@@ -381,7 +403,10 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                 const isZero = st.currentStock === 0;
 
                 return (
-                  <tr key={p.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors text-[12px] group">
+                  <tr
+                    key={p.id}
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors text-[12px] group"
+                  >
                     <td className="py-2 px-3 text-center text-slate-400 dark:text-slate-500 font-mono font-bold sticky right-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/60 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
                       {idx + 1}
                     </td>
@@ -389,13 +414,13 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                     <td className="py-2 px-3">
                       <div className="font-bold text-slate-900 dark:text-slate-100">{p.name}</div>
                       {p.description && (
-                        <div className="text-xs text-slate-400 dark:text-slate-500 truncate max-w-xs">{p.description}</div>
+                        <div className="text-xs text-slate-400 dark:text-slate-500 truncate max-w-xs">
+                          {p.description}
+                        </div>
                       )}
                     </td>
 
-                    <td className="py-2 px-2.5 text-slate-600 dark:text-slate-300 text-xs">
-                      {p.unit || 'حبة'}
-                    </td>
+                    <td className="py-2 px-2.5 text-slate-600 dark:text-slate-300 text-xs">{p.unit || 'حبة'}</td>
 
                     <td className="py-2 px-2.5 text-left font-mono text-slate-700 dark:text-slate-200">
                       {formatNumberLatin(p.openingStock)}
@@ -416,8 +441,8 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                           isNegative
                             ? 'bg-rose-50 text-rose-800 border-rose-200'
                             : isZero
-                            ? 'bg-slate-100 text-slate-600 border-slate-200'
-                            : 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              ? 'bg-slate-100 text-slate-600 border-slate-200'
+                              : 'bg-emerald-50 text-emerald-800 border-emerald-200'
                         }`}
                       >
                         {formatNumberLatin(st.currentStock)} {p.unit || 'حبة'}
@@ -530,7 +555,9 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">حدّ الطلب (تنبيه المخزون)</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">
+                    حدّ الطلب (تنبيه المخزون)
+                  </label>
                   <input
                     type="number"
                     min="0"
@@ -573,7 +600,10 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                   onChange={(e) => setFormIsActive(e.target.checked)}
                   className="rounded text-blue-600 dark:text-blue-400 focus:ring-blue-500"
                 />
-                <label htmlFor="prodActiveToggle" className="text-slate-700 dark:text-slate-200 font-semibold cursor-pointer">
+                <label
+                  htmlFor="prodActiveToggle"
+                  className="text-slate-700 dark:text-slate-200 font-semibold cursor-pointer"
+                >
                   صنف نشط (يظهر في القوائم المنسدلة لإضافة حركات جديدة)
                 </label>
               </div>

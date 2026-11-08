@@ -137,7 +137,12 @@ const LiveClock: React.FC = React.memo(() => {
     const update = () => {
       const now = new Date();
       const day = now.toLocaleDateString('ar-YE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      const time = now.toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      const time = now.toLocaleTimeString('ar-YE', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      });
       setTimeStr(`${day} • ${time}`);
     };
     update();
@@ -201,7 +206,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
   const [workOSData, setWorkOSData] = useState(() => loadWorkOSData());
 
   // Operations Tab state: 'today' | 'overdue' | 'visits' | 'commitments' | 'orders_ledger'
-  const [activeOpsTab, setActiveOpsTab] = useState<'today' | 'overdue' | 'visits' | 'commitments' | 'orders_ledger'>('today');
+  const [activeOpsTab, setActiveOpsTab] = useState<'today' | 'overdue' | 'visits' | 'commitments' | 'orders_ledger'>(
+    'today'
+  );
   useSubTabSync('dashboard', activeOpsTab, setActiveOpsTab as (next: string) => void);
   const [workOSTasksVersion, setWorkOSTasksVersion] = useState(0);
 
@@ -223,7 +230,7 @@ export const UnifiedDashboard: React.FC<Props> = ({
 
   // Stock metrics
   const stockStats = useMemo(() => {
-    let totalItems = items.length;
+    const totalItems = items.length;
     let lowStockCount = 0;
     let outOfStockCount = 0;
     let totalQty = 0;
@@ -246,7 +253,16 @@ export const UnifiedDashboard: React.FC<Props> = ({
   // Command Center Live Categorization: Today, Overdue, Upcoming
   // دمج مهام منظومة العمل Work OS والمهام الكلاسيكية لضمان تزامن لوحة القيادة
   const unifiedTasksPool = useMemo(() => {
-    const list: Array<{ id: string; title: string; end?: string; start?: string; status: string; priority?: string; assignee?: string; category?: string }> = [];
+    const list: Array<{
+      id: string;
+      title: string;
+      end?: string;
+      start?: string;
+      status: string;
+      priority?: string;
+      assignee?: string;
+      category?: string;
+    }> = [];
     (tasks || []).forEach((t) => {
       if (t) {
         list.push({
@@ -439,9 +455,7 @@ export const UnifiedDashboard: React.FC<Props> = ({
         <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-[#0D9488]" />
-            <span className="text-xs font-black text-slate-900 dark:text-slate-100">
-              الإجراءات السريعة الفورية
-            </span>
+            <span className="text-xs font-black text-slate-900 dark:text-slate-100">الإجراءات السريعة الفورية</span>
             <span className="text-xs text-slate-400 font-medium hidden sm:inline">
               (إدخال مباشر منظم عبر النماذج المحاسبية دون مغادرة الشاشة)
             </span>
@@ -625,9 +639,7 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
               <AnimatedCounter value={commitments.filter((c) => c.status !== 'تم الانجاز').length} />
             </div>
-            <span className="text-xs font-bold text-amber-700 dark:text-amber-400">
-              التزامات قائمة
-            </span>
+            <span className="text-xs font-bold text-amber-700 dark:text-amber-400">التزامات قائمة</span>
           </div>
         </div>
 
@@ -646,9 +658,7 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="text-2xl font-black text-rose-600 dark:text-rose-400 font-mono">
               <AnimatedCounter value={stockStats.lowStockCount + stockStats.outOfStockCount} />
             </div>
-            <span className="text-xs font-bold text-rose-700 dark:text-rose-300">
-              صنف بلغ حد الطلب
-            </span>
+            <span className="text-xs font-bold text-rose-700 dark:text-rose-300">صنف بلغ حد الطلب</span>
           </div>
         </div>
 
@@ -667,9 +677,7 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono truncate">
               <AnimatedCounter value={finSummary.netBalance} formatter={formatCurrency} />
             </div>
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-              ريال يمني (صافي)
-            </span>
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">ريال يمني (صافي)</span>
           </div>
         </div>
       </div>
@@ -689,9 +697,13 @@ export const UnifiedDashboard: React.FC<Props> = ({
             >
               <CheckSquare className="w-3.5 h-3.5" />
               <span>مهام اليوم</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-                activeOpsTab === 'today' ? 'bg-teal-800 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-              }`}>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                  activeOpsTab === 'today'
+                    ? 'bg-teal-800 text-white'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                }`}
+              >
                 {todayTasks.length}
               </span>
             </button>
@@ -706,9 +718,13 @@ export const UnifiedDashboard: React.FC<Props> = ({
             >
               <Flame className="w-3.5 h-3.5" />
               <span>المتأخرات</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-                activeOpsTab === 'overdue' ? 'bg-rose-800 text-white' : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'
-              }`}>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                  activeOpsTab === 'overdue'
+                    ? 'bg-rose-800 text-white'
+                    : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'
+                }`}
+              >
                 {overdueTasks.length + overdueCommitments.length}
               </span>
             </button>
@@ -723,9 +739,13 @@ export const UnifiedDashboard: React.FC<Props> = ({
             >
               <Eye className="w-3.5 h-3.5" />
               <span>زيارات ومواعيد مسار اليوم ({todayArabic})</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-                activeOpsTab === 'visits' ? 'bg-sky-800 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-              }`}>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                  activeOpsTab === 'visits'
+                    ? 'bg-sky-800 text-white'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                }`}
+              >
                 {todayCustomerVisits.length + todayDoctorVisits.length}
               </span>
             </button>
@@ -752,9 +772,13 @@ export const UnifiedDashboard: React.FC<Props> = ({
             >
               <ShoppingCart className="w-3.5 h-3.5" />
               <span>الدفتر المركزي (الطلبيات والربط الثلاثي)</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-                activeOpsTab === 'orders_ledger' ? 'bg-blue-800 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-              }`}>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                  activeOpsTab === 'orders_ledger'
+                    ? 'bg-blue-800 text-white'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                }`}
+              >
                 {dashboardOrders.length}
               </span>
             </button>
@@ -809,7 +833,8 @@ export const UnifiedDashboard: React.FC<Props> = ({
                                 wt.id === matched.id
                                   ? {
                                       ...wt,
-                                      status: wt.status === 'completed' ? ('in_progress' as const) : ('completed' as const),
+                                      status:
+                                        wt.status === 'completed' ? ('in_progress' as const) : ('completed' as const),
                                       progress: wt.status === 'completed' ? 50 : 100,
                                       updatedAt: new Date().toISOString(),
                                     }
@@ -833,8 +858,8 @@ export const UnifiedDashboard: React.FC<Props> = ({
                               task.priority === 'A'
                                 ? 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'
                                 : task.priority === 'B'
-                                ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300'
-                                : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
+                                  ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300'
+                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
                             }`}
                           >
                             أولوية {task.priority}
@@ -891,7 +916,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
                           متأخرة منذ {task.end}
                         </span>
                       </div>
-                      <span className="text-xs text-slate-400">المسؤول: {task.assignee || 'المستخدم'} • {task.category}</span>
+                      <span className="text-xs text-slate-400">
+                        المسؤول: {task.assignee || 'المستخدم'} • {task.category}
+                      </span>
                     </div>
 
                     <button
@@ -938,7 +965,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
                         </span>
                       </div>
                       <p className="text-xs text-slate-500 dark:text-slate-400">{comm.desc}</p>
-                      <span className="text-xs font-mono font-bold text-rose-600">المبلغ: {formatCurrency(comm.amount)} YER</span>
+                      <span className="text-xs font-mono font-bold text-rose-600">
+                        المبلغ: {formatCurrency(comm.amount)} YER
+                      </span>
                     </div>
 
                     <button
@@ -971,7 +1000,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
                 </div>
 
                 {todayCustomerVisits.length === 0 ? (
-                  <p className="text-center py-4 text-xs text-slate-400">لا يوجد عملاء مجدولون في مسار {todayArabic}.</p>
+                  <p className="text-center py-4 text-xs text-slate-400">
+                    لا يوجد عملاء مجدولون في مسار {todayArabic}.
+                  </p>
                 ) : (
                   <div className="space-y-1.5">
                     {todayCustomerVisits.map((c) => (
@@ -981,7 +1012,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
                       >
                         <div>
                           <span className="font-bold text-slate-900 dark:text-slate-100 block">{c.name}</span>
-                          <span className="text-xs text-slate-400">{c.region} • المندوب: {c.responsible}</span>
+                          <span className="text-xs text-slate-400">
+                            {c.region} • المندوب: {c.responsible}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xs font-bold text-teal-700 dark:text-teal-300">
@@ -1013,7 +1046,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
                 </div>
 
                 {todayDoctorVisits.length === 0 ? (
-                  <p className="text-center py-4 text-xs text-slate-400">لا يوجد أطباء مجدولون في مسار {todayArabic}.</p>
+                  <p className="text-center py-4 text-xs text-slate-400">
+                    لا يوجد أطباء مجدولون في مسار {todayArabic}.
+                  </p>
                 ) : (
                   <div className="space-y-1.5">
                     {todayDoctorVisits.map((d) => (
@@ -1068,9 +1103,13 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   >
                     <div>
                       <span className="font-bold text-slate-900 dark:text-slate-100 block">{dc.name}</span>
-                      <span className="text-xs text-slate-400">{dc.category} • المستحق: {dc.endDate || dc.date}</span>
+                      <span className="text-xs text-slate-400">
+                        {dc.category} • المستحق: {dc.endDate || dc.date}
+                      </span>
                     </div>
-                    <span className="font-mono font-bold text-rose-600">{formatCurrency(dc.amount)} {dc.currency}</span>
+                    <span className="font-mono font-bold text-rose-600">
+                      {formatCurrency(dc.amount)} {dc.currency}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -1097,9 +1136,13 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   >
                     <div>
                       <span className="font-bold text-slate-900 dark:text-slate-100 block">{d.name}</span>
-                      <span className="text-xs text-slate-400">دفتر: {d.book} • التاريخ: {d.date}</span>
+                      <span className="text-xs text-slate-400">
+                        دفتر: {d.book} • التاريخ: {d.date}
+                      </span>
                     </div>
-                    <span className={`font-mono font-bold ${d.book === 'لنا' ? 'text-teal-700 dark:text-teal-300' : 'text-rose-600'}`}>
+                    <span
+                      className={`font-mono font-bold ${d.book === 'لنا' ? 'text-teal-700 dark:text-teal-300' : 'text-rose-600'}`}
+                    >
                       {formatCurrency(d.debit || d.credit)} {d.currency}
                     </span>
                   </div>
@@ -1147,11 +1190,10 @@ export const UnifiedDashboard: React.FC<Props> = ({
                 <Wallet className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">
-                  الحركة المالية واليومية
-                </h3>
+                <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">الحركة المالية واليومية</h3>
                 <span className="text-xs text-slate-400">
-                  إيرادات: {formatCurrency(finSummary.totalIncome)} YER • مصروفات: {formatCurrency(finSummary.totalExpense)} YER
+                  إيرادات: {formatCurrency(finSummary.totalIncome)} YER • مصروفات:{' '}
+                  {formatCurrency(finSummary.totalExpense)} YER
                 </span>
               </div>
             </div>
@@ -1190,17 +1232,29 @@ export const UnifiedDashboard: React.FC<Props> = ({
                     className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className={`p-1.5 rounded-lg ${isIncome ? 'bg-teal-100 dark:bg-teal-950 text-teal-800 dark:text-teal-200' : 'bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-200'}`}>
-                        {isIncome ? <ArrowDownLeft className="w-3.5 h-3.5" /> : <ArrowUpRight className="w-3.5 h-3.5" />}
+                      <div
+                        className={`p-1.5 rounded-lg ${isIncome ? 'bg-teal-100 dark:bg-teal-950 text-teal-800 dark:text-teal-200' : 'bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-200'}`}
+                      >
+                        {isIncome ? (
+                          <ArrowDownLeft className="w-3.5 h-3.5" />
+                        ) : (
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        )}
                       </div>
                       <div>
-                        <span className="font-bold text-slate-900 dark:text-slate-100 block">{txn.accountName || txn.id}</span>
-                        <span className="text-xs text-slate-500 dark:text-slate-400">{txn.movement} • {txn.restriction} • {txn.date}</span>
+                        <span className="font-bold text-slate-900 dark:text-slate-100 block">
+                          {txn.accountName || txn.id}
+                        </span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">
+                          {txn.movement} • {txn.restriction} • {txn.date}
+                        </span>
                       </div>
                     </div>
 
                     <div className="text-left font-mono">
-                      <span className={`font-bold block ${isIncome ? 'text-teal-700 dark:text-teal-300' : 'text-rose-600 dark:text-rose-400'}`}>
+                      <span
+                        className={`font-bold block ${isIncome ? 'text-teal-700 dark:text-teal-300' : 'text-rose-600 dark:text-rose-400'}`}
+                      >
                         {formatCurrency(txn.amountYER)} YER
                       </span>
                       {(txn.amountSAR > 0 || txn.amountUSD > 0) && (
@@ -1225,11 +1279,10 @@ export const UnifiedDashboard: React.FC<Props> = ({
                 <Package className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">
-                  حركة المخزون والمستودع
-                </h3>
+                <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">حركة المخزون والمستودع</h3>
                 <span className="text-xs text-slate-400">
-                  الأصناف: {stockStats.totalItems} • إجمالي الكمية: {stockStats.totalQty} • حرجة: {stockStats.lowStockCount + stockStats.outOfStockCount}
+                  الأصناف: {stockStats.totalItems} • إجمالي الكمية: {stockStats.totalQty} • حرجة:{' '}
+                  {stockStats.lowStockCount + stockStats.outOfStockCount}
                 </span>
               </div>
             </div>
@@ -1260,8 +1313,14 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs"
                 >
                   <div className="flex items-center gap-2.5">
-                    <div className={`p-1.5 rounded-lg ${mov.movementType === 'توريد' ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800' : 'bg-rose-100 dark:bg-rose-950 text-rose-800'}`}>
-                      {mov.movementType === 'توريد' ? <ArrowDownLeft className="w-3.5 h-3.5" /> : <ArrowUpRight className="w-3.5 h-3.5" />}
+                    <div
+                      className={`p-1.5 rounded-lg ${mov.movementType === 'توريد' ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800' : 'bg-rose-100 dark:bg-rose-950 text-rose-800'}`}
+                    >
+                      {mov.movementType === 'توريد' ? (
+                        <ArrowDownLeft className="w-3.5 h-3.5" />
+                      ) : (
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      )}
                     </div>
                     <div>
                       <span className="font-bold text-slate-900 dark:text-slate-100 block">
@@ -1273,9 +1332,13 @@ export const UnifiedDashboard: React.FC<Props> = ({
                     </div>
                   </div>
 
-                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${
-                    mov.status === 'معتمد' ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300' : 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300'
-                  }`}>
+                  <span
+                    className={`px-2 py-0.5 rounded text-xs font-bold ${
+                      mov.status === 'معتمد'
+                        ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300'
+                        : 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300'
+                    }`}
+                  >
                     {mov.status}
                   </span>
                 </div>
@@ -1315,7 +1378,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200/50">2</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200/50">
+                    2
+                  </span>
                   <div className="p-2 bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 rounded-xl group-hover:bg-teal-600 group-hover:text-white transition-colors">
                     <Wallet className="w-4 h-4" />
                   </div>
@@ -1324,8 +1389,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {financialTransactions.length} حركة
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-teal-600">ادارة السجل اليومي</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">سندات القبض والصرف، المقبوضات والمدفوعات والصناديق</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-teal-600">
+                ادارة السجل اليومي
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                سندات القبض والصرف، المقبوضات والمدفوعات والصناديق
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-teal-700 dark:text-teal-400">
               <span>فتح السجل المالي</span>
@@ -1341,7 +1410,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200/50">3</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200/50">
+                    3
+                  </span>
                   <div className="p-2 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 rounded-xl group-hover:bg-amber-600 group-hover:text-white transition-colors">
                     <Coins className="w-4 h-4" />
                   </div>
@@ -1350,8 +1421,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {debts.length + debtCommitments.length} سجل
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-amber-600">ادارة الديون والالتزامات</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">دفاتر الذمم، سندات الأقساط، والالتزامات المالية</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-amber-600">
+                ادارة الديون والالتزامات
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                دفاتر الذمم، سندات الأقساط، والالتزامات المالية
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-amber-700 dark:text-amber-400">
               <span>فتح الديون</span>
@@ -1367,7 +1442,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200/50">4</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200/50">
+                    4
+                  </span>
                   <div className="p-2 bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 rounded-xl group-hover:bg-sky-600 group-hover:text-white transition-colors">
                     <Package className="w-4 h-4" />
                   </div>
@@ -1376,8 +1453,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {items.length} صنف
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-sky-600">ادارة صرف وتوريد</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">حركة المخزون، أذونات الصرف والتوريد وتنبيهات النواقص</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-sky-600">
+                ادارة صرف وتوريد
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                حركة المخزون، أذونات الصرف والتوريد وتنبيهات النواقص
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-sky-700 dark:text-sky-400">
               <span>فتح المخزون</span>
@@ -1393,7 +1474,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200/50">5</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200/50">
+                    5
+                  </span>
                   <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                     <Zap className="w-4 h-4" />
                   </div>
@@ -1402,8 +1485,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {tasks.length} مهمة
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-emerald-600">إدارة العمل (Work OS)</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">المشاريع، المهام، كانبان، الجدول الزمني، والتخطيط اليومي</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-emerald-600">
+                إدارة العمل (Work OS)
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                المشاريع، المهام، كانبان، الجدول الزمني، والتخطيط اليومي
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-emerald-700 dark:text-emerald-400">
               <span>فتح إدارة العمل</span>
@@ -1419,7 +1506,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200/50">6</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200/50">
+                    6
+                  </span>
                   <div className="p-2 bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 rounded-xl group-hover:bg-teal-600 group-hover:text-white transition-colors">
                     <Users className="w-4 h-4" />
                   </div>
@@ -1428,8 +1517,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {customers.length} عميل
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-teal-600">ادارة العملاء وزيارات</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">شبكة العملاء، كشوفات المطابقة، وخطوط السير اليومية</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-teal-600">
+                ادارة العملاء وزيارات
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                شبكة العملاء، كشوفات المطابقة، وخطوط السير اليومية
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-teal-700 dark:text-teal-400">
               <span>فتح العملاء</span>
@@ -1445,7 +1538,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200/50">7</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200/50">
+                    7
+                  </span>
                   <div className="p-2 bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 rounded-xl group-hover:bg-sky-600 group-hover:text-white transition-colors">
                     <Stethoscope className="w-4 h-4" />
                   </div>
@@ -1454,8 +1549,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {doctors.length} طبيب
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-sky-600">ادارة الاطباء وزيارات</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">دليل الأطباء، العيادات، العينات الطبية والمتابعات الميدانية</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-sky-600">
+                ادارة الاطباء وزيارات
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                دليل الأطباء، العيادات، العينات الطبية والمتابعات الميدانية
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-sky-700 dark:text-sky-400">
               <span>فتح الأطباء</span>
@@ -1471,7 +1570,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200/50">8</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200/50">
+                    8
+                  </span>
                   <div className="p-2 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 rounded-xl group-hover:bg-amber-600 group-hover:text-white transition-colors">
                     <Flame className="w-4 h-4" />
                   </div>
@@ -1480,8 +1581,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   نشط
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-amber-600">ادارة الروتين والعادات</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">العادات اليومية، مربعات التركيز، وجداول الإنتاجية</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-amber-600">
+                ادارة الروتين والعادات
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                العادات اليومية، مربعات التركيز، وجداول الإنتاجية
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-amber-700 dark:text-amber-400">
               <span>فتح الروتين</span>
@@ -1497,7 +1602,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200/50">9</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200/50">
+                    9
+                  </span>
                   <div className="p-2 bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 rounded-xl group-hover:bg-purple-600 group-hover:text-white transition-colors">
                     <BookOpen className="w-4 h-4" />
                   </div>
@@ -1506,8 +1613,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {loadNotes().length} ملاحظة
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-purple-600">ادارة الملاحظات والمعرفة</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">التوثيق الإداري، محاضر الاجتماعات، والأرشيف المقفل</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-purple-600">
+                ادارة الملاحظات والمعرفة
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                التوثيق الإداري، محاضر الاجتماعات، والأرشيف المقفل
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-purple-700 dark:text-purple-400">
               <span>فتح الملاحظات</span>
@@ -1523,7 +1634,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200/50">10</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200/50">
+                    10
+                  </span>
                   <div className="p-2 bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 rounded-xl group-hover:bg-rose-600 group-hover:text-white transition-colors">
                     <ShieldCheck className="w-4 h-4" />
                   </div>
@@ -1532,8 +1645,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {loadCustodyIssues().length} سجل
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-rose-600">ادارة العهد والاشكاليات</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">سجلات العهد العينية والنقدية والمعلقات الإدارية</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-rose-600">
+                ادارة العهد والاشكاليات
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                سجلات العهد العينية والنقدية والمعلقات الإدارية
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-rose-700 dark:text-rose-400">
               <span>فتح العهد</span>
@@ -1549,7 +1666,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border border-violet-200/50">11</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border border-violet-200/50">
+                    11
+                  </span>
                   <div className="p-2 bg-violet-50 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400 rounded-xl group-hover:bg-violet-600 group-hover:text-white transition-colors">
                     <Globe className="w-4 h-4" />
                   </div>
@@ -1558,8 +1677,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   {loadLinksRecords().length} رابط
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-violet-600">مكتبة الروابط والأدوات</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">روابط أدوات الذكاء الاصطناعي والمواقع الخدمية</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-violet-600">
+                مكتبة الروابط والأدوات
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                روابط أدوات الذكاء الاصطناعي والمواقع الخدمية
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-violet-700 dark:text-violet-400">
               <span>فتح الروابط</span>
@@ -1575,7 +1698,9 @@ export const UnifiedDashboard: React.FC<Props> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200">12</span>
+                  <span className="w-5 h-5 flex items-center justify-center text-xs font-mono font-bold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200">
+                    12
+                  </span>
                   <div className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl group-hover:bg-slate-600 group-hover:text-white transition-colors">
                     <Building2 className="w-4 h-4" />
                   </div>
@@ -1584,8 +1709,12 @@ export const UnifiedDashboard: React.FC<Props> = ({
                   النظام
                 </span>
               </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-slate-600">إعدادات النظام والنسخ</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">النسخ الاحتياطي الشامل، المستخدمون والصلاحيات وقواعد البيانات</p>
+              <h3 className="text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-slate-600">
+                إعدادات النظام والنسخ
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                النسخ الاحتياطي الشامل، المستخدمون والصلاحيات وقواعد البيانات
+              </p>
             </div>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-400">
               <span>فتح الإعدادات</span>

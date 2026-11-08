@@ -46,8 +46,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       ? 'lg:mr-[calc(5rem+14rem)]'
       : 'lg:mr-[calc(18rem+14rem)] xl:mr-[calc(20rem+14rem)]'
     : isSidebarCollapsed
-    ? 'lg:mr-20'
-    : 'lg:mr-72 xl:mr-80';
+      ? 'lg:mr-20'
+      : 'lg:mr-72 xl:mr-80';
 
   return (
     <div
@@ -77,9 +77,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       />
 
       {/* 2. Main Page Layout with Dynamic Right Margin for RTL Layout */}
-      <div
-        className={`min-h-screen flex flex-col transition-all duration-300 ${contentMargin}`}
-      >
+      <div className={`min-h-screen flex flex-col transition-all duration-300 ${contentMargin}`}>
         <SubMenuDrawer
           activeTab={activeTab}
           isSidebarCollapsed={isSidebarCollapsed}
@@ -97,9 +95,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         />
 
         {/* Content Viewport */}
-        <main className="flex-1 max-w-[96rem] w-full mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-4">
-          {children}
-        </main>
+        <main className="flex-1 max-w-[96rem] w-full mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-4">{children}</main>
       </div>
     </div>
   );

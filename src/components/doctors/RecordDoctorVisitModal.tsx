@@ -2,18 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DoctorRecord, DoctorVisitLog, DoctorVisitStatus } from '../../types';
 import { DOCTOR_RESPONSIBLES } from '../../data/defaultDoctors';
 import { getTodayArabicDay } from '../../utils/doctors';
-import {
-  X,
-  Stethoscope,
-  Calendar,
-  User,
-  Package,
-  FileText,
-  CheckCircle2,
-  Clock,
-  Send,
-  Building2,
-} from 'lucide-react';
+import { X, Stethoscope, Calendar, User, Package, FileText, CheckCircle2, Clock, Send, Building2 } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -100,9 +89,7 @@ export const RecordDoctorVisitModal: React.FC<Props> = ({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-black">توثيق زيارة طبية ميدانية</h2>
-              <p className="text-xs text-teal-200">
-                تسجيل نتائج الزيارة وتحديث حالة الطبيب في الدفتر
-              </p>
+              <p className="text-xs text-teal-200">تسجيل نتائج الزيارة وتحديث حالة الطبيب في الدفتر</p>
             </div>
           </div>
           <button
@@ -148,9 +135,7 @@ export const RecordDoctorVisitModal: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
-                اليوم
-              </label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">اليوم</label>
               <input
                 type="text"
                 value={dayOfWeek}

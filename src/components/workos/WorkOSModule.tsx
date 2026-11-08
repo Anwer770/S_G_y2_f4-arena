@@ -44,9 +44,7 @@ import { WorkOSAICopilotModal } from './WorkOSAICopilotModal';
 import { WorkOSQuickAddModal } from './WorkOSQuickAddModal';
 import { WorkOSCommandPaletteModal } from './WorkOSCommandPaletteModal';
 
-import {
-  Briefcase,
-} from 'lucide-react';
+import { Briefcase } from 'lucide-react';
 import { Task, Commitment, TaskAuditLog } from '../../types';
 import { exportTasksToExcel } from '../../utils/excel';
 import { WorkOSPrintReportModal } from './WorkOSPrintReportModal';
@@ -100,7 +98,10 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
     if (initialView === 'projects') return 'projects';
     if (initialView === 'tasks') return 'tasks';
     if (initialView === 'workload') return 'workload';
-    if (initialView && ['overview', 'projects', 'tasks', 'kanban', 'timeline', 'priorities', 'workload'].includes(initialView)) {
+    if (
+      initialView &&
+      ['overview', 'projects', 'tasks', 'kanban', 'timeline', 'priorities', 'workload'].includes(initialView)
+    ) {
       return initialView;
     }
     return 'overview';
@@ -271,9 +272,7 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
     const validTasks = (data.tasks || []).filter(Boolean);
 
     const totalProjects = validProjects.length;
-    const activeProjects = validProjects.filter(
-      (p) => p && (p.status === 'active' || p.status === 'delayed')
-    ).length;
+    const activeProjects = validProjects.filter((p) => p && (p.status === 'active' || p.status === 'delayed')).length;
 
     const totalTasks = validTasks.length;
     const completedTasks = validTasks.filter((t) => t && t.status === 'completed').length;
@@ -281,16 +280,11 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
     const overdueTasks = validTasks.filter(
       (t) => t && t.status !== 'completed' && t.dueDate && t.dueDate < todayStr
     ).length;
-    const urgentTasks = validTasks.filter(
-      (t) => t && t.status !== 'completed' && t.priority === 'urgent'
-    ).length;
-    const dueTodayTasks = validTasks.filter(
-      (t) => t && t.status !== 'completed' && t.dueDate === todayStr
-    ).length;
+    const urgentTasks = validTasks.filter((t) => t && t.status !== 'completed' && t.priority === 'urgent').length;
+    const dueTodayTasks = validTasks.filter((t) => t && t.status !== 'completed' && t.dueDate === todayStr).length;
     const openTasks = validTasks.filter((t) => t && t.status !== 'completed').length;
 
-    const overallCompletionRate =
-      totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+    const overallCompletionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
     return {
       totalProjects,
@@ -467,13 +461,25 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
     if (selectedStatus === 'in_progress') return 'in_progress_tasks';
     if (currentTab === 'projects' && selectedProjectId !== 'all') return 'active_projects';
     if (currentTab === 'projects') return 'total_projects';
-    if (currentTab === 'tasks' && selectedProjectId === 'all' && selectedAssigneeId === 'all' && selectedStatus === 'all' && !overdueOnly && !completedOnly && selectedPriority === 'all') return 'total_tasks';
+    if (
+      currentTab === 'tasks' &&
+      selectedProjectId === 'all' &&
+      selectedAssigneeId === 'all' &&
+      selectedStatus === 'all' &&
+      !overdueOnly &&
+      !completedOnly &&
+      selectedPriority === 'all'
+    )
+      return 'total_tasks';
     if (currentTab === 'overview') return 'completion_rate';
     return null;
   }, [overdueOnly, selectedPriority, completedOnly, selectedStatus, currentTab, selectedProjectId, selectedAssigneeId]);
 
   return (
-    <div className="min-h-screen bg-slate-100/60 dark:bg-slate-800/60 pb-16 font-sans text-slate-800 dark:text-slate-200" dir="rtl">
+    <div
+      className="min-h-screen bg-slate-100/60 dark:bg-slate-800/60 pb-16 font-sans text-slate-800 dark:text-slate-200"
+      dir="rtl"
+    >
       {/* 1. TOP UNIFIED BAR (Single unified header across the app) */}
       <WorkOSUnifiedTopBar
         searchQuery={searchQuery}

@@ -31,12 +31,7 @@ interface ReportsViewProps {
   categories: string[];
 }
 
-export const ReportsView: React.FC<ReportsViewProps> = ({
-  records,
-  products,
-  stocks,
-  categories,
-}) => {
+export const ReportsView: React.FC<ReportsViewProps> = ({ records, products, stocks, categories }) => {
   const [reportType, setReportType] = useState<'beneficiary' | 'product' | 'period'>('beneficiary');
 
   // --- Beneficiary Report State ---
@@ -48,9 +43,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   const [benMovementType, setBenMovementType] = useState('');
 
   // --- Product Movement Card State ---
-  const [selectedProduct, setSelectedProduct] = useState<string>(
-    products.length > 0 ? products[0].name : ''
-  );
+  const [selectedProduct, setSelectedProduct] = useState<string>(products.length > 0 ? products[0].name : '');
   const [prodStartDate, setProdStartDate] = useState('');
   const [prodEndDate, setProdEndDate] = useState('');
 
@@ -64,20 +57,22 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   }, [records]);
 
   // Default select first beneficiary if none selected
-  const activeBeneficiary = selectedBeneficiary || (uniqueBeneficiaries[0] || '');
+  const activeBeneficiary = selectedBeneficiary || uniqueBeneficiaries[0] || '';
 
   // 1. Filtered records for Beneficiary Report (FR-25, FR-26)
   const beneficiaryRecords = useMemo(() => {
     if (!activeBeneficiary) return [];
 
-    return records.filter((r) => {
-      if (r.beneficiary.trim() !== activeBeneficiary.trim()) return false;
-      if (benStartDate && r.date < benStartDate) return false;
-      if (benEndDate && r.date > benEndDate) return false;
-      if (benCategory && r.category !== benCategory) return false;
-      if (benMovementType && r.movementType !== benMovementType) return false;
-      return true;
-    }).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    return records
+      .filter((r) => {
+        if (r.beneficiary.trim() !== activeBeneficiary.trim()) return false;
+        if (benStartDate && r.date < benStartDate) return false;
+        if (benEndDate && r.date > benEndDate) return false;
+        if (benCategory && r.category !== benCategory) return false;
+        if (benMovementType && r.movementType !== benMovementType) return false;
+        return true;
+      })
+      .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   }, [records, activeBeneficiary, benStartDate, benEndDate, benCategory, benMovementType]);
 
   // Beneficiary Summary & Product Breakdown (FR-27)
@@ -123,12 +118,14 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
     const prodObj = products.find((p) => p.name === selectedProduct);
     const opening = Number(prodObj?.openingStock) || 0;
 
-    const matchedRecords = records.filter((r) => {
-      if (!r.items || !(selectedProduct in r.items)) return false;
-      if (prodStartDate && r.date < prodStartDate) return false;
-      if (prodEndDate && r.date > prodEndDate) return false;
-      return true;
-    }).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    const matchedRecords = records
+      .filter((r) => {
+        if (!r.items || !(selectedProduct in r.items)) return false;
+        if (prodStartDate && r.date < prodStartDate) return false;
+        if (prodEndDate && r.date > prodEndDate) return false;
+        return true;
+      })
+      .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
 
     let running = opening;
     let totalIn = 0;
@@ -195,10 +192,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         };
       }
 
-      const totalItemsUnits = Object.values(r.items || {}).reduce<number>(
-        (sum, q) => sum + (Number(q) || 0),
-        0
-      );
+      const totalItemsUnits = Object.values(r.items || {}).reduce<number>((sum, q) => sum + (Number(q) || 0), 0);
 
       if (r.movementType === 'توريد') {
         monthMap[period].inCount += 1;
@@ -209,9 +203,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
       }
     }
 
-    const sortedPeriods = Object.values(monthMap).sort((a, b) =>
-      b.period.localeCompare(a.period)
-    );
+    const sortedPeriods = Object.values(monthMap).sort((a, b) => b.period.localeCompare(a.period));
 
     return { periods: sortedPeriods, unparsedDatesCount };
   }, [records]);
@@ -240,7 +232,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <button
               onClick={() => setReportType('beneficiary')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                reportType === 'beneficiary' ? 'bg-[#0D9488] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
+                reportType === 'beneficiary'
+                  ? 'bg-[#0D9488] text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
               }`}
             >
               <User className="w-3.5 h-3.5" />
@@ -250,7 +244,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <button
               onClick={() => setReportType('product')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                reportType === 'product' ? 'bg-[#0D9488] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
+                reportType === 'product'
+                  ? 'bg-[#0D9488] text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
               }`}
             >
               <Package className="w-3.5 h-3.5" />
@@ -260,7 +256,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <button
               onClick={() => setReportType('period')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                reportType === 'period' ? 'bg-[#0D9488] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
+                reportType === 'period'
+                  ? 'bg-[#0D9488] text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
@@ -278,7 +276,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           {/* Filter Bar */}
           <div className="bg-white dark:bg-slate-900 p-4.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-200">تحديد المستفيد والفترة الزمنية:</span>
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                تحديد المستفيد والفترة الزمنية:
+              </span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handlePrint}
@@ -288,7 +288,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                   <span>طباعة الكشف</span>
                 </button>
                 <button
-                  onClick={() => exportRecordsToExcel(beneficiaryRecords, products, `كشف_مستفيد_${activeBeneficiary}.xlsx`)}
+                  onClick={() =>
+                    exportRecordsToExcel(beneficiaryRecords, products, `كشف_مستفيد_${activeBeneficiary}.xlsx`)
+                  }
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5" />
@@ -362,7 +364,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             </div>
 
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">إجمالي التوريد (IN)</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">
+                إجمالي التوريد (IN)
+              </span>
               <div className="text-xl font-black text-emerald-700 dark:text-emerald-300 font-mono">
                 +{formatNumberLatin(beneficiarySummary.totalInUnits)}
               </div>
@@ -370,7 +374,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             </div>
 
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">إجمالي الصرف (OUT)</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">
+                إجمالي الصرف (OUT)
+              </span>
               <div className="text-xl font-black text-rose-700 dark:text-rose-300 font-mono">
                 −{formatNumberLatin(beneficiarySummary.totalOutUnits)}
               </div>
@@ -463,16 +469,23 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                             {r.movementType}
                           </span>
                         </td>
-                        <td className="py-2.5 px-3 text-slate-700 dark:text-slate-200 max-w-xs truncate">{r.description}</td>
+                        <td className="py-2.5 px-3 text-slate-700 dark:text-slate-200 max-w-xs truncate">
+                          {r.description}
+                        </td>
                         <td className="py-2.5 px-3">
-                          <span className={`px-2 py-0.5 rounded text-xs font-bold border ${getCategoryBadgeStyle(r.category)}`}>
+                          <span
+                            className={`px-2 py-0.5 rounded text-xs font-bold border ${getCategoryBadgeStyle(r.category)}`}
+                          >
                             {r.category}
                           </span>
                         </td>
                         <td className="py-2.5 px-3">
                           <div className="flex items-center gap-1 flex-wrap">
                             {itemsEntries.map(([pName, qty]) => (
-                              <span key={pName} className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs px-2 py-0.5 rounded-md font-medium">
+                              <span
+                                key={pName}
+                                className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs px-2 py-0.5 rounded-md font-medium"
+                              >
                                 {pName} ×{qty}
                               </span>
                             ))}
@@ -509,7 +522,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
               <div>
-                <label className="block font-bold text-slate-600 dark:text-slate-300 mb-1">اختر الصنف (من 62 صنفاً)</label>
+                <label className="block font-bold text-slate-600 dark:text-slate-300 mb-1">
+                  اختر الصنف (من 62 صنفاً)
+                </label>
                 <select
                   value={selectedProduct}
                   onChange={(e) => setSelectedProduct(e.target.value)}
@@ -548,7 +563,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           {/* Product Balance Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">الرصيد الافتتاحي</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">
+                الرصيد الافتتاحي
+              </span>
               <div className="text-xl font-black text-slate-900 dark:text-slate-100 font-mono">
                 {formatNumberLatin(productStatement.opening)}
               </div>
@@ -556,7 +573,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             </div>
 
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">إجمالي الوارد (IN)</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">
+                إجمالي الوارد (IN)
+              </span>
               <div className="text-xl font-black text-emerald-700 dark:text-emerald-300 font-mono">
                 +{formatNumberLatin(productStatement.totalIn)}
               </div>
@@ -564,7 +583,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             </div>
 
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">إجمالي المنصرف (OUT)</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">
+                إجمالي المنصرف (OUT)
+              </span>
               <div className="text-xl font-black text-rose-700 dark:text-rose-300 font-mono">
                 −{formatNumberLatin(productStatement.totalOut)}
               </div>
@@ -572,10 +593,14 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             </div>
 
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">الرصيد الحالي المتوفر</span>
-              <div className={`text-xl font-black font-mono ${
-                productStatement.finalBalance < 0 ? 'text-rose-700' : 'text-blue-900'
-              }`}>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">
+                الرصيد الحالي المتوفر
+              </span>
+              <div
+                className={`text-xl font-black font-mono ${
+                  productStatement.finalBalance < 0 ? 'text-rose-700' : 'text-blue-900'
+                }`}
+              >
                 {formatNumberLatin(productStatement.finalBalance)}
               </div>
               <span className="text-xs text-slate-500 dark:text-slate-400">حبة / وحدة</span>
@@ -664,7 +689,8 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-900 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-amber-700 dark:text-amber-300 shrink-0" />
               <span>
-                تنبيه: تم استثناء <strong>{periodicData.unparsedDatesCount}</strong> حركة من التجميع الشهري نظراً لعدم احتواء تاريخها على سنة وشهر قياسيين.
+                تنبيه: تم استثناء <strong>{periodicData.unparsedDatesCount}</strong> حركة من التجميع الشهري نظراً لعدم
+                احتواء تاريخها على سنة وشهر قياسيين.
               </span>
             </div>
           )}
@@ -680,8 +706,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                 <thead>
                   <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold">
                     <th className="py-2.5 px-3">الشهر / السنة</th>
-                    <th className="py-2.5 px-3 text-center text-emerald-800 dark:text-emerald-200">حركات التوريد (IN)</th>
-                    <th className="py-2.5 px-3 text-left text-emerald-800 dark:text-emerald-200">كميات التوريد (وحدات)</th>
+                    <th className="py-2.5 px-3 text-center text-emerald-800 dark:text-emerald-200">
+                      حركات التوريد (IN)
+                    </th>
+                    <th className="py-2.5 px-3 text-left text-emerald-800 dark:text-emerald-200">
+                      كميات التوريد (وحدات)
+                    </th>
                     <th className="py-2.5 px-3 text-center text-rose-800 dark:text-rose-200">حركات الصرف (OUT)</th>
                     <th className="py-2.5 px-3 text-left text-rose-800 dark:text-rose-200">كميات الصرف (وحدات)</th>
                     <th className="py-2.5 px-3 text-left">صافي حركة الشهر</th>
@@ -692,18 +722,26 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                     const net = p.inUnits - p.outUnits;
                     return (
                       <tr key={p.period} className="hover:bg-slate-50 dark:hover:bg-slate-800/60">
-                        <td className="py-2.5 px-3 font-mono font-bold text-slate-900 dark:text-slate-100">{p.period}</td>
-                        <td className="py-2.5 px-3 text-center font-mono text-emerald-700 dark:text-emerald-300">{p.inCount}</td>
+                        <td className="py-2.5 px-3 font-mono font-bold text-slate-900 dark:text-slate-100">
+                          {p.period}
+                        </td>
+                        <td className="py-2.5 px-3 text-center font-mono text-emerald-700 dark:text-emerald-300">
+                          {p.inCount}
+                        </td>
                         <td className="py-2.5 px-3 text-left font-mono font-bold text-emerald-700 dark:text-emerald-300">
                           +{formatNumberLatin(p.inUnits)}
                         </td>
-                        <td className="py-2.5 px-3 text-center font-mono text-rose-700 dark:text-rose-300">{p.outCount}</td>
+                        <td className="py-2.5 px-3 text-center font-mono text-rose-700 dark:text-rose-300">
+                          {p.outCount}
+                        </td>
                         <td className="py-2.5 px-3 text-left font-mono font-bold text-rose-700 dark:text-rose-300">
                           −{formatNumberLatin(p.outUnits)}
                         </td>
-                        <td className={`py-2.5 px-3 text-left font-mono font-black ${
-                          net >= 0 ? 'text-blue-900' : 'text-rose-900'
-                        }`}>
+                        <td
+                          className={`py-2.5 px-3 text-left font-mono font-black ${
+                            net >= 0 ? 'text-blue-900' : 'text-rose-900'
+                          }`}
+                        >
                           {formatNumberLatin(net)}
                         </td>
                       </tr>

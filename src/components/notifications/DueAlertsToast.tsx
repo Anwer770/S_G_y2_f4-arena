@@ -71,21 +71,15 @@ export const DueAlertsToast: React.FC<DueAlertsToastProps> = ({
       <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
           {summary.overdueCount > 0 && (
-            <span className="text-rose-600 dark:text-rose-400 font-bold">
-              {summary.overdueCount} متأخرة
-            </span>
+            <span className="text-rose-600 dark:text-rose-400 font-bold">{summary.overdueCount} متأخرة</span>
           )}
           {summary.overdueCount > 0 && summary.todayCount > 0 && <span>•</span>}
           {summary.todayCount > 0 && (
-            <span className="text-amber-600 dark:text-amber-400 font-bold">
-              {summary.todayCount} اليوم
-            </span>
+            <span className="text-amber-600 dark:text-amber-400 font-bold">{summary.todayCount} اليوم</span>
           )}
           {(summary.overdueCount > 0 || summary.todayCount > 0) && summary.soonCount > 0 && <span>•</span>}
           {summary.soonCount > 0 && (
-            <span className="text-teal-600 dark:text-teal-400 font-bold">
-              {summary.soonCount} قريباً
-            </span>
+            <span className="text-teal-600 dark:text-teal-400 font-bold">{summary.soonCount} قريباً</span>
           )}
         </div>
 

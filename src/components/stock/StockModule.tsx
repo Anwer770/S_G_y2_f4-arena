@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  AppSettings,
-  AuditLog,
-  Item,
-  Movement,
-  ProductStock,
-} from '../../types';
+import { AppSettings, AuditLog, Item, Movement, ProductStock } from '../../types';
 import { DashboardView } from '../DashboardView';
 import { RecordsView } from '../RecordsView';
 import { InventoryView } from '../InventoryView';
@@ -232,12 +226,7 @@ export const StockModule: React.FC<Props> = ({
       )}
 
       {subTab === 'reports' && (
-        <ReportsView
-          records={records}
-          products={products}
-          stocks={stocks}
-          categories={categories}
-        />
+        <ReportsView records={records} products={products} stocks={stocks} categories={categories} />
       )}
 
       {subTab === 'dashboard' && (

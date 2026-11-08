@@ -95,13 +95,16 @@ export const CommitmentsTable: React.FC<Props> = ({
         {/* Outstanding */}
         <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">المبالغ القائمة (المطلوب سدادها)</span>
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+              المبالغ القائمة (المطلوب سدادها)
+            </span>
             <div className="p-2 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-lg">
               <AlertCircle className="w-5 h-5" />
             </div>
           </div>
           <div className="text-2xl font-black font-mono text-rose-600 dark:text-rose-400">
-            {formatCurrency(stats.outstanding)} <span className="text-xs font-sans text-slate-500 dark:text-slate-400">ريال</span>
+            {formatCurrency(stats.outstanding)}{' '}
+            <span className="text-xs font-sans text-slate-500 dark:text-slate-400">ريال</span>
           </div>
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">الالتزامات المستحقة قيد التنفيذ</p>
         </div>
@@ -115,9 +118,12 @@ export const CommitmentsTable: React.FC<Props> = ({
             </div>
           </div>
           <div className="text-2xl font-black font-mono text-emerald-600 dark:text-emerald-400">
-            {formatCurrency(stats.paid)} <span className="text-xs font-sans text-slate-500 dark:text-slate-400">ريال</span>
+            {formatCurrency(stats.paid)}{' '}
+            <span className="text-xs font-sans text-slate-500 dark:text-slate-400">ريال</span>
           </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">تم سدادها وإنجازها ({stats.completedCount} التزام)</p>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+            تم سدادها وإنجازها ({stats.completedCount} التزام)
+          </p>
         </div>
 
         {/* Total Commitments */}
@@ -129,7 +135,8 @@ export const CommitmentsTable: React.FC<Props> = ({
             </div>
           </div>
           <div className="text-2xl font-black font-mono text-slate-900 dark:text-slate-100">
-            {formatCurrency(stats.total)} <span className="text-xs font-sans text-slate-500 dark:text-slate-400">ريال</span>
+            {formatCurrency(stats.total)}{' '}
+            <span className="text-xs font-sans text-slate-500 dark:text-slate-400">ريال</span>
           </div>
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">إجمالي {stats.totalCount} التزام مالي مسجل</p>
         </div>
@@ -243,7 +250,9 @@ export const CommitmentsTable: React.FC<Props> = ({
                       <td className="py-3 px-4 font-mono font-bold text-xs text-amber-700 dark:text-amber-300">
                         {c.id}
                       </td>
-                      <td className={`py-3 px-4 font-bold text-slate-900 dark:text-slate-100 ${isCompleted ? 'line-through text-slate-400' : ''}`}>
+                      <td
+                        className={`py-3 px-4 font-bold text-slate-900 dark:text-slate-100 ${isCompleted ? 'line-through text-slate-400' : ''}`}
+                      >
                         {c.name}
                       </td>
                       <td className="py-3 px-4 font-mono font-black text-sm text-slate-900 dark:text-slate-100">
@@ -257,30 +266,31 @@ export const CommitmentsTable: React.FC<Props> = ({
                             c.pri === 'A'
                               ? 'bg-rose-50 text-rose-700 border border-rose-200'
                               : c.pri === 'B'
-                              ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                              : 'bg-blue-50 text-blue-700 border border-blue-200'
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                : 'bg-blue-50 text-blue-700 border border-blue-200'
                           }`}
                         >
                           أولوية {c.pri}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-xs text-slate-600 dark:text-slate-300">
-                        {c.due || 'غير محدد'}
-                      </td>
+                      <td className="py-3 px-4 text-xs text-slate-600 dark:text-slate-300">{c.due || 'غير محدد'}</td>
                       <td className="py-3 px-4">
                         <span
                           className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                             isCompleted
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                               : c.status === 'متأخر'
-                              ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                              : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                : 'bg-amber-50 text-amber-700 border border-amber-200'
                           }`}
                         >
                           {c.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-xs text-slate-500 dark:text-slate-400 max-w-xs truncate" title={c.desc}>
+                      <td
+                        className="py-3 px-4 text-xs text-slate-500 dark:text-slate-400 max-w-xs truncate"
+                        title={c.desc}
+                      >
                         {c.desc || '—'}
                       </td>
                       <td className="py-3 px-4 text-center">

@@ -1,15 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { DoctorRecord } from '../../types';
 import { parseDoctorsExcelOrCSV } from '../../utils/doctors';
-import {
-  X,
-  Upload,
-  FileSpreadsheet,
-  AlertTriangle,
-  CheckCircle2,
-  Download,
-  AlertCircle,
-} from 'lucide-react';
+import { X, Upload, FileSpreadsheet, AlertTriangle, CheckCircle2, Download, AlertCircle } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 interface Props {
@@ -19,12 +11,7 @@ interface Props {
   onImportDoctors: (importedDoctors: DoctorRecord[], mode: 'append' | 'replace') => void;
 }
 
-export const ImportDoctorsModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  existingDoctors,
-  onImportDoctors,
-}) => {
+export const ImportDoctorsModal: React.FC<Props> = ({ isOpen, onClose, existingDoctors, onImportDoctors }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [parseResult, setParseResult] = useState<{
@@ -59,15 +46,15 @@ export const ImportDoctorsModal: React.FC<Props> = ({
   const handleDownloadTemplate = () => {
     const templateData = [
       {
-        'المعرف': 'DOC-1001',
+        المعرف: 'DOC-1001',
         'اسم الطبيب / المركز': 'د. خالد عبدالجليل الشرجبي',
-        'المصدر': 'الأطباء',
-        'التخصص': 'جلدية وتجميل',
+        المصدر: 'الأطباء',
+        التخصص: 'جلدية وتجميل',
         'العيادة / المستشفى': 'مركز الشرجبي للجلدية',
-        'المنطقة': 'صنعاء - السبعين والوحدة',
-        'المسار': 'السبت',
-        'الأهمية': 'A',
-        'المسؤول': 'انور',
+        المنطقة: 'صنعاء - السبعين والوحدة',
+        المسار: 'السبت',
+        الأهمية: 'A',
+        المسؤول: 'انور',
         'وصف المهمة': 'زيارة ميدانية لتعريف بمنتجات العناية بالبشرة الجديدة',
         'تاريخ بدء المهمة': '2026-08-01',
         'تاريخ انتهاء المهمة': '2026-08-07',
@@ -76,7 +63,7 @@ export const ImportDoctorsModal: React.FC<Props> = ({
         'العنوان والموقع': 'شارع بيت بوس',
         'العينات المسلمة': '4 عبوات سيروم تجريبي',
         'نتيجة الزيارة': 'تأكيد إدراج الكريمات في الوصفات',
-        'ملاحظات': 'تجاوب ممتاز من الطبيب',
+        ملاحظات: 'تجاوب ممتاز من الطبيب',
       },
     ];
 
@@ -195,7 +182,9 @@ export const ImportDoctorsModal: React.FC<Props> = ({
                     <div className="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800 text-xs text-sky-900 dark:text-sky-200 space-y-1">
                       <span className="font-bold block">أمانة الاستيراد — ما بقي فارغاً وما وُلّد داخلياً:</span>
                       {parseResult.warnings.slice(0, 8).map((w, idx) => (
-                        <p key={idx} className="leading-5">• {w}</p>
+                        <p key={idx} className="leading-5">
+                          • {w}
+                        </p>
                       ))}
                     </div>
                   )}

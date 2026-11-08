@@ -72,7 +72,8 @@ export const RoutinePostponeModal: React.FC<RoutinePostponeModalProps> = ({
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div className="text-xs text-slate-500 dark:text-slate-400">
-            الوقت الحالي المخطط: <span className="font-bold text-slate-800 dark:text-white">{occurrence.plannedStart}</span>
+            الوقت الحالي المخطط:{' '}
+            <span className="font-bold text-slate-800 dark:text-white">{occurrence.plannedStart}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2">

@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  FolderKanban,
-  CheckCircle2,
-  Clock,
-  AlertTriangle,
-  Flame,
-  Activity,
-  ListTodo,
-  TrendingUp,
-} from 'lucide-react';
+import { FolderKanban, CheckCircle2, Clock, AlertTriangle, Flame, Activity, ListTodo, TrendingUp } from 'lucide-react';
 
 export interface WorkOSKPICardsProps {
   totalProjects: number;
@@ -46,7 +37,7 @@ export const WorkOSKPICards: React.FC<WorkOSKPICardsProps> = ({
     if (typeof onCardClick === 'function') onCardClick(type);
   };
 
-  const rate = typeof completionRate === 'number' ? completionRate : (overallCompletionRate || 0);
+  const rate = typeof completionRate === 'number' ? completionRate : overallCompletionRate || 0;
 
   // The 8 official Interactive KPI cards specified in the Master Prompt
   const cards = [
@@ -152,8 +143,8 @@ export const WorkOSKPICards: React.FC<WorkOSKPICardsProps> = ({
                 isActive
                   ? `${card.activeColor} shadow-xs`
                   : card.cardBg
-                  ? `${card.cardBg} hover:shadow-2xs`
-                  : 'bg-white border-slate-200/80 hover:border-teal-300 hover:shadow-2xs'
+                    ? `${card.cardBg} hover:shadow-2xs`
+                    : 'bg-white border-slate-200/80 hover:border-teal-300 hover:shadow-2xs'
               }`}
               title={card.hint}
             >
@@ -164,9 +155,7 @@ export const WorkOSKPICards: React.FC<WorkOSKPICardsProps> = ({
                 <Icon className={`w-3.5 h-3.5 shrink-0 ${card.iconColor}`} />
               </div>
 
-              <div className={`text-xl font-black font-mono ${card.color}`}>
-                {card.value}
-              </div>
+              <div className={`text-xl font-black font-mono ${card.color}`}>{card.value}</div>
 
               {card.isProgress ? (
                 <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1 mt-1.5 overflow-hidden">

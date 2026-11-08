@@ -8,19 +8,10 @@ import {
   DEFAULT_LINK_IMPORTANCES,
   DEFAULT_LINK_TYPES,
 } from '../../data/defaultLinks';
-import {
-  dbStorage,
-} from '../../database/dbStorage';
-import {
-  logSystemAudit,
-} from './system';
-import {
-  LinkRecord,
-  LinksKPIs,
-} from '../../types';
-import {
-  STORAGE_KEYS,
-} from './keys';
+import { dbStorage } from '../../database/dbStorage';
+import { logSystemAudit } from './system';
+import { LinkRecord, LinksKPIs } from '../../types';
+import { STORAGE_KEYS } from './keys';
 
 export function loadLinksRecords(): LinkRecord[] {
   try {

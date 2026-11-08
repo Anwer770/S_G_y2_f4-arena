@@ -151,9 +151,7 @@ export const CustodyIssuesTable: React.FC<CustodyIssuesTableProps> = ({
           <button
             onClick={() => onSelectSectionTab('all')}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeSectionTab === 'all'
-                ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-200/70'
+              activeSectionTab === 'all' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200/70'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -225,7 +223,9 @@ export const CustodyIssuesTable: React.FC<CustodyIssuesTableProps> = ({
         <table className="w-full text-right border-collapse text-xs min-w-[960px] print:min-w-0">
           <thead className="sticky top-0 z-20">
             <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shadow-2xs select-none">
-              <th className="py-2.5 px-3 w-14 text-center sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">المعرف</th>
+              <th className="py-2.5 px-3 w-14 text-center sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                المعرف
+              </th>
               <th className="py-2.5 px-2 w-16 text-center">القسم</th>
               <th className="py-2.5 px-2.5 w-24">التاريخ</th>
               <th className="py-2.5 px-2.5 w-36">الاسم / الجهة</th>
@@ -235,7 +235,9 @@ export const CustodyIssuesTable: React.FC<CustodyIssuesTableProps> = ({
               <th className="py-2.5 px-2 w-24 text-center">الحالة</th>
               <th className="py-2.5 px-2.5 w-24">المسؤول</th>
               <th className="py-2.5 px-2.5 w-28 text-left">المبلغ</th>
-              <th className="py-2.5 px-3 w-28 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)]">الإجراءات</th>
+              <th className="py-2.5 px-3 w-28 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                الإجراءات
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
@@ -334,9 +336,7 @@ export const CustodyIssuesTable: React.FC<CustodyIssuesTableProps> = ({
                     </td>
 
                     {/* Priority */}
-                    <td className="py-2 px-2 text-center">
-                      {getPriorityBadge(r.pri)}
-                    </td>
+                    <td className="py-2 px-2 text-center">{getPriorityBadge(r.pri)}</td>
 
                     {/* Status with Quick Toggle Dropdown */}
                     <td className="py-2 px-2 text-center">

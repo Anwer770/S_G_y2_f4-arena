@@ -23,13 +23,7 @@ import {
   ArrowUpDown,
   Filter,
 } from 'lucide-react';
-import {
-  WorkTask,
-  WorkProject,
-  TeamMember,
-  TaskStatus,
-  TaskPriority,
-} from '../../types/workos';
+import { WorkTask, WorkProject, TeamMember, TaskStatus, TaskPriority } from '../../types/workos';
 
 interface WorkOSTasksTabProps {
   tasks: WorkTask[];
@@ -156,9 +150,7 @@ export const WorkOSTasksTab: React.FC<WorkOSTasksTabProps> = ({
   };
 
   const handleToggleSelectTask = (id: string) => {
-    setSelectedTaskIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    setSelectedTaskIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   };
 
   const handleBulkComplete = () => {
@@ -236,10 +228,7 @@ export const WorkOSTasksTab: React.FC<WorkOSTasksTabProps> = ({
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {tasks.map((task) => {
                 const isSelected = selectedTaskIds.includes(task.id);
-                const isOverdue =
-                  task.dueDate &&
-                  task.dueDate < todayStr &&
-                  task.status !== 'completed';
+                const isOverdue = task.dueDate && task.dueDate < todayStr && task.status !== 'completed';
                 const project = task.projectId ? projectMap.get(task.projectId) : undefined;
                 const assignee = task.assigneeId ? teamMap.get(task.assigneeId) : undefined;
 
@@ -275,7 +264,9 @@ export const WorkOSTasksTab: React.FC<WorkOSTasksTabProps> = ({
                     {/* Task Name */}
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
-                        <span className={`font-bold ${task.status === 'completed' ? 'text-slate-400 line-through' : 'text-slate-900'}`}>
+                        <span
+                          className={`font-bold ${task.status === 'completed' ? 'text-slate-400 line-through' : 'text-slate-900'}`}
+                        >
                           {task.title}
                         </span>
                         {isOverdue && (
@@ -389,9 +380,7 @@ export const WorkOSTasksTab: React.FC<WorkOSTasksTabProps> = ({
                         <div className="w-16 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
                           <div
                             className={`h-full rounded-full ${
-                              task.status === 'completed'
-                                ? 'bg-emerald-600'
-                                : 'bg-teal-600'
+                              task.status === 'completed' ? 'bg-emerald-600' : 'bg-teal-600'
                             }`}
                             style={{ width: `${task.progress || 0}%` }}
                           />
@@ -411,11 +400,7 @@ export const WorkOSTasksTab: React.FC<WorkOSTasksTabProps> = ({
                     <td className="py-3 px-3 text-center" onClick={(e) => e.stopPropagation()}>
                       <div className="relative inline-block text-left">
                         <button
-                          onClick={() =>
-                            setActiveActionMenuTaskId(
-                              activeActionMenuTaskId === task.id ? null : task.id
-                            )
-                          }
+                          onClick={() => setActiveActionMenuTaskId(activeActionMenuTaskId === task.id ? null : task.id)}
                           className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition cursor-pointer"
                           title="خيارات المهمة"
                         >
@@ -499,8 +484,12 @@ export const WorkOSTasksTab: React.FC<WorkOSTasksTabProps> = ({
                 <tr>
                   <td colSpan={12} className="py-12 text-center text-slate-400 dark:text-slate-500">
                     <CheckCircle2 className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                    <p className="font-bold text-sm text-slate-600 dark:text-slate-300">لا توجد مهام تطابق الفلاتر الحالية</p>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">جرّب تغيير خيارات البحث أو قم بإضافة مهمة جديدة</p>
+                    <p className="font-bold text-sm text-slate-600 dark:text-slate-300">
+                      لا توجد مهام تطابق الفلاتر الحالية
+                    </p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                      جرّب تغيير خيارات البحث أو قم بإضافة مهمة جديدة
+                    </p>
                   </td>
                 </tr>
               )}

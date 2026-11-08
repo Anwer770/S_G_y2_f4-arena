@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Calendar as CalendarIcon,
-  Clock,
-  CheckCircle2,
-  Play,
-  Flame,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, CheckCircle2, Play, Flame } from 'lucide-react';
 import { RoutineOccurrence, RoutineRecord } from '../../types/routines';
 
 interface RoutineCalendarViewProps {
@@ -151,9 +143,7 @@ export const RoutineCalendarView: React.FC<RoutineCalendarViewProps> = ({
                 <div className="flex items-center justify-between mb-1.5">
                   <span
                     className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                      isToday
-                        ? 'bg-emerald-600 text-white shadow-sm'
-                        : 'text-slate-700 dark:text-slate-300'
+                      isToday ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 dark:text-slate-300'
                     }`}
                   >
                     {dayNum}

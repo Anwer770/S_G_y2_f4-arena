@@ -57,9 +57,7 @@ export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = (
           <button
             onClick={() => setTab('notes')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-              tab === 'notes'
-                ? 'bg-purple-700 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              tab === 'notes' ? 'bg-purple-700 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
@@ -105,14 +103,14 @@ export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = (
                 {t === 'all'
                   ? 'الكل'
                   : t === 'instruction'
-                  ? 'توجيهات وسياسات'
-                  : t === 'project'
-                  ? 'ملاحظات مشاريع'
-                  : t === 'idea'
-                  ? 'أفكار'
-                  : t === 'decision'
-                  ? 'قرارات'
-                  : 'عملاء'}
+                    ? 'توجيهات وسياسات'
+                    : t === 'project'
+                      ? 'ملاحظات مشاريع'
+                      : t === 'idea'
+                        ? 'أفكار'
+                        : t === 'decision'
+                          ? 'قرارات'
+                          : 'عملاء'}
               </button>
             ))}
           </div>
@@ -140,7 +138,10 @@ export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = (
                 <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {note.tags.map((tag, i) => (
-                      <span key={i} className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                      <span
+                        key={i}
+                        className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded"
+                      >
                         #{tag}
                       </span>
                     ))}
@@ -154,7 +155,9 @@ export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = (
                     <span className="font-mono text-xs">{note.createdAt.split('T')[0]}</span>
                     {onSaveNote && (
                       <button
-                        onClick={() => onSaveNote({ ...note, isPinned: !note.isPinned, updatedAt: new Date().toISOString() })}
+                        onClick={() =>
+                          onSaveNote({ ...note, isPinned: !note.isPinned, updatedAt: new Date().toISOString() })
+                        }
                         className={`p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer ${
                           note.isPinned ? 'text-amber-500' : 'text-slate-400 hover:text-slate-600'
                         }`}
@@ -227,7 +230,9 @@ export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = (
 
               {/* Action items with 1-click conversion to Task */}
               <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">بنود الإجراءات التنفيذية الناتجة (Action Items):</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  بنود الإجراءات التنفيذية الناتجة (Action Items):
+                </div>
                 <div className="space-y-1.5">
                   {meeting.actionItems.map((act) => (
                     <div
@@ -238,7 +243,9 @@ export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = (
                         <CheckSquare className="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0" />
                         <span className="font-bold text-slate-800 dark:text-slate-200 truncate">{act.title}</span>
                         <span className="text-xs text-slate-500 dark:text-slate-400">المسؤول: {act.assignee}</span>
-                        <span className="font-mono text-xs text-slate-400 dark:text-slate-500">التسليم: {act.dueDate}</span>
+                        <span className="font-mono text-xs text-slate-400 dark:text-slate-500">
+                          التسليم: {act.dueDate}
+                        </span>
                       </div>
 
                       <button

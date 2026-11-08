@@ -121,11 +121,7 @@ export const PartialPaymentModal: React.FC<PartialPaymentModalProps> = ({
               <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
                 <div
                   className={`h-2.5 rounded-full transition-all duration-500 ${
-                    progressPercent === 100
-                      ? 'bg-emerald-500'
-                      : progressPercent > 50
-                      ? 'bg-indigo-500'
-                      : 'bg-amber-500'
+                    progressPercent === 100 ? 'bg-emerald-500' : progressPercent > 50 ? 'bg-indigo-500' : 'bg-amber-500'
                   }`}
                   style={{ width: `${progressPercent}%` }}
                 />
@@ -135,7 +131,10 @@ export const PartialPaymentModal: React.FC<PartialPaymentModalProps> = ({
 
           {/* Add New Payment Form */}
           {remainingAmount > 0 ? (
-            <form onSubmit={handleAddPaymentSubmit} className="p-4 bg-emerald-50/50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-3">
+            <form
+              onSubmit={handleAddPaymentSubmit}
+              className="p-4 bg-emerald-50/50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-3"
+            >
               <h4 className="text-xs font-black text-emerald-900 flex items-center gap-1.5">
                 <Plus className="w-4 h-4 text-emerald-700 dark:text-emerald-300" />
                 <span>تسجيل دفعة سداد جديدة</span>
@@ -165,7 +164,9 @@ export const PartialPaymentModal: React.FC<PartialPaymentModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">تاريخ السداد</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
+                    تاريخ السداد
+                  </label>
                   <input
                     type="date"
                     required
@@ -202,9 +203,7 @@ export const PartialPaymentModal: React.FC<PartialPaymentModalProps> = ({
           ) : (
             <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 text-center">
               <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400 mx-auto mb-1" />
-              <p className="text-xs font-black text-emerald-900">
-                تم سداد هذا الالتزام بالكامل بنسبة 100%
-              </p>
+              <p className="text-xs font-black text-emerald-900">تم سداد هذا الالتزام بالكامل بنسبة 100%</p>
             </div>
           )}
 
@@ -234,13 +233,9 @@ export const PartialPaymentModal: React.FC<PartialPaymentModalProps> = ({
                           <span className="font-black text-slate-900 dark:text-slate-100">
                             {formatDebtAmount(p.amount, commitment.currency)}
                           </span>
-                          <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
-                            {p.date}
-                          </span>
+                          <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">{p.date}</span>
                         </div>
-                        {p.note && (
-                          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{p.note}</p>
-                        )}
+                        {p.note && <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{p.note}</p>}
                       </div>
                     </div>
 

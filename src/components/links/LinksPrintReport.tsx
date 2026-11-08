@@ -8,11 +8,7 @@ interface LinksPrintReportProps {
   onBack: () => void;
 }
 
-export const LinksPrintReport: React.FC<LinksPrintReportProps> = ({
-  links,
-  kpis,
-  onBack,
-}) => {
+export const LinksPrintReport: React.FC<LinksPrintReportProps> = ({ links, kpis, onBack }) => {
   const handlePrint = () => {
     window.print();
   };
@@ -78,43 +74,45 @@ export const LinksPrintReport: React.FC<LinksPrintReportProps> = ({
 
       {/* Links Detailed Table */}
       <div className="w-full overflow-x-auto print:overflow-visible">
-      <table className="w-full text-right border-collapse text-xs mt-4 min-w-[600px] print:min-w-0">
-        <thead>
-          <tr className="border-b-2 border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold">
-            <th className="py-2.5 px-3 w-10 text-center">#</th>
-            <th className="py-2.5 px-3">اسم الموقع / الأداة</th>
-            <th className="py-2.5 px-3">الرابط URL</th>
-            <th className="py-2.5 px-3">التصنيف والفئة</th>
-            <th className="py-2.5 px-3 text-center w-20">الأهمية</th>
-            <th className="py-2.5 px-3">الوصف والملاحظات</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-          {links.map((link, idx) => (
-            <tr key={link.id} className="break-inside-avoid">
-              <td className="py-2 px-3 text-center font-mono text-slate-400 dark:text-slate-500">{idx + 1}</td>
-              <td className="py-2 px-3 font-bold text-slate-900 dark:text-slate-100">{link.siteName}</td>
-              <td className="py-2 px-3 font-mono text-xs text-slate-600 dark:text-slate-300 dir-ltr text-right max-w-xs truncate">
-                {link.url}
-              </td>
-              <td className="py-2 px-3 text-xs">
-                <span className="font-bold text-purple-800">{link.classification}</span>
-                <span className="text-slate-400 dark:text-slate-500 mx-1">/</span>
-                <span className="text-slate-600 dark:text-slate-300">{link.category}</span>
-              </td>
-              <td className="py-2 px-3 text-center font-black">
-                <span className="px-2 py-0.5 rounded text-xs bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
-                  {link.importance}
-                </span>
-              </td>
-              <td className="py-2 px-3 text-slate-600 dark:text-slate-300 text-xs leading-snug">
-                {link.desc}
-                {link.notes && <span className="block text-slate-400 dark:text-slate-500 text-xs mt-0.5">({link.notes})</span>}
-              </td>
+        <table className="w-full text-right border-collapse text-xs mt-4 min-w-[600px] print:min-w-0">
+          <thead>
+            <tr className="border-b-2 border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold">
+              <th className="py-2.5 px-3 w-10 text-center">#</th>
+              <th className="py-2.5 px-3">اسم الموقع / الأداة</th>
+              <th className="py-2.5 px-3">الرابط URL</th>
+              <th className="py-2.5 px-3">التصنيف والفئة</th>
+              <th className="py-2.5 px-3 text-center w-20">الأهمية</th>
+              <th className="py-2.5 px-3">الوصف والملاحظات</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+            {links.map((link, idx) => (
+              <tr key={link.id} className="break-inside-avoid">
+                <td className="py-2 px-3 text-center font-mono text-slate-400 dark:text-slate-500">{idx + 1}</td>
+                <td className="py-2 px-3 font-bold text-slate-900 dark:text-slate-100">{link.siteName}</td>
+                <td className="py-2 px-3 font-mono text-xs text-slate-600 dark:text-slate-300 dir-ltr text-right max-w-xs truncate">
+                  {link.url}
+                </td>
+                <td className="py-2 px-3 text-xs">
+                  <span className="font-bold text-purple-800">{link.classification}</span>
+                  <span className="text-slate-400 dark:text-slate-500 mx-1">/</span>
+                  <span className="text-slate-600 dark:text-slate-300">{link.category}</span>
+                </td>
+                <td className="py-2 px-3 text-center font-black">
+                  <span className="px-2 py-0.5 rounded text-xs bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                    {link.importance}
+                  </span>
+                </td>
+                <td className="py-2 px-3 text-slate-600 dark:text-slate-300 text-xs leading-snug">
+                  {link.desc}
+                  {link.notes && (
+                    <span className="block text-slate-400 dark:text-slate-500 text-xs mt-0.5">({link.notes})</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Footer Signatures */}

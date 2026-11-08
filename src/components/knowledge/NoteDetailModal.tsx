@@ -129,9 +129,7 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                  {note.title}
-                </h2>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">{note.title}</h2>
                 {note.isPinned && (
                   <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-xs font-bold rounded">
                     📌 مثبتة
@@ -282,8 +280,8 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                   note.priority === 'عالية'
                     ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300'
                     : note.priority === 'متوسطة'
-                    ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
-                    : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                      ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                      : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
                 }`}
               >
                 أولوية: {note.priority}
@@ -293,10 +291,10 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                   note.status === 'نشطة'
                     ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
                     : note.status === 'قيد المراجعة'
-                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
-                    : note.status === 'مكتملة'
-                    ? 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300'
-                    : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
+                      : note.status === 'مكتملة'
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300'
+                        : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                 }`}
               >
                 حالة: {note.status}
@@ -317,9 +315,7 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                   <FileText className="w-3.5 h-3.5" />
                   <span>الملخص التنفيذي:</span>
                 </div>
-                <p className="text-xs text-indigo-800 dark:text-indigo-200 leading-relaxed">
-                  {note.summary}
-                </p>
+                <p className="text-xs text-indigo-800 dark:text-indigo-200 leading-relaxed">{note.summary}</p>
               </div>
             )}
 
@@ -343,7 +339,9 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                       <User className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                       <div className="truncate">
                         <span className="text-xs text-slate-400 dark:text-slate-500 block">العميل</span>
-                        <span className="font-semibold text-slate-700 dark:text-slate-200">{note.linkedCustomerName}</span>
+                        <span className="font-semibold text-slate-700 dark:text-slate-200">
+                          {note.linkedCustomerName}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -352,7 +350,9 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                       <Stethoscope className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                       <div className="truncate">
                         <span className="text-xs text-slate-400 dark:text-slate-500 block">الطبيب</span>
-                        <span className="font-semibold text-slate-700 dark:text-slate-200">{note.linkedDoctorName}</span>
+                        <span className="font-semibold text-slate-700 dark:text-slate-200">
+                          {note.linkedDoctorName}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -431,9 +431,7 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <div>
-                  <span className="font-semibold text-slate-700 dark:text-slate-200">
-                    تاريخ المراجعة القادمة:
-                  </span>{' '}
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">تاريخ المراجعة القادمة:</span>{' '}
                   <span className="font-bold text-amber-700 dark:text-amber-300">
                     {note.nextReviewDate || 'غير محدد'}
                   </span>
@@ -476,9 +474,7 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
             {/* Tags */}
             {note.tags && note.tags.length > 0 && (
               <div className="space-y-1.5">
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">
-                  الوسوم:
-                </span>
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">الوسوم:</span>
                 <div className="flex flex-wrap gap-1.5">
                   {note.tags.map((tag) => (
                     <span
@@ -506,9 +502,7 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                     >
                       <div className="flex items-center gap-2 truncate">
                         <Paperclip className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                        <span className="truncate font-medium text-slate-700 dark:text-slate-300">
-                          {att.name}
-                        </span>
+                        <span className="truncate font-medium text-slate-700 dark:text-slate-300">{att.name}</span>
                       </div>
                       {att.dataUrl && (
                         <a

@@ -119,7 +119,10 @@ export const FinancialPrintModal: React.FC<FinancialPrintModalProps> = ({
         </div>
 
         {/* Printable Document Body */}
-        <div ref={printRef} className="p-6 sm:p-10 overflow-y-auto flex-1 space-y-6 text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">
+        <div
+          ref={printRef}
+          className="p-6 sm:p-10 overflow-y-auto flex-1 space-y-6 text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900"
+        >
           {/* Header */}
           <div className="border-b-2 border-slate-900 pb-5">
             <div className="flex items-start justify-between gap-4">
@@ -139,7 +142,9 @@ export const FinancialPrintModal: React.FC<FinancialPrintModalProps> = ({
                     <strong>الفترة:</strong> {periodLabel}
                   </span>
                   <span>|</span>
-                  <span><strong>تاريخ الطباعة:</strong> {todayDate} - {printTime}</span>
+                  <span>
+                    <strong>تاريخ الطباعة:</strong> {todayDate} - {printTime}
+                  </span>
                 </div>
               </div>
 
@@ -147,7 +152,9 @@ export const FinancialPrintModal: React.FC<FinancialPrintModalProps> = ({
                 <span className="inline-block px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-mono font-bold text-slate-800 dark:text-slate-200">
                   تقرير مالي رسمي
                 </span>
-                <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">الرقم المرجعي: #{Date.now().toString().slice(-6)}</div>
+                <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                  الرقم المرجعي: #{Date.now().toString().slice(-6)}
+                </div>
               </div>
             </div>
           </div>
@@ -175,9 +182,11 @@ export const FinancialPrintModal: React.FC<FinancialPrintModalProps> = ({
             {/* 3. صافي الفترة */}
             <div className="bg-slate-50/80 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
               <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 text-right">صافي الفترة</span>
-              <div className={`mt-2 text-xl sm:text-2xl font-black font-mono text-right leading-none ${
-                periodSummary.netBalanceYER >= 0 ? 'text-emerald-600' : 'text-rose-600'
-              }`}>
+              <div
+                className={`mt-2 text-xl sm:text-2xl font-black font-mono text-right leading-none ${
+                  periodSummary.netBalanceYER >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                }`}
+              >
                 {periodSummary.netBalanceYER.toLocaleString()}
               </div>
               <span className="text-xs text-slate-400 dark:text-slate-500 mt-1 text-right">فارق الحركة</span>
@@ -196,123 +205,116 @@ export const FinancialPrintModal: React.FC<FinancialPrintModalProps> = ({
           {/* Transactions Table */}
           <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
             <div className="w-full overflow-x-auto print:overflow-visible">
-            <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0">
-              <thead>
-                <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700 text-xs">
-                  <th className="py-2.5 px-3 w-16">رقم القيد</th>
-                  <th className="py-2.5 px-3 w-24">التاريخ</th>
-                  <th className="py-2.5 px-3 w-20">الحركة</th>
-                  <th className="py-2.5 px-3 w-28">نوع القيد</th>
-                  <th className="py-2.5 px-3">البيان والشرح</th>
-                  <th className="py-2.5 px-3 w-28">اسم الحساب</th>
-                  <th className="py-2.5 px-3 text-left w-24 text-emerald-700 dark:text-emerald-300">وارد (YER)</th>
-                  <th className="py-2.5 px-3 text-left w-24 text-rose-700 dark:text-rose-300">منصرف (YER)</th>
-                  <th className="py-2.5 px-3 text-left w-20">عملات أخرى</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                {transactions.length === 0 ? (
-                  <tr>
-                    <td colSpan={9} className="py-8 text-center text-slate-400 dark:text-slate-500">
-                      لا توجد قيود مالية مسجلة في هذه الفترة
-                    </td>
+              <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0">
+                <thead>
+                  <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700 text-xs">
+                    <th className="py-2.5 px-3 w-16">رقم القيد</th>
+                    <th className="py-2.5 px-3 w-24">التاريخ</th>
+                    <th className="py-2.5 px-3 w-20">الحركة</th>
+                    <th className="py-2.5 px-3 w-28">نوع القيد</th>
+                    <th className="py-2.5 px-3">البيان والشرح</th>
+                    <th className="py-2.5 px-3 w-28">اسم الحساب</th>
+                    <th className="py-2.5 px-3 text-left w-24 text-emerald-700 dark:text-emerald-300">وارد (YER)</th>
+                    <th className="py-2.5 px-3 text-left w-24 text-rose-700 dark:text-rose-300">منصرف (YER)</th>
+                    <th className="py-2.5 px-3 text-left w-20">عملات أخرى</th>
                   </tr>
-                ) : (
-                  transactions.map((txn, index) => {
-                    const isIncome =
-                      txn.movement === 'ايرادات' ||
-                      txn.movement === 'الصندوق' ||
-                      txn.movement === 'حساب له' ||
-                      txn.movement === 'حساب دائن (له)';
-                    const isExpense =
-                      txn.movement === 'منصرف' ||
-                      txn.movement === 'حساب عليه' ||
-                      txn.movement === 'سلفه' ||
-                      txn.movement === 'حساب مدين (ع)';
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                  {transactions.length === 0 ? (
+                    <tr>
+                      <td colSpan={9} className="py-8 text-center text-slate-400 dark:text-slate-500">
+                        لا توجد قيود مالية مسجلة في هذه الفترة
+                      </td>
+                    </tr>
+                  ) : (
+                    transactions.map((txn, index) => {
+                      const isIncome =
+                        txn.movement === 'ايرادات' ||
+                        txn.movement === 'الصندوق' ||
+                        txn.movement === 'حساب له' ||
+                        txn.movement === 'حساب دائن (له)';
+                      const isExpense =
+                        txn.movement === 'منصرف' ||
+                        txn.movement === 'حساب عليه' ||
+                        txn.movement === 'سلفه' ||
+                        txn.movement === 'حساب مدين (ع)';
 
-                    const yerVal = txn.amountYER || 0;
-                    const incomeYER = isIncome ? yerVal : 0;
-                    const expenseYER = isExpense ? yerVal : 0;
+                      const yerVal = txn.amountYER || 0;
+                      const incomeYER = isIncome ? yerVal : 0;
+                      const expenseYER = isExpense ? yerVal : 0;
 
-                    return (
-                      <tr
-                        key={txn.id}
-                        className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}
-                      >
-                        <td className="py-2 px-3 font-mono font-bold text-teal-800 dark:text-teal-200">
-                          {txn.id}
-                          {txn.isDraft && (
-                            <span className="mr-1 text-xs text-amber-700 dark:text-amber-300 font-bold bg-amber-100 dark:bg-amber-900/40 px-1 rounded">
-                              مسودة
+                      return (
+                        <tr key={txn.id} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}>
+                          <td className="py-2 px-3 font-mono font-bold text-teal-800 dark:text-teal-200">
+                            {txn.id}
+                            {txn.isDraft && (
+                              <span className="mr-1 text-xs text-amber-700 dark:text-amber-300 font-bold bg-amber-100 dark:bg-amber-900/40 px-1 rounded">
+                                مسودة
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-2 px-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">{txn.date}</td>
+                          <td className="py-2 px-3 font-medium">
+                            <span
+                              className={`px-1.5 py-0.5 rounded text-xs font-bold ${
+                                isIncome
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : isExpense
+                                    ? 'bg-rose-100 text-rose-800'
+                                    : 'bg-slate-100 text-slate-800'
+                              }`}
+                            >
+                              {txn.movement}
                             </span>
-                          )}
-                        </td>
-                        <td className="py-2 px-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                          {txn.date}
-                        </td>
-                        <td className="py-2 px-3 font-medium">
-                          <span
-                            className={`px-1.5 py-0.5 rounded text-xs font-bold ${
-                              isIncome
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : isExpense
-                                ? 'bg-rose-100 text-rose-800'
-                                : 'bg-slate-100 text-slate-800'
-                            }`}
-                          >
-                            {txn.movement}
-                          </span>
-                        </td>
-                        <td className="py-2 px-3 text-slate-700 dark:text-slate-200">
-                          {txn.restriction || '-'}
-                        </td>
-                        <td className="py-2 px-3 text-slate-800 dark:text-slate-200 max-w-xs truncate">
-                          {txn.description || txn.categoryAccount || '-'}
-                          {txn.attachmentUrl && (
-                            <span className="text-xs text-slate-400 dark:text-slate-500 block">
-                              مستند: {txn.attachmentUrl}
-                            </span>
-                          )}
-                        </td>
-                        <td className="py-2 px-3 font-bold text-slate-700 dark:text-slate-200">
-                          {txn.accountName || txn.restrictionAccount || '-'}
-                        </td>
-                        <td className="py-2 px-3 text-left font-mono font-bold text-emerald-700 dark:text-emerald-300">
-                          {incomeYER > 0 ? incomeYER.toLocaleString() : '-'}
-                        </td>
-                        <td className="py-2 px-3 text-left font-mono font-bold text-rose-700 dark:text-rose-300">
-                          {expenseYER > 0 ? expenseYER.toLocaleString() : '-'}
-                        </td>
-                        <td className="py-2 px-3 text-left font-mono text-xs text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                          {txn.amountSAR ? `${txn.amountSAR.toLocaleString()} SAR` : ''}
-                          {txn.amountUSD ? `${txn.amountUSD.toLocaleString()} $` : ''}
-                          {!txn.amountSAR && !txn.amountUSD ? '-' : ''}
-                        </td>
-                      </tr>
-                    );
-                  })
+                          </td>
+                          <td className="py-2 px-3 text-slate-700 dark:text-slate-200">{txn.restriction || '-'}</td>
+                          <td className="py-2 px-3 text-slate-800 dark:text-slate-200 max-w-xs truncate">
+                            {txn.description || txn.categoryAccount || '-'}
+                            {txn.attachmentUrl && (
+                              <span className="text-xs text-slate-400 dark:text-slate-500 block">
+                                مستند: {txn.attachmentUrl}
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-2 px-3 font-bold text-slate-700 dark:text-slate-200">
+                            {txn.accountName || txn.restrictionAccount || '-'}
+                          </td>
+                          <td className="py-2 px-3 text-left font-mono font-bold text-emerald-700 dark:text-emerald-300">
+                            {incomeYER > 0 ? incomeYER.toLocaleString() : '-'}
+                          </td>
+                          <td className="py-2 px-3 text-left font-mono font-bold text-rose-700 dark:text-rose-300">
+                            {expenseYER > 0 ? expenseYER.toLocaleString() : '-'}
+                          </td>
+                          <td className="py-2 px-3 text-left font-mono text-xs text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                            {txn.amountSAR ? `${txn.amountSAR.toLocaleString()} SAR` : ''}
+                            {txn.amountUSD ? `${txn.amountUSD.toLocaleString()} $` : ''}
+                            {!txn.amountSAR && !txn.amountUSD ? '-' : ''}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+                {transactions.length > 0 && (
+                  <tfoot>
+                    <tr className="bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-slate-100 border-t-2 border-slate-300 dark:border-slate-600">
+                      <td colSpan={6} className="py-3 px-3 text-right">
+                        الإجمالي العام للفترة ({transactions.length} قيد)
+                      </td>
+                      <td className="py-3 px-3 text-left font-mono text-sm text-emerald-700 dark:text-emerald-300">
+                        {periodSummary.totalIncomeYER.toLocaleString()}
+                      </td>
+                      <td className="py-3 px-3 text-left font-mono text-sm text-rose-700 dark:text-rose-300">
+                        {periodSummary.totalExpenseYER.toLocaleString()}
+                      </td>
+                      <td className="py-3 px-3 text-left font-mono text-xs">
+                        {periodSummary.totalSAR > 0 && `${periodSummary.totalSAR.toLocaleString()} SAR `}
+                        {periodSummary.totalUSD > 0 && `${periodSummary.totalUSD.toLocaleString()} $`}
+                      </td>
+                    </tr>
+                  </tfoot>
                 )}
-              </tbody>
-              {transactions.length > 0 && (
-                <tfoot>
-                  <tr className="bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-slate-100 border-t-2 border-slate-300 dark:border-slate-600">
-                    <td colSpan={6} className="py-3 px-3 text-right">
-                      الإجمالي العام للفترة ({transactions.length} قيد)
-                    </td>
-                    <td className="py-3 px-3 text-left font-mono text-sm text-emerald-700 dark:text-emerald-300">
-                      {periodSummary.totalIncomeYER.toLocaleString()}
-                    </td>
-                    <td className="py-3 px-3 text-left font-mono text-sm text-rose-700 dark:text-rose-300">
-                      {periodSummary.totalExpenseYER.toLocaleString()}
-                    </td>
-                    <td className="py-3 px-3 text-left font-mono text-xs">
-                      {periodSummary.totalSAR > 0 && `${periodSummary.totalSAR.toLocaleString()} SAR `}
-                      {periodSummary.totalUSD > 0 && `${periodSummary.totalUSD.toLocaleString()} $`}
-                    </td>
-                  </tr>
-                </tfoot>
-              )}
-            </table>
+              </table>
             </div>
           </div>
 

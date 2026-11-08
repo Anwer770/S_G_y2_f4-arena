@@ -213,9 +213,7 @@ export const DebtRecordModal: React.FC<DebtRecordModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-rose-700 dark:text-rose-300 mb-1">
-                مدين (عليه)
-              </label>
+              <label className="block text-xs font-bold text-rose-700 dark:text-rose-300 mb-1">مدين (عليه)</label>
               <input
                 type="number"
                 min="0"
@@ -228,9 +226,7 @@ export const DebtRecordModal: React.FC<DebtRecordModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-emerald-700 dark:text-emerald-300 mb-1">
-                دائن (له)
-              </label>
+              <label className="block text-xs font-bold text-emerald-700 dark:text-emerald-300 mb-1">دائن (له)</label>
               <input
                 type="number"
                 min="0"
@@ -245,7 +241,9 @@ export const DebtRecordModal: React.FC<DebtRecordModalProps> = ({
 
           {/* Notes */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">الملاحظات والتفاصيل</label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
+              الملاحظات والتفاصيل
+            </label>
             <textarea
               rows={2}
               placeholder="أي تفاصيل أو مراجع أو سندات..."
@@ -264,7 +262,10 @@ export const DebtRecordModal: React.FC<DebtRecordModalProps> = ({
               onChange={(e) => setIsCompleted(e.target.checked)}
               className="w-4 h-4 text-emerald-600 dark:text-emerald-400 rounded-md border-slate-300 dark:border-slate-600 focus:ring-emerald-500"
             />
-            <label htmlFor="isCompletedDebt" className="text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer">
+            <label
+              htmlFor="isCompletedDebt"
+              className="text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer"
+            >
               وسم السجل مكتملاً ✔ (تظليل رمادي وخط شطب)
             </label>
           </div>

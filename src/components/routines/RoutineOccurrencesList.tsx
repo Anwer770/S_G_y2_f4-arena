@@ -15,11 +15,7 @@ import {
   ArrowRight,
   Flame,
 } from 'lucide-react';
-import {
-  RoutineOccurrence,
-  RoutineRecord,
-  ScheduleConflict,
-} from '../../types/routines';
+import { RoutineOccurrence, RoutineRecord, ScheduleConflict } from '../../types/routines';
 import { formatDurationArabic } from '../../utils/routines';
 
 interface RoutineOccurrencesListProps {
@@ -70,17 +66,13 @@ export const RoutineOccurrencesList: React.FC<RoutineOccurrencesListProps> = ({
   });
 
   // Sort by plannedStart time ascending
-  const sortedOccurrences = [...filteredOccurrences].sort((a, b) =>
-    a.plannedStart.localeCompare(b.plannedStart)
-  );
+  const sortedOccurrences = [...filteredOccurrences].sort((a, b) => a.plannedStart.localeCompare(b.plannedStart));
 
   const todayStr = new Date().toISOString().split('T')[0];
   const isToday = selectedDate === todayStr;
 
   const totalForDay = occurrences.filter((o) => o.date === selectedDate).length;
-  const completedForDay = occurrences.filter(
-    (o) => o.date === selectedDate && o.status === 'COMPLETED'
-  ).length;
+  const completedForDay = occurrences.filter((o) => o.date === selectedDate && o.status === 'COMPLETED').length;
   const dayCompletionRate = totalForDay > 0 ? Math.round((completedForDay / totalForDay) * 100) : 0;
 
   return (
@@ -207,9 +199,7 @@ export const RoutineOccurrencesList: React.FC<RoutineOccurrencesListProps> = ({
           <div className="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 mx-auto text-2xl">
             🌿
           </div>
-          <h3 className="text-base font-bold text-slate-700 dark:text-slate-200">
-            لا توجد روتينات مجدولة لهذا اليوم
-          </h3>
+          <h3 className="text-base font-bold text-slate-700 dark:text-slate-200">لا توجد روتينات مجدولة لهذا اليوم</h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
             يمكنك تخصيص الجداول وإضافة روتينات يومية أو أسبوعية جديدة من خلال معالج الروتين الذكي.
           </p>
@@ -231,10 +221,10 @@ export const RoutineOccurrencesList: React.FC<RoutineOccurrencesListProps> = ({
                   isCompleted
                     ? 'border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/20'
                     : isSkipped
-                    ? 'border-slate-200 dark:border-slate-800 opacity-60'
-                    : isInProgress
-                    ? 'border-indigo-400 dark:border-indigo-600 ring-2 ring-indigo-400/20'
-                    : 'border-slate-200 dark:border-slate-800'
+                      ? 'border-slate-200 dark:border-slate-800 opacity-60'
+                      : isInProgress
+                        ? 'border-indigo-400 dark:border-indigo-600 ring-2 ring-indigo-400/20'
+                        : 'border-slate-200 dark:border-slate-800'
                 }`}
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -289,9 +279,7 @@ export const RoutineOccurrencesList: React.FC<RoutineOccurrencesListProps> = ({
                       </h3>
 
                       {routine.description && (
-                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
-                          {routine.description}
-                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">{routine.description}</p>
                       )}
                     </div>
                   </div>

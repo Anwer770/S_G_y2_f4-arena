@@ -102,7 +102,19 @@ export function formatValidUrl(url: string): string {
  * Export links list as CSV with UTF-8 BOM for full Arabic Excel support
  */
 export function exportLinksToCSV(links: LinkRecord[]): void {
-  const headers = ['المعرف', 'اسم الموقع', 'الوصف', 'الرابط', 'النوع', 'التصنيف', 'الفئة', 'الأهمية', 'مفضل', 'مرات الزيارة', 'ملاحظات'];
+  const headers = [
+    'المعرف',
+    'اسم الموقع',
+    'الوصف',
+    'الرابط',
+    'النوع',
+    'التصنيف',
+    'الفئة',
+    'الأهمية',
+    'مفضل',
+    'مرات الزيارة',
+    'ملاحظات',
+  ];
 
   const rows = links.map((r) => [
     `"${(r.id || '').replace(/"/g, '""')}"`,
@@ -155,19 +167,22 @@ export function exportLinksToJSON(links: LinkRecord[]): void {
 /**
  * Export links as native Excel XLSX with RTL worksheet
  */
-export function exportLinksToExcel(links: LinkRecord[], filename = `مكتبة_الروابط_${new Date().toISOString().split('T')[0]}.xlsx`): void {
+export function exportLinksToExcel(
+  links: LinkRecord[],
+  filename = `مكتبة_الروابط_${new Date().toISOString().split('T')[0]}.xlsx`
+): void {
   const rows = links.map((r) => ({
-    'المعرف': r.id || '',
+    المعرف: r.id || '',
     'اسم الموقع / الأداة': r.siteName || '',
-    'الوصف': r.desc || '',
+    الوصف: r.desc || '',
     'الرابط الإلكتروني': r.url || '',
-    'النوع': r.type || '',
-    'التصنيف': r.classification || '',
-    'الفئة': r.category || '',
-    'الأهمية': r.importance || '',
-    'مفضل': r.isFavorite ? 'نعم' : 'لا',
+    النوع: r.type || '',
+    التصنيف: r.classification || '',
+    الفئة: r.category || '',
+    الأهمية: r.importance || '',
+    مفضل: r.isFavorite ? 'نعم' : 'لا',
     'مرات الزيارة': r.visitCount || 0,
-    'ملاحظات': r.notes || '',
+    ملاحظات: r.notes || '',
   }));
 
   const wb = XLSX.utils.book_new();

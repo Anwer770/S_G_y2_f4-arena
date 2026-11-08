@@ -315,9 +315,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
               <AlertTriangle className="w-4 h-4 text-rose-600 animate-pulse" />
               <span>تنبيهات محرك الأتمتة الذكي ({automationAlerts.length} تنبيهات حرجة تستوجب المتابعة)</span>
             </div>
-            <span className="text-xs font-mono text-rose-600 dark:text-rose-400 font-bold">
-              فحص لحظي آلي
-            </span>
+            <span className="text-xs font-mono text-rose-600 dark:text-rose-400 font-bold">فحص لحظي آلي</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -336,12 +334,8 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                   <Clock className="w-3.5 h-3.5" />
                 </div>
                 <div className="min-w-0">
-                  <span className="font-bold text-slate-900 dark:text-slate-100 block truncate">
-                    {alert.title}
-                  </span>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-                    {alert.message}
-                  </p>
+                  <span className="font-bold text-slate-900 dark:text-slate-100 block truncate">{alert.title}</span>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{alert.message}</p>
                 </div>
               </div>
             ))}
@@ -366,9 +360,11 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
             >
               <Layers className="w-3.5 h-3.5" />
               <span>الكل (عرض مدمج ثلاثي)</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-                activeTab === 'all' ? 'bg-teal-800 text-white' : 'bg-slate-200 dark:bg-slate-700'
-              }`}>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                  activeTab === 'all' ? 'bg-teal-800 text-white' : 'bg-slate-200 dark:bg-slate-700'
+                }`}
+              >
                 {orders.length + tasks.length + commitments.length}
               </span>
             </button>
@@ -385,9 +381,11 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
             >
               <ShoppingCart className="w-3.5 h-3.5" />
               <span>الطلبيات وعقود التوريد</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-                activeTab === 'orders' ? 'bg-blue-700 text-white' : 'bg-blue-100 dark:bg-blue-950 text-blue-700'
-              }`}>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                  activeTab === 'orders' ? 'bg-blue-700 text-white' : 'bg-blue-100 dark:bg-blue-950 text-blue-700'
+                }`}
+              >
                 {orders.length}
               </span>
             </button>
@@ -404,9 +402,11 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
             >
               <CheckSquare className="w-3.5 h-3.5" />
               <span>المهام التنفيذية</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-                activeTab === 'tasks' ? 'bg-teal-800 text-white' : 'bg-teal-100 dark:bg-teal-950 text-teal-700'
-              }`}>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                  activeTab === 'tasks' ? 'bg-teal-800 text-white' : 'bg-teal-100 dark:bg-teal-950 text-teal-700'
+                }`}
+              >
                 {tasks.length}
               </span>
             </button>
@@ -423,9 +423,13 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
             >
               <Coins className="w-3.5 h-3.5" />
               <span>الالتزامات والتحصيلات</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-                activeTab === 'commitments' ? 'bg-amber-700 text-white' : 'bg-amber-100 dark:bg-amber-950 text-amber-700'
-              }`}>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+                  activeTab === 'commitments'
+                    ? 'bg-amber-700 text-white'
+                    : 'bg-amber-100 dark:bg-amber-950 text-amber-700'
+                }`}
+              >
                 {commitments.length}
               </span>
             </button>
@@ -525,18 +529,14 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                             <span className="font-mono font-bold text-blue-700 dark:text-blue-400 block">
                               {order.orderNumber}
                             </span>
-                            <span className="text-xs text-slate-400 block">
-                              {order.orderType}
-                            </span>
+                            <span className="text-xs text-slate-400 block">{order.orderType}</span>
                           </div>
                         </div>
                       </td>
 
                       {/* 2. Title & Customer */}
                       <td className="py-2.5 px-3">
-                        <span className="font-bold text-slate-900 dark:text-slate-100 block">
-                          {order.title}
-                        </span>
+                        <span className="font-bold text-slate-900 dark:text-slate-100 block">{order.title}</span>
                         <span className="text-xs text-slate-500 dark:text-slate-400 font-medium block flex items-center gap-1 mt-0.5">
                           <Building className="w-3 h-3 text-slate-400 shrink-0" />
                           <span>{order.customerName}</span>
@@ -568,19 +568,21 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                             order.status === 'delivered'
                               ? 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700'
                               : order.status === 'shipped'
-                              ? 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-300 dark:border-sky-700'
-                              : 'bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700'
+                                ? 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-300 dark:border-sky-700'
+                                : 'bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700'
                           }`}
                         >
-                          <span className={`w-1.5 h-1.5 rounded-full ${
-                            order.status === 'delivered' ? 'bg-emerald-500' : 'bg-amber-500'
-                          }`} />
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              order.status === 'delivered' ? 'bg-emerald-500' : 'bg-amber-500'
+                            }`}
+                          />
                           <span>
                             {order.status === 'delivered'
                               ? 'تم التسليم'
                               : order.status === 'shipped'
-                              ? 'تم الشحن'
-                              : 'قيد التجهيز'}
+                                ? 'تم الشحن'
+                                : 'قيد التجهيز'}
                           </span>
                         </span>
                       </td>
@@ -664,10 +666,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                   const isTaskDone = task.progress === 100 || task.status === 'completed';
 
                   return (
-                    <tr
-                      key={task.id}
-                      className="hover:bg-teal-50/50 dark:hover:bg-teal-950/20 transition-colors"
-                    >
+                    <tr key={task.id} className="hover:bg-teal-50/50 dark:hover:bg-teal-950/20 transition-colors">
                       {/* Type & Task # */}
                       <td className="py-2.5 px-3 whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
@@ -678,16 +677,16 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                             <span className="font-mono font-bold text-teal-700 dark:text-teal-400 block">
                               {task.taskNumber}
                             </span>
-                            <span className="text-xs text-slate-400 block">
-                              {task.category || 'تنفيذي'}
-                            </span>
+                            <span className="text-xs text-slate-400 block">{task.category || 'تنفيذي'}</span>
                           </div>
                         </div>
                       </td>
 
                       {/* Title */}
                       <td className="py-2.5 px-3">
-                        <span className={`font-bold block ${isTaskDone ? 'line-through text-slate-400' : 'text-slate-900 dark:text-slate-100'}`}>
+                        <span
+                          className={`font-bold block ${isTaskDone ? 'line-through text-slate-400' : 'text-slate-900 dark:text-slate-100'}`}
+                        >
                           {task.title}
                         </span>
                         {task.subtasks.length > 0 && (
@@ -698,9 +697,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                       </td>
 
                       {/* Region */}
-                      <td className="py-2.5 px-3 whitespace-nowrap text-slate-500">
-                        {task.customerRef || '—'}
-                      </td>
+                      <td className="py-2.5 px-3 whitespace-nowrap text-slate-500">{task.customerRef || '—'}</td>
 
                       {/* Assignee */}
                       <td className="py-2.5 px-3 whitespace-nowrap text-slate-700 dark:text-slate-300 font-medium">
@@ -708,9 +705,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                       </td>
 
                       {/* Amount */}
-                      <td className="py-2.5 px-3 whitespace-nowrap font-mono text-slate-400">
-                        —
-                      </td>
+                      <td className="py-2.5 px-3 whitespace-nowrap font-mono text-slate-400">—</td>
 
                       {/* Status */}
                       <td className="py-2.5 px-3 whitespace-nowrap">
@@ -729,10 +724,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                       <td className="py-2.5 px-3 min-w-[200px]">
                         <div className="flex items-center gap-2">
                           <div className="w-20 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
-                            <div
-                              className="h-full bg-teal-600 transition-all"
-                              style={{ width: `${task.progress}%` }}
-                            />
+                            <div className="h-full bg-teal-600 transition-all" style={{ width: `${task.progress}%` }} />
                           </div>
                           <span className="font-mono font-bold text-xs">{task.progress}%</span>
                         </div>
@@ -768,10 +760,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                   const isFulfilled = cmt.status === 'fulfilled';
 
                   return (
-                    <tr
-                      key={cmt.id}
-                      className="hover:bg-amber-50/50 dark:hover:bg-amber-950/20 transition-colors"
-                    >
+                    <tr key={cmt.id} className="hover:bg-amber-50/50 dark:hover:bg-amber-950/20 transition-colors">
                       {/* Type & ID */}
                       <td className="py-2.5 px-3 whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
@@ -791,7 +780,9 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
 
                       {/* Title */}
                       <td className="py-2.5 px-3">
-                        <span className={`font-bold block ${isFulfilled ? 'line-through text-slate-400' : 'text-slate-900 dark:text-slate-100'}`}>
+                        <span
+                          className={`font-bold block ${isFulfilled ? 'line-through text-slate-400' : 'text-slate-900 dark:text-slate-100'}`}
+                        >
                           {cmt.title}
                         </span>
                         <span className="text-xs text-slate-400 block">
@@ -800,9 +791,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                       </td>
 
                       {/* Region */}
-                      <td className="py-2.5 px-3 whitespace-nowrap text-slate-500">
-                        {cmt.paymentMethod || 'نقداً'}
-                      </td>
+                      <td className="py-2.5 px-3 whitespace-nowrap text-slate-500">{cmt.paymentMethod || 'نقداً'}</td>
 
                       {/* Rep */}
                       <td className="py-2.5 px-3 whitespace-nowrap text-slate-700 dark:text-slate-300 font-medium">
@@ -830,9 +819,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
                       {/* Linked Info */}
                       <td className="py-2.5 px-3 text-xs text-slate-500">
                         {cmt.linkedOrderId ? (
-                          <span className="text-blue-600 font-mono font-bold">
-                            مرتبط بطلبية
-                          </span>
+                          <span className="text-blue-600 font-mono font-bold">مرتبط بطلبية</span>
                         ) : (
                           '—'
                         )}
