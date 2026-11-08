@@ -140,7 +140,7 @@ const CI_GATES = [
   'npm run security', 'npm run storage-keys', 'npm run settings', 'npm run snapshots',
   'npm run auth', 'npm run data-loss', 'npm run workos', 'npm run outbox',
   'npm run typography', 'npm run darkmode', 'npm run tables', 'npm run tables:assert',
-  'npm run regression',
+  'npm run regression', 'npm run lint:eslint', 'npm run format:check', 'npm run test:unit:coverage',
 ];
 const ciText = fs.existsSync(CI_DIR)
   ? fs.readdirSync(CI_DIR).filter((f) => /\.ya?ml$/.test(f))

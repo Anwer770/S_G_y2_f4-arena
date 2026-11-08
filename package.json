@@ -1,7 +1,7 @@
 {
   "name": "caesar-erp-unified",
   "private": true,
-  "version": "3.17.0",
+  "version": "3.18.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -30,8 +30,13 @@
     "storage-keys": "node tools/regression/storage-keys.test.mjs",
     "tables:assert": "python3 tools/audit/tables_audit.py --assert",
     "tables:measure": "python3 tools/audit/tables_audit.py --json",
-    "verify": "npx tsc --noEmit && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/security.test.mjs && node --max-old-space-size=2048 tools/regression/settings.test.mjs && node tools/regression/hygiene.test.mjs && node tools/regression/storage-keys.test.mjs && node tools/regression/run.mjs",
-    "integrity": "node tools/regression/integrity.test.mjs"
+    "verify": "npx tsc --noEmit && npm run lint:eslint && npm run format:check && npm run test:unit:coverage && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/security.test.mjs && node --max-old-space-size=2048 tools/regression/settings.test.mjs && node tools/regression/hygiene.test.mjs && node tools/regression/storage-keys.test.mjs && node tools/regression/run.mjs",
+    "integrity": "node tools/regression/integrity.test.mjs",
+    "lint:eslint": "eslint . --max-warnings 800",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"tests/**/*.ts\"",
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
@@ -47,16 +52,23 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.14.0",
+    "@vitest/coverage-v8": "^5.1.0",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "fake-indexeddb": "^6.2.5",
     "jsdom": "^25.0.1",
+    "prettier": "^3.9.10",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
+    "typescript-eslint": "^8.72.1",
     "vite": "^6.2.3",
-    "vite-plugin-pwa": "^1.3.0"
+    "vite-plugin-pwa": "^1.3.0",
+    "vitest": "^5.1.0"
   }
 }

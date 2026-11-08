@@ -4,7 +4,7 @@
 
 **تطبيق ويب عربي (RTL) لإدارة العمليات والمخزون والحسابات والعهد والديون والعملاء والمهام — يعمل بلا خادم، وكل البيانات محلية في متصفحك.**
 
-الإصدار الحالي: **v3.17.0**
+الإصدار الحالي: **v3.18.0**
 
 [![Verify](https://github.com/Anwer770/S_G_y2_f4-arena/actions/workflows/verify.yml/badge.svg)](https://github.com/Anwer770/S_G_y2_f4-arena/actions/workflows/verify.yml)
 
@@ -54,6 +54,9 @@ npm run verify   # نفس البوابات محلياً، متسلسلة — ي�
 | البوابة | ما تتحقق منه | النتيجة الحالية |
 |---|---|---|
 | `npx tsc --noEmit` | أنواع صارمة | ✅ 0 أخطاء |
+| `npm run lint:eslint` | ESLint: قواعد الخطافات · `any` = 0 · لا `console.log` · سقف تحذيرات 800 | ✅ 0 أخطاء · 784 تحذيراً |
+| `npm run format:check` | تنسيق Prettier إلزامي (لا يُراجع يدوياً) | ✅ كل الملفات |
+| `npm run test:unit:coverage` | اختبارات وحدات (Vitest) للمنطق النقي + عتبات تغطية | ✅ 64 اختباراً · 86% سطور |
 | `npm run build` | بناء إنتاجي + PWA | ✅ ناجح |
 | `npm run integrity` | تصنيف الحركة المالية · ديمومة التخزين · سلامة الحذف | ✅ 33/33 |
 | `npm run data-loss` | الحفظ بعد إقلاع بارد | ✅ 8/8 |
