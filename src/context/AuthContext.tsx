@@ -3,6 +3,7 @@ import { SystemUser, UserRole, CompleteSystemSettings } from '../types/settings'
 import { ActiveModuleTab } from '../types';
 import { loadCompleteSystemSettings, saveCompleteSystemSettings, SETTINGS_UPDATED_EVENT } from '../utils/settingsStorage';
 import { dbStorage } from '../database/dbStorage';
+import { modulesForRole, permissionsForRole } from '../utils/roles';
 
 const AUTH_SESSION_KEY = 'suite_active_auth_session_v1';
 
@@ -24,53 +25,6 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Define allowed module tabs for each role
-const ROLE_MODULE_ACCESS: Record<UserRole, ActiveModuleTab[]> = {
-  admin: [
-    'dashboard',
-    'financial',
-    'stock',
-    'tasks',
-    'customers',
-    'doctors',
-    'debts',
-    'custody',
-    'knowledge',
-    'routines',
-    'links',
-    'taskflow',
-    'workos',
-    'settings',
-  ],
-  accountant: [
-    'dashboard',
-    'financial',
-    'debts',
-    'custody',
-    'customers',
-    'stock',
-    'tasks',
-    'links',
-    'knowledge',
-  ],
-  sales: [
-    'dashboard',
-    'customers',
-    'doctors',
-    'tasks',
-    'stock',
-    'custody',
-    'links',
-    'knowledge',
-  ],
-  viewer: [
-    'dashboard',
-    'stock',
-    'customers',
-    'doctors',
-    'links',
-    'knowledge',
-  ],
-};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<SystemUser | null>(null);
@@ -214,7 +168,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!currentUser) return false;
     if (currentUser.role === 'admin') return true;
 
-    const userPerms = settings.rolePermissions[currentUser.role] || [];
+    const userPerms = permissionsForRole(currentUser.role, settings.rolePermissions, settings.customRoles);
+    if (userPerms[0] === '*') return true;
     return userPerms.includes(permissionId);
   };
 
@@ -223,17 +178,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!currentUser) return false;
     if (currentUser.role === 'admin') return true;
 
-    const allowed = ROLE_MODULE_ACCESS[currentUser.role] || ['dashboard'];
+    const allowed = modulesForRole(currentUser.role, settings.rolePermissions, settings.customRoles);
     return allowed.includes(tab);
   };
 
   // Get list of allowed tabs for current user
   const getAllowedTabs = (): ActiveModuleTab[] => {
     if (!currentUser) return ['dashboard'];
-    if (currentUser.role === 'admin') {
-      return ROLE_MODULE_ACCESS.admin;
-    }
-    return ROLE_MODULE_ACCESS[currentUser.role] || ['dashboard'];
+    return modulesForRole(currentUser.role, settings.rolePermissions, settings.customRoles);
   };
 
   const value: AuthContextType = {

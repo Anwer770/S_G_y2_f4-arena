@@ -1,52 +1,64 @@
 import React, { useState } from 'react';
-import { UserRole } from '../../../types/settings';
+import { CustomRole, SystemUser } from '../../../types/settings';
 import { ALL_PERMISSIONS_LIST } from '../../../utils/settingsStorage';
-import { ShieldCheck, Shield, Check, Lock, CheckSquare, Square, Info } from 'lucide-react';
+import { BUILTIN_ROLES, canDeleteCustomRole, makeRoleId, roleCoverage, validateCustomRole } from '../../../utils/roles';
+import { ShieldCheck, Shield, Check, Lock, CheckSquare, Square, Info, Plus, Trash2, Users } from 'lucide-react';
 
 interface Props {
-  rolePermissions: Record<UserRole, string[]>;
-  onChange: (updated: Record<UserRole, string[]>) => void;
+  rolePermissions: Record<string, string[]>;
+  onChange: (updated: Record<string, string[]>) => void;
+  customRoles: CustomRole[];
+  onCustomRolesChange: (roles: CustomRole[]) => void;
+  users: SystemUser[];
 }
 
-const ROLES: Array<{
-  id: UserRole;
-  title: string;
-  description: string;
-  badgeBg: string;
-  badgeColor: string;
-}> = [
-  {
-    id: 'admin',
-    title: 'مدير النظام (Admin)',
-    description: 'صلاحيات كاملة وغير مقيدة على جميع وحدات النظام والتقارير والنسخ الاحتياطي',
-    badgeBg: 'bg-purple-100 dark:bg-purple-950/60',
-    badgeColor: 'text-purple-700 dark:text-purple-300',
-  },
-  {
-    id: 'accountant',
-    title: 'محاسب (Accountant)',
-    description: 'تسجيل وتعديل القيود اليومية، سندات القبض والصرف، ومتابعة القوائم والميزانية',
-    badgeBg: 'bg-teal-100 dark:bg-teal-950/60',
-    badgeColor: 'text-teal-700 dark:text-teal-300',
-  },
-  {
-    id: 'sales',
-    title: 'موظف مبيعات (Sales)',
-    description: 'إصدار الفواتير النقدية والآجلة، عروض الأسعار، واستعراض بيانات العملاء والمخزون',
-    badgeBg: 'bg-amber-100 dark:bg-amber-950/60',
-    badgeColor: 'text-amber-700 dark:text-amber-300',
-  },
-  {
-    id: 'viewer',
-    title: 'مشاهد (Viewer)',
-    description: 'استعراض وقراءة السجلات والتقارير المالية دون إمكانية الإضافة أو التعديل أو الحذف',
-    badgeBg: 'bg-slate-100 dark:bg-slate-800',
-    badgeColor: 'text-slate-700 dark:text-slate-300',
-  },
-];
 
-export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onChange }) => {
-  const [activeRole, setActiveRole] = useState<UserRole>('accountant');
+export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onChange, customRoles, onCustomRolesChange, users }) => {
+  const [activeRole, setActiveRole] = useState<string>('accountant');
+  const [newRoleLabel, setNewRoleLabel] = useState('');
+  const [copyFrom, setCopyFrom] = useState<string>('viewer');
+  const [roleError, setRoleError] = useState('');
+
+  const allRoles = [
+    ...BUILTIN_ROLES,
+    ...customRoles.map((r) => ({
+      id: r.id,
+      title: r.label,
+      description: r.description || `دور مخصّص · ${r.permissions.length} صلاحية`,
+      badgeBg: 'bg-indigo-100 dark:bg-indigo-950/60',
+      badgeColor: 'text-indigo-700 dark:text-indigo-300',
+      custom: true,
+    })),
+  ];
+
+  const addRole = () => {
+    const perms = Array.from(new Set([...((rolePermissions[copyFrom] || []).slice(0, 6))]));
+    const err = validateCustomRole(newRoleLabel, perms, customRoles);
+    if (err) { setRoleError(err); return; }
+    const role: CustomRole = {
+      id: makeRoleId(newRoleLabel),
+      label: newRoleLabel.trim(),
+      permissions: perms,
+      createdAt: new Date().toISOString(),
+    };
+    onCustomRolesChange([...customRoles, role]);
+    onChange({ ...rolePermissions, [role.id]: perms });
+    setActiveRole(role.id);
+    setNewRoleLabel('');
+    setRoleError('');
+  };
+
+  const deleteRole = (roleId: string) => {
+    const err = canDeleteCustomRole(roleId, users);
+    if (err) { setRoleError(err); return; }
+    if (!window.confirm('حذف هذا الدور نهائياً؟')) return;
+    onCustomRolesChange(customRoles.filter((r) => r.id !== roleId));
+    const next = { ...rolePermissions };
+    delete next[roleId];
+    onChange(next);
+    setActiveRole('accountant');
+    setRoleError('');
+  };
 
   const currentRolePerms = rolePermissions[activeRole] || [];
 
@@ -86,6 +98,7 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
   };
 
   const categories = ['الحسابات والمالية', 'المخزون والمستودعات', 'الفواتير والمبيعات', 'الإعدادات والنظام'] as const;
+  const activeIsCustom = customRoles.some((r) => r.id === activeRole);
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -102,9 +115,50 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
         </div>
       </div>
 
+      {/* إدارة الأدوار المخصّصة */}
+      <div className="surface-card p-4 space-y-3">
+        <div className="flex items-center gap-2 text-xs font-black text-slate-900 dark:text-white">
+          <Users className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> أدوار مخصّصة
+          <span className="version-chip rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 text-xs font-bold">
+            {customRoles.length}
+          </span>
+        </div>
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          أنشئ دوراً جديداً (مثل «مراقب مخزون») بنسخ صلاحيات دور قائم ثم عدّلها. وحدات الشاشات تُشتق آلياً من الصلاحيات الممنوحة.
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            value={newRoleLabel}
+            onChange={(e) => setNewRoleLabel(e.target.value)}
+            placeholder="اسم الدور الجديد"
+            className="w-48 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+          />
+          <select
+            value={copyFrom}
+            onChange={(e) => setCopyFrom(e.target.value)}
+            className="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+            title="نسخ الصلاحيات من"
+          >
+            {allRoles.map((r) => (<option key={r.id} value={r.id}>نسخ من: {r.title}</option>))}
+          </select>
+          <button type="button" onClick={addRole}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold cursor-pointer">
+            <Plus className="w-3.5 h-3.5" /> إنشاء دور
+          </button>
+          {activeIsCustom && (
+            <button type="button" onClick={() => deleteRole(activeRole)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-300 text-xs font-bold hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer">
+              <Trash2 className="w-3.5 h-3.5" /> حذف الدور الحالي
+            </button>
+          )}
+          <span className="text-xs text-slate-400 dark:text-slate-500">تغطية الدور الحالي: {roleCoverage(currentRolePerms, ALL_PERMISSIONS_LIST.length)}%</span>
+        </div>
+        {roleError && <div className="text-xs font-bold text-rose-600 dark:text-rose-300">{roleError}</div>}
+      </div>
+
       {/* Role Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {ROLES.map((r) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {allRoles.map((r) => {
           const isSelected = activeRole === r.id;
           const count = rolePermissions[r.id]?.length || 0;
           return (
@@ -150,7 +204,7 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span>
-                صلاحيات دور: {ROLES.find((r) => r.id === activeRole)?.title}
+                صلاحيات دور: {allRoles.find((r) => r.id === activeRole)?.title}
               </span>
             </h3>
             <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">

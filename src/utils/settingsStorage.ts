@@ -140,6 +140,7 @@ export const DEFAULT_SYSTEM_SETTINGS: CompleteSystemSettings = {
       'fin_view', 'inv_view', 'sales_view'
     ],
   },
+  customRoles: [],
   database: {
     googleDriveClientId: '',
     isGoogleDriveConnected: false,
@@ -222,6 +223,9 @@ export function loadCompleteSystemSettings(): CompleteSystemSettings {
         },
         users,
         rolePermissions: { ...DEFAULT_SYSTEM_SETTINGS.rolePermissions, ...(parsed.rolePermissions || {}) },
+        customRoles: Array.isArray(parsed.customRoles)
+          ? parsed.customRoles.filter((r: unknown) => r && typeof r === 'object')
+          : [],
         database: { ...DEFAULT_SYSTEM_SETTINGS.database, ...(parsed.database || {}) },
       };
     }

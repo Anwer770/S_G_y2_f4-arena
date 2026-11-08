@@ -84,12 +84,24 @@ export interface PrinterSettings {
 
 export type UserRole = 'admin' | 'accountant' | 'sales' | 'viewer';
 
+/** دور مخصّص يُنشأ من الإعدادات بصلاحيات حرّة (R20) */
+export interface CustomRole {
+  id: string;
+  label: string;
+  description?: string;
+  permissions: string[];
+  createdAt: string;
+}
+
+/** مُعرّف دور مفتوح: مدمج أو مخصّص */
+export type RoleId = string;
+
 export interface SystemUser {
   id: string;
   name: string;
   email: string;
   phone?: string;
-  role: UserRole;
+  role: RoleId;
   status: 'active' | 'inactive';
   avatarInitial?: string;
   pin?: string;
@@ -129,6 +141,8 @@ export interface CompleteSystemSettings {
   notifications: NotificationSettings;
   printer: PrinterSettings;
   users: SystemUser[];
-  rolePermissions: Record<UserRole, string[]>;
+  rolePermissions: Record<string, string[]>;
+  /** أدوار مخصّصة بصلاحيات حرّة */
+  customRoles: CustomRole[];
   database: DatabaseConfig;
 }

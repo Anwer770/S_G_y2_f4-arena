@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ShieldCheck, Search, Trash2, RefreshCw, Download } from 'lucide-react';
+import { ShieldCheck, Search, Trash2, RefreshCw, Download, Archive } from 'lucide-react';
 import { auditService } from '../../../core/audit/AuditService';
 
 const ACTION_LABEL: Record<string, string> = {
@@ -12,10 +12,11 @@ export const AuditLogTab: React.FC = () => {
   const [version, setVersion] = useState(0);
   const [query, setQuery] = useState('');
   const [actionFilter, setActionFilter] = useState('all');
+  const [includeArchive, setIncludeArchive] = useState(false);
   const logs = useMemo(() => {
     void version;
-    return auditService.getAllLogs();
-  }, [version]);
+    return includeArchive ? auditService.getAllLogsIncludingArchive() : auditService.getAllLogs();
+  }, [version, includeArchive]);
 
   const actionOptions = useMemo<string[]>(
     () => Array.from(new Set(logs.map((l) => String(l.action)))),
@@ -63,6 +64,26 @@ export const AuditLogTab: React.FC = () => {
               <option key={a} value={a}>{ACTION_LABEL[a] || a}</option>
             ))}
           </select>
+          <label className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 cursor-pointer" title="يشمل السجلات المؤرشفة">
+            <input type="checkbox" checked={includeArchive} onChange={(e) => setIncludeArchive(e.target.checked)} />
+            الأرشيف ({auditService.getArchiveCount()})
+          </label>
+          <button
+            type="button"
+            onClick={() => {
+              const blob = new Blob([JSON.stringify(auditService.exportAll(), null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `audit-archive-${new Date().toISOString().slice(0, 10)}.json`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+            title="تصدير السجل والأرشيف (JSON)"
+          >
+            <Archive className="w-3.5 h-3.5" />
+          </button>
           <button
             type="button"
             onClick={() => {

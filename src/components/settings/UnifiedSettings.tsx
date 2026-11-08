@@ -242,6 +242,7 @@ export const UnifiedSettings: React.FC<Props> = ({
 
           {activeTab === 'users' && (
             <UsersTab
+              customRoles={settings.customRoles || []}
               users={settings.users}
               onChange={(updated) => {
                 const adminUser = updated.find((u) => u.role === 'admin' || u.id === 'usr-1');
@@ -261,6 +262,9 @@ export const UnifiedSettings: React.FC<Props> = ({
             <SecurityPermissionsTab
               rolePermissions={settings.rolePermissions}
               onChange={(updated) => setSettings({ ...settings, rolePermissions: updated })}
+              customRoles={settings.customRoles || []}
+              onCustomRolesChange={(roles) => setSettings({ ...settings, customRoles: roles })}
+              users={settings.users}
             />
           )}
 

@@ -68,6 +68,27 @@ check('W3 · مركز التنبيهات يعرض تنبيهات المحرك', 
 check('W4 · القوائم تُدرَج في النسخة الاحتياطية وتُستعاد', /lookups: loadLookupsForBackup\(\)/.test(read('src/utils/storage.ts')) && /setLookupsFromBackup/.test(read('src/utils/storage.ts')));
 check('W5 · القوائم باقية بلا قيم مخترعة في نماذج الديون', !/\|\| 'أنور'/.test(read('src/components/debts/CommitmentModal.tsx')));
 
+
+// ── الأدوار المخصّصة (RBAC ديناميكي)
+const R = await build('src/utils/roles.ts', '.roles-bundle.mjs');
+check('R1 · الأدوار المدمجة أربعة ومُعرّفة', R.BUILTIN_ROLE_IDS.length === 4 && R.BUILTIN_ROLES.length === 4);
+check('R2 · الأدوار المخصّصة تُشتق وحداتها من الصلاحيات', (() => {
+  const mods = R.modulesForRole('role_x', { role_x: ['fin_view', 'inv_view'] }, []);
+  return mods.includes('financial') && mods.includes('stock') && mods.includes('dashboard');
+})());
+check('R3 · الدور المدمج يحتفظ بجدوله الثابت', R.modulesForRole('sales', {}, []).includes('customers') && !R.modulesForRole('sales', {}, []).includes('financial'));
+check('R4 · تحقّق إنشاء الدور يرفض الاسم القصير/المكرر/بلا صلاحيات', Boolean(R.validateCustomRole('', ['x'], [])) && Boolean(R.validateCustomRole('مراقب', [], [])) && Boolean(R.validateCustomRole('مراقب', ['inv_view'], [{ id: 'r', label: 'مراقب', permissions: ['inv_view'], createdAt: '' }])));
+check('R5 · لا يُحذف دور مدمج ولا دور مستخدم', Boolean(R.canDeleteCustomRole('admin', [])) && Boolean(R.canDeleteCustomRole('role_x', [{ role: 'role_x' }])) && R.canDeleteCustomRole('role_y', []) === null);
+check('R6 · معرّف الدور فريد وآمن', /^role_\S+_[a-z0-9]+$/.test(R.makeRoleId('مراقب مخزون')));
+
+// ── الأرشيف وسجل التدقيق
+const auditSrc = read('src/core/audit/AuditService.ts');
+check('R7 · سجل التدقيق يؤرشف الفائض بدل حذفه', /AUDIT_ARCHIVE_KEY/.test(auditSrc) && /getArchivedLogs/.test(auditSrc) && /getAllLogsIncludingArchive/.test(auditSrc) && /MAX_ARCHIVE/.test(auditSrc));
+check('R8 · تصدير كامل للسجل (JSON)', /exportAll\(\)/.test(auditSrc) && /audit-archive-/.test(read('src/components/settings/tabs/AuditLogTab.tsx')));
+
+// ── توحيد فئات المخزون
+check('R9 · فئات المخزون تُزامَن من القوائم المركزية', /activeLabels\(lookups, 'categories'\)/.test(read('src/components/settings/tabs/InventorySettingsTab.tsx')));
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة اختبار الإعدادات المركزية (settings) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);

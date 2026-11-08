@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { InventorySettings, WarehouseItem } from '../../../types/settings';
-import { Package, Plus, Trash2, CheckCircle2, Warehouse, Tag, Scale } from 'lucide-react';
+import { Package, Plus, Trash2, CheckCircle2, Warehouse, Tag, Scale, RefreshCw } from 'lucide-react';
+import { useLookups } from '../../../utils/lookupsStore';
+import { activeLabels } from '../../../constants/lookups';
 
 interface Props {
   settings: InventorySettings;
@@ -11,6 +13,13 @@ export const InventorySettingsTab: React.FC<Props> = ({ settings, onChange }) =>
   const [newWarehouseName, setNewWarehouseName] = useState('');
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newUnitName, setNewUnitName] = useState('');
+  const { lookups } = useLookups();
+  const centralCategories = activeLabels(lookups, 'categories');
+  const syncFromLookups = () => {
+    if (!centralCategories.length) return;
+    if (!window.confirm('استبدال فئات المخزون بفئات «القوائم والثوابت» المركزية؟ (لن تُحذف أي أصناف)')) return;
+    onChange({ ...settings, productCategories: centralCategories });
+  };
 
   // Warehouse handlers
   const handleAddWarehouse = (e: React.FormEvent) => {
@@ -202,9 +211,19 @@ export const InventorySettingsTab: React.FC<Props> = ({ settings, onChange }) =>
               <Tag className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200">تصنيفات المنتجات</h3>
             </div>
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400">
-              {settings.productCategories.length} تصنيف
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400">
+                {settings.productCategories.length} تصنيف
+              </span>
+              <button
+                type="button"
+                onClick={syncFromLookups}
+                title="استبدال الفئات بفئات «القوائم والثوابت» المركزية"
+                className="flex items-center gap-1 px-2 py-1 rounded-lg border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 text-xs font-bold hover:bg-teal-50 dark:hover:bg-teal-950/40 cursor-pointer"
+              >
+                <RefreshCw className="w-3 h-3" /> مزامنة من القوائم المركزية ({centralCategories.length})
+              </button>
+            </div>
           </div>
 
           {/* Add Category form */}
