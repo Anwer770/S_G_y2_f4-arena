@@ -32,6 +32,7 @@ export const ImportDoctorsModal: React.FC<Props> = ({
     doctors: DoctorRecord[];
     errors: string[];
     duplicateCount: number;
+    warnings?: string[];
   } | null>(null);
   const [importMode, setImportMode] = useState<'append' | 'replace'>('append');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -187,6 +188,15 @@ export const ImportDoctorsModal: React.FC<Props> = ({
                     <div className="flex items-center gap-2 text-amber-900 font-bold bg-amber-100/60 dark:bg-amber-900/40 p-2.5 rounded-lg">
                       <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                       <span>يوجد {parseResult.duplicateCount} سجل يشتبه بتكراره مع الأطباء المسجلين حالياً.</span>
+                    </div>
+                  )}
+
+                  {parseResult.warnings && parseResult.warnings.length > 0 && (
+                    <div className="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800 text-xs text-sky-900 dark:text-sky-200 space-y-1">
+                      <span className="font-bold block">أمانة الاستيراد — ما بقي فارغاً وما وُلّد داخلياً:</span>
+                      {parseResult.warnings.slice(0, 8).map((w, idx) => (
+                        <p key={idx} className="leading-5">• {w}</p>
+                      ))}
                     </div>
                   )}
 

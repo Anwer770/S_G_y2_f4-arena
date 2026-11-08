@@ -81,6 +81,7 @@ export function calculateCustomerStats(
   let todayVisitsCompleted = 0;
 
   const sourceMap: Record<CustomerSource, any> = {
+    '': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
     'القيصر الذهبي': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
     'توب مكياجي': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
     عفيف: { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },

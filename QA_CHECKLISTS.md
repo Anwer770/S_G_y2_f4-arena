@@ -27,6 +27,7 @@
 | 11 | `npm run workos` | تكامل مساحة العمل | ✅ 17/17 (R15 مُصلحة) | ~18s |
 | 12 | `npm run identity` | مصدر واحد للهوية والإصدار + لا ادعاء AI + النسخة اليتيمة مؤرشفة | ✅ 16/16 (R7/R10/R11) | ~2s |
 | 13 | `npm run snapshots` | تشفير نقاط الاستعادة فعلياً + لا ادعاء سحابي/Drive | ✅ 13/13 (R17) | ~1s |
+| 14 | `npm run imports` | أمانة الاستيراد: الخلية الفارغة تبقى فارغة في كل مُحلّل | ✅ 13/13 (R18) | ~1s |
 | — | `npm run verify` | كل ما سبق متسلسلاً | ✅ **أخضر بالكامل** (2026-11-08) | ~7min |
 
 > **ملاحظة أمانة:** البوابة `verify` **خضراء** الآن بعد إغلاق R15/R16. قبل إغلاقهما كان الفشل موثّقاً كفشل سابق على خط الأساس `HEAD`، وقد أُصلح في التطبيق (لا في التأكيدات): شارة العدّاد، وحاويات الأعمدة/الزيارات، وسلّم النصوص. تفاصيل ما تغيّر بالضبط في القسم 6 أدناه.
@@ -85,7 +86,7 @@
 [ ] npm run build ناجح
 [ ] npm run integrity = 33/33 (أو أكثر)
 [ ] npm run regression = لا انحدار + 0 أخطاء JS
-[ ] كل البوابات خضراء: workos 17/17 · typography 7/7 · tables:assert 38/38 · integrity 33/33 · identity 16/16 · snapshots 13/13
+[ ] كل البوابات خضراء: workos 17/17 · typography 7/7 · tables:assert 38/38 · integrity 33/33 · identity 16/16 · snapshots 13/13 · imports 13/13
 [ ] الإصدار موحّد: `src/constants/appMeta.ts` = `package.json` = `metadata.json` = سطر «الإصدار» في `PRD.md`
 [ ] تنقّل يدوي: التبويبات المتأثرة + dashboard
 [ ] إضافة/تعديل/حذف سجل في الوحدة المتأثرة + reload
@@ -113,7 +114,8 @@
 12. **`snapshots` تحرس التشفير الحقيقي:** أي تعديل على `DatabasesTab` أو `snapshotCrypto` يجب أن يُبقي: `isEncrypted: !!payload` (لا `usePin`)، و`data: null` عند التشفير، ورفض الرمز الخاطئ. لا تُعِد نمط «علامة تشفير بلا تشفير».
 13. **لا ادعاءات سحابية/Drive:** بطاقة «النسخ الاحتياطي الخارجي (يدوي)» تصرّح بعدم وجود ربط سحابي. إعادة أي زر «ربط Google Drive» بلا تنفيذ فعلي تُفشل `S11` و`npm run verify`.
 14. **`package-lock.json` صار مُتتبَّعاً** لأول مرة (تثبيت إصدارات jsdom/esbuild التي تعتمد عليها البوابات). لا تُحدّثه يدوياً — `npm install` فقط، وراجِع الفرق قبل الـ commit.
-15. **ملف مبني للاختبار:** `docs/تدقيق/.snapshot-crypto.mjs` يُولَّد من `src/utils/snapshotCrypto.ts` وهو مُستبعَد في `.gitignore` — لا تُراجعه ولا تُرفعه.
+15. **أمانة الاستيراد (R18):** كل مُحلّل استيراد يجب أن يستخدم `cellText`/`cellNumber`/`autoKey` من `src/utils/importFidelity.ts`، ويُرفق `report.summary()` في `warnings`. **ممنوع** كتابة قيمة افتراضية لخلية فارغة (`|| 'صنعاء'` · `|| 'انور'` · `|| 'تم التنفيذ'` · `new Date()` للتاريخ …) — البوابة `npm run imports` تفحص أجسام المُحلّلات الأربعة وتفشل عند أي عودة.
+16. **ملف مبني للاختبار:** `docs/تدقيق/.snapshot-crypto.mjs` و`.imports-bundle.mjs` يُولَّدان من `src/utils/snapshotCrypto.ts` و`importFidelity.ts` وهو مُستبعَد في `.gitignore` — لا تُراجعه ولا تُرفعه.
 
 ---
 
