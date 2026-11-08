@@ -20,13 +20,13 @@ import { autoKey } from './importFidelity';
 import { assertFileSize, readFirstSheetSafe, safeSheetWarnings } from './xlsxSafe';
 
 // Helper to read file to JSON rows
-export const readFileToRows = (file: File): Promise<any[]> => {
+export const readFileToRows = (file: File): Promise<Record<string, unknown>[]> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
         assertFileSize(file);
-        const result = readFirstSheetSafe<any>(e.target?.result as string, 'binary');
+        const result = readFirstSheetSafe<Record<string, unknown>>(e.target?.result as string, 'binary');
         for (const w of safeSheetWarnings(result)) console.warn('[import]', w);
         resolve(result.rows || []);
       } catch (err) {
@@ -53,7 +53,7 @@ export const parseDebtsExcelFile = async (
   rows.forEach((row, idx) => {
     const bookRaw = String(row['دفتر الحساب'] || row['الدفتر'] || row['Book'] || '').trim();
     const name = String(row['الاسم / الجهة'] || row['الاسم'] || row['الجهة'] || row['Name'] || '').trim();
-    const amount = parseFloat(row['المبلغ'] || row['Amount'] || 0) || 0;
+    const amount = parseFloat(String(row['المبلغ'] || row['Amount'] || 0)) || 0;
     const currency = String(row['العملة'] || row['Currency'] || '').trim();
     const transType = String(row['نوع المعاملة'] || row['النوع'] || '').trim();
     const category = String(row['التصنيف'] || row['Category'] || '').trim();
@@ -131,7 +131,7 @@ export const parseStockExcelFile = async (
     const rawSubId = String(row['المعرف الفرعي'] || row['Sub_ID'] || row['الكود'] || '').trim();
     const date = String(row['التاريخ'] || row['Date'] || '').substring(0, 10);
     const itemName = String(row['اسم الصنف'] || row['الصنف'] || row['Item'] || '').trim();
-    const quantity = Math.abs(parseFloat(row['الكمية'] || row['Quantity'] || 0) || 0);
+    const quantity = Math.abs(parseFloat(String(row['الكمية'] || row['Quantity'] || 0)) || 0);
     const beneficiary = String(row['الجهة / المورد'] || row['الجهة'] || row['العميل'] || '').trim();
     const notes = String(row['ملاحظات'] || row['Notes'] || '').trim();
     const category = String(row['التصنيف'] || '').trim();
@@ -221,7 +221,7 @@ export const parseCustomersExcelFile = async (
     const route = String(row['المسار / اليوم'] || row['المسار'] || '').trim();
     const phone = String(row['رقم الهاتف'] || row['الهاتف'] || '').trim();
     const responsible = String(row['الشخص المسؤول'] || row['المسؤول'] || '').trim();
-    const initialDebt = parseFloat(row['مديونية سابقة'] || row['المديونية'] || 0) || 0;
+    const initialDebt = parseFloat(String(row['مديونية سابقة'] || row['المديونية'] || 0)) || 0;
     const notes = String(row['ملاحظات'] || '').trim();
 
     if (!name) return;
@@ -333,7 +333,7 @@ export const parseNotesExcelFile = async (
       id: `note-imp-${Date.now()}-${idx}`,
       title,
       content,
-      type: type as any,
+      type: type as NoteRecord['type'],
       category,
       priority,
       status,
@@ -370,7 +370,7 @@ export const parseCustodyExcelFile = async (
     const desc = String(row['الوصف'] || row['الملاحظات'] || name).trim();
     const responsible = String(row['الشخص المسؤول'] || row['المسؤول'] || '').trim();
     const category = String(row['التصنيف'] || 'عام').trim();
-    const amount = parseFloat(row['المبلغ'] || 0) || 0;
+    const amount = parseFloat(String(row['المبلغ'] || 0)) || 0;
     const currency = String(row['العملة'] || '').trim();
     const date = String(row['التاريخ'] || todayStr).substring(0, 10);
     const notes = String(row['الملاحظات'] || '').trim();

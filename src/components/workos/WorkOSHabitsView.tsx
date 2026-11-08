@@ -10,8 +10,8 @@ interface WorkOSHabitsViewProps {
 
 export const WorkOSHabitsView: React.FC<WorkOSHabitsViewProps> = ({
   habits = [],
-  onToggleHabitDay = (..._args: any[]) => {},
-  onOpenQuickAdd = (..._args: any[]) => {},
+  onToggleHabitDay = (..._args: unknown[]) => {},
+  onOpenQuickAdd = (..._args: unknown[]) => {},
 }) => {
   // Generate current week dates (last 7 days)
   const today = new Date();

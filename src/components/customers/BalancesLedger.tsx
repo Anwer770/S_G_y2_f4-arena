@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Customer, CustomerSource } from '../../types';
 import { CUSTOMER_SOURCES } from '../../data/defaultCustomers';
-import { calculateCustomerStats } from '../../utils/customers';
+import { calculateCustomerStats, CustomerSourceBucket } from '../../utils/customers';
 import {
   DollarSign,
   AlertTriangle,
@@ -217,7 +217,7 @@ export const BalancesLedger: React.FC<Props> = ({
       {activeTab === 'sources' ? (
         /* Source Breakdown Matrix */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {Object.entries(stats.sourceBreakdown).map(([sourceName, data]: [string, any]) => {
+          {Object.entries(stats.sourceBreakdown).map(([sourceName, data]: [string, CustomerSourceBucket]) => {
             return (
               <div
                 key={sourceName}

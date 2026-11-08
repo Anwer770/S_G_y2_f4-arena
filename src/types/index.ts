@@ -5,6 +5,22 @@
 // 3. Tasks, Commitments & Plans (دفتر المهام والأعمال والخطط والأهداف - دفتر المها v2.0)
 // ============================================================================
 
+import type {
+  RoutineAuditLog,
+  RoutineCategoryItem,
+  RoutineException,
+  RoutineExecution,
+  RoutineModuleSettings,
+  RoutineOccurrence,
+  RoutineRecord,
+  RoutineTagItem,
+  RoutineTemplate,
+} from './routines';
+import type { CustodyIssueRecord } from './custodyIssues';
+import type { LinkRecord } from './linksLibrary';
+import type { WorkOSData } from './workos';
+import type { LookupsState } from '../constants/lookups';
+
 // ----------------------------------------------------------------------------
 // 1. STOCK & INVENTORY TYPES
 // ----------------------------------------------------------------------------
@@ -612,6 +628,15 @@ export interface AppSettings {
   confirmDelete?: boolean;
 }
 
+/** أنواع الخيارات المالية القابلة للإضافة من أي شاشة (R28) */
+export type FinancialOptionType =
+  | 'category'
+  | 'account'
+  | 'restriction'
+  | 'movementType'
+  | 'restrictionAccount'
+  | 'accountName';
+
 export interface AuditLog {
   id: string;
   timestamp: string;
@@ -641,7 +666,7 @@ export interface UnifiedBackupState {
       seq: { IN: number; OUT: number };
     };
     custody?: {
-      records: any[];
+      records: CustodyIssueRecord[];
       categories: string[];
       responsibles: string[];
       statuses: string[];
@@ -700,27 +725,27 @@ export interface UnifiedBackupState {
       auditLogs: NoteAuditLog[];
     };
     routines?: {
-      routines: any[];
-      occurrences: any[];
-      executions: any[];
-      categories: any[];
-      tags: any[];
-      templates: any[];
-      exceptions: any[];
-      auditLogs: any[];
-      settings: any;
+      routines: RoutineRecord[];
+      occurrences: RoutineOccurrence[];
+      executions: RoutineExecution[];
+      categories: RoutineCategoryItem[];
+      tags: RoutineTagItem[];
+      templates: RoutineTemplate[];
+      exceptions: RoutineException[];
+      auditLogs: RoutineAuditLog[];
+      settings: RoutineModuleSettings;
     };
     links?: {
-      records: any[];
+      records: LinkRecord[];
       classifications?: string[];
       categories?: string[];
       types?: string[];
       importances?: string[];
     };
-    workos?: any;
+    workos?: WorkOSData;
     settings: AppSettings;
     /** القوائم والثوابت المركزية (Master Lookups) — R19 */
-    lookups?: any;
+    lookups?: LookupsState;
     systemLogs: AuditLog[];
   };
 }

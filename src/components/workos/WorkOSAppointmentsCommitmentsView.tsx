@@ -16,16 +16,16 @@ interface WorkOSAppointmentsCommitmentsViewProps {
   appointments: AppointmentItem[];
   commitments: WorkCommitment[];
   onOpenQuickAdd: (type?: string) => void;
-  onUpdateAppointmentStatus: (id: string, status: any) => void;
-  onUpdateCommitmentStatus: (id: string, status: any) => void;
+  onUpdateAppointmentStatus: (id: string, status: AppointmentItem['status']) => void;
+  onUpdateCommitmentStatus: (id: string, status: WorkCommitment['status']) => void;
 }
 
 export const WorkOSAppointmentsCommitmentsView: React.FC<WorkOSAppointmentsCommitmentsViewProps> = ({
   appointments = [],
   commitments = [],
-  onOpenQuickAdd = (..._args: any[]) => {},
-  onUpdateAppointmentStatus = (..._args: any[]) => {},
-  onUpdateCommitmentStatus = (..._args: any[]) => {},
+  onOpenQuickAdd = (..._args: unknown[]) => {},
+  onUpdateAppointmentStatus = (..._args: unknown[]) => {},
+  onUpdateCommitmentStatus = (..._args: unknown[]) => {},
 }) => {
   const [tab, setTab] = useState<'appointments' | 'commitments'>('appointments');
 

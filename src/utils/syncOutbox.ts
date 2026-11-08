@@ -18,7 +18,7 @@ export interface SyncOutboxEntry {
   entity: OutboxEntity;
   action: OutboxAction;
   entityId: string;
-  payload?: any;
+  payload?: unknown;
   timestamp: string;
   status: 'pending' | 'synced' | 'failed';
   retryCount: number;
@@ -57,7 +57,7 @@ export function recordOutboxMutation(
   entity: OutboxEntity,
   action: OutboxAction,
   entityId: string,
-  payload?: any
+  payload?: unknown
 ): SyncOutboxEntry {
   const entries = loadSyncOutbox();
   const newEntry: SyncOutboxEntry = {

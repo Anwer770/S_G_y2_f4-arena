@@ -21,13 +21,13 @@ import {
   X,
   Sparkles,
 } from 'lucide-react';
-import { ActiveTimerState, WorkTask, WorkProject } from '../../types/workos';
+import { ActiveTimerState, QuickAddType, WorkTask, WorkProject } from '../../types/workos';
 
 interface WorkOSUnifiedTopBarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onOpenQuickAdd?: (type: 'project' | 'task' | 'meeting' | 'appointment' | 'goal' | 'note' | 'order' | 'commitment' | 'habit') => void;
-  onOpenAddModal?: (type: any) => void;
+  onOpenAddModal?: (type: QuickAddType) => void;
   tasks?: WorkTask[];
   projects?: WorkProject[];
   activeTimer: ActiveTimerState | null;
@@ -83,7 +83,7 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
   const settingsRef = useRef<HTMLDivElement>(null);
 
   // Safe handler for opening quick add modal
-  const handleOpenAdd = (type: 'project' | 'task' | 'meeting' | 'appointment' | 'goal' | 'note' | 'order' | 'commitment' | 'habit') => {
+  const handleOpenAdd = (type: QuickAddType) => {
     if (typeof onOpenQuickAdd === 'function') {
       onOpenQuickAdd(type);
     } else if (typeof onOpenAddModal === 'function') {

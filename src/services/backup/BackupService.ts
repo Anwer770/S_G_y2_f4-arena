@@ -13,11 +13,12 @@ export class BackupService {
     return backup;
   }
 
-  public static validateBackup(backup: any): { valid: boolean; reason?: string } {
+  public static validateBackup(backup: unknown): { valid: boolean; reason?: string } {
     if (!backup || typeof backup !== 'object') {
       return { valid: false, reason: 'الملف غير صالح أو ليس بتنسيق JSON صحيح' };
     }
-    if (!backup.modules || typeof backup.modules !== 'object') {
+    const modules = (backup as { modules?: unknown }).modules;
+    if (!modules || typeof modules !== 'object') {
       return { valid: false, reason: 'الملف لا يحتوي على كائن وحدات النظام (modules)' };
     }
     return { valid: true };

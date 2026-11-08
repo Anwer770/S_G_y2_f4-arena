@@ -11,7 +11,7 @@ interface WorkOSGoalsViewProps {
 export const WorkOSGoalsView: React.FC<WorkOSGoalsViewProps> = ({
   goals = [],
   projects = [],
-  onOpenQuickAdd = (..._args: any[]) => {},
+  onOpenQuickAdd = (..._args: unknown[]) => {},
 }) => {
   return (
     <div className="space-y-6" dir="rtl">

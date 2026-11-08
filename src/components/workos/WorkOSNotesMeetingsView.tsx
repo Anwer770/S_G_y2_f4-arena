@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { WorkNote, WorkMeeting, WorkProject, TeamMember } from '../../types/workos';
+import { MeetingActionItem, WorkNote, WorkMeeting, WorkProject, TeamMember } from '../../types/workos';
 import {
   BookOpen,
   Users,
@@ -21,11 +21,11 @@ interface WorkOSNotesMeetingsViewProps {
   projects?: WorkProject[];
   team?: TeamMember[];
   onOpenQuickAdd?: (type?: string) => void;
-  onConvertActionItemToTask?: (actionItem: any, meeting: WorkMeeting) => void;
+  onConvertActionItemToTask?: (actionItem: MeetingActionItem, meeting: WorkMeeting) => void;
   onSaveNote?: (note: WorkNote) => void;
   onDeleteNote?: (id: string) => void;
   onSaveMeeting?: (meeting: WorkMeeting) => void;
-  onConvertMeetingActionToTask?: (action: any) => void;
+  onConvertMeetingActionToTask?: (action: MeetingActionItem) => void;
 }
 
 export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = ({
@@ -33,8 +33,8 @@ export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = (
   meetings = [],
   projects = [],
   team = [],
-  onOpenQuickAdd = (..._args: any[]) => {},
-  onConvertActionItemToTask = (..._args: any[]) => {},
+  onOpenQuickAdd = (..._args: unknown[]) => {},
+  onConvertActionItemToTask = (..._args: unknown[]) => {},
   onSaveNote,
   onDeleteNote,
   onSaveMeeting,

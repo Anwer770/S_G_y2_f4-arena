@@ -62,6 +62,9 @@ export interface CustomerDashboardStats {
   topBalances: Customer[];
 }
 
+/** حزمة إحصاءات مصدر العميل الواحد (R28) */
+export type CustomerSourceBucket = CustomerDashboardStats['sourceBreakdown'][CustomerSource];
+
 export function calculateCustomerStats(
   customers: Customer[],
   visits: CustomerVisitRecord[] = []
@@ -80,7 +83,7 @@ export function calculateCustomerStats(
   let todayVisitsTotal = 0;
   let todayVisitsCompleted = 0;
 
-  const sourceMap: Record<CustomerSource, any> = {
+  const sourceMap: Record<CustomerSource, CustomerSourceBucket> = {
     '': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
     'القيصر الذهبي': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
     'توب مكياجي': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },

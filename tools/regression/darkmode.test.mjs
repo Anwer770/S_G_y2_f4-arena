@@ -15,6 +15,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { TEST_PIN, withTestPin, loginWithPin, findPinField } from './_login.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
@@ -66,7 +67,7 @@ async function boot() {
   const w = dom.window;
   const doc = w.document;
 
-  w.localStorage.setItem(SETTINGS_KEY, settingsJson);
+  w.localStorage.setItem(SETTINGS_KEY, withTestPin(settingsJson));
   w.localStorage.setItem(THEME_KEY, 'dark');
   w.matchMedia = (q) => ({ matches: /prefers-color-scheme:\s*dark/.test(q), media: q, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent: () => false });
   w.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
@@ -87,7 +88,6 @@ async function boot() {
 }
 
 const click = (w, el) => el.dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true, view: w }));
-const quickBtn = (doc) => [...doc.querySelectorAll('button')].find((b) => /دخول سريع/.test(b.textContent || ''));
 const isLoggedIn = (doc) => /اللوحة التحكم|لوحة التحكم/.test(doc.body.textContent || '');
 
 /** يعدّ العناصر التي تحمل صنفاً ليلِيّاً واحداً على الأقل */
@@ -110,11 +110,10 @@ check('D1 · الوضع الليلي طُبِّق على <html> (class="dark")',
   'الربط الفعلي بين مفتاح التطبيق وأنماط Tailwind');
 report.themeApplied = doc.documentElement.classList.contains('dark');
 
-const loginReady = await waitFor(() => !!quickBtn(doc));
+const loginReady = await waitFor(() => !!findPinField(doc));
 check('D2 · شاشة الدخول اكتمل رسمها', loginReady);
-const qb = quickBtn(doc);
-if (qb) { click(w, qb); }
-check('D3 · دخول ناجح للحساب الافتراضي', await waitFor(() => isLoggedIn(doc)), '');
+const loggedIn = await loginWithPin(w, doc);
+check('D3 · دخول ناجح بالرمز المعيَّن (R2: لا رمز افتراضي)', loggedIn && (await waitFor(() => isLoggedIn(doc))), '');
 
 // ================================================================ زيارة الوحدات
 const navSelector = 'aside button, aside a, nav button, nav a';

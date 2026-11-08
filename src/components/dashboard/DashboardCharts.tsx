@@ -190,7 +190,7 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({
                   direction: 'rtl',
                   textAlign: 'right',
                 }}
-                formatter={(val: any) => [`${(Number(val) || 0).toLocaleString('ar-YE')} ر.س`, 'الإيراد']}
+                formatter={(val: number | string) => [`${(Number(val) || 0).toLocaleString('ar-YE')} ر.س`, 'الإيراد']}
               />
               <Area
                 type="monotone"

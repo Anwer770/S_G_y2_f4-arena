@@ -11,6 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { loginWithPin, findPinField } from './_login.mjs';
 
 const HERE = path.dirname(url.fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
@@ -89,9 +90,19 @@ w.eval(code);
 await sleep(2000);
 report.steps.push({ step: 'boot', rootLen: doc.getElementById('root').innerHTML.length, loggedOut: /تسجيل الدخول/.test(doc.body.textContent) });
 
-const loginBtn = byText(/تسجيل الدخول كـ|دخول سريع/) || [...doc.querySelectorAll('button')].pop();
-if (loginBtn) { click(loginBtn); await sleep(2500); }
-report.steps.push({ step: 'login', sawShell: /اللوحة التحكم/.test(doc.body.textContent) });
+// R2: لا رموز افتراضية — الدخول يمرّ بتعيين الرمز أول مرة (الحسابات المزروعة بلا رمز)
+const loginScreenSeen = await (async () => {
+  const t0 = Date.now();
+  while (Date.now() - t0 < 20000) {
+    if (findPinField(doc)) return true;
+    if (/اللوحة التحكم/.test(doc.body.textContent)) return false;
+    await sleep(150);
+  }
+  return false;
+})();
+const loginDone = loginScreenSeen ? await loginWithPin(w, doc, { expectSetup: true }) : false;
+await sleep(1500);
+report.steps.push({ step: 'login', loginScreenSeen, loginDone, sawShell: /اللوحة التحكم/.test(doc.body.textContent) });
 
 report.storage.before = storageSnapshot();
 

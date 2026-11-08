@@ -307,7 +307,7 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">عند وقوع الحدث (Trigger):</label>
                   <select
                     value={triggerEvent}
-                    onChange={(e) => setTriggerEvent(e.target.value as any)}
+                    onChange={(e) => setTriggerEvent(e.target.value as AutomationRule['triggerEvent'])}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:border-teal-600 focus:outline-hidden text-xs"
                   >
                     <option value="task_overdue">تأخر موعد تسليم المهمة</option>
@@ -323,7 +323,7 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">نفذ الإجراء تلقائياً (Action):</label>
                   <select
                     value={actionType}
-                    onChange={(e) => setActionType(e.target.value as any)}
+                    onChange={(e) => setActionType(e.target.value as AutomationRule['actionType'])}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:border-teal-600 focus:outline-hidden text-xs"
                   >
                     <option value="notify_team">إرسال تنبيه فوري للمسؤول والفريق</option>

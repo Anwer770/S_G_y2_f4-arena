@@ -64,9 +64,9 @@ export const WorkOSDailyPlannerView: React.FC<WorkOSDailyPlannerViewProps> = ({
   appointments = [],
   routine = [],
   activeTimer = null,
-  onOpenTaskDetail = (..._args: any[]) => {},
-  onUpdateTaskDueDate = (..._args: any[]) => {},
-  onOpenQuickAdd = (..._args: any[]) => {},
+  onOpenTaskDetail = (..._args: unknown[]) => {},
+  onUpdateTaskDueDate = (..._args: unknown[]) => {},
+  onOpenQuickAdd = (..._args: unknown[]) => {},
 }) => {
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
   const [draggingId, setDraggingId] = useState<string | null>(null);

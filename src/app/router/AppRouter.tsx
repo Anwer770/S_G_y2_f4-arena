@@ -11,6 +11,8 @@ import {
   DoctorAuditLog,
   DoctorRecord,
   DoctorVisitLog,
+  AuditLog,
+  FinancialOptionType,
   FinancialTransaction,
   Item,
   Movement,
@@ -47,7 +49,7 @@ export interface AppRouterProps {
   statuses: string[];
   settings: AppSettings;
   seq: { IN: number; OUT: number };
-  stockAuditLogs: any[];
+  stockAuditLogs: AuditLog[];
   stocks: ProductStock[];
   onSaveMovement: (record: Movement) => void;
   onDeleteRecord: (record: Movement) => void;
@@ -69,7 +71,7 @@ export interface AppRouterProps {
   onSaveFinancialTxn: (txn: FinancialTransaction) => void;
   onDeleteFinancialTxn: (id: string) => void;
   onImportFinancialTxns: (txns: FinancialTransaction[], mode: 'append' | 'replace') => void;
-  onAddFinancialOption: (type: any, val: string) => void;
+  onAddFinancialOption: (type: FinancialOptionType, val: string) => void;
   // Tasks props
   tasks: Task[];
   commitments: Commitment[];
@@ -255,7 +257,7 @@ export const AppRouter: React.FC<AppRouterProps> = (props) => {
         >
           <WorkOSModule
             initialView={activeTab === 'taskflow' ? 'taskflow' : 'overview'}
-            onNavigateToERP={(tab) => setActiveTab(tab as any)}
+            onNavigateToERP={(tab) => setActiveTab(tab as ActiveModuleTab)}
             tasks={props.tasks}
             commitments={props.commitments}
             categories={props.taskCategories}

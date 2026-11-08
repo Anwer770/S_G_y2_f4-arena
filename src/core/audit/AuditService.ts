@@ -28,8 +28,8 @@ export interface CentralAuditEntry {
   recordId?: string;
   timestamp: string;
   details?: string;
-  oldValue?: any;
-  newValue?: any;
+  oldValue?: unknown;
+  newValue?: unknown;
 }
 
 const AUDIT_STORAGE_KEY = 'suite_unified_audit_v2';

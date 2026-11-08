@@ -172,9 +172,9 @@ export const DEFAULT_COMMITMENTS: Commitment[] = [
       id: `التزامات-${String(idx).padStart(3, '0')}`,
       name: `التزام تشغيلي وتوريد مرحلي رقم (${idx}) - صيانة وخدمات`,
       amount: amt,
-      pri: (i % 3 === 0 ? 'A' : i % 2 === 0 ? 'B' : 'C') as any,
+      pri: (i % 3 === 0 ? 'A' : i % 2 === 0 ? 'B' : 'C') as Commitment['pri'],
       due: `2024-11-${dueDay}`,
-      status: (isDone ? 'تم الانجاز' : 'قيد التنفيذ') as any,
+      status: (isDone ? 'تم الانجاز' : 'قيد التنفيذ') as Commitment['status'],
       desc: `متابعة وسداد الالتزام الدوري المعتمد رقم ${idx}`,
       createdAt: '2024-11-02T15:00:00.000Z',
     };

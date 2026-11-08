@@ -251,7 +251,7 @@ export const DebtLedgerTable: React.FC<DebtLedgerTableProps> = ({
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400">العملة:</span>
           <select
             value={currencyFilter}
-            onChange={(e) => setCurrencyFilter(e.target.value as any)}
+            onChange={(e) => setCurrencyFilter(e.target.value as 'all' | 'YER' | 'SAR' | 'USD')}
             className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold focus:outline-hidden focus:ring-2 focus:ring-amber-500"
           >
             <option value="all">الكل</option>

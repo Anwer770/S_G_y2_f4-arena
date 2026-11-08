@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { FinancialFilterState, FinancialTransaction, FinancialPeriodFilter } from '../../types';
+import React, { useState, useMemo, useEffect } from 'react';
+import { FinancialTransaction } from '../../types';
 import {
   calculateFinancialSummary,
   filterFinancialTransactions,
@@ -10,38 +10,26 @@ import { FinancialModal } from './FinancialModal';
 import { FinancialVoucherModal } from './FinancialVoucherModal';
 import { ImportFinancialModal } from './ImportFinancialModal';
 import {
-  Search,
-  Plus,
   AlertTriangle,
   FileSpreadsheet,
-  Printer,
   Edit2,
   Trash2,
-  TrendingUp,
-  TrendingDown,
-  Layers,
-  RotateCcw,
   Building,
-  Filter,
-  DollarSign,
   X,
-  SlidersHorizontal,
   CheckSquare,
-  Square,
   Keyboard,
-  Info,
-  ChevronRight,
-  ChevronLeft,
-  ChevronDown,
-  Check,
   Calendar,
   FileText,
   Paperclip,
-  LayoutGrid,
-  Table,
 } from 'lucide-react';
 import { getMovementBadgeStyle, getImportanceBadgeStyle } from '../../data/defaultFinancial';
 import { FinancialPrintModal } from './FinancialPrintModal';
+import { FinancialKPIBar } from './FinancialKPIBar';
+import { FinancialJournalTable } from './FinancialJournalTable';
+import { FinancialHeaderBar } from './FinancialHeaderBar';
+import { FinancialFilters } from './FinancialFilters';
+import { FinancialFilterDrawer } from './FinancialFilterDrawer';
+import { useFinancialState } from './useFinancialState';
 
 interface Props {
   transactions: FinancialTransaction[];
@@ -83,129 +71,28 @@ export const FinancialModule: React.FC<Props> = ({
   const [activeRowId, setActiveRowId] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  // Slide-over Drawer for advanced filters
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [showShortcutsModal, setShowShortcutsModal] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
-  const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
-  const periodDropdownRef = useRef<HTMLDivElement>(null);
 
-  const searchInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-      if (periodDropdownRef.current && !periodDropdownRef.current.contains(e.target as Node)) {
-        setIsPeriodDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
-  }, []);
-
-  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
-
-  // Total drafts count
-  const draftsCount = useMemo(
-    () => transactions.filter((t) => t.isDraft).length,
-    [transactions]
-  );
-
-  // Filters State
-  const [filters, setFilters] = useState<FinancialFilterState>({
-    search: '',
-    movement: '',
-    importance: '',
-    restriction: '',
-    movementType: '',
-    categoryAccount: '',
-    restrictionAccount: '',
-    accountName: '',
-    startDate: '',
-    endDate: '',
-    currencyFilter: 'all',
-    periodFilter: 'all',
-    selectedPeriodDate: todayStr,
-    isDraftOnly: false,
-  });
-
-  const handleSetPeriod = (p: FinancialPeriodFilter) => {
-    setFilters((prev) => ({
-      ...prev,
-      periodFilter: p,
-      selectedPeriodDate: prev.selectedPeriodDate || todayStr,
-    }));
-  };
-
-  const handleNavigatePeriod = (delta: number) => {
-    const curDateStr = filters.selectedPeriodDate || todayStr;
-    const [y, m, d] = curDateStr.split('-').map(Number);
-    const dateObj = new Date(y, m - 1, d);
-
-    if (filters.periodFilter === 'daily') {
-      dateObj.setDate(dateObj.getDate() + delta);
-    } else if (filters.periodFilter === 'weekly') {
-      dateObj.setDate(dateObj.getDate() + delta * 7);
-    } else if (filters.periodFilter === 'monthly') {
-      dateObj.setMonth(dateObj.getMonth() + delta);
-    } else if (filters.periodFilter === 'yearly') {
-      dateObj.setFullYear(dateObj.getFullYear() + delta);
-    }
-
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    setFilters((prev) => ({ ...prev, selectedPeriodDate: `${year}-${month}-${day}` }));
-  };
-
-  const periodLabel = useMemo(() => {
-    if (!filters.periodFilter || filters.periodFilter === 'all') return 'كافة الفترات';
-    const curDateStr = filters.selectedPeriodDate || todayStr;
-    const [y, m, d] = curDateStr.split('-').map(Number);
-    const dateObj = new Date(y, m - 1, d);
-
-    const arabicMonths = [
-      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
-    ];
-    const arabicDays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-
-    if (filters.periodFilter === 'daily') {
-      const dayName = arabicDays[dateObj.getDay()];
-      return `${dayName}، ${d} ${arabicMonths[m - 1]} ${y}`;
-    }
-
-    if (filters.periodFilter === 'weekly') {
-      const dayOfWeek = dateObj.getDay();
-      const diffToSat = (dayOfWeek + 1) % 7;
-      const startOfWeek = new Date(dateObj);
-      startOfWeek.setDate(dateObj.getDate() - diffToSat);
-
-      const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-      const startD = startOfWeek.getDate();
-      const startM = arabicMonths[startOfWeek.getMonth()];
-      const endD = endOfWeek.getDate();
-      const endM = arabicMonths[endOfWeek.getMonth()];
-      const yr = endOfWeek.getFullYear();
-
-      return `الأسبوع: ${startD} ${startM} - ${endD} ${endM} ${yr}`;
-    }
-
-    if (filters.periodFilter === 'monthly') {
-      return `شهر ${arabicMonths[m - 1]} ${y}`;
-    }
-
-    if (filters.periodFilter === 'yearly') {
-      return `سنة ${y}`;
-    }
-
-    return curDateStr;
-  }, [filters.periodFilter, filters.selectedPeriodDate, todayStr]);
+  // الفلاتر والفترة الزمنية ولوحة الفلاتر المتقدمة — في hook مستقل (R27)
+  const {
+    filters,
+    setFilters,
+    todayStr,
+    draftsCount,
+    periodLabel,
+    handleSetPeriod,
+    handleNavigatePeriod,
+    activeFilterChips,
+    activeAdvancedFilterCount,
+    handleResetFilters,
+    isFilterDrawerOpen,
+    setIsFilterDrawerOpen,
+    isPeriodDropdownOpen,
+    setIsPeriodDropdownOpen,
+    periodDropdownRef,
+    searchInputRef,
+  } = useFinancialState(transactions);
 
   // Calculate Metrics
   const summary = useMemo(() => calculateFinancialSummary(transactions), [transactions]);
@@ -221,148 +108,6 @@ export const FinancialModule: React.FC<Props> = ({
     () => calculateFinancialSummary(filteredTransactions),
     [filteredTransactions]
   );
-
-  // Active filters count & list for Chips
-  const activeFilterChips = useMemo(() => {
-    const chips: { id: string; label: string; value: string; onRemove: () => void }[] = [];
-
-    if (filters.search.trim()) {
-      chips.push({
-        id: 'search',
-        label: 'بحث',
-        value: filters.search,
-        onRemove: () => setFilters((f) => ({ ...f, search: '' })),
-      });
-    }
-    if (filters.movement) {
-      chips.push({
-        id: 'movement',
-        label: 'الحركة',
-        value: filters.movement,
-        onRemove: () => setFilters((f) => ({ ...f, movement: '' })),
-      });
-    }
-    if (filters.importance) {
-      chips.push({
-        id: 'importance',
-        label: 'الأهمية',
-        value: filters.importance,
-        onRemove: () => setFilters((f) => ({ ...f, importance: '' })),
-      });
-    }
-    if (filters.restriction) {
-      chips.push({
-        id: 'restriction',
-        label: 'نوع القيد',
-        value: filters.restriction,
-        onRemove: () => setFilters((f) => ({ ...f, restriction: '' })),
-      });
-    }
-    if (filters.movementType) {
-      chips.push({
-        id: 'movementType',
-        label: 'طريقة الدفع',
-        value: filters.movementType,
-        onRemove: () => setFilters((f) => ({ ...f, movementType: '' })),
-      });
-    }
-    if (filters.categoryAccount) {
-      chips.push({
-        id: 'categoryAccount',
-        label: 'فئة الحساب',
-        value: filters.categoryAccount,
-        onRemove: () => setFilters((f) => ({ ...f, categoryAccount: '' })),
-      });
-    }
-    if (filters.restrictionAccount) {
-      chips.push({
-        id: 'restrictionAccount',
-        label: 'حساب التقييد',
-        value: filters.restrictionAccount,
-        onRemove: () => setFilters((f) => ({ ...f, restrictionAccount: '' })),
-      });
-    }
-    if (filters.accountName) {
-      chips.push({
-        id: 'accountName',
-        label: 'اسم الحساب',
-        value: filters.accountName,
-        onRemove: () => setFilters((f) => ({ ...f, accountName: '' })),
-      });
-    }
-    if (filters.currencyFilter && filters.currencyFilter !== 'all') {
-      const currMap: Record<string, string> = { YER: 'ريال يمني', SAR: 'ريال سعودي', USD: 'دولار أمريكي' };
-      chips.push({
-        id: 'currencyFilter',
-        label: 'العملة',
-        value: currMap[filters.currencyFilter] || filters.currencyFilter,
-        onRemove: () => setFilters((f) => ({ ...f, currencyFilter: 'all' })),
-      });
-    }
-    if (filters.startDate || filters.endDate) {
-      chips.push({
-        id: 'dateRange',
-        label: 'التاريخ',
-        value: `${filters.startDate || '...'} إلى ${filters.endDate || '...'}`,
-        onRemove: () => setFilters((f) => ({ ...f, startDate: '', endDate: '' })),
-      });
-    }
-    if (filters.periodFilter && filters.periodFilter !== 'all') {
-      const periodNames: Record<string, string> = {
-        daily: 'يومي',
-        weekly: 'أسبوعي',
-        monthly: 'شهري',
-        yearly: 'سنوي',
-      };
-      chips.push({
-        id: 'periodFilter',
-        label: 'المدة',
-        value: `${periodNames[filters.periodFilter] || filters.periodFilter} (${periodLabel})`,
-        onRemove: () => setFilters((f) => ({ ...f, periodFilter: 'all' })),
-      });
-    }
-    if (filters.isDraftOnly) {
-      chips.push({
-        id: 'isDraftOnly',
-        label: 'الحالة',
-        value: 'مسودات فقط',
-        onRemove: () => setFilters((f) => ({ ...f, isDraftOnly: false })),
-      });
-    }
-
-    return chips;
-  }, [filters, periodLabel]);
-
-  const activeAdvancedFilterCount = useMemo(() => {
-    let count = 0;
-    if (filters.importance) count++;
-    if (filters.restriction) count++;
-    if (filters.movementType) count++;
-    if (filters.categoryAccount) count++;
-    if (filters.restrictionAccount) count++;
-    if (filters.accountName) count++;
-    if (filters.startDate || filters.endDate) count++;
-    return count;
-  }, [filters]);
-
-  const handleResetFilters = () => {
-    setFilters({
-      search: '',
-      movement: '',
-      importance: '',
-      restriction: '',
-      movementType: '',
-      categoryAccount: '',
-      restrictionAccount: '',
-      accountName: '',
-      startDate: '',
-      endDate: '',
-      currencyFilter: 'all',
-      periodFilter: 'all',
-      selectedPeriodDate: todayStr,
-      isDraftOnly: false,
-    });
-  };
 
   const handleOpenAdd = () => {
     setEditingTxn(null);
@@ -436,7 +181,7 @@ export const FinancialModule: React.FC<Props> = ({
     }
   };
 
-  const handleToggleRowSelection = (id: string, e: React.MouseEvent) => {
+  const handleToggleRowSelection = (id: string, e: React.SyntheticEvent) => {
     e.stopPropagation();
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -503,139 +248,17 @@ export const FinancialModule: React.FC<Props> = ({
 
   return (
     <div className="space-y-3.5" dir="rtl">
-      {/* 1. COMPACT HEADER BAR */}
-      <div className="bg-white/95 dark:bg-slate-900/90 backdrop-blur-xs px-4 py-3 sm:py-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200/50 dark:border-teal-800/50">
-            <Layers className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg md:text-xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                سجل العمليات والقيود المالية اليومية
-              </h1>
-              <span className="hidden sm:inline-block px-2 py-0.5 rounded-md bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300 text-xs font-bold border border-teal-200/50 dark:border-teal-800/50">
-                المعيار المحاسبي الشامل
-              </span>
-            </div>
-            <p className="text-xs md:text-xs text-slate-500 dark:text-slate-400">
-              إدارة الحركات والقيود وسندات القبض والصرف (YER - SAR - USD)
-            </p>
-          </div>
-        </div>
+      {/* 1. رأس الصفحة — مكوّن مستقل (R25) */}
+      <FinancialHeaderBar
+        onAdd={handleOpenAdd}
+        onExportExcel={handleExportExcel}
+        onOpenImport={() => setIsImportModalOpen(true)}
+        onOpenPrint={() => setIsPrintModalOpen(true)}
+        onShowShortcuts={() => setShowShortcutsModal(true)}
+      />
 
-        <div className="flex items-center gap-2 flex-wrap self-end md:self-auto">
-          {/* Keyboard Shortcuts Guide */}
-          <button
-            onClick={() => setShowShortcutsModal(true)}
-            className="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
-            title="اختصارات لوحة المفاتيح"
-          >
-            <Keyboard className="w-4 h-4" />
-          </button>
-
-          {/* طباعة (Matching Annotation 2026-09-23 032232.png) */}
-          <button
-            type="button"
-            onClick={() => setIsPrintModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold transition-all cursor-pointer border border-slate-200 dark:border-slate-700 shadow-2xs"
-            title="طباعة كشف السجل اليومي والقيود"
-          >
-            <Printer className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
-            <span>طباعة</span>
-          </button>
-
-          <button
-            onClick={() => setIsImportModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold transition-all cursor-pointer border border-slate-300 dark:border-slate-700 shadow-2xs"
-            title="استيراد قيود مالية من ملف Excel مطابق للقالب"
-          >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
-            <span>استيراد</span>
-          </button>
-
-          <button
-            onClick={handleExportExcel}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
-            title="تصدير القيود المعروضة إلى Excel"
-          >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
-            <span>تصدير Excel</span>
-          </button>
-
-          <button
-            onClick={handleOpenAdd}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white rounded-lg text-xs font-black shadow-2xs hover:shadow-xs transition-all cursor-pointer"
-            title="إضافة قيد جديد (Alt + N)"
-          >
-            <Plus className="w-4 h-4" />
-            <span>قيد جديد</span>
-            <kbd className="hidden sm:inline-block mr-1 px-1 py-0.2 bg-teal-700/80 rounded text-xs font-mono text-teal-100 border border-teal-500/50">
-              Alt+N
-            </kbd>
-          </button>
-        </div>
-      </div>
-
-      {/* 2. KPI SUMMARY BAR (Matching User Design: وارد الفترة | مصروف الفترة | صافي الفترة | عدد الحركات) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {/* 1. وارد الفترة (Rightmost in RTL) */}
-        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between hover:border-emerald-300 dark:hover:border-emerald-700 transition-all">
-          <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">
-            وارد الفترة
-          </div>
-          <div className="mt-2 text-2xl sm:text-3xl font-black font-mono text-emerald-600 dark:text-emerald-400 tracking-tight text-right leading-none">
-            {periodSummary.totalIncomeYER.toLocaleString()}
-          </div>
-          {(periodSummary.totalSAR > 0 || periodSummary.totalUSD > 0) && (
-            <div className="mt-2 pt-1.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 font-mono">
-              {periodSummary.totalSAR > 0 && <span>SAR {periodSummary.totalSAR.toLocaleString()}</span>}
-              {periodSummary.totalUSD > 0 && <span>USD ${periodSummary.totalUSD.toLocaleString()}</span>}
-            </div>
-          )}
-        </div>
-
-        {/* 2. مصروف الفترة */}
-        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between hover:border-rose-300 dark:hover:border-rose-700 transition-all">
-          <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">
-            مصروف الفترة
-          </div>
-          <div className="mt-2 text-2xl sm:text-3xl font-black font-mono text-[#e11d48] dark:text-[#f43f5e] tracking-tight text-right leading-none">
-            {periodSummary.totalExpenseYER.toLocaleString()}
-          </div>
-          <div className="mt-1 text-xs text-slate-400 dark:text-slate-500 text-right">
-            {periodSummary.expenseCount} قيد صرف
-          </div>
-        </div>
-
-        {/* 3. صافي الفترة */}
-        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between hover:border-teal-300 dark:hover:border-teal-700 transition-all">
-          <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">
-            صافي الفترة
-          </div>
-          <div className={`mt-2 text-2xl sm:text-3xl font-black font-mono tracking-tight text-right leading-none ${
-            periodSummary.netBalanceYER >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
-          }`}>
-            {periodSummary.netBalanceYER.toLocaleString()}
-          </div>
-          <div className="mt-1 text-xs text-slate-400 dark:text-slate-500 text-right">
-            فارق الحركة
-          </div>
-        </div>
-
-        {/* 4. عدد الحركات (Leftmost in RTL) */}
-        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between hover:border-teal-300 dark:hover:border-teal-700 transition-all">
-          <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">
-            عدد الحركات
-          </div>
-          <div className="mt-2 text-2xl sm:text-3xl font-black font-mono text-teal-600 dark:text-teal-400 tracking-tight text-right leading-none">
-            {filteredTransactions.length}
-          </div>
-          <div className="mt-1 text-xs text-slate-400 dark:text-slate-500 text-right">
-            {periodLabel}
-          </div>
-        </div>
-      </div>
+      {/* 2. KPI SUMMARY BAR — مكوّن مستقل (R25) */}
+      <FinancialKPIBar summary={periodSummary} count={filteredTransactions.length} periodLabel={periodLabel} />
 
       {/* تنبيه القيود ذات التصنيف غير المعروف (إصلاح R12) */}
       {periodSummary.unclassifiedCount > 0 && (
@@ -708,279 +331,27 @@ export const FinancialModule: React.FC<Props> = ({
       {/* SUB-TAB 1: JOURNAL VIEW */}
       {activeSubTab === 'journal' && (
         <div className="space-y-2.5">
-          {/* 4. INLINE SEARCH & FILTER BAR (Space-saving & Instant) */}
-          <div className="bg-white/95 dark:bg-slate-900/90 backdrop-blur-xs p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-2 relative z-30">
-            {/* Consolidated Filter & Search Bar - Period dropdown positioned between Search and Movements */}
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Compact Quick Search (تصغير حقل/زر البحث) */}
-              <div className="relative w-48 sm:w-56">
-                <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 absolute right-3 top-2.5 pointer-events-none" />
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={filters.search}
-                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                  placeholder="بحث سريع... (Ctrl+K)"
-                  className="w-full pl-8 pr-8 py-1.5 bg-slate-50 dark:bg-slate-800/80 focus:bg-white dark:focus:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100 placeholder-slate-400 transition-all"
-                />
-                {filters.search && (
-                  <button
-                    onClick={() => setFilters({ ...filters, search: '' })}
-                    className="absolute left-2.5 top-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-
-              {/* The "الفترة" Dropdown - Located directly between Search and Movements */}
-              <div className="relative" ref={periodDropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsPeriodDropdownOpen(!isPeriodDropdownOpen)}
-                  className="flex items-center justify-between gap-2.5 px-3 py-1.5 bg-white dark:bg-slate-900 border border-teal-600 dark:border-teal-500 rounded-lg text-xs font-bold text-slate-800 dark:text-slate-200 shadow-2xs hover:border-teal-700 transition cursor-pointer min-w-[130px]"
-                >
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
-                    <span>
-                      {filters.periodFilter === 'all'
-                        ? 'الفترة: الكل'
-                        : filters.periodFilter === 'daily'
-                        ? 'الفترة: يومي'
-                        : filters.periodFilter === 'weekly'
-                        ? 'الفترة: أسبوعي'
-                        : filters.periodFilter === 'monthly'
-                        ? 'الفترة: شهري'
-                        : 'الفترة: سنوي'}
-                    </span>
-                  </div>
-                  <ChevronDown className={`w-3.5 h-3.5 text-teal-600 dark:text-teal-400 transition-transform shrink-0 ${isPeriodDropdownOpen ? 'rotate-180' : ''}`} />
-                </button>
-
-                {/* Dropdown Options Popup */}
-                {isPeriodDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-1.5 w-48 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 p-2 z-50 space-y-1">
-                    {[
-                      { id: 'daily', label: 'يومي' },
-                      { id: 'weekly', label: 'أسبوعي' },
-                      { id: 'monthly', label: 'شهري' },
-                      { id: 'yearly', label: 'سنوي' },
-                      { id: 'all', label: 'الكل' },
-                    ].map((opt) => {
-                      const isSelected = filters.periodFilter === opt.id;
-                      return (
-                        <button
-                          key={opt.id}
-                          type="button"
-                          onClick={() => {
-                            handleSetPeriod(opt.id as FinancialPeriodFilter);
-                            setIsPeriodDropdownOpen(false);
-                          }}
-                          className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-teal-600 text-white shadow-xs'
-                              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-                          }`}
-                        >
-                          <div className="w-5 h-5 flex items-center justify-center">
-                            {isSelected && (
-                              <div className="w-4 h-4 rounded-full bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 flex items-center justify-center shadow-xs">
-                                <Check className="w-3 h-3 stroke-[3]" />
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span>{opt.label}</span>
-                            <Calendar className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-slate-400'}`} />
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Period Navigator Controls (When a period filter is active: daily, weekly, monthly, yearly) */}
-              {filters.periodFilter !== 'all' && (
-                <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-800/80 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => handleNavigatePeriod(-1)}
-                    className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-300 transition cursor-pointer"
-                    title="الفترة السابقة"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                  <span className="font-bold text-slate-800 dark:text-slate-200 px-1 text-xs whitespace-nowrap">
-                    {periodLabel}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleNavigatePeriod(1)}
-                    className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-300 transition cursor-pointer"
-                    title="الفترة اللاحقة"
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setFilters((prev) => ({ ...prev, selectedPeriodDate: todayStr }))}
-                    className="px-2 py-0.5 bg-white dark:bg-slate-900 hover:bg-teal-50 text-xs font-bold text-teal-700 dark:text-teal-400 rounded border border-slate-200 dark:border-slate-700 cursor-pointer shadow-2xs"
-                    title="العودة لتاريخ اليوم"
-                  >
-                    اليوم
-                  </button>
-                </div>
-              )}
-
-              {/* Quick Movement Filter (كافة الحركات) */}
-              <div className="w-36">
-                <select
-                  value={filters.movement}
-                  onChange={(e) => setFilters({ ...filters, movement: e.target.value })}
-                  className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                >
-                  <option value="">كافة الحركات</option>
-                  {movements.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Quick Currency Filter */}
-              <div className="w-28">
-                <select
-                  value={filters.currencyFilter}
-                  onChange={(e) => setFilters({ ...filters, currencyFilter: e.target.value as any })}
-                  className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                >
-                  <option value="all">كافة العملات</option>
-                  <option value="YER">ريال يمني (YER)</option>
-                  <option value="SAR">سعودي (SAR)</option>
-                  <option value="USD">دولار (USD)</option>
-                </select>
-              </div>
-
-              {/* Drafts Filter Toggle */}
-              <div>
-                <button
-                  type="button"
-                  onClick={() => setFilters((prev) => ({ ...prev, isDraftOnly: !prev.isDraftOnly }))}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
-                    filters.isDraftOnly
-                      ? 'bg-amber-500 text-white border-amber-600 shadow-2xs'
-                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
-                  }`}
-                  title="تصفية وعرض القيود المحفوظة كمسودة"
-                >
-                  <FileText className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                  <span>المسودات</span>
-                  {draftsCount > 0 && (
-                    <span
-                      className={`px-1.5 py-0.2 rounded-full text-xs font-mono font-bold ${
-                        filters.isDraftOnly ? 'bg-amber-600 text-white' : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
-                      }`}
-                    >
-                      {draftsCount}
-                    </span>
-                  )}
-                </button>
-              </div>
-
-              {/* Open Slide-over Drawer for Advanced Filters */}
-              <button
-                onClick={() => setIsFilterDrawerOpen(true)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
-                  activeAdvancedFilterCount > 0
-                    ? 'bg-teal-50 dark:bg-teal-950/60 border-teal-300 dark:border-teal-700 text-teal-700 dark:text-teal-300'
-                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
-                }`}
-                title="فتح لوحة الفلاتر المتقدمة (طريقة الدفع، فئة الحساب، التواريخ)"
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-                <span>فلاتر متقدمة</span>
-                {activeAdvancedFilterCount > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-bold">
-                    {activeAdvancedFilterCount}
-                  </span>
-                )}
-              </button>
-
-              {/* View Mode Toggle: Table vs Mobile Cards */}
-              <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
-                <button
-                  type="button"
-                  onClick={() => setViewMode('table')}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
-                    viewMode === 'table'
-                      ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-300 shadow-2xs'
-                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'
-                  }`}
-                  title="عرض الجدول المحاسبي الكامل"
-                >
-                  <Table className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">جدول</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode('cards')}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
-                    viewMode === 'cards'
-                      ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-300 shadow-2xs'
-                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'
-                  }`}
-                  title="عرض بطاقات تفاعلية مناسبة للهواتف والميدان"
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">بطاقات</span>
-                </button>
-              </div>
-
-              {/* Reset Filters */}
-              {activeFilterChips.length > 0 && (
-                <button
-                  onClick={handleResetFilters}
-                  className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg font-bold transition-colors cursor-pointer"
-                  title="مسح جميع الفلاتر"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>مسح ({activeFilterChips.length})</span>
-                </button>
-              )}
-            </div>
-
-            {/* ACTIVE FILTER CHIPS (شارات الفلاتر النشطة) */}
-            {activeFilterChips.length > 0 && (
-              <div className="flex items-center gap-1.5 flex-wrap pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                <span className="text-xs font-bold text-slate-400 dark:text-slate-500">الفلاتر المطبقة:</span>
-                {activeFilterChips.map((chip) => (
-                  <span
-                    key={chip.id}
-                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-teal-50 dark:bg-teal-950/50 text-teal-800 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800/60 text-xs font-medium"
-                  >
-                    <span className="font-bold text-teal-600 dark:text-teal-400">{chip.label}:</span>
-                    <span className="max-w-[120px] truncate">{chip.value}</span>
-                    <button
-                      onClick={chip.onRemove}
-                      className="text-teal-600 dark:text-teal-400 hover:text-rose-600 dark:hover:text-rose-400 p-0.5 cursor-pointer"
-                      title="إزالة الفلتر"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                ))}
-                <button
-                  onClick={handleResetFilters}
-                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 underline font-medium cursor-pointer mr-1"
-                >
-                  إلغاء الكل
-                </button>
-              </div>
-            )}
-          </div>
+          {/* 4. INLINE SEARCH & FILTER BAR — مكوّن مستقل (R27) */}
+          <FinancialFilters
+            filters={filters}
+            setFilters={setFilters}
+            movements={movements}
+            draftsCount={draftsCount}
+            activeFilterChips={activeFilterChips}
+            activeAdvancedFilterCount={activeAdvancedFilterCount}
+            periodLabel={periodLabel}
+            todayStr={todayStr}
+            onSetPeriod={handleSetPeriod}
+            onNavigatePeriod={handleNavigatePeriod}
+            onResetFilters={handleResetFilters}
+            onOpenAdvanced={() => setIsFilterDrawerOpen(true)}
+            isPeriodDropdownOpen={isPeriodDropdownOpen}
+            setIsPeriodDropdownOpen={setIsPeriodDropdownOpen}
+            periodDropdownRef={periodDropdownRef}
+            searchInputRef={searchInputRef}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+          />
 
           {/* BATCH ACTIONS BAR (When 1 or more rows selected) */}
           {selectedIds.size > 0 && (
@@ -1058,7 +429,7 @@ export const FinancialModule: React.FC<Props> = ({
                             <input
                               type="checkbox"
                               checked={isSelected}
-                              onChange={(e) => handleToggleRowSelection(txn.id, e as any)}
+                              onChange={(e) => handleToggleRowSelection(txn.id, e)}
                               onClick={(e) => e.stopPropagation()}
                               className="rounded text-teal-600 dark:text-teal-400 focus:ring-teal-500 w-4 h-4 cursor-pointer"
                             />
@@ -1220,258 +591,20 @@ export const FinancialModule: React.FC<Props> = ({
           ) : (
             /* Table View */
             <div className="bg-white/95 dark:bg-slate-900/90 backdrop-blur-xs rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs overflow-hidden">
-              {/* Scrollable Container with Sticky Header */}
-              <div className="overflow-x-auto max-h-[calc(100vh-270px)] min-h-[380px] overflow-y-auto scrollbar-thin">
-                <table className="w-full text-right text-xs border-collapse min-w-[960px] print:min-w-0">
-                {/* Sticky Header */}
-                <thead className="sticky top-0 z-20">
-                  <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700 select-none shadow-2xs">
-                    {/* Sticky Column Right: Select Checkbox & ID */}
-                    <th className="py-2.5 px-3 sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)] w-28">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={filteredTransactions.length > 0 && selectedIds.size === filteredTransactions.length}
-                          onChange={handleToggleSelectAll}
-                          className="rounded text-teal-600 dark:text-teal-400 focus:ring-teal-500 w-3.5 h-3.5 cursor-pointer"
-                          title="تحديد الكل"
-                        />
-                        <span>القيد</span>
-                      </div>
-                    </th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">اليوم</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">التاريخ</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">الأهمية</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">الحركة</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">القيد</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">طريقة الدفع</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">فئة الحساب</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">حساب التقييد</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">اسم الحساب</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap min-w-[160px]">الوصف</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap">الرقم</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap text-left">ريال يمني</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap text-left">سعودي</th>
-                    <th className="py-2.5 px-2.5 whitespace-nowrap text-left">دولار</th>
-                    {/* Sticky Column Left: Quick Actions */}
-                    <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-24">
-                      إجراءات
-                    </th>
-                  </tr>
-                </thead>
-
-                {/* Table Body */}
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-slate-800 dark:text-slate-200">
-                  {filteredTransactions.length === 0 ? (
-                    <tr>
-                      <td colSpan={16} className="py-12 text-center text-slate-400 dark:text-slate-500 text-xs">
-                        <div className="flex flex-col items-center justify-center gap-2.5">
-                          <p className="font-medium">لا توجد قيود مالية مطابقة للبحث أو الفلاتر المحددة.</p>
-                          {(filters.periodFilter !== 'all' || filters.search || filters.movement || filters.currencyFilter !== 'all' || filters.isDraftOnly || filters.importance || filters.restriction) && (
-                            <button
-                              type="button"
-                              onClick={handleResetFilters}
-                              className="px-3.5 py-1.5 bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/60 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 rounded-lg text-xs font-bold border border-teal-200 dark:border-teal-800 cursor-pointer transition shadow-2xs"
-                            >
-                              عرض كافة القيود (إعادة تعيين الفلاتر)
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredTransactions.map((txn) => {
-                      const movBadge = getMovementBadgeStyle(txn.movement);
-                      const impBadge = getImportanceBadgeStyle(txn.importance);
-                      const isSelected = selectedIds.has(txn.id);
-                      const isActive = activeRowId === txn.id;
-
-                      return (
-                        <tr
-                          key={txn.id}
-                          onClick={() => setActiveRowId(txn.id)}
-                          className={`group transition-colors cursor-pointer select-none text-[12px] ${
-                            isActive
-                              ? 'bg-teal-50/80 dark:bg-teal-950/40 ring-1 ring-inset ring-teal-500/30'
-                              : isSelected
-                              ? 'bg-teal-50/40 dark:bg-teal-950/20'
-                              : 'hover:bg-teal-50/30 dark:hover:bg-slate-800/60'
-                          }`}
-                        >
-                          {/* 1. Sticky ID & Select Checkbox */}
-                          <td
-                            className={`py-2 px-3 font-mono font-bold whitespace-nowrap sticky right-0 z-10 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)] transition-colors ${
-                              isActive
-                                ? 'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300'
-                                : isSelected
-                                ? 'bg-teal-50/50 dark:bg-teal-950/30 text-teal-700 dark:text-teal-300'
-                                : 'bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/90 text-teal-700 dark:text-teal-400'
-                            }`}
-                          >
-                            <div className="flex items-center gap-1.5">
-                              <input
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={(e) => handleToggleRowSelection(txn.id, e as any)}
-                                onClick={(e) => e.stopPropagation()}
-                                className="rounded text-teal-600 dark:text-teal-400 focus:ring-teal-500 w-3.5 h-3.5 cursor-pointer"
-                              />
-                              <span>{txn.id}</span>
-                              {txn.isDraft && (
-                                <span className="px-1.5 py-0.2 rounded text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300/80">
-                                  مسودة
-                                </span>
-                              )}
-                              {txn.attachmentUrl && (
-                                <span title={`مستند مرفق: ${txn.attachmentUrl}`} className="text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400">
-                                  <Paperclip className="w-3 h-3 inline" />
-                                </span>
-                              )}
-                            </div>
-                          </td>
-
-                          {/* 2. Day */}
-                          <td className="py-2 px-2.5 font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap">
-                            {txn.day}
-                          </td>
-
-                          {/* 3. Date */}
-                          <td className="py-2 px-2.5 font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                            {txn.date}
-                          </td>
-
-                          {/* 4. Importance Badge (Standardized 3-color soft tints) */}
-                          <td className="py-2 px-2.5 whitespace-nowrap">
-                            <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold border ${impBadge.bg} ${impBadge.text} ${impBadge.border}`}>
-                              {txn.importance}
-                            </span>
-                          </td>
-
-                          {/* 5. Movement Badge (Standardized 3-color soft tints) */}
-                          <td className="py-2 px-2.5 whitespace-nowrap">
-                            <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold border ${movBadge.bg} ${movBadge.text} ${movBadge.border}`}>
-                              {txn.movement}
-                            </span>
-                          </td>
-
-                          {/* 6. Restriction */}
-                          <td className="py-2 px-2.5 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">
-                            {txn.restriction}
-                          </td>
-
-                          {/* 7. Movement Type */}
-                          <td className="py-2 px-2.5 font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                            {txn.movementType}
-                          </td>
-
-                          {/* 8. Category Account */}
-                          <td className="py-2 px-2.5 font-medium whitespace-nowrap">
-                            <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded text-xs">
-                              {txn.categoryAccount}
-                            </span>
-                          </td>
-
-                          {/* 9. Restriction Account */}
-                          <td className="py-2 px-2.5 font-medium text-slate-800 dark:text-slate-200 max-w-[130px] truncate" title={txn.restrictionAccount}>
-                            {txn.restrictionAccount}
-                          </td>
-
-                          {/* 10. Account Name (High Contrast) */}
-                          <td className="py-2 px-2.5 font-black text-slate-900 dark:text-slate-100 max-w-[150px] truncate" title={txn.accountName}>
-                            {txn.accountName}
-                          </td>
-
-                          {/* 11. Description */}
-                          <td className="py-2 px-2.5 text-slate-700 dark:text-slate-300 max-w-[180px] truncate" title={txn.description}>
-                            {txn.description || '-'}
-                          </td>
-
-                          {/* 12. Number */}
-                          <td className="py-2 px-2.5 font-mono font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">
-                            {txn.number}
-                          </td>
-
-                          {/* 13. Amount YER (High Contrast Monospace) */}
-                          <td className="py-2 px-2.5 font-mono font-black text-teal-700 dark:text-teal-300 text-left whitespace-nowrap">
-                            {txn.amountYER > 0 ? formatCurrency(txn.amountYER) : '-'}
-                          </td>
-
-                          {/* 14. Amount SAR (High Contrast Monospace) */}
-                          <td className="py-2 px-2.5 font-mono font-bold text-amber-700 dark:text-amber-300 text-left whitespace-nowrap">
-                            {txn.amountSAR > 0 ? formatCurrency(txn.amountSAR) : '-'}
-                          </td>
-
-                          {/* 15. Amount USD (High Contrast Monospace) */}
-                          <td className="py-2 px-2.5 font-mono font-bold text-sky-700 dark:text-sky-300 text-left whitespace-nowrap">
-                            {txn.amountUSD > 0 ? `$${formatCurrency(txn.amountUSD)}` : '-'}
-                          </td>
-
-                          {/* 16. Sticky Actions Column */}
-                          <td
-                            className={`py-2 px-3 whitespace-nowrap sticky left-0 z-10 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] transition-colors ${
-                              isActive
-                                ? 'bg-teal-50 dark:bg-teal-950/60'
-                                : isSelected
-                                ? 'bg-teal-50/50 dark:bg-teal-950/30'
-                                : 'bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/90'
-                            }`}
-                          >
-                            <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
-                              <button
-                                onClick={() => setViewingTxn(txn)}
-                                title="عرض وطباعة السند"
-                                className="p-1 text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/60 rounded-md transition-colors cursor-pointer"
-                              >
-                                <Printer className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => handleOpenEdit(txn)}
-                                title="تعديل القيد"
-                                className="p-1 text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/60 rounded-md transition-colors cursor-pointer"
-                              >
-                                <Edit2 className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => {
-                                  if (window.confirm(`هل أنت متأكد من حذف القيد ${txn.id}؟`)) {
-                                    onDeleteTransaction(txn.id);
-                                  }
-                                }}
-                                title="حذف القيد"
-                                className="p-1 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-md transition-colors cursor-pointer"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-
-                {/* Table Summary Footer (Sticky at bottom if needed) */}
-                {filteredTransactions.length > 0 && (
-                  <tfoot>
-                    <tr className="bg-slate-900 text-white font-mono font-black text-xs border-t-2 border-slate-700">
-                      <td colSpan={12} className="py-2.5 px-4 font-sans font-black">
-                        إجمالي النتائج المعروضة ({filteredTransactions.length} قيد):
-                      </td>
-                      <td className="py-2.5 px-2.5 text-left text-teal-300">
-                        {formatCurrency(filteredTransactions.reduce((s, t) => s + (t.amountYER || 0), 0))} YER
-                      </td>
-                      <td className="py-2.5 px-2.5 text-left text-amber-300">
-                        {formatCurrency(filteredTransactions.reduce((s, t) => s + (t.amountSAR || 0), 0))} SAR
-                      </td>
-                      <td className="py-2.5 px-2.5 text-left text-sky-300">
-                        ${formatCurrency(filteredTransactions.reduce((s, t) => s + (t.amountUSD || 0), 0))} USD
-                      </td>
-                      <td className="sticky left-0 bg-slate-900"></td>
-                    </tr>
-                  </tfoot>
-                )}
-              </table>
-            </div>
+              {/* 5.1 جدول السجل — مكوّن مستقل (R25) */}
+              <FinancialJournalTable
+                transactions={filteredTransactions}
+                filters={filters}
+                selectedIds={selectedIds}
+                activeRowId={activeRowId}
+                onToggleSelectAll={handleToggleSelectAll}
+                onToggleRowSelection={handleToggleRowSelection}
+                onActivateRow={setActiveRowId}
+                onView={setViewingTxn}
+                onEdit={handleOpenEdit}
+                onDelete={onDeleteTransaction}
+                onResetFilters={handleResetFilters}
+              />
           </div>
           )}
         </div>
@@ -1567,182 +700,20 @@ export const FinancialModule: React.FC<Props> = ({
         </div>
       )}
 
-      {/* 6. SLIDE-OVER DRAWER FOR ADVANCED FILTERS */}
-      {isFilterDrawerOpen && (
-        <div className="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-          {/* Backdrop */}
-          <div
-            onClick={() => setIsFilterDrawerOpen(false)}
-            className="fixed inset-0 bg-slate-900/50 backdrop-blur-2xs transition-opacity animate-fade-in"
-          />
-
-          <div className="fixed inset-y-0 left-0 pl-10 max-w-full flex">
-            <div className="w-screen max-w-sm bg-white dark:bg-slate-900 shadow-2xl border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between p-5 animate-fade-in">
-              {/* Drawer Header */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                    <SlidersHorizontal className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-                    <h3 className="text-sm font-black">الفلاتر المتقدمة للقيود</h3>
-                  </div>
-                  <button
-                    onClick={() => setIsFilterDrawerOpen(false)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* Filters Fields */}
-                <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-200px)] pr-1">
-                  {/* Restriction */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">نوع القيد</label>
-                    <select
-                      value={filters.restriction}
-                      onChange={(e) => setFilters({ ...filters, restriction: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200"
-                    >
-                      <option value="">جميع أنواع القيود</option>
-                      {restrictions.map((r) => (
-                        <option key={r} value={r}>
-                          {r}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Movement Type */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">طريقة الدفع</label>
-                    <select
-                      value={filters.movementType}
-                      onChange={(e) => setFilters({ ...filters, movementType: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200"
-                    >
-                      <option value="">جميع طرق الدفع</option>
-                      {movementTypes.map((mt) => (
-                        <option key={mt} value={mt}>
-                          {mt}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Importance */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">درجة الأهمية / الحالة</label>
-                    <select
-                      value={filters.importance}
-                      onChange={(e) => setFilters({ ...filters, importance: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200"
-                    >
-                      <option value="">جميع الحالات</option>
-                      {importanceList.map((imp) => (
-                        <option key={imp} value={imp}>
-                          {imp}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Category Account */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">فئة الحساب</label>
-                    <select
-                      value={filters.categoryAccount}
-                      onChange={(e) => setFilters({ ...filters, categoryAccount: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200"
-                    >
-                      <option value="">جميع فئات الحساب</option>
-                      {categoryAccounts.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Restriction Account */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">حساب التقييد</label>
-                    <select
-                      value={filters.restrictionAccount}
-                      onChange={(e) => setFilters({ ...filters, restrictionAccount: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200"
-                    >
-                      <option value="">جميع حسابات التقييد</option>
-                      {restrictionAccounts.map((ra) => (
-                        <option key={ra} value={ra}>
-                          {ra}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Account Name */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">اسم الحساب المستفيد</label>
-                    <select
-                      value={filters.accountName}
-                      onChange={(e) => setFilters({ ...filters, accountName: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200"
-                    >
-                      <option value="">جميع أسماء الحسابات</option>
-                      {accountNames.map((an) => (
-                        <option key={an} value={an}>
-                          {an}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Date Range */}
-                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400">الفترة الزمنية</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <span className="text-xs text-slate-400 dark:text-slate-500 block mb-0.5">من تاريخ</span>
-                        <input
-                          type="date"
-                          value={filters.startDate}
-                          onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-                          className="w-full px-2 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-xs text-slate-400 dark:text-slate-500 block mb-0.5">إلى تاريخ</span>
-                        <input
-                          type="date"
-                          value={filters.endDate}
-                          onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-                          className="w-full px-2 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Drawer Footer */}
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
-                <button
-                  onClick={() => setIsFilterDrawerOpen(false)}
-                  className="flex-1 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
-                >
-                  تطبيق الفلاتر
-                </button>
-                <button
-                  onClick={handleResetFilters}
-                  className="px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition-colors cursor-pointer"
-                >
-                  إعادة ضبط
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 6. SLIDE-OVER DRAWER FOR ADVANCED FILTERS — مكوّن مستقل (R27) */}
+      <FinancialFilterDrawer
+        isOpen={isFilterDrawerOpen}
+        onClose={() => setIsFilterDrawerOpen(false)}
+        filters={filters}
+        setFilters={setFilters}
+        restrictions={restrictions}
+        movementTypes={movementTypes}
+        importanceList={importanceList}
+        categoryAccounts={categoryAccounts}
+        restrictionAccounts={restrictionAccounts}
+        accountNames={accountNames}
+        onResetFilters={handleResetFilters}
+      />
 
       {/* 7. KEYBOARD SHORTCUTS MODAL */}
       {showShortcutsModal && (

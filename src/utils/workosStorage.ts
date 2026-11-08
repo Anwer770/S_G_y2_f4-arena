@@ -2,6 +2,8 @@ import {
   Workspace,
   WorkProject,
   WorkTask,
+  TaskStatus,
+  TaskPriority,
   WorkOrder,
   InboxItem,
   DailyRoutineBlock,
@@ -1371,8 +1373,8 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
       try {
         assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const safeSheet = readFirstSheetSafe<any>(data, 'array');
-        const rawJson: any[] = safeSheet.rows;
+        const safeSheet = readFirstSheetSafe<Record<string, unknown>>(data, 'array');
+        const rawJson: Record<string, unknown>[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({ success: false, message: 'الملف فارغ أو لا يحتوي على أسطر صالحة.' });
@@ -1406,13 +1408,13 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
           // Match assignee
           const matchedMember = team.find((m) => m.name.includes(memberName) || memberName.includes(m.name));
 
-          let status: any = 'planned';
+          let status: TaskStatus = 'planned';
           if (['completed', 'مكتملة', 'تم', 'منجز'].includes(rawStatus.toLowerCase())) status = 'completed';
           else if (['in_progress', 'قيد التنفيذ', 'جاري'].includes(rawStatus.toLowerCase())) status = 'in_progress';
-          else if (['in_review', 'مراجعة'].includes(rawStatus.toLowerCase())) status = 'in_review';
+          else if (['in_review', 'مراجعة'].includes(rawStatus.toLowerCase())) status = 'review';
           else if (['blocked', 'معلقة', 'متوقفة'].includes(rawStatus.toLowerCase())) status = 'blocked';
 
-          let priority: any = 'medium';
+          let priority: 'urgent' | 'high' | 'medium' | 'low' = 'medium';
           if (['urgent', 'طارئ', 'عاجل'].includes(rawPri.toLowerCase())) priority = 'urgent';
           else if (['high', 'مرتفع', 'مهم'].includes(rawPri.toLowerCase())) priority = 'high';
           else if (['low', 'منخفض', 'عادي'].includes(rawPri.toLowerCase())) priority = 'low';
@@ -1452,9 +1454,9 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
         currentData.tasks = [...newTasks, ...existingTasks];
         saveWorkOSData(currentData);
         resolve({ success: true, message: `تم استيراد ${importedCount} مهمة جديدة بنجاح!`, count: importedCount });
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('WorkOS Excel Import Error:', err);
-        resolve({ success: false, message: `فشل قراءة الملف: ${err?.message || 'تنسيق غير صالح'}` });
+        resolve({ success: false, message: `فشل قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'تنسيق غير صالح'}` });
       }
     };
 
@@ -1476,7 +1478,7 @@ export interface TripleOrderInput {
   orderType: string;
   regionBranch: string;
   totalAmount: number;
-  priority: any;
+  priority: TaskPriority;
   startDate: string;
   deliveryDate: string;
   assignedRep: string;
@@ -1830,8 +1832,8 @@ export function importUnifiedWorkOSFromExcel(
       try {
         assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const safeSheet = readFirstSheetSafe<any>(data, 'array');
-        const rawJson: any[] = safeSheet.rows;
+        const safeSheet = readFirstSheetSafe<Record<string, unknown>>(data, 'array');
+        const rawJson: Record<string, unknown>[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({ success: false, message: 'الملف فارغ أو لا يحتوي على أسطر صالحة.' });
@@ -1883,9 +1885,9 @@ export function importUnifiedWorkOSFromExcel(
           message: `تم استيراد ${importedCount} طلبية مع إنشاء مهامها والتزاماتها المالية المرتبطة آلياً!`,
           count: importedCount,
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Unified Import Error:', err);
-        resolve({ success: false, message: `فشل قراءة الملف: ${err?.message || 'تنسيق غير صالح'}` });
+        resolve({ success: false, message: `فشل قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'تنسيق غير صالح'}` });
       }
     };
     reader.onerror = () => resolve({ success: false, message: 'تعذر قراءة ملف الإكسل.' });

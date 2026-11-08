@@ -66,7 +66,20 @@ export const TASK_ASSIGNEES: string[] = [
 ];
 
 // Helper to seed 103 representative tasks from PRD
-const initialRawTasks = [
+/** صف خام للبذرة — الأنواع مقيّدة باتحادات المهمة الفعلية (R28) */
+interface RawTaskSeed {
+  title: string;
+  cat: string;
+  op: string;
+  pri: Task['pri'];
+  status: Task['status'];
+  resp: string;
+  start: string;
+  end: string;
+  amount?: number;
+}
+
+const initialRawTasks: RawTaskSeed[] = [
   { title: 'متابعة طلبيات صيدليات منطقة الحصبة وتسليم الفواتير', cat: 'العملاء', op: 'تسليم', pri: 'A', status: 'تم الانجاز', resp: 'عمار', start: '2024-10-01', end: '2024-10-02', amount: 45000 },
   { title: 'زيارة الدكتور سامي في العيادة وعرض عينات السيروم الجديد', cat: 'الأطباء', op: 'زيارة', pri: 'B', status: 'تم الانجاز', resp: 'أنا', start: '2024-10-01', end: '2024-10-01' },
   { title: 'جرد أسبوعي دوري لأصناف العناية بالبشرة والمقشرات', cat: 'الروتين', op: 'مهمة', pri: 'A', status: 'تم الانجاز', resp: 'صدام', start: '2024-10-02', end: '2024-10-02' },
@@ -126,7 +139,7 @@ export const DEFAULT_TASKS: Task[] = Array.from({ length: 103 }, (_, index) => {
   const subNum = String((index % 30) + 1).padStart(4, '0');
   
   // Distribute statuses across the 103 items to ensure realistic metrics
-  let status: any = item.status;
+  let status: Task['status'] = item.status;
   if (index >= 30 && index < 55) status = 'قيد التنفيذ';
   else if (index >= 55 && index < 75) status = 'مخطط';
   else if (index >= 75 && index < 85) status = 'تم الانجاز';
@@ -153,7 +166,7 @@ export const DEFAULT_TASKS: Task[] = Array.from({ length: 103 }, (_, index) => {
     desc: `تفاصيل متابعة العمل والتنسيق المباشر لـ ${item.title} مع الجهات المعنية.`,
     cat: item.cat,
     op: item.op,
-    pri: (item.pri as any) || 'B',
+    pri: item.pri,
     status: status,
     resp: item.resp,
     amount: item.amount ? item.amount + (index * 500) : undefined,

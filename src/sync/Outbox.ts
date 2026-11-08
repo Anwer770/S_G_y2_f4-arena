@@ -7,7 +7,7 @@ export interface OutboxMutation {
   entity: string;
   operation: 'INSERT' | 'UPDATE' | 'DELETE';
   recordId: string;
-  payload: any;
+  payload: unknown;
   timestamp: number;
   retryCount: number;
   status: 'PENDING' | 'SYNCING' | 'FAILED' | 'RESOLVED';
@@ -28,7 +28,7 @@ export class Outbox {
     entity: string,
     operation: 'INSERT' | 'UPDATE' | 'DELETE',
     recordId: string,
-    payload: any
+    payload: unknown
   ): OutboxMutation {
     const mutation: OutboxMutation = {
       id: `mut_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,

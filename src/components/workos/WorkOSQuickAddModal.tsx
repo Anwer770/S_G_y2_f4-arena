@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { WorkProject, TeamMember, TaskPriority, WorkOrder, WorkSubtask } from '../../types/workos';
+import {
+  WorkProject,
+  TeamMember,
+  TaskPriority,
+  WorkOrder,
+  WorkSubtask,
+  NewTaskDraft,
+  NewProjectDraft,
+  NewNoteDraft,
+  NewAppointmentDraft,
+  NewCommitmentDraft,
+  NewHabitDraft,
+  NewGoalDraft,
+} from '../../types/workos';
 import { createTripleLinkOrder } from '../../utils/workosStorage';
 import {
   X,
@@ -32,14 +45,14 @@ interface WorkOSQuickAddModalProps {
   initialPriority?: TaskPriority;
   projects: WorkProject[];
   team: TeamMember[];
-  onAddTask: (task: any) => void;
+  onAddTask: (task: NewTaskDraft) => void;
   onAddOrder?: (order: WorkOrder) => void;
-  onAddProject: (project: any) => void;
-  onAddNote: (note: any) => void;
-  onAddAppointment: (appointment: any) => void;
-  onAddCommitment: (commitment: any) => void;
-  onAddHabit: (habit: any) => void;
-  onAddGoal: (goal: any) => void;
+  onAddProject: (project: NewProjectDraft) => void;
+  onAddNote: (note: NewNoteDraft) => void;
+  onAddAppointment: (appointment: NewAppointmentDraft) => void;
+  onAddCommitment: (commitment: NewCommitmentDraft) => void;
+  onAddHabit: (habit: NewHabitDraft) => void;
+  onAddGoal: (goal: NewGoalDraft) => void;
 }
 
 export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
@@ -398,7 +411,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                 </label>
                 <select
                   value={priority}
-                  onChange={(e) => setPriority(e.target.value as any)}
+                  onChange={(e) => setPriority(e.target.value as TaskPriority)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0D9488] cursor-pointer"
                 >
                   <option value="urgent">A - حرجة / عاجلة جداً</option>
@@ -526,7 +539,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   </label>
                   <select
                     value={orderStatus}
-                    onChange={(e) => setOrderStatus(e.target.value as any)}
+                    onChange={(e) => setOrderStatus(e.target.value as 'processing' | 'shipped' | 'delivered' | 'pending')}
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-bold cursor-pointer"
                   >
                     <option value="processing">قيد التجهيز</option>
@@ -646,7 +659,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   </label>
                   <select
                     value={commitmentType}
-                    onChange={(e) => setCommitmentType(e.target.value as any)}
+                    onChange={(e) => setCommitmentType(e.target.value as 'receivable' | 'payable' | 'contractual')}
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-semibold cursor-pointer"
                   >
                     <option value="receivable">لنا (تحصيل / مدينون)</option>
@@ -677,7 +690,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   </label>
                   <select
                     value={commitmentStatus}
-                    onChange={(e) => setCommitmentStatus(e.target.value as any)}
+                    onChange={(e) => setCommitmentStatus(e.target.value as 'pending' | 'in_progress' | 'fulfilled' | 'breached')}
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-bold cursor-pointer"
                   >
                     <option value="pending">قيد الانتظار</option>
@@ -877,7 +890,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                 </label>
                 <select
                   value={habitFrequency}
-                  onChange={(e) => setHabitFrequency(e.target.value as any)}
+                  onChange={(e) => setHabitFrequency(e.target.value as 'daily' | 'weekdays')}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-semibold cursor-pointer"
                 >
                   <option value="daily">يومياً (7 أيام)</option>

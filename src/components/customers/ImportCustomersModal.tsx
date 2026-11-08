@@ -51,8 +51,8 @@ export const ImportCustomersModal: React.FC<Props> = ({
       } else {
         setParsedData(res);
       }
-    } catch (err: any) {
-      setError(err?.message || 'حدث خطأ أثناء قراءة ملف Excel');
+    } catch (err: unknown) {
+      setError((err instanceof Error ? err.message : String(err)) || 'حدث خطأ أثناء قراءة ملف Excel');
       setParsedData(null);
     } finally {
       setIsProcessing(false);
