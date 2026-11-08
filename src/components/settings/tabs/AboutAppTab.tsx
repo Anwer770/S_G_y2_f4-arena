@@ -23,15 +23,16 @@ export const AboutAppTab: React.FC = () => {
         <div className="relative z-10 max-w-2xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 dark:bg-slate-900/10 backdrop-blur-md text-emerald-400 text-xs font-bold border border-white/10">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>{APP_NAME} — الإصدار {APP_VERSION_LABEL}</span>
+            <span>
+              {APP_NAME} — الإصدار {APP_VERSION_LABEL}
+            </span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl font-black text-white leading-tight">
-            {APP_NAME}
-          </h3>
+          <h3 className="text-xl sm:text-2xl font-black text-white leading-tight">{APP_NAME}</h3>
 
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            نظام محاسبي وإداري شامل صُمم بأحدث المعايير البرمجية لتلبية احتياجات الشركات والتوكيلات التجارية، إدارة المخازن المتعددة، ومتابعة سندات القبض والصرف وحركات العملاء والموردين بدقة فائقة.
+            نظام محاسبي وإداري شامل صُمم بأحدث المعايير البرمجية لتلبية احتياجات الشركات والتوكيلات التجارية، إدارة
+            المخازن المتعددة، ومتابعة سندات القبض والصرف وحركات العملاء والموردين بدقة فائقة.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-4 text-xs text-slate-300 font-mono">
@@ -60,9 +61,7 @@ export const AboutAppTab: React.FC = () => {
               INJAZ
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                شركة إنجاز للتقنية (Injaz For Tech)
-              </h4>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">شركة إنجاز للتقنية (Injaz For Tech)</h4>
               <p className="text-xs text-slate-500 dark:text-slate-400">حلول البرمجيات والأنظمة السحابية المتقدمة</p>
             </div>
           </div>
@@ -131,9 +130,7 @@ export const AboutAppTab: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Youtube className="w-5 h-5 text-rose-600 dark:text-rose-400" />
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                شروحات لطريقة استخدام {APP_NAME}
-              </h4>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">شروحات لطريقة استخدام {APP_NAME}</h4>
             </div>
 
             <a
@@ -148,7 +145,8 @@ export const AboutAppTab: React.FC = () => {
           </div>
 
           <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            فيديوهات تفصيلية تشرح دورة القيود اليومية، كشوفات الحساب، ميزان المراجعة، إدارة المخازن وطرق الجرد، وإصدار الفواتير وطباعتها على الطابعات الحرارية وطابعات A4.
+            فيديوهات تفصيلية تشرح دورة القيود اليومية، كشوفات الحساب، ميزان المراجعة، إدارة المخازن وطرق الجرد، وإصدار
+            الفواتير وطباعتها على الطابعات الحرارية وطابعات A4.
           </p>
         </div>
       </div>

@@ -48,17 +48,11 @@ export const CompanyInfoTab: React.FC<Props> = ({ settings, onChange }) => {
 
       {/* Logo Section */}
       <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
-        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-3">
-          شعار الشركة (اللوجو)
-        </label>
+        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-3">شعار الشركة (اللوجو)</label>
         <div className="flex flex-col sm:flex-row items-center gap-5">
           <div className="relative w-28 h-28 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
             {settings.logoUrl ? (
-              <img
-                src={settings.logoUrl}
-                alt="شعار الشركة"
-                className="w-full h-full object-contain p-2"
-              />
+              <img src={settings.logoUrl} alt="شعار الشركة" className="w-full h-full object-contain p-2" />
             ) : (
               <div className="flex flex-col items-center text-slate-400 dark:text-slate-500 text-center p-2">
                 <Building2 className="w-8 h-8 mb-1" />
@@ -174,9 +168,7 @@ export const CompanyInfoTab: React.FC<Props> = ({ settings, onChange }) => {
 
         {/* Commercial Registration */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-            رقم السجل التجاري (C.R)
-          </label>
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">رقم السجل التجاري (C.R)</label>
           <div className="relative">
             <input
               type="text"
@@ -207,9 +199,7 @@ export const CompanyInfoTab: React.FC<Props> = ({ settings, onChange }) => {
 
         {/* Website */}
         <div className="space-y-1.5 md:col-span-2">
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-            الموقع الإلكتروني
-          </label>
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">الموقع الإلكتروني</label>
           <div className="relative">
             <input
               type="url"
@@ -225,9 +215,7 @@ export const CompanyInfoTab: React.FC<Props> = ({ settings, onChange }) => {
 
         {/* Address */}
         <div className="space-y-1.5 md:col-span-2">
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-            العنوان والموقع الجغرافي
-          </label>
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">العنوان والموقع الجغرافي</label>
           <div className="relative">
             <textarea
               rows={3}

@@ -45,4 +45,3 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
     </>
   );
 };
-

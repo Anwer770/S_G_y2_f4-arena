@@ -79,7 +79,9 @@ import { RoutineSkipModal } from './RoutineSkipModal';
 
 export const RoutinesModule: React.FC = () => {
   // State
-  const [activeTab, setActiveTab] = useState<'today' | 'habits' | 'routines' | 'calendar' | 'analytics' | 'history'>('today');
+  const [activeTab, setActiveTab] = useState<'today' | 'habits' | 'routines' | 'calendar' | 'analytics' | 'history'>(
+    'today'
+  );
   const [selectedDate, setSelectedDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
 
   // Data State
@@ -145,16 +147,16 @@ export const RoutinesModule: React.FC = () => {
 
   const handleExportExcel = () => {
     const rows = routines.map((r) => ({
-      'المعرف': r.id,
-      'الكود': r.code,
+      المعرف: r.id,
+      الكود: r.code,
       'اسم الروتين': r.name,
-      'الوصف': r.description || '',
-      'النوع': r.type === 'HABIT' ? 'عادة مستمرة' : 'نشاط روتيني',
-      'التكرار': r.recurrence?.frequency || 'DAILY',
+      الوصف: r.description || '',
+      النوع: r.type === 'HABIT' ? 'عادة مستمرة' : 'نشاط روتيني',
+      التكرار: r.recurrence?.frequency || 'DAILY',
       'وقت البدء': r.schedule?.startTime || '08:00',
       'المدة المقدرة (دقيقة)': r.schedule?.estimatedDurationMinutes || 30,
-      'الأولوية': r.priority || 'MEDIUM',
-      'الحالة': r.status === 'ACTIVE' ? 'نشط' : 'معطل',
+      الأولوية: r.priority || 'MEDIUM',
+      الحالة: r.status === 'ACTIVE' ? 'نشط' : 'معطل',
     }));
 
     const wb = XLSX.utils.book_new();
@@ -187,12 +189,7 @@ export const RoutinesModule: React.FC = () => {
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0).toISOString().split('T')[0];
 
-    const generated = generateOccurrencesForDateRange(
-      loadedRoutines,
-      startOfMonth,
-      endOfMonth,
-      loadedOccurrences
-    );
+    const generated = generateOccurrencesForDateRange(loadedRoutines, startOfMonth, endOfMonth, loadedOccurrences);
     setOccurrences(generated);
     saveRoutineOccurrences(generated);
   }, []);
@@ -371,12 +368,7 @@ export const RoutinesModule: React.FC = () => {
   };
 
   // Postpone Handler
-  const handleConfirmPostpone = (
-    occurrenceId: string,
-    newTime: string,
-    newDate?: string,
-    reason?: string
-  ) => {
+  const handleConfirmPostpone = (occurrenceId: string, newTime: string, newDate?: string, reason?: string) => {
     const updatedOccurrences = occurrences.map((occ) => {
       if (occ.id === occurrenceId) {
         return {
@@ -439,11 +431,18 @@ export const RoutinesModule: React.FC = () => {
 
   // Computed Values
   const conflicts = useMemo(() => detectScheduleConflicts(occurrences, routines), [occurrences, routines]);
-  const kpis = useMemo(() => calculateRoutineKPIs(routines, occurrences, executions), [routines, occurrences, executions]);
+  const kpis = useMemo(
+    () => calculateRoutineKPIs(routines, occurrences, executions),
+    [routines, occurrences, executions]
+  );
   const habitsStreakList = useMemo(() => calculateHabitStreaksList(routines, occurrences), [routines, occurrences]);
 
   const filteredRoutinesList = routines.filter((r) => {
-    if (searchTerm && !r.name.toLowerCase().includes(searchTerm.toLowerCase()) && !r.code.toLowerCase().includes(searchTerm.toLowerCase())) {
+    if (
+      searchTerm &&
+      !r.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !r.code.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
       return false;
     }
     if (categoryFilter !== 'ALL' && r.categoryId !== categoryFilter) return false;
@@ -462,9 +461,7 @@ export const RoutinesModule: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">
-                  ادارة الروتين والعادات
-                </h1>
+                <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">ادارة الروتين والعادات</h1>
                 <span className="bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300 font-black text-xs px-2.5 py-0.5 rounded-full border border-teal-200/50 dark:border-teal-800/50">
                   التركيز العالي
                 </span>
@@ -545,7 +542,8 @@ export const RoutinesModule: React.FC = () => {
               : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
           }`}
         >
-          <Flame size={15} className={activeTab === 'habits' ? 'fill-white' : 'text-amber-500'} /> <span>متتبع العادات</span>
+          <Flame size={15} className={activeTab === 'habits' ? 'fill-white' : 'text-amber-500'} />{' '}
+          <span>متتبع العادات</span>
         </button>
 
         <button
@@ -648,7 +646,10 @@ export const RoutinesModule: React.FC = () => {
           {/* Controls Bar */}
           <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="relative flex-1 w-full">
-              <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              <Search
+                size={16}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
+              />
               <input
                 type="text"
                 value={searchTerm}
@@ -731,9 +732,7 @@ export const RoutinesModule: React.FC = () => {
                     </div>
 
                     {rtn.description && (
-                      <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">
-                        {rtn.description}
-                      </p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">{rtn.description}</p>
                     )}
 
                     {/* Metadata Chips */}
@@ -833,9 +832,7 @@ export const RoutinesModule: React.FC = () => {
         />
       )}
 
-      {activeTab === 'analytics' && (
-        <RoutineAnalyticsView kpis={kpis} routines={routines} executions={executions} />
-      )}
+      {activeTab === 'analytics' && <RoutineAnalyticsView kpis={kpis} routines={routines} executions={executions} />}
 
       {activeTab === 'history' && (
         <RoutineExecutionsHistory

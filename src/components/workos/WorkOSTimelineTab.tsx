@@ -10,11 +10,7 @@ import {
   Filter,
   Users,
 } from 'lucide-react';
-import {
-  WorkProject,
-  WorkTask,
-  TeamMember,
-} from '../../types/workos';
+import { WorkProject, WorkTask, TeamMember } from '../../types/workos';
 
 interface WorkOSTimelineTabProps {
   tasks: WorkTask[];
@@ -111,7 +107,9 @@ export const WorkOSTimelineTab: React.FC<WorkOSTimelineTabProps> = ({
                 >
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-slate-400 dark:text-slate-500 font-bold text-xs">{proj.code}</span>
+                      <span className="font-mono text-slate-400 dark:text-slate-500 font-bold text-xs">
+                        {proj.code}
+                      </span>
                       <strong className="text-slate-900 dark:text-slate-100">{proj.name}</strong>
                       <span className="text-slate-400 dark:text-slate-500 text-xs">({proj.manager})</span>
                     </div>
@@ -140,15 +138,14 @@ export const WorkOSTimelineTab: React.FC<WorkOSTimelineTabProps> = ({
       <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs overflow-hidden">
         <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-200">
           <span>المهام والجدول الزمني للأنشطة:</span>
-          <span className="text-slate-400 dark:text-slate-500 font-normal">يتم تمييز المهام المتأخرة باللون الأحمر</span>
+          <span className="text-slate-400 dark:text-slate-500 font-normal">
+            يتم تمييز المهام المتأخرة باللون الأحمر
+          </span>
         </div>
 
         <div className="divide-y divide-slate-100 dark:divide-slate-800">
           {displayedTasks.map((task) => {
-            const isOverdue =
-              task.dueDate &&
-              task.dueDate < todayStr &&
-              task.status !== 'completed';
+            const isOverdue = task.dueDate && task.dueDate < todayStr && task.status !== 'completed';
             const project = task.projectId ? projectMap.get(task.projectId) : undefined;
             const assignee = task.assigneeId ? teamMap.get(task.assigneeId) : undefined;
             const duration = getTaskDuration(task.startDate, task.dueDate);
@@ -164,7 +161,9 @@ export const WorkOSTimelineTab: React.FC<WorkOSTimelineTabProps> = ({
                 {/* Task info */}
                 <div className="space-y-1 min-w-[260px]">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-slate-400 dark:text-slate-500 font-bold">{task.taskNumber}</span>
+                    <span className="font-mono text-xs text-slate-400 dark:text-slate-500 font-bold">
+                      {task.taskNumber}
+                    </span>
                     <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">{task.title}</h4>
                     {isOverdue && (
                       <span className="px-1.5 py-0.2 rounded text-xs font-bold bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300">
@@ -178,7 +177,9 @@ export const WorkOSTimelineTab: React.FC<WorkOSTimelineTabProps> = ({
                       <span className="text-indigo-600 dark:text-indigo-400 font-medium">{project.name}</span>
                     )}
                     <span>•</span>
-                    <span>المسؤول: <strong>{assignee ? assignee.name : 'غير محدد'}</strong></span>
+                    <span>
+                      المسؤول: <strong>{assignee ? assignee.name : 'غير محدد'}</strong>
+                    </span>
                   </div>
                 </div>
 
@@ -193,11 +194,7 @@ export const WorkOSTimelineTab: React.FC<WorkOSTimelineTabProps> = ({
                   <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200 dark:border-slate-700">
                     <div
                       className={`h-full rounded-full transition-all duration-300 ${
-                        task.status === 'completed'
-                          ? 'bg-emerald-500'
-                          : isOverdue
-                          ? 'bg-rose-600'
-                          : 'bg-teal-600'
+                        task.status === 'completed' ? 'bg-emerald-500' : isOverdue ? 'bg-rose-600' : 'bg-teal-600'
                       }`}
                       style={{ width: `${Math.max(5, task.progress || 0)}%` }}
                     />
@@ -207,13 +204,15 @@ export const WorkOSTimelineTab: React.FC<WorkOSTimelineTabProps> = ({
                 {/* Progress % and action */}
                 <div className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-slate-200 shrink-0">
                   <span className="font-bold">{task.progress || 0}%</span>
-                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${
-                    task.status === 'completed'
-                      ? 'bg-emerald-50 text-emerald-700'
-                      : isOverdue
-                      ? 'bg-rose-50 text-rose-700'
-                      : 'bg-blue-50 text-blue-700'
-                  }`}>
+                  <span
+                    className={`px-2 py-0.5 rounded text-xs font-bold ${
+                      task.status === 'completed'
+                        ? 'bg-emerald-50 text-emerald-700'
+                        : isOverdue
+                          ? 'bg-rose-50 text-rose-700'
+                          : 'bg-blue-50 text-blue-700'
+                    }`}
+                  >
                     {task.status === 'completed' ? 'منجز' : isOverdue ? 'متأخر' : 'جارٍ'}
                   </span>
                 </div>

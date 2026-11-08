@@ -25,8 +25,25 @@ export const PIN_MIN_ITERATIONS = 20_000;
 
 /** رموز شائعة مرفوضة عند التعيين */
 const COMMON_PINS = [
-  '1234', '0000', '1111', '2222', '3333', '4444', '5555', '6666', '7777', '8888', '9999',
-  '123456', '654321', '121212', '112233', '123123', '000000', '111111', '121314',
+  '1234',
+  '0000',
+  '1111',
+  '2222',
+  '3333',
+  '4444',
+  '5555',
+  '6666',
+  '7777',
+  '8888',
+  '9999',
+  '123456',
+  '654321',
+  '121212',
+  '112233',
+  '123123',
+  '000000',
+  '111111',
+  '121314',
 ];
 
 /** رمز المرور المقبول: 4–6 أرقام، وليس رمزاً شائعاً */
@@ -67,7 +84,9 @@ const fromBase64 = (value: string): Uint8Array => {
 
 const derive = async (pin: string, salt: Uint8Array, iterations: number): Promise<Uint8Array> => {
   const encoder = new TextEncoder();
-  const base = await subtle().importKey('raw', encoder.encode(pin) as unknown as BufferSource, 'PBKDF2', false, ['deriveBits']);
+  const base = await subtle().importKey('raw', encoder.encode(pin) as unknown as BufferSource, 'PBKDF2', false, [
+    'deriveBits',
+  ]);
   const bits = await subtle().deriveBits(
     { name: 'PBKDF2', salt: salt as unknown as BufferSource, iterations, hash: 'SHA-256' },
     base,
@@ -107,5 +126,6 @@ export async function verifyPin(pin: string, digest: PinDigest): Promise<boolean
 }
 
 /** هل يملك المستخدم ملخّصاً صالح الشكل؟ (لا يكشف الرمز) */
-export const hasPinDigest = (user: { pinHash?: string; pinSalt?: string; pinIterations?: number } | null | undefined): boolean =>
-  !!user && !!user.pinHash && !!user.pinSalt && Number(user.pinIterations) > 0;
+export const hasPinDigest = (
+  user: { pinHash?: string; pinSalt?: string; pinIterations?: number } | null | undefined
+): boolean => !!user && !!user.pinHash && !!user.pinSalt && Number(user.pinIterations) > 0;

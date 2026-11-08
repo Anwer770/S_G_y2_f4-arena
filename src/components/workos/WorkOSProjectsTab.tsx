@@ -21,13 +21,7 @@ import {
   Paperclip,
   Share2,
 } from 'lucide-react';
-import {
-  WorkProject,
-  WorkTask,
-  TeamMember,
-  ProjectStatus,
-  TaskPriority,
-} from '../../types/workos';
+import { WorkProject, WorkTask, TeamMember, ProjectStatus, TaskPriority } from '../../types/workos';
 
 interface WorkOSProjectsTabProps {
   projects: WorkProject[];
@@ -94,13 +88,29 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
   const getPriorityBadge = (pri: TaskPriority) => {
     switch (pri) {
       case 'urgent':
-        return <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">حرجة</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+            حرجة
+          </span>
+        );
       case 'high':
-        return <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800">عالية</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800">
+            عالية
+          </span>
+        );
       case 'medium':
-        return <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">متوسطة</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+            متوسطة
+          </span>
+        );
       default:
-        return <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">منخفضة</span>;
+        return (
+          <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+            منخفضة
+          </span>
+        );
     }
   };
 
@@ -112,9 +122,7 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
     const overdueTasks = remainingTasks.filter((t) => t.dueDate && t.dueDate < todayStr);
 
     const calculatedProgress =
-      projectTasks.length > 0
-        ? Math.round((completedTasks.length / projectTasks.length) * 100)
-        : 0;
+      projectTasks.length > 0 ? Math.round((completedTasks.length / projectTasks.length) * 100) : 0;
 
     return {
       total: projectTasks.length,
@@ -144,12 +152,16 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
             </button>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-mono text-xs text-slate-400 dark:text-slate-500 font-bold">{selectedProject.code}</span>
+                <span className="font-mono text-xs text-slate-400 dark:text-slate-500 font-bold">
+                  {selectedProject.code}
+                </span>
                 <h2 className="text-base font-black text-slate-900 dark:text-slate-100">{selectedProject.name}</h2>
                 {getProjectStatusBadge(selectedProject.status)}
                 {getPriorityBadge(selectedProject.priority)}
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">{selectedProject.description}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
+                {selectedProject.description}
+              </p>
             </div>
           </div>
 
@@ -263,7 +275,9 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
                     <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">نسبة الإنجاز الفعلية</span>
-                    <span className="text-xl font-black font-mono text-teal-800 dark:text-teal-200">{stats.progress}%</span>
+                    <span className="text-xl font-black font-mono text-teal-800 dark:text-teal-200">
+                      {stats.progress}%
+                    </span>
                     <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 mt-1.5 overflow-hidden">
                       <div className="bg-teal-600 h-full rounded-full" style={{ width: `${stats.progress}%` }} />
                     </div>
@@ -272,18 +286,23 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
                     <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">المهام المكتملة</span>
                     <span className="text-xl font-black font-mono text-emerald-700 dark:text-emerald-300">
-                      {stats.completed} <span className="text-xs text-slate-400 dark:text-slate-500 font-normal">من {stats.total}</span>
+                      {stats.completed}{' '}
+                      <span className="text-xs text-slate-400 dark:text-slate-500 font-normal">من {stats.total}</span>
                     </span>
                   </div>
 
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
                     <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">المهام المتبقية</span>
-                    <span className="text-xl font-black font-mono text-blue-700 dark:text-blue-300">{stats.remaining}</span>
+                    <span className="text-xl font-black font-mono text-blue-700 dark:text-blue-300">
+                      {stats.remaining}
+                    </span>
                   </div>
 
                   <div className="p-3 bg-rose-50/70 dark:bg-rose-950/40 rounded-xl border border-rose-200 dark:border-rose-800">
                     <span className="text-xs text-rose-700 dark:text-rose-300 block mb-1 font-bold">مهام متأخرة</span>
-                    <span className="text-xl font-black font-mono text-rose-700 dark:text-rose-300">{stats.overdue}</span>
+                    <span className="text-xl font-black font-mono text-rose-700 dark:text-rose-300">
+                      {stats.overdue}
+                    </span>
                   </div>
                 </div>
 
@@ -298,15 +317,21 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
                       </div>
                       <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
                         <span className="text-slate-500 dark:text-slate-400">تاريخ البداية:</span>
-                        <span className="font-mono text-slate-700 dark:text-slate-200">{selectedProject.startDate || 'غير محدد'}</span>
+                        <span className="font-mono text-slate-700 dark:text-slate-200">
+                          {selectedProject.startDate || 'غير محدد'}
+                        </span>
                       </div>
                       <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
                         <span className="text-slate-500 dark:text-slate-400">تاريخ النهاية المستهدف:</span>
-                        <span className="font-mono text-slate-700 dark:text-slate-200 font-bold">{selectedProject.dueDate || 'غير محدد'}</span>
+                        <span className="font-mono text-slate-700 dark:text-slate-200 font-bold">
+                          {selectedProject.dueDate || 'غير محدد'}
+                        </span>
                       </div>
                       <div className="flex justify-between py-1">
                         <span className="text-slate-500 dark:text-slate-400">التصنيف:</span>
-                        <span className="text-slate-800 dark:text-slate-200 font-medium">{selectedProject.category || 'عام'}</span>
+                        <span className="text-slate-800 dark:text-slate-200 font-medium">
+                          {selectedProject.category || 'عام'}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -325,7 +350,9 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
             {projectDetailTab === 'tasks' && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">قائمة المهام المرتبطة بهذا المشروع:</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                    قائمة المهام المرتبطة بهذا المشروع:
+                  </span>
                   <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">{stats.total} مهمة مسجلة</span>
                 </div>
 
@@ -337,17 +364,19 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
                       className="p-3 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 flex items-center justify-between gap-3 cursor-pointer transition"
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="font-mono text-xs text-slate-400 dark:text-slate-500 font-bold">{t.taskNumber}</span>
+                        <span className="font-mono text-xs text-slate-400 dark:text-slate-500 font-bold">
+                          {t.taskNumber}
+                        </span>
                         <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{t.title}</span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-xs text-slate-500 dark:text-slate-400">{t.dueDate}</span>
-                        <span className={`px-2 py-0.5 rounded text-xs font-bold ${
-                          t.status === 'completed'
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'bg-blue-50 text-blue-700'
-                        }`}>
+                        <span
+                          className={`px-2 py-0.5 rounded text-xs font-bold ${
+                            t.status === 'completed' ? 'bg-emerald-50 text-emerald-700' : 'bg-blue-50 text-blue-700'
+                          }`}
+                        >
                           {t.status === 'completed' ? 'مكتملة' : 'قيد التنفيذ'}
                         </span>
                       </div>
@@ -367,13 +396,19 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
             {projectDetailTab === 'timeline' && (
               <div className="space-y-4">
                 <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-xs flex items-center justify-between">
-                  <span>فترة المشروع: من <strong className="font-mono">{selectedProject.startDate}</strong> إلى <strong className="font-mono">{selectedProject.dueDate}</strong></span>
+                  <span>
+                    فترة المشروع: من <strong className="font-mono">{selectedProject.startDate}</strong> إلى{' '}
+                    <strong className="font-mono">{selectedProject.dueDate}</strong>
+                  </span>
                   <span className="text-teal-700 dark:text-teal-300 font-bold">{stats.progress}% إنجاز زمني</span>
                 </div>
 
                 <div className="space-y-2">
                   {stats.tasks.map((t) => (
-                    <div key={t.id} className="p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between text-xs">
+                    <div
+                      key={t.id}
+                      className="p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between text-xs"
+                    >
                       <span className="font-bold text-slate-800 dark:text-slate-200">{t.title}</span>
                       <div className="flex items-center gap-3">
                         <span className="font-mono text-slate-400 dark:text-slate-500">{t.dueDate}</span>
@@ -395,7 +430,10 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {team.map((m) => (
-                    <div key={m.id} className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                    <div
+                      key={m.id}
+                      className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between"
+                    >
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">
                           {m.name.charAt(0)}
@@ -419,7 +457,9 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
               <div className="space-y-4">
                 <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 block">الميزانية التقديرية المعتمدة:</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 block">
+                      الميزانية التقديرية المعتمدة:
+                    </span>
                     <span className="text-xl font-black font-mono text-slate-900 dark:text-slate-100">
                       {selectedProject.budget ? selectedProject.budget.toLocaleString() : '0'} YER
                     </span>
@@ -442,8 +482,12 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
             {projectDetailTab === 'activity' && (
               <div className="space-y-2 text-xs">
                 <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                  <span className="font-bold text-slate-800 dark:text-slate-200">تم تسجيل وتأسيس المشروع في النظام</span>
-                  <span className="font-mono text-slate-400 dark:text-slate-500">{selectedProject.startDate || 'سابقاً'}</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">
+                    تم تسجيل وتأسيس المشروع في النظام
+                  </span>
+                  <span className="font-mono text-slate-400 dark:text-slate-500">
+                    {selectedProject.startDate || 'سابقاً'}
+                  </span>
                 </div>
               </div>
             )}
@@ -534,7 +578,9 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
                 <div className="grid grid-cols-3 gap-2 text-center text-xs py-2 border-y border-slate-100 dark:border-slate-800">
                   <div className="p-1.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
                     <span className="text-xs text-slate-400 dark:text-slate-500 block font-bold">المكتملة</span>
-                    <span className="font-black font-mono text-emerald-700 dark:text-emerald-300">{stats.completed}</span>
+                    <span className="font-black font-mono text-emerald-700 dark:text-emerald-300">
+                      {stats.completed}
+                    </span>
                   </div>
 
                   <div className="p-1.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
@@ -553,7 +599,9 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                      <span>المدير: <strong className="text-slate-800 dark:text-slate-200">{project.manager}</strong></span>
+                      <span>
+                        المدير: <strong className="text-slate-800 dark:text-slate-200">{project.manager}</strong>
+                      </span>
                     </div>
                     {getPriorityBadge(project.priority)}
                   </div>
@@ -613,11 +661,14 @@ export const WorkOSProjectsTab: React.FC<WorkOSProjectsTabProps> = ({
                         <div className="w-16 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
                           <div className="bg-indigo-600 h-full rounded-full" style={{ width: `${stats.progress}%` }} />
                         </div>
-                        <span className="font-mono text-indigo-700 dark:text-indigo-300 font-bold">{stats.progress}%</span>
+                        <span className="font-mono text-indigo-700 dark:text-indigo-300 font-bold">
+                          {stats.progress}%
+                        </span>
                       </div>
                     </td>
                     <td className="py-3 px-4 font-mono text-slate-700 dark:text-slate-200">
-                      <span className="text-emerald-700 dark:text-emerald-300 font-bold">{stats.completed}</span> / {stats.remaining}
+                      <span className="text-emerald-700 dark:text-emerald-300 font-bold">{stats.completed}</span> /{' '}
+                      {stats.remaining}
                     </td>
                     <td className="py-3 px-4 font-mono">
                       {stats.overdue > 0 ? (

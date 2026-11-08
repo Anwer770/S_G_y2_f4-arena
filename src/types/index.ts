@@ -137,15 +137,7 @@ export interface FinancialDropdownLists {
 // ----------------------------------------------------------------------------
 export type TaskPriority = 'A' | 'B' | 'C' | 'D'; // A: حرجة, B: عالية, C: متوسطة, D: منخفضة
 
-export type TaskStatus =
-  | 'مخطط'
-  | 'الهدف'
-  | 'قيد التنفيذ'
-  | 'تم الانجاز'
-  | 'تم ترحيل'
-  | 'مؤجل'
-  | 'ملغي'
-  | 'متأخر';
+export type TaskStatus = 'مخطط' | 'الهدف' | 'قيد التنفيذ' | 'تم الانجاز' | 'تم ترحيل' | 'مؤجل' | 'ملغي' | 'متأخر';
 
 export interface Task {
   id: string; // Unique T-XXXX (e.g. "T-0001")
@@ -436,13 +428,7 @@ export type NoteType =
 
 export type NotePriority = 'عالية' | 'متوسطة' | 'منخفضة';
 
-export type NoteStatus =
-  | 'مسودة'
-  | 'جديدة'
-  | 'قيد المراجعة'
-  | 'نشطة'
-  | 'مكتملة'
-  | 'مؤرشفة';
+export type NoteStatus = 'مسودة' | 'جديدة' | 'قيد المراجعة' | 'نشطة' | 'مكتملة' | 'مؤرشفة';
 
 export interface NoteFolder {
   id: string;
@@ -630,12 +616,7 @@ export interface AppSettings {
 
 /** أنواع الخيارات المالية القابلة للإضافة من أي شاشة (R28) */
 export type FinancialOptionType =
-  | 'category'
-  | 'account'
-  | 'restriction'
-  | 'movementType'
-  | 'restrictionAccount'
-  | 'accountName';
+  'category' | 'account' | 'restriction' | 'movementType' | 'restrictionAccount' | 'accountName';
 
 export interface AuditLog {
   id: string;
@@ -751,5 +732,3 @@ export interface UnifiedBackupState {
 }
 
 export * from './linksLibrary';
-
-

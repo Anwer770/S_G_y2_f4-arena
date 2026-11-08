@@ -43,11 +43,7 @@ export function useActiveSubTab(moduleTab: string): string | undefined {
 /**
  * يُركَّب داخل الوحدة: ينشر التبويب الحالي ويستقبل طلبات الدرج.
  */
-export function useSubTabSync<T extends string>(
-  moduleTab: string,
-  value: T,
-  setValue: (next: T) => void
-): void {
+export function useSubTabSync<T extends string>(moduleTab: string, value: T, setValue: (next: T) => void): void {
   useEffect(() => {
     publishSubTab(moduleTab, value);
   }, [moduleTab, value]);

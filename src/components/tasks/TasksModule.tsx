@@ -1,12 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Commitment,
-  Task,
-  TaskAuditLog,
-  TaskFilterState,
-  TaskPriority,
-  TaskStatus,
-} from '../../types';
+import { Commitment, Task, TaskAuditLog, TaskFilterState, TaskPriority, TaskStatus } from '../../types';
 import { calculateTaskStats, filterTasks, getUpcomingTasks } from '../../utils/tasks';
 import { exportTasksToCSV, exportTasksToExcel } from '../../utils/excel';
 import { formatArabicDate, formatCurrency } from '../../utils/formatters';
@@ -314,7 +307,9 @@ export const TasksModule: React.FC<Props> = ({
             {/* This Month */}
             <div className="bg-white/95 dark:bg-slate-900/85 backdrop-blur-xs p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs text-center">
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">هذا الشهر</span>
-              <span className="text-2xl font-black font-mono text-slate-800 dark:text-slate-200">{stats.thisMonth}</span>
+              <span className="text-2xl font-black font-mono text-slate-800 dark:text-slate-200">
+                {stats.thisMonth}
+              </span>
             </div>
 
             {/* Overdue */}
@@ -326,13 +321,17 @@ export const TasksModule: React.FC<Props> = ({
             {/* Completed */}
             <div className="bg-white/95 dark:bg-slate-900/85 backdrop-blur-xs p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs text-center">
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 block mb-1">مكتملة</span>
-              <span className="text-2xl font-black font-mono text-emerald-600 dark:text-emerald-400">{stats.completed}</span>
+              <span className="text-2xl font-black font-mono text-emerald-600 dark:text-emerald-400">
+                {stats.completed}
+              </span>
             </div>
 
             {/* In Progress */}
             <div className="bg-white/95 dark:bg-slate-900/85 backdrop-blur-xs p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs text-center">
               <span className="text-xs font-bold text-amber-600 dark:text-amber-400 block mb-1">قيد التنفيذ</span>
-              <span className="text-2xl font-black font-mono text-amber-600 dark:text-amber-400">{stats.inProgress}</span>
+              <span className="text-2xl font-black font-mono text-amber-600 dark:text-amber-400">
+                {stats.inProgress}
+              </span>
             </div>
 
             {/* Total Tasks */}
@@ -344,7 +343,10 @@ export const TasksModule: React.FC<Props> = ({
             {/* Total Commitments */}
             <div className="bg-white/95 dark:bg-slate-900/85 backdrop-blur-xs p-3.5 rounded-xl border border-amber-200/80 dark:border-amber-900/50 bg-amber-50/30 dark:bg-amber-950/20 shadow-xs text-center">
               <span className="text-xs font-bold text-amber-700 dark:text-amber-300 block mb-1">الالتزامات</span>
-              <span className="text-lg font-black font-mono text-amber-700 dark:text-amber-300 truncate block" title={String(stats.outstandingCommitmentsAmount)}>
+              <span
+                className="text-lg font-black font-mono text-amber-700 dark:text-amber-300 truncate block"
+                title={String(stats.outstandingCommitmentsAmount)}
+              >
                 {formatCurrency(stats.outstandingCommitmentsAmount)}
               </span>
             </div>
@@ -355,8 +357,12 @@ export const TasksModule: React.FC<Props> = ({
             {/* Category Distribution Bars */}
             <div className="lg:col-span-2 bg-white/95 dark:bg-slate-900/85 backdrop-blur-xs p-6 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-base text-slate-900 dark:text-slate-100">توزيع المهام حسب الفئات (18 فئة)</h3>
-                <span className="text-xs text-slate-400 dark:text-slate-500">نسبة الإنجاز العامة: {stats.completionRate}%</span>
+                <h3 className="font-bold text-base text-slate-900 dark:text-slate-100">
+                  توزيع المهام حسب الفئات (18 فئة)
+                </h3>
+                <span className="text-xs text-slate-400 dark:text-slate-500">
+                  نسبة الإنجاز العامة: {stats.completionRate}%
+                </span>
               </div>
 
               <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
@@ -366,7 +372,9 @@ export const TasksModule: React.FC<Props> = ({
                     <div key={c.cat} className="space-y-1">
                       <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
                         <span>{c.cat}</span>
-                        <span className="font-mono">{c.count} مهمة ({pct}%)</span>
+                        <span className="font-mono">
+                          {c.count} مهمة ({pct}%)
+                        </span>
                       </div>
                       <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                         <div
@@ -389,7 +397,9 @@ export const TasksModule: React.FC<Props> = ({
 
               <div className="space-y-3">
                 {upcomingTasks.length === 0 ? (
-                  <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-8">لا توجد مهام مستحقة قادمة</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-8">
+                    لا توجد مهام مستحقة قادمة
+                  </p>
                 ) : (
                   upcomingTasks.map((t) => (
                     <div
@@ -401,7 +411,9 @@ export const TasksModule: React.FC<Props> = ({
                         <span className="font-bold text-xs text-slate-900 dark:text-slate-100 truncate">{t.title}</span>
                         <span
                           className={`text-xs px-1.5 py-0.5 rounded font-bold ${
-                            t.pri === 'A' ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300' : 'bg-teal-100 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300'
+                            t.pri === 'A'
+                              ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300'
+                              : 'bg-teal-100 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300'
                           }`}
                         >
                           {t.pri}
@@ -549,7 +561,9 @@ export const TasksModule: React.FC<Props> = ({
               <table className="w-full text-right text-xs border-collapse min-w-[960px] print:min-w-0">
                 <thead className="sticky top-0 z-20">
                   <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700 shadow-2xs select-none">
-                    <th className="py-2.5 px-3 w-12 text-center sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">إنجاز</th>
+                    <th className="py-2.5 px-3 w-12 text-center sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                      إنجاز
+                    </th>
                     <th className="py-2.5 px-2.5 w-20">المعرف</th>
                     <th className="py-2.5 px-3 min-w-[200px]">عنوان المهمة</th>
                     <th className="py-2.5 px-2.5 w-24">الفئة</th>
@@ -558,7 +572,9 @@ export const TasksModule: React.FC<Props> = ({
                     <th className="py-2.5 px-2.5 w-24">التاريخ</th>
                     <th className="py-2.5 px-2.5 w-24">المسؤول</th>
                     <th className="py-2.5 px-2.5 w-24 text-center">الحالة</th>
-                    <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-24">إجراءات</th>
+                    <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-24">
+                      إجراءات
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
@@ -572,7 +588,10 @@ export const TasksModule: React.FC<Props> = ({
                     filteredTasks.map((t) => {
                       const isCompleted = t.status === 'تم الانجاز';
                       return (
-                        <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors text-[12px] group">
+                        <tr
+                          key={t.id}
+                          className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors text-[12px] group"
+                        >
                           <td className="py-2 px-3 text-center sticky right-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/60 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
                             <button
                               onClick={() => onToggleCompleteTask(t)}
@@ -588,28 +607,36 @@ export const TasksModule: React.FC<Props> = ({
                           </td>
                           <td className="py-2 px-2.5 font-mono font-bold text-xs text-indigo-700 dark:text-indigo-300 whitespace-nowrap">
                             {t.id}
-                            {t.sub && <span className="block text-xs text-slate-400 dark:text-slate-500 font-sans">{t.sub}</span>}
+                            {t.sub && (
+                              <span className="block text-xs text-slate-400 dark:text-slate-500 font-sans">
+                                {t.sub}
+                              </span>
+                            )}
                           </td>
-                          <td className={`py-2 px-3 font-bold text-slate-900 dark:text-slate-100 ${isCompleted ? 'line-through text-slate-400' : ''}`}>
+                          <td
+                            className={`py-2 px-3 font-bold text-slate-900 dark:text-slate-100 ${isCompleted ? 'line-through text-slate-400' : ''}`}
+                          >
                             <div className="truncate max-w-sm">{t.title}</div>
-                            {t.desc && <p className="text-xs text-slate-400 dark:text-slate-500 font-normal truncate max-w-sm">{t.desc}</p>}
+                            {t.desc && (
+                              <p className="text-xs text-slate-400 dark:text-slate-500 font-normal truncate max-w-sm">
+                                {t.desc}
+                              </p>
+                            )}
                           </td>
                           <td className="py-2 px-2.5">
                             <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium border border-slate-200 dark:border-slate-700">
                               {t.cat}
                             </span>
                           </td>
-                          <td className="py-2 px-2.5 text-xs text-slate-600 dark:text-slate-300">
-                            {t.op}
-                          </td>
+                          <td className="py-2 px-2.5 text-xs text-slate-600 dark:text-slate-300">{t.op}</td>
                           <td className="py-2 px-2 text-center">
                             <span
                               className={`inline-block px-1.5 py-0.5 rounded text-xs font-bold ${
                                 t.pri === 'A'
                                   ? 'bg-rose-50 text-rose-700 border border-rose-200'
                                   : t.pri === 'B'
-                                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                  : 'bg-blue-50 text-blue-700 border border-blue-200'
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                    : 'bg-blue-50 text-blue-700 border border-blue-200'
                               }`}
                             >
                               {t.pri}
@@ -618,17 +645,15 @@ export const TasksModule: React.FC<Props> = ({
                           <td className="py-2 px-2.5 text-xs text-slate-600 dark:text-slate-300 font-mono whitespace-nowrap">
                             {t.start}
                           </td>
-                          <td className="py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
-                            {t.resp}
-                          </td>
+                          <td className="py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">{t.resp}</td>
                           <td className="py-2 px-2.5 text-center">
                             <span
                               className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${
                                 isCompleted
                                   ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                   : t.status === 'متأخر'
-                                  ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                                  : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                                    ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                    : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                               }`}
                             >
                               {t.status}
@@ -708,7 +733,9 @@ export const TasksModule: React.FC<Props> = ({
         <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-700">
             <div>
-              <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">سجل تدقيق وتعديلات المهام (Audit Log)</h3>
+              <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">
+                سجل تدقيق وتعديلات المهام (Audit Log)
+              </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 تسجيل تلقائي لجميع عمليات الإضافة، التعديل، الحذف، والإنجاز مع التوقيت الدقيق
               </p>
@@ -726,10 +753,15 @@ export const TasksModule: React.FC<Props> = ({
               <p className="text-center text-xs text-slate-400 dark:text-slate-500 py-12">لا توجد سجلات مسجلة.</p>
             ) : (
               auditLogs.map((log) => (
-                <div key={log.id} className="p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 flex items-start justify-between gap-3">
+                <div
+                  key={log.id}
+                  className="p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 flex items-start justify-between gap-3"
+                >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-xs text-slate-900 dark:text-slate-100">{log.action}: {log.title}</span>
+                      <span className="font-bold text-xs text-slate-900 dark:text-slate-100">
+                        {log.action}: {log.title}
+                      </span>
                       <span className="text-xs px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-bold">
                         {log.entity}
                       </span>

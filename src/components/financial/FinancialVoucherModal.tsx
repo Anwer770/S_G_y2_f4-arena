@@ -115,18 +115,21 @@ export const FinancialVoucherModal: React.FC<Props> = ({ isOpen, onClose, transa
         }
       `}</style>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-xl shadow-2xl w-full max-w-3xl overflow-hidden border border-slate-200 dark:border-slate-800 print:border-none print:shadow-none animate-in fade-in zoom-in-95 duration-200 my-auto" dir="rtl">
+      <div
+        className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-xl shadow-2xl w-full max-w-3xl overflow-hidden border border-slate-200 dark:border-slate-800 print:border-none print:shadow-none animate-in fade-in zoom-in-95 duration-200 my-auto"
+        dir="rtl"
+      >
         {/* Header - Screen Only */}
         <div className="bg-slate-900 text-white px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 print-hidden">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-teal-600 font-mono font-bold text-xs text-white">
-              {transaction.id}
-            </div>
+            <div className="p-2 rounded-xl bg-teal-600 font-mono font-bold text-xs text-white">{transaction.id}</div>
             <div>
               <h3 className="font-bold text-sm sm:text-base">
                 سند قيد / حركة مالية ({transaction.restriction || 'سند مالي'})
               </h3>
-              <p className="text-xs text-slate-400 dark:text-slate-500">مرجع: {transaction.number} • {transaction.day} {transaction.date}</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">
+                مرجع: {transaction.number} • {transaction.day} {transaction.date}
+              </p>
             </div>
           </div>
 
@@ -145,7 +148,9 @@ export const FinancialVoucherModal: React.FC<Props> = ({ isOpen, onClose, transa
               <button
                 onClick={() => setPrintMode('thermal80')}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  printMode === 'thermal80' ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
+                  printMode === 'thermal80'
+                    ? 'bg-amber-500 text-slate-950 font-black'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 <Receipt className="w-3 h-3" />
@@ -177,7 +182,9 @@ export const FinancialVoucherModal: React.FC<Props> = ({ isOpen, onClose, transa
               id="print-financial-voucher-btn"
               onClick={handlePrint}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                printMode === 'thermal80' ? 'bg-amber-500 hover:bg-amber-600 text-slate-950 font-black' : 'bg-teal-600 hover:bg-teal-700'
+                printMode === 'thermal80'
+                  ? 'bg-amber-500 hover:bg-amber-600 text-slate-950 font-black'
+                  : 'bg-teal-600 hover:bg-teal-700'
               }`}
             >
               <Printer className="w-3.5 h-3.5" />
@@ -216,7 +223,9 @@ export const FinancialVoucherModal: React.FC<Props> = ({ isOpen, onClose, transa
                 </div>
                 <div className="flex justify-between">
                   <span className="font-bold">التاريخ واليوم:</span>
-                  <span>{transaction.day} {transaction.date}</span>
+                  <span>
+                    {transaction.day} {transaction.date}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-bold">اسم الحساب:</span>
@@ -231,9 +240,7 @@ export const FinancialVoucherModal: React.FC<Props> = ({ isOpen, onClose, transa
               {/* Amount Thermal Block */}
               <div className="py-2.5 border-b border-dashed border-slate-800 text-center space-y-1">
                 <div className="text-xs font-bold text-slate-600 dark:text-slate-300">المبلغ المقيد:</div>
-                <div className="text-xl font-black font-mono">
-                  {formatCurrency(transaction.amountYER)}
-                </div>
+                <div className="text-xl font-black font-mono">{formatCurrency(transaction.amountYER)}</div>
                 <div className="text-xs text-slate-600 dark:text-slate-300">
                   {transaction.amountSAR > 0 && <span>{formatCurrency(transaction.amountSAR)} | </span>}
                   {transaction.amountUSD > 0 && <span>{formatCurrency(transaction.amountUSD)}</span>}
@@ -244,7 +251,9 @@ export const FinancialVoucherModal: React.FC<Props> = ({ isOpen, onClose, transa
               {transaction.statement && (
                 <div className="py-2 border-b border-dashed border-slate-400 text-xs space-y-1">
                   <span className="font-bold block">البيان والشرح:</span>
-                  <p className="text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-1.5 rounded">{transaction.statement}</p>
+                  <p className="text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-1.5 rounded">
+                    {transaction.statement}
+                  </p>
                 </div>
               )}
 
@@ -280,8 +289,12 @@ export const FinancialVoucherModal: React.FC<Props> = ({ isOpen, onClose, transa
             {/* Company Branding */}
             <div className="border-b-2 border-slate-900 pb-4 flex items-center justify-between flex-wrap gap-4">
               <div className="text-right">
-                <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100">المنظومة-الإدارية-المتكاملة — الإدارة والمحاسبة المالية</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">قسم الحسابات والمالية — السجل المالي اليومي المعتمد</p>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100">
+                  المنظومة-الإدارية-المتكاملة — الإدارة والمحاسبة المالية
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  قسم الحسابات والمالية — السجل المالي اليومي المعتمد
+                </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">الجمهورية اليمنية • مركز العمليات والتوزيع</p>
               </div>
               <div className="text-center p-3 border-2 border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-800/60">
@@ -300,11 +313,15 @@ export const FinancialVoucherModal: React.FC<Props> = ({ isOpen, onClose, transa
               </div>
               <div>
                 <span className="text-slate-400 dark:text-slate-500 block font-bold">الرقم المرجعي:</span>
-                <span className="font-mono font-bold text-sm text-slate-900 dark:text-slate-100">{transaction.number}</span>
+                <span className="font-mono font-bold text-sm text-slate-900 dark:text-slate-100">
+                  {transaction.number}
+                </span>
               </div>
               <div>
                 <span className="text-slate-400 dark:text-slate-500 block font-bold">تاريخ القيد:</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">{transaction.day} {transaction.date}</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">
+                  {transaction.day} {transaction.date}
+                </span>
               </div>
               <div>
                 <span className="text-slate-400 dark:text-slate-500 block font-bold">درجة الأهمية:</span>

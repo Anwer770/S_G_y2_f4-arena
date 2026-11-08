@@ -1,9 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { FinancialTransaction } from '../../types';
-import {
-  calculateFinancialSummary,
-  filterFinancialTransactions,
-} from '../../utils/financial';
+import { calculateFinancialSummary, filterFinancialTransactions } from '../../utils/financial';
 import { formatCurrency } from '../../utils/formatters';
 import { exportFinancialToExcel } from '../../utils/excel';
 import { FinancialModal } from './FinancialModal';
@@ -43,7 +40,10 @@ interface Props {
   categoryAccounts: string[];
   restrictionAccounts: string[];
   accountNames: string[];
-  onAddOption?: (type: 'category' | 'account' | 'restriction' | 'movementType' | 'restrictionAccount' | 'accountName', value: string) => void;
+  onAddOption?: (
+    type: 'category' | 'account' | 'restriction' | 'movementType' | 'restrictionAccount' | 'accountName',
+    value: string
+  ) => void;
 }
 
 export const FinancialModule: React.FC<Props> = ({
@@ -104,10 +104,7 @@ export const FinancialModule: React.FC<Props> = ({
   );
 
   // Period Summary (Metrics of the current selected period & active filters)
-  const periodSummary = useMemo(
-    () => calculateFinancialSummary(filteredTransactions),
-    [filteredTransactions]
-  );
+  const periodSummary = useMemo(() => calculateFinancialSummary(filteredTransactions), [filteredTransactions]);
 
   const handleOpenAdd = () => {
     setEditingTxn(null);
@@ -268,11 +265,9 @@ export const FinancialModule: React.FC<Props> = ({
         >
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <p className="leading-relaxed">
-            يوجد{' '}
-            <span className="font-black font-mono">{periodSummary.unclassifiedCount.toLocaleString()}</span>{' '}
-            قيداً بمبلغ{' '}
-            <span className="font-black font-mono">{periodSummary.unclassifiedYER.toLocaleString()}</span>{' '}
-            بتصنيف حركة غير معروف، ولم تُحتسب في الوارد أو المصروف. صحّح حقل «نوع الحركة» فيها لتظهر في المجاميع.
+            يوجد <span className="font-black font-mono">{periodSummary.unclassifiedCount.toLocaleString()}</span> قيداً
+            بمبلغ <span className="font-black font-mono">{periodSummary.unclassifiedYER.toLocaleString()}</span> بتصنيف
+            حركة غير معروف، ولم تُحتسب في الوارد أو المصروف. صحّح حقل «نوع الحركة» فيها لتظهر في المجاميع.
           </p>
         </div>
       )}
@@ -288,9 +283,13 @@ export const FinancialModule: React.FC<Props> = ({
           }`}
         >
           <span>سجل القيود اليومية</span>
-          <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-            activeSubTab === 'journal' ? 'bg-teal-700/60 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-          }`}>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+              activeSubTab === 'journal'
+                ? 'bg-teal-700/60 text-white'
+                : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+            }`}
+          >
             {filteredTransactions.length}
           </span>
         </button>
@@ -304,9 +303,13 @@ export const FinancialModule: React.FC<Props> = ({
           }`}
         >
           <span>كشف الحسابات والأرصدة</span>
-          <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-            activeSubTab === 'accounts' ? 'bg-teal-700/60 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-          }`}>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+              activeSubTab === 'accounts'
+                ? 'bg-teal-700/60 text-white'
+                : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+            }`}
+          >
             {summary.accountBreakdown.length}
           </span>
         </button>
@@ -320,9 +323,13 @@ export const FinancialModule: React.FC<Props> = ({
           }`}
         >
           <span>التحليلات والمطابقات</span>
-          <span className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
-            activeSubTab === 'analytics' ? 'bg-teal-700/60 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-          }`}>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-xs font-mono ${
+              activeSubTab === 'analytics'
+                ? 'bg-teal-700/60 text-white'
+                : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+            }`}
+          >
             {summary.movementBreakdown.length}
           </span>
         </button>
@@ -392,7 +399,13 @@ export const FinancialModule: React.FC<Props> = ({
                 <div className="py-12 text-center text-slate-400 dark:text-slate-500 text-xs">
                   <div className="flex flex-col items-center justify-center gap-2.5">
                     <p className="font-medium">لا توجد قيود مالية مطابقة للبحث أو الفلاتر المحددة.</p>
-                    {(filters.periodFilter !== 'all' || filters.search || filters.movement || filters.currencyFilter !== 'all' || filters.isDraftOnly || filters.importance || filters.restriction) && (
+                    {(filters.periodFilter !== 'all' ||
+                      filters.search ||
+                      filters.movement ||
+                      filters.currencyFilter !== 'all' ||
+                      filters.isDraftOnly ||
+                      filters.importance ||
+                      filters.restriction) && (
                       <button
                         type="button"
                         onClick={handleResetFilters}
@@ -419,8 +432,8 @@ export const FinancialModule: React.FC<Props> = ({
                           isActive
                             ? 'bg-teal-50/70 dark:bg-teal-950/40 border-teal-500 ring-2 ring-teal-500/20'
                             : isSelected
-                            ? 'bg-teal-50/40 dark:bg-teal-950/20 border-teal-400'
-                            : 'bg-white dark:bg-slate-800/80 border-slate-200/80 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-700'
+                              ? 'bg-teal-50/40 dark:bg-teal-950/20 border-teal-400'
+                              : 'bg-white dark:bg-slate-800/80 border-slate-200/80 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-700'
                         }`}
                       >
                         {/* Header: ID, Date, Badges */}
@@ -442,15 +455,22 @@ export const FinancialModule: React.FC<Props> = ({
                               </span>
                             )}
                             {txn.attachmentUrl && (
-                              <Paperclip className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" title={`مرفق: ${txn.attachmentUrl}`} />
+                              <Paperclip
+                                className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500"
+                                title={`مرفق: ${txn.attachmentUrl}`}
+                              />
                             )}
                           </div>
 
                           <div className="flex items-center gap-1.5 flex-wrap justify-end">
-                            <span className={`px-2 py-0.5 rounded text-xs font-bold border ${movBadge.bg} ${movBadge.text} ${movBadge.border}`}>
+                            <span
+                              className={`px-2 py-0.5 rounded text-xs font-bold border ${movBadge.bg} ${movBadge.text} ${movBadge.border}`}
+                            >
                               {txn.movement}
                             </span>
-                            <span className={`px-2 py-0.5 rounded text-xs font-bold border ${impBadge.bg} ${impBadge.text} ${impBadge.border}`}>
+                            <span
+                              className={`px-2 py-0.5 rounded text-xs font-bold border ${impBadge.bg} ${impBadge.text} ${impBadge.border}`}
+                            >
                               {txn.importance}
                             </span>
                           </div>
@@ -460,12 +480,18 @@ export const FinancialModule: React.FC<Props> = ({
                         <div className="bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1">
                           <div className="flex items-center justify-between text-xs">
                             <span className="text-slate-400 dark:text-slate-500 text-xs">اسم الحساب:</span>
-                            <span className="font-bold text-slate-900 dark:text-slate-100 truncate max-w-[200px]" title={txn.accountName}>
+                            <span
+                              className="font-bold text-slate-900 dark:text-slate-100 truncate max-w-[200px]"
+                              title={txn.accountName}
+                            >
                               {txn.accountName}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                            <span className="truncate max-w-[170px]" title={`${txn.categoryAccount} / ${txn.restrictionAccount}`}>
+                            <span
+                              className="truncate max-w-[170px]"
+                              title={`${txn.categoryAccount} / ${txn.restrictionAccount}`}
+                            >
                               {txn.categoryAccount} • {txn.restrictionAccount}
                             </span>
                             <span className="font-mono bg-white dark:bg-slate-800 px-1.5 py-0.2 rounded border border-slate-200 dark:border-slate-700 text-xs">
@@ -477,7 +503,9 @@ export const FinancialModule: React.FC<Props> = ({
                         {/* Amounts Highlight */}
                         <div className="pt-1 flex items-baseline justify-between border-t border-slate-100 dark:border-slate-800">
                           <div>
-                            <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">المبلغ بالريال اليمني:</span>
+                            <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">
+                              المبلغ بالريال اليمني:
+                            </span>
                             <span className="text-sm sm:text-base font-mono font-black text-teal-700 dark:text-teal-400">
                               {formatCurrency(txn.amountYER || 0)} YER
                             </span>
@@ -503,7 +531,9 @@ export const FinancialModule: React.FC<Props> = ({
                         <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
                           <div className="flex items-center gap-1 font-mono">
                             <Calendar className="w-3 h-3 text-slate-400 dark:text-slate-500" />
-                            <span>{txn.day} • {txn.date}</span>
+                            <span>
+                              {txn.day} • {txn.date}
+                            </span>
                           </div>
                           {txn.number && (
                             <span className="font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.2 rounded text-xs">
@@ -605,7 +635,7 @@ export const FinancialModule: React.FC<Props> = ({
                 onDelete={onDeleteTransaction}
                 onResetFilters={handleResetFilters}
               />
-          </div>
+            </div>
           )}
         </div>
       )}
@@ -614,7 +644,10 @@ export const FinancialModule: React.FC<Props> = ({
       {activeSubTab === 'accounts' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {summary.accountBreakdown.map((acc) => (
-            <div key={acc.account} className="bg-white/95 dark:bg-slate-900/90 backdrop-blur-xs p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-2.5">
+            <div
+              key={acc.account}
+              className="bg-white/95 dark:bg-slate-900/90 backdrop-blur-xs p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-2.5"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 rounded-lg border border-teal-200/40 dark:border-teal-800/40">
@@ -665,7 +698,10 @@ export const FinancialModule: React.FC<Props> = ({
               {summary.movementBreakdown.map((m) => {
                 const b = getMovementBadgeStyle(m.movement);
                 return (
-                  <div key={m.movement} className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs">
+                  <div
+                    key={m.movement}
+                    className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs"
+                  >
                     <div className="flex items-center gap-2">
                       <span className={`px-2 py-0.5 rounded-md text-xs font-bold border ${b.bg} ${b.text} ${b.border}`}>
                         {m.movement}
@@ -685,7 +721,10 @@ export const FinancialModule: React.FC<Props> = ({
             <h3 className="font-black text-sm text-slate-900 dark:text-slate-100">توزيع فئات الحسابات</h3>
             <div className="space-y-2">
               {summary.categoryBreakdown.map((cat) => (
-                <div key={cat.category} className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs">
+                <div
+                  key={cat.category}
+                  className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs"
+                >
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-slate-800 dark:text-slate-200">{cat.category}</span>
                     <span className="text-slate-400 dark:text-slate-500 font-medium">({cat.count} قيد)</span>
@@ -722,7 +761,9 @@ export const FinancialModule: React.FC<Props> = ({
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <Keyboard className="w-5 h-5 text-teal-600 dark:text-teal-400" />
-                <h3 className="font-black text-sm text-slate-900 dark:text-slate-100">اختصارات لوحة المفاتيح السريعة</h3>
+                <h3 className="font-black text-sm text-slate-900 dark:text-slate-100">
+                  اختصارات لوحة المفاتيح السريعة
+                </h3>
               </div>
               <button
                 onClick={() => setShowShortcutsModal(false)}
@@ -746,7 +787,9 @@ export const FinancialModule: React.FC<Props> = ({
                 </kbd>
               </div>
               <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-800">
-                <span className="font-bold text-slate-700 dark:text-slate-300">إغلاق النوافذ والفلاتر / إلغاء التحديد</span>
+                <span className="font-bold text-slate-700 dark:text-slate-300">
+                  إغلاق النوافذ والفلاتر / إلغاء التحديد
+                </span>
                 <kbd className="px-2 py-1 bg-white dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600 font-mono text-xs font-bold">
                   Esc
                 </kbd>
@@ -782,11 +825,7 @@ export const FinancialModule: React.FC<Props> = ({
         onAddOption={onAddOption}
       />
 
-      <FinancialVoucherModal
-        isOpen={!!viewingTxn}
-        onClose={() => setViewingTxn(null)}
-        transaction={viewingTxn}
-      />
+      <FinancialVoucherModal isOpen={!!viewingTxn} onClose={() => setViewingTxn(null)} transaction={viewingTxn} />
 
       <ImportFinancialModal
         isOpen={isImportModalOpen}

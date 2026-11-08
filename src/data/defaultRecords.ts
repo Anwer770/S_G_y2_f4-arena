@@ -23,26 +23,9 @@ const BENEFICIARIES = [
   'إدارة التسويق والدعاية',
 ];
 
-const CATEGORIES = [
-  'مبيعات',
-  'مبيعات',
-  'مبيعات',
-  'عينات',
-  'توزيع',
-  'هدية',
-  'دعم',
-  'شركة',
-  'مرتجع',
-];
+const CATEGORIES = ['مبيعات', 'مبيعات', 'مبيعات', 'عينات', 'توزيع', 'هدية', 'دعم', 'شركة', 'مرتجع'];
 
-const STATUSES = [
-  'تم التنفيذ',
-  'تم التنفيذ',
-  'تم التنفيذ',
-  'تم التنفيذ',
-  'تم ترحيل',
-  'قيد التنفيذ',
-];
+const STATUSES = ['تم التنفيذ', 'تم التنفيذ', 'تم التنفيذ', 'تم التنفيذ', 'تم ترحيل', 'قيد التنفيذ'];
 
 // Helper to generate representative historical records
 export function generateDefaultRecords(): MovementRecord[] {
@@ -121,9 +104,9 @@ export function generateDefaultRecords(): MovementRecord[] {
   for (let i = 1; i <= 298; i++) {
     const subId = `OUT-${String(i).padStart(4, '0')}`;
     const mainId = `Categ-${1000 + ((i % 50) + 1)}`;
-    
+
     // Increment date gradually across 2024, 2025, 2026
-    const curDate = new Date(baseDate.getTime() + (i * 2.8) * 24 * 60 * 60 * 1000);
+    const curDate = new Date(baseDate.getTime() + i * 2.8 * 24 * 60 * 60 * 1000);
     const dateStr = curDate.toISOString().split('T')[0];
 
     const beneficiary = BENEFICIARIES[i % BENEFICIARIES.length];

@@ -97,9 +97,7 @@ export const DoctorDetailsModal: React.FC<Props> = ({
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-black">{doctor.name}</h2>
                 <span
-                  className={`text-xs px-2.5 py-0.5 rounded-full font-bold border ${getStatusBadge(
-                    doctor.status
-                  )}`}
+                  className={`text-xs px-2.5 py-0.5 rounded-full font-bold border ${getStatusBadge(doctor.status)}`}
                 >
                   {doctor.status}
                 </span>
@@ -169,7 +167,9 @@ export const DoctorDetailsModal: React.FC<Props> = ({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">العيادة/المركز:</span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200">{doctor.clinicName || 'عيادة خاصة'}</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">
+                    {doctor.clinicName || 'عيادة خاصة'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">المصدر:</span>
@@ -219,11 +219,15 @@ export const DoctorDetailsModal: React.FC<Props> = ({
               <div className="text-xs space-y-1.5">
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">بدء المهمة:</span>
-                  <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{doctor.dateBegin || '2026-08-01'}</span>
+                  <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+                    {doctor.dateBegin || '2026-08-01'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">انتهاء المهمة:</span>
-                  <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{doctor.dateEnd || '2026-08-07'}</span>
+                  <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+                    {doctor.dateEnd || '2026-08-07'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">آخر زيارة مسجلة:</span>
@@ -285,9 +289,7 @@ export const DoctorDetailsModal: React.FC<Props> = ({
                   <Package className="w-3.5 h-3.5" />
                   العينات والمواد المسلمة:
                 </span>
-                <p className="text-xs text-teal-950 font-bold leading-relaxed">
-                  {doctor.samplesGiven}
-                </p>
+                <p className="text-xs text-teal-950 font-bold leading-relaxed">{doctor.samplesGiven}</p>
               </div>
             )}
           </div>
@@ -298,9 +300,7 @@ export const DoctorDetailsModal: React.FC<Props> = ({
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 نتيجة الزيارة الأخيرة ورد فعل الطبيب:
               </span>
-              <p className="text-xs text-emerald-950 font-bold leading-relaxed">
-                {doctor.visitResult}
-              </p>
+              <p className="text-xs text-emerald-950 font-bold leading-relaxed">{doctor.visitResult}</p>
             </div>
           )}
 
@@ -344,11 +344,7 @@ export const DoctorDetailsModal: React.FC<Props> = ({
                         <span className="text-slate-400 dark:text-slate-500">({v.dayOfWeek})</span>
                         <span className="text-slate-600 dark:text-slate-300">• المندوب: {v.responsible}</span>
                       </div>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-md font-bold border ${getStatusBadge(
-                          v.status
-                        )}`}
-                      >
+                      <span className={`text-xs px-2 py-0.5 rounded-md font-bold border ${getStatusBadge(v.status)}`}>
                         {v.status}
                       </span>
                     </div>

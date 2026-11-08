@@ -121,24 +121,29 @@ export const DEFAULT_SYSTEM_SETTINGS: CompleteSystemSettings = {
   ],
   rolePermissions: {
     admin: [
-      'fin_create', 'fin_edit', 'fin_delete', 'fin_view', 'fin_reports',
-      'inv_create', 'inv_edit', 'inv_delete', 'inv_view', 'inv_adjust',
-      'sales_create', 'sales_edit', 'sales_delete', 'sales_discount', 'sales_view',
-      'sys_settings', 'sys_backup', 'sys_users', 'sys_audit'
-    ],
-    accountant: [
-      'fin_create', 'fin_edit', 'fin_view', 'fin_reports',
+      'fin_create',
+      'fin_edit',
+      'fin_delete',
+      'fin_view',
+      'fin_reports',
+      'inv_create',
+      'inv_edit',
+      'inv_delete',
       'inv_view',
+      'inv_adjust',
+      'sales_create',
+      'sales_edit',
+      'sales_delete',
+      'sales_discount',
       'sales_view',
-      'sys_audit'
+      'sys_settings',
+      'sys_backup',
+      'sys_users',
+      'sys_audit',
     ],
-    sales: [
-      'sales_create', 'sales_view',
-      'inv_view'
-    ],
-    viewer: [
-      'fin_view', 'inv_view', 'sales_view'
-    ],
+    accountant: ['fin_create', 'fin_edit', 'fin_view', 'fin_reports', 'inv_view', 'sales_view', 'sys_audit'],
+    sales: ['sales_create', 'sales_view', 'inv_view'],
+    viewer: ['fin_view', 'inv_view', 'sales_view'],
   },
   customRoles: [],
   database: {
@@ -149,28 +154,123 @@ export const DEFAULT_SYSTEM_SETTINGS: CompleteSystemSettings = {
 };
 
 export const ALL_PERMISSIONS_LIST = [
-  { id: 'fin_create', name: 'إضافة قيود وسندات مالية', category: 'الحسابات والمالية', description: 'إنشاء سندات قبض وصرف وقيود يومية' },
-  { id: 'fin_edit', name: 'تعديل القيود والحسابات', category: 'الحسابات والمالية', description: 'تعديل المعاملات المالية المعتمدة' },
-  { id: 'fin_delete', name: 'حذف السجلات المالية', category: 'الحسابات والمالية', description: 'إمكانية إلغاء وحذف القيود والسندات' },
-  { id: 'fin_view', name: 'عرض السجلات وكشوفات الحساب', category: 'الحسابات والمالية', description: 'الاطلاع على الحركات والأرصدة' },
-  { id: 'fin_reports', name: 'تصدير التقارير والقوائم الختامية', category: 'الحسابات والمالية', description: 'استعراض ميزان المراجعة والأرباح والخسائر' },
+  {
+    id: 'fin_create',
+    name: 'إضافة قيود وسندات مالية',
+    category: 'الحسابات والمالية',
+    description: 'إنشاء سندات قبض وصرف وقيود يومية',
+  },
+  {
+    id: 'fin_edit',
+    name: 'تعديل القيود والحسابات',
+    category: 'الحسابات والمالية',
+    description: 'تعديل المعاملات المالية المعتمدة',
+  },
+  {
+    id: 'fin_delete',
+    name: 'حذف السجلات المالية',
+    category: 'الحسابات والمالية',
+    description: 'إمكانية إلغاء وحذف القيود والسندات',
+  },
+  {
+    id: 'fin_view',
+    name: 'عرض السجلات وكشوفات الحساب',
+    category: 'الحسابات والمالية',
+    description: 'الاطلاع على الحركات والأرصدة',
+  },
+  {
+    id: 'fin_reports',
+    name: 'تصدير التقارير والقوائم الختامية',
+    category: 'الحسابات والمالية',
+    description: 'استعراض ميزان المراجعة والأرباح والخسائر',
+  },
 
-  { id: 'inv_create', name: 'إضافة منتجات وأصناف جديدة', category: 'المخزون والمستودعات', description: 'تسجيل أصناف وتحديد أسعارها' },
-  { id: 'inv_edit', name: 'تعديل بيانات الأصناف والمخازن', category: 'المخزون والمستودعات', description: 'تعديل الأسماء والكميات والوحدات' },
-  { id: 'inv_delete', name: 'حذف أصناف من المستودع', category: 'المخزون والمستودعات', description: 'حذف سجلات الأصناف نهائياً' },
-  { id: 'inv_view', name: 'عرض المخزون وحركات التوريد والصرف', category: 'المخزون والمستودعات', description: 'متابعة أرصدة الأصناف' },
-  { id: 'inv_adjust', name: 'إجراء تسويات وجرد مخزني', category: 'المخزون والمستودعات', description: 'تعديل فروقات الجرد والفاقد' },
+  {
+    id: 'inv_create',
+    name: 'إضافة منتجات وأصناف جديدة',
+    category: 'المخزون والمستودعات',
+    description: 'تسجيل أصناف وتحديد أسعارها',
+  },
+  {
+    id: 'inv_edit',
+    name: 'تعديل بيانات الأصناف والمخازن',
+    category: 'المخزون والمستودعات',
+    description: 'تعديل الأسماء والكميات والوحدات',
+  },
+  {
+    id: 'inv_delete',
+    name: 'حذف أصناف من المستودع',
+    category: 'المخزون والمستودعات',
+    description: 'حذف سجلات الأصناف نهائياً',
+  },
+  {
+    id: 'inv_view',
+    name: 'عرض المخزون وحركات التوريد والصرف',
+    category: 'المخزون والمستودعات',
+    description: 'متابعة أرصدة الأصناف',
+  },
+  {
+    id: 'inv_adjust',
+    name: 'إجراء تسويات وجرد مخزني',
+    category: 'المخزون والمستودعات',
+    description: 'تعديل فروقات الجرد والفاقد',
+  },
 
-  { id: 'sales_create', name: 'إنشاء فواتير المبيعات وعروض الأسعار', category: 'الفواتير والمبيعات', description: 'إصدار فواتير نقدية وآجلة' },
-  { id: 'sales_edit', name: 'تعديل الفواتير الصادرة', category: 'الفواتير والمبيعات', description: 'تعديل الكميات والأسعار في الفاتورة' },
-  { id: 'sales_delete', name: 'إلغاء وحذف الفواتير', category: 'الفواتير والمبيعات', description: 'إلغاء فواتير المبيعات المعتمدة' },
-  { id: 'sales_discount', name: 'منح خصومات إضافية', category: 'الفواتير والمبيعات', description: 'تطبيق نسب خصم خاصة للعملاء' },
-  { id: 'sales_view', name: 'استعراض سجل الفواتير والمقبوضات', category: 'الفواتير والمبيعات', description: 'الاطلاع على مبيعات الفروع' },
+  {
+    id: 'sales_create',
+    name: 'إنشاء فواتير المبيعات وعروض الأسعار',
+    category: 'الفواتير والمبيعات',
+    description: 'إصدار فواتير نقدية وآجلة',
+  },
+  {
+    id: 'sales_edit',
+    name: 'تعديل الفواتير الصادرة',
+    category: 'الفواتير والمبيعات',
+    description: 'تعديل الكميات والأسعار في الفاتورة',
+  },
+  {
+    id: 'sales_delete',
+    name: 'إلغاء وحذف الفواتير',
+    category: 'الفواتير والمبيعات',
+    description: 'إلغاء فواتير المبيعات المعتمدة',
+  },
+  {
+    id: 'sales_discount',
+    name: 'منح خصومات إضافية',
+    category: 'الفواتير والمبيعات',
+    description: 'تطبيق نسب خصم خاصة للعملاء',
+  },
+  {
+    id: 'sales_view',
+    name: 'استعراض سجل الفواتير والمقبوضات',
+    category: 'الفواتير والمبيعات',
+    description: 'الاطلاع على مبيعات الفروع',
+  },
 
-  { id: 'sys_settings', name: 'تعديل إعدادات النظام وبيانات الشركة', category: 'الإعدادات والنظام', description: 'التحكم في العملات والطابعات والشعار' },
-  { id: 'sys_backup', name: 'النسخ الاحتياطي واستعادة البيانات', category: 'الإعدادات والنظام', description: 'تصدير واستيراد قواعد البيانات' },
-  { id: 'sys_users', name: 'إدارة المستخدمين والصلاحيات', category: 'الإعدادات والنظام', description: 'إنشاء وتعديل حسابات المستخدمين' },
-  { id: 'sys_audit', name: 'مراجعة سجلات التدقيق والمراقبة', category: 'الإعدادات والنظام', description: 'متابعة نشاط المستخدمين على النظام' },
+  {
+    id: 'sys_settings',
+    name: 'تعديل إعدادات النظام وبيانات الشركة',
+    category: 'الإعدادات والنظام',
+    description: 'التحكم في العملات والطابعات والشعار',
+  },
+  {
+    id: 'sys_backup',
+    name: 'النسخ الاحتياطي واستعادة البيانات',
+    category: 'الإعدادات والنظام',
+    description: 'تصدير واستيراد قواعد البيانات',
+  },
+  {
+    id: 'sys_users',
+    name: 'إدارة المستخدمين والصلاحيات',
+    category: 'الإعدادات والنظام',
+    description: 'إنشاء وتعديل حسابات المستخدمين',
+  },
+  {
+    id: 'sys_audit',
+    name: 'مراجعة سجلات التدقيق والمراقبة',
+    category: 'الإعدادات والنظام',
+    description: 'متابعة نشاط المستخدمين على النظام',
+  },
 ] as const;
 
 export function loadCompleteSystemSettings(): CompleteSystemSettings {
@@ -188,16 +288,29 @@ export function loadCompleteSystemSettings(): CompleteSystemSettings {
         ...DEFAULT_SYSTEM_SETTINGS.general,
         ...(parsed.general || {}),
       };
-      if (!general.currentUserName || general.currentUserName.trim() === '' || general.currentUserName === 'مدير النظام') {
+      if (
+        !general.currentUserName ||
+        general.currentUserName.trim() === '' ||
+        general.currentUserName === 'مدير النظام'
+      ) {
         general.currentUserName = 'محمد العولقي';
       }
-      if (!general.currentUserTitle || general.currentUserTitle.trim() === '' || general.currentUserTitle === 'مدير عام المنظومة والعمليات') {
+      if (
+        !general.currentUserTitle ||
+        general.currentUserTitle.trim() === '' ||
+        general.currentUserTitle === 'مدير عام المنظومة والعمليات'
+      ) {
         general.currentUserTitle = 'مدير النظام التنفيذي';
       }
 
       const users: typeof DEFAULT_SYSTEM_SETTINGS.users = parsed.users || DEFAULT_SYSTEM_SETTINGS.users;
       // If the primary admin user exists, sync their name
-      if (users && users.length > 0 && users[0].id === 'usr-1' && (users[0].name === 'أنور قاسم' || users[0].name === 'مدير النظام' || !users[0].name)) {
+      if (
+        users &&
+        users.length > 0 &&
+        users[0].id === 'usr-1' &&
+        (users[0].name === 'أنور قاسم' || users[0].name === 'مدير النظام' || !users[0].name)
+      ) {
         users[0].name = general.currentUserName;
         users[0].avatarInitial = 'م';
       }

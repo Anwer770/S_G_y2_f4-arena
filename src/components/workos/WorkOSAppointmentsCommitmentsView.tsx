@@ -81,9 +81,7 @@ export const WorkOSAppointmentsCommitmentsView: React.FC<WorkOSAppointmentsCommi
                 <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">{apt.title}</h3>
                 <span
                   className={`px-2 py-0.5 rounded text-xs font-bold ${
-                    apt.status === 'completed'
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-amber-100 text-amber-800'
+                    apt.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                   }`}
                 >
                   {apt.status === 'completed' ? 'تم اللقاء' : 'مجدول'}
@@ -93,12 +91,16 @@ export const WorkOSAppointmentsCommitmentsView: React.FC<WorkOSAppointmentsCommi
               <div className="space-y-1 text-xs text-slate-600 dark:text-slate-300">
                 <div className="flex items-center gap-2">
                   <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                  <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{apt.date} • {apt.time}</span>
+                  <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+                    {apt.date} • {apt.time}
+                  </span>
                   <span className="text-slate-400 dark:text-slate-500">({apt.durationMinutes} دقيقة)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                  <span>الشخص المعني: <strong className="text-slate-800 dark:text-slate-200">{apt.person}</strong></span>
+                  <span>
+                    الشخص المعني: <strong className="text-slate-800 dark:text-slate-200">{apt.person}</strong>
+                  </span>
                 </div>
                 {apt.location && (
                   <div className="flex items-center gap-2">
@@ -115,9 +117,13 @@ export const WorkOSAppointmentsCommitmentsView: React.FC<WorkOSAppointmentsCommi
               )}
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-                <span className="text-slate-400 dark:text-slate-500">المشاركون: {apt.attendees?.join('، ') || '—'}</span>
+                <span className="text-slate-400 dark:text-slate-500">
+                  المشاركون: {apt.attendees?.join('، ') || '—'}
+                </span>
                 <button
-                  onClick={() => onUpdateAppointmentStatus(apt.id, apt.status === 'completed' ? 'scheduled' : 'completed')}
+                  onClick={() =>
+                    onUpdateAppointmentStatus(apt.id, apt.status === 'completed' ? 'scheduled' : 'completed')
+                  }
                   className="text-amber-700 dark:text-amber-300 font-bold hover:underline cursor-pointer"
                 >
                   {apt.status === 'completed' ? 'إلغاء التمام' : 'تأكيد التمام ✓'}
@@ -146,9 +152,7 @@ export const WorkOSAppointmentsCommitmentsView: React.FC<WorkOSAppointmentsCommi
 
                 <span
                   className={`px-2 py-0.5 rounded text-xs font-bold ${
-                    cmt.status === 'fulfilled'
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-rose-100 text-rose-800'
+                    cmt.status === 'fulfilled' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                   }`}
                 >
                   {cmt.status === 'fulfilled' ? 'تم الوفاء بالالتزام' : 'ساري / قيد الوفاء'}
@@ -156,12 +160,18 @@ export const WorkOSAppointmentsCommitmentsView: React.FC<WorkOSAppointmentsCommi
               </div>
 
               <div className="space-y-1 text-xs text-slate-600 dark:text-slate-300">
-                <div>الجهة المتعهد لها: <strong className="text-slate-800 dark:text-slate-200">{cmt.entity}</strong></div>
-                <div>الشخص المسؤول: <strong>{cmt.person}</strong></div>
+                <div>
+                  الجهة المتعهد لها: <strong className="text-slate-800 dark:text-slate-200">{cmt.entity}</strong>
+                </div>
+                <div>
+                  الشخص المسؤول: <strong>{cmt.person}</strong>
+                </div>
                 <div className="flex items-center justify-between font-mono pt-1 text-rose-800 dark:text-rose-200 font-bold">
                   <span>تاريخ الاستحقاق: {cmt.dueDate}</span>
                   {cmt.amount && (
-                    <span>المبلغ: {cmt.amount.toLocaleString()} {cmt.currency || 'YER'}</span>
+                    <span>
+                      المبلغ: {cmt.amount.toLocaleString()} {cmt.currency || 'YER'}
+                    </span>
                   )}
                 </div>
               </div>
@@ -173,7 +183,9 @@ export const WorkOSAppointmentsCommitmentsView: React.FC<WorkOSAppointmentsCommi
               <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
                 <span className="text-slate-400 dark:text-slate-500">تاريخ الالتزام: {cmt.commitmentDate}</span>
                 <button
-                  onClick={() => onUpdateCommitmentStatus(cmt.id, cmt.status === 'fulfilled' ? 'in_progress' : 'fulfilled')}
+                  onClick={() =>
+                    onUpdateCommitmentStatus(cmt.id, cmt.status === 'fulfilled' ? 'in_progress' : 'fulfilled')
+                  }
                   className="text-rose-700 dark:text-rose-300 font-bold hover:underline cursor-pointer"
                 >
                   {cmt.status === 'fulfilled' ? 'إعادة فتح' : 'تحديد كمكتمل وموفى ✓'}

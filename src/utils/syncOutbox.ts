@@ -1,15 +1,7 @@
 import { dbStorage } from '../database/dbStorage';
 import { broadcastDataChange } from './multiTabSync';
 
-export type OutboxEntity =
-  | 'financial'
-  | 'stock'
-  | 'customer'
-  | 'doctor'
-  | 'debt'
-  | 'custody'
-  | 'task'
-  | 'settings';
+export type OutboxEntity = 'financial' | 'stock' | 'customer' | 'doctor' | 'debt' | 'custody' | 'task' | 'settings';
 
 export type OutboxAction = 'INSERT' | 'UPDATE' | 'DELETE';
 

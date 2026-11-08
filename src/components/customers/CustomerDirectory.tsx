@@ -1,10 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Customer,
-  CustomerFilterState,
-  CustomerSource,
-  CustomerVisitRecord,
-} from '../../types';
+import { Customer, CustomerFilterState, CustomerSource, CustomerVisitRecord } from '../../types';
 import {
   CUSTOMER_REGIONS,
   CUSTOMER_RESPONSIBLES,
@@ -270,7 +265,9 @@ export const CustomerDirectory: React.FC<Props> = ({
 
           {/* Route Filter */}
           <div>
-            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">مسار الزيارة (اليوم)</label>
+            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">
+              مسار الزيارة (اليوم)
+            </label>
             <select
               value={filters.route}
               onChange={(e) => {
@@ -466,7 +463,9 @@ export const CustomerDirectory: React.FC<Props> = ({
                       <ArrowUpDown className="w-3 h-3 text-slate-400 dark:text-slate-500" />
                     </div>
                   </th>
-                  <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-36">الإجراءات</th>
+                  <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-36">
+                    الإجراءات
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
@@ -564,13 +563,13 @@ export const CustomerDirectory: React.FC<Props> = ({
                               (c.balanceYER || 0) < 0
                                 ? 'text-rose-600'
                                 : (c.balanceYER || 0) > 0
-                                ? 'text-emerald-700'
-                                : 'text-slate-600'
+                                  ? 'text-emerald-700'
+                                  : 'text-slate-600'
                             }`}
                           >
                             {(c.balanceYER || 0).toLocaleString('ar-YE')} ريال
                           </span>
-                          {(c.balanceSAR || c.balanceUSD) ? (
+                          {c.balanceSAR || c.balanceUSD ? (
                             <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
                               {c.balanceSAR ? `${(c.balanceSAR || 0).toLocaleString()} SAR ` : ''}
                               {c.balanceUSD ? `$${(c.balanceUSD || 0).toLocaleString()}` : ''}
@@ -637,7 +636,8 @@ export const CustomerDirectory: React.FC<Props> = ({
               <span className="font-bold text-slate-900 dark:text-slate-100">
                 {Math.min(currentPage * itemsPerPage, filteredCustomers.length)}
               </span>{' '}
-              من أصل <span className="font-bold text-slate-900 dark:text-slate-100">{filteredCustomers.length}</span> عميل
+              من أصل <span className="font-bold text-slate-900 dark:text-slate-100">{filteredCustomers.length}</span>{' '}
+              عميل
             </div>
 
             <div className="flex items-center gap-1.5">
@@ -675,9 +675,7 @@ export const CustomerDirectory: React.FC<Props> = ({
                     <div className="flex items-center gap-2 flex-wrap">
                       <h4 className="font-black text-slate-900 dark:text-slate-100 text-sm">{c.name}</h4>
                       <span
-                        className={`px-2 py-0.5 rounded-full font-bold text-xs border ${getSourceBadgeColor(
-                          c.source
-                        )}`}
+                        className={`px-2 py-0.5 rounded-full font-bold text-xs border ${getSourceBadgeColor(c.source)}`}
                       >
                         {c.source}
                       </span>
@@ -715,11 +713,7 @@ export const CustomerDirectory: React.FC<Props> = ({
                       {(c.balanceYER || 0).toLocaleString()} ريال
                     </span>
                   </div>
-                  <span
-                    className={`px-2 py-0.5 rounded-md font-bold text-xs border ${getStatusBadgeColor(
-                      c.status
-                    )}`}
-                  >
+                  <span className={`px-2 py-0.5 rounded-md font-bold text-xs border ${getStatusBadgeColor(c.status)}`}>
                     {c.status}
                   </span>
                 </div>

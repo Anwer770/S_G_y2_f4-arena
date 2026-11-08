@@ -51,8 +51,20 @@ export const BUILTIN_ROLE_IDS: UserRole[] = ['admin', 'accountant', 'sales', 'vi
 
 export const ROLE_MODULE_ACCESS: Record<UserRole, ActiveModuleTab[]> = {
   admin: [
-    'dashboard', 'financial', 'stock', 'tasks', 'customers', 'doctors', 'debts',
-    'custody', 'knowledge', 'routines', 'links', 'taskflow', 'workos', 'settings',
+    'dashboard',
+    'financial',
+    'stock',
+    'tasks',
+    'customers',
+    'doctors',
+    'debts',
+    'custody',
+    'knowledge',
+    'routines',
+    'links',
+    'taskflow',
+    'workos',
+    'settings',
   ],
   accountant: ['dashboard', 'financial', 'debts', 'custody', 'customers', 'stock', 'tasks', 'links', 'knowledge'],
   sales: ['dashboard', 'customers', 'doctors', 'tasks', 'stock', 'custody', 'links', 'knowledge'],
@@ -115,14 +127,11 @@ export const makeRoleId = (label: string): string =>
     .slice(0, 24)}_${Date.now().toString(36).slice(-4)}`;
 
 /** تحقّق من صلاحية إنشاء دور مخصّص. */
-export function validateCustomRole(
-  label: string,
-  permissions: string[],
-  existing: CustomRole[]
-): string | null {
+export function validateCustomRole(label: string, permissions: string[], existing: CustomRole[]): string | null {
   const clean = String(label || '').trim();
   if (clean.length < 2) return 'اسم الدور مطلوب (حرفان على الأقل)';
-  if (existing.some((r) => r.label.trim().toLowerCase() === clean.toLowerCase())) return `الدور «${clean}» موجود بالفعل`;
+  if (existing.some((r) => r.label.trim().toLowerCase() === clean.toLowerCase()))
+    return `الدور «${clean}» موجود بالفعل`;
   if (!permissions.length) return 'اختر صلاحية واحدة على الأقل للدور الجديد';
   return null;
 }

@@ -1,12 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  NoteFolder,
-  NotePriority,
-  NoteRecord,
-  NoteStatus,
-  NoteTagItem,
-  NoteType,
-} from '../../types';
+import { NoteFolder, NotePriority, NoteRecord, NoteStatus, NoteTagItem, NoteType } from '../../types';
 import {
   Search,
   Filter,
@@ -377,10 +370,7 @@ export const NotesListView: React.FC<NotesListViewProps> = ({
             pinnedOnly ||
             favoritesOnly ||
             overdueOnly) && (
-            <button
-              onClick={clearFilters}
-              className="text-xs text-rose-500 font-bold hover:underline mr-auto"
-            >
+            <button onClick={clearFilters} className="text-xs text-rose-500 font-bold hover:underline mr-auto">
               إلغاء كل الفلاتر
             </button>
           )}
@@ -659,9 +649,7 @@ export const NotesListView: React.FC<NotesListViewProps> = ({
                       {note.isPinned && <Pin className="w-3 h-3 text-amber-500 shrink-0" />}
                       {note.isFavorite && <Star className="w-3 h-3 text-yellow-500 shrink-0" />}
                       {note.isLocked && <Lock className="w-3 h-3 text-rose-500 shrink-0" />}
-                      <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">
-                        {note.title}
-                      </span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">{note.title}</span>
                     </div>
                     <p className="text-xs text-slate-400 dark:text-slate-500 truncate mt-0.5">
                       {note.summary || note.content}
@@ -674,9 +662,7 @@ export const NotesListView: React.FC<NotesListViewProps> = ({
                     </span>
                   </td>
 
-                  <td className="p-3 text-slate-600 dark:text-slate-300">
-                    {note.folderName || note.category}
-                  </td>
+                  <td className="p-3 text-slate-600 dark:text-slate-300">{note.folderName || note.category}</td>
 
                   <td className="p-3">
                     <span
@@ -684,17 +670,15 @@ export const NotesListView: React.FC<NotesListViewProps> = ({
                         note.priority === 'عالية'
                           ? 'bg-rose-100 text-rose-700'
                           : note.priority === 'متوسطة'
-                          ? 'bg-amber-100 text-amber-700'
-                          : 'bg-emerald-100 text-emerald-700'
+                            ? 'bg-amber-100 text-amber-700'
+                            : 'bg-emerald-100 text-emerald-700'
                       }`}
                     >
                       {note.priority}
                     </span>
                   </td>
 
-                  <td className="p-3 text-slate-600 dark:text-slate-300 font-medium">
-                    {note.status}
-                  </td>
+                  <td className="p-3 text-slate-600 dark:text-slate-300 font-medium">{note.status}</td>
 
                   <td className="p-3 text-slate-500 dark:text-slate-400">
                     {note.tasks && note.tasks.length > 0 ? (
@@ -744,9 +728,7 @@ export const NotesListView: React.FC<NotesListViewProps> = ({
                 className="p-3.5 rounded-xl bg-slate-100/70 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/80 space-y-3 flex flex-col max-h-[75vh]"
               >
                 <div className="flex items-center justify-between px-1">
-                  <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
-                    {colStatus}
-                  </span>
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{colStatus}</span>
                   <span className="px-2 py-0.5 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold rounded-lg shadow-2xs">
                     {colNotes.length}
                   </span>
@@ -810,9 +792,7 @@ export const NotesListView: React.FC<NotesListViewProps> = ({
                     </span>
                   </div>
 
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                    {note.title}
-                  </h4>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">{note.title}</h4>
 
                   <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">
                     {note.summary || note.content}
@@ -851,14 +831,14 @@ export const NotesListView: React.FC<NotesListViewProps> = ({
                       onClick={() => onSelectNote(note)}
                       className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 cursor-pointer text-xs space-y-1 transition-colors"
                     >
-                      <div className="font-bold text-slate-800 dark:text-slate-200 truncate">
-                        {note.title}
-                      </div>
+                      <div className="font-bold text-slate-800 dark:text-slate-200 truncate">{note.title}</div>
                       <div className="text-xs text-slate-400 dark:text-slate-500">{note.date}</div>
                     </div>
                   ))}
                   {folderNotes.length === 0 && (
-                    <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-4">لا توجد ملاحظات بهذا المجلد</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-4">
+                      لا توجد ملاحظات بهذا المجلد
+                    </p>
                   )}
                 </div>
               </div>

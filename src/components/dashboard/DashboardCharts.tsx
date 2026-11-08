@@ -70,9 +70,7 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({
       {/* 1. Order Statuses Donut Chart (Left Side / 5 cols) */}
       <div className="lg:col-span-5 bg-white dark:bg-slate-900/90 rounded-xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">
-            حالات الطلبات
-          </h3>
+          <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">حالات الطلبات</h3>
           <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
             {totalOrders} طلب
           </span>
@@ -104,9 +102,7 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({
               <span className="text-2xl font-black text-slate-900 dark:text-white font-mono leading-none">
                 {totalOrders}
               </span>
-              <span className="text-xs font-medium text-slate-400 dark:text-slate-500 mt-0.5">
-                الإجمالي
-              </span>
+              <span className="text-xs font-medium text-slate-400 dark:text-slate-500 mt-0.5">الإجمالي</span>
             </div>
           </div>
 
@@ -118,18 +114,11 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({
                 className="flex items-center justify-between text-xs p-1.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <span
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <span className="font-bold text-slate-700 dark:text-slate-300">
-                    {item.name}
-                  </span>
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                  <span className="font-bold text-slate-700 dark:text-slate-300">{item.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-slate-900 dark:text-white">
-                    {item.value}
-                  </span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">{item.value}</span>
                   <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
                     ({Math.round((item.value / totalOrders) * 100)}%)
                   </span>
@@ -144,9 +133,7 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({
       <div className="lg:col-span-7 bg-white dark:bg-slate-900/90 rounded-xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">
-              منحنى الإيرادات — آخر 6 أشهر
-            </h3>
+            <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">منحنى الإيرادات — آخر 6 أشهر</h3>
           </div>
 
           <div className="px-2.5 py-1 rounded-lg bg-[#e6f8f0] dark:bg-teal-950/60 text-[#0d6854] dark:text-teal-300 font-bold text-xs font-mono border border-teal-200/60 dark:border-teal-800/60">
@@ -164,13 +151,7 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
-              <XAxis
-                dataKey="month"
-                stroke={textColor}
-                fontSize={11}
-                tickLine={false}
-                axisLine={false}
-              />
+              <XAxis dataKey="month" stroke={textColor} fontSize={11} tickLine={false} axisLine={false} />
               <YAxis
                 stroke={textColor}
                 fontSize={11}

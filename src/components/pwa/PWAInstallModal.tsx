@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import { Download, Smartphone, X, Sparkles, CheckCircle2, ShieldCheck, Laptop } from 'lucide-react';
 
-export const PWAInstallModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
-  isOpen,
-  onClose,
-}) => {
+export const PWAInstallModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [justInstalled, setJustInstalled] = useState(false);
 
@@ -37,9 +34,7 @@ export const PWAInstallModal: React.FC<{ isOpen: boolean; onClose: () => void }>
               <Download className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                تثبيت المنظومة كتطبيق أصلي (PWA)
-              </h3>
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">تثبيت المنظومة كتطبيق أصلي (PWA)</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 سطح المكتب • هواتف Android • أجهزة iPhone وiPad
               </p>
@@ -99,23 +94,36 @@ export const PWAInstallModal: React.FC<{ isOpen: boolean; onClose: () => void }>
                 </div>
                 <div className="space-y-2 leading-relaxed text-xs pr-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">1</span>
-                    <span>انقر على زر <strong>المشاركة (Share)</strong> في متصفح Safari.</span>
+                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">
+                      1
+                    </span>
+                    <span>
+                      انقر على زر <strong>المشاركة (Share)</strong> في متصفح Safari.
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">2</span>
-                    <span>اختر <strong>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</strong>.</span>
+                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">
+                      2
+                    </span>
+                    <span>
+                      اختر <strong>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</strong>.
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">3</span>
-                    <span>انقر <strong>إضافة</strong> ليظهر التطبيق في شاشة جهازك.</span>
+                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">
+                      3
+                    </span>
+                    <span>
+                      انقر <strong>إضافة</strong> ليظهر التطبيق في شاشة جهازك.
+                    </span>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="text-xs text-slate-600 dark:text-slate-300 space-y-3">
                 <p className="leading-relaxed">
-                  عند النقر على زر التثبيت، سيقوم المتصفح بإضافة المنظومة مباشرة إلى قائمة التطبيقات على حاسوبك المكتبي أو هاتفك الذكي بنقرة واحدة، لتتمكن من الوصول اللحظي الآمن.
+                  عند النقر على زر التثبيت، سيقوم المتصفح بإضافة المنظومة مباشرة إلى قائمة التطبيقات على حاسوبك المكتبي
+                  أو هاتفك الذكي بنقرة واحدة، لتتمكن من الوصول اللحظي الآمن.
                 </p>
                 <button
                   type="button"

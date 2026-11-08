@@ -53,6 +53,26 @@ jobs:
           node -e "const fs=require('fs');const sw=fs.readFileSync('dist/sw.js','utf8');if(!/precache|workbox/i.test(sw))throw new Error('sw.js بدون بيان precache');console.log('sw.js OK ·',(sw.length/1024).toFixed(1)+'KB');"
           node -e "const fs=require('fs');const files=fs.readdirSync('dist').filter(f=>f.endsWith('.js'));const total=files.reduce((s,f)=>s+fs.statSync('dist/'+f).size,0);if(total===0)throw new Error('حزمة JS فارغة');console.log('bundles:',files.length,'·',(total/1024/1024).toFixed(2)+'MB');"
 
+  # ---------------------------------------------------------------- 1.5) الفحص الساكن + اختبارات الوحدات
+  lint-and-unit:
+    name: ESLint + Prettier + unit tests (coverage)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+
+      - name: ESLint (0 errors · warnings under budget)
+        run: npm run lint:eslint
+      - name: Prettier (formatting is enforced, not advisory)
+        run: npm run format:check
+      - name: Unit tests + coverage thresholds
+        run: npm run test:unit:coverage
+
   # ---------------------------------------------------------------- 2) البوابات الساكنة (تحليل الكود)
   static-gates:
     name: Static gates (hygiene · identity · integrity · imports · security)

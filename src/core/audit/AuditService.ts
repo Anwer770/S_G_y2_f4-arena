@@ -67,7 +67,9 @@ export class CentralAuditService {
     return this.deviceId;
   }
 
-  public log(entry: Omit<CentralAuditEntry, 'id' | 'timestamp' | 'deviceId' | 'userId'> & { userId?: string }): CentralAuditEntry {
+  public log(
+    entry: Omit<CentralAuditEntry, 'id' | 'timestamp' | 'deviceId' | 'userId'> & { userId?: string }
+  ): CentralAuditEntry {
     const fullEntry: CentralAuditEntry = {
       id: `audit_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
       timestamp: new Date().toISOString(),

@@ -35,12 +35,7 @@ interface ChatMessage {
   time: string;
 }
 
-export const AIAssistantModal: React.FC<AIAssistantModalProps> = ({
-  isOpen,
-  onClose,
-  notes,
-  onCreateNoteFromAi,
-}) => {
+export const AIAssistantModal: React.FC<AIAssistantModalProps> = ({ isOpen, onClose, notes, onCreateNoteFromAi }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'msg-welcome',
@@ -86,16 +81,25 @@ export const AIAssistantModal: React.FC<AIAssistantModalProps> = ({
 
       if (lower.includes('لخص') || lower.includes('ملخص') || lower.includes('قرارات')) {
         const activeNotes = notes.slice(0, 5);
-        aiResponseText = `بناءً على تحليل الملاحظات الأخيرة:\n\n` +
-          activeNotes.map((n, i) => `**${i + 1}. ${n.title}** (${n.category}):\n${n.summary || n.content.substring(0, 100)}...`).join('\n\n') +
+        aiResponseText =
+          `بناءً على تحليل الملاحظات الأخيرة:\n\n` +
+          activeNotes
+            .map((n, i) => `**${i + 1}. ${n.title}** (${n.category}):\n${n.summary || n.content.substring(0, 100)}...`)
+            .join('\n\n') +
           `\n\n📌 **الخلاصة:** يتضح التركيز الحالي على متابعة الذمم وتطوير استراتيجية التوزيع للربع القادم.`;
       } else if (lower.includes('مهام') || lower.includes('عالق') || lower.includes('متابعة')) {
         const allTasks = notes.flatMap((n) => (n.tasks || []).map((t) => ({ ...t, noteTitle: n.title })));
         const pendingTasks = allTasks.filter((t) => !t.completed);
 
         if (pendingTasks.length > 0) {
-          aiResponseText = `تم استخراج ${pendingTasks.length} مهمة غير مكتملة من قاعدة الملاحظات:\n\n` +
-            pendingTasks.map((t, idx) => `• **${t.text}** (الأولوية: ${t.priority || 'متوسطة'}${t.dueDate ? ` | الاستحقاق: ${t.dueDate}` : ''}) — من ملاحظة "${t.noteTitle}"`).join('\n');
+          aiResponseText =
+            `تم استخراج ${pendingTasks.length} مهمة غير مكتملة من قاعدة الملاحظات:\n\n` +
+            pendingTasks
+              .map(
+                (t, idx) =>
+                  `• **${t.text}** (الأولوية: ${t.priority || 'متوسطة'}${t.dueDate ? ` | الاستحقاق: ${t.dueDate}` : ''}) — من ملاحظة "${t.noteTitle}"`
+              )
+              .join('\n');
         } else {
           aiResponseText = `رائع! لا توجد حالياً مهام غير مكتملة داخل الملاحظات.`;
         }
@@ -108,15 +112,20 @@ export const AIAssistantModal: React.FC<AIAssistantModalProps> = ({
         };
       } else {
         // General search & reasoning across notes
-        const matchingNotes = notes.filter((n) =>
-          n.title.toLowerCase().includes(lower) ||
-          n.content.toLowerCase().includes(lower) ||
-          n.tags?.some((tag) => tag.toLowerCase().includes(lower))
+        const matchingNotes = notes.filter(
+          (n) =>
+            n.title.toLowerCase().includes(lower) ||
+            n.content.toLowerCase().includes(lower) ||
+            n.tags?.some((tag) => tag.toLowerCase().includes(lower))
         );
 
         if (matchingNotes.length > 0) {
-          aiResponseText = `وجدت ${matchingNotes.length} ملاحظة ذات صلة بطلبك:\n\n` +
-            matchingNotes.slice(0, 3).map((n) => `• **${n.title}** (${n.date}): ${n.summary || n.content.substring(0, 120)}...`).join('\n\n');
+          aiResponseText =
+            `وجدت ${matchingNotes.length} ملاحظة ذات صلة بطلبك:\n\n` +
+            matchingNotes
+              .slice(0, 3)
+              .map((n) => `• **${n.title}** (${n.date}): ${n.summary || n.content.substring(0, 120)}...`)
+              .join('\n\n');
         } else {
           aiResponseText = `قمت بمسح جميع الملاحظات (${notes.length} ملاحظة)، ولم أجد تطابقاً حرفياً مباشراً. لكن بناءً على معرفتي بالمنظومة، أوصي بإنشاء ملاحظة جديدة لتوثيق هذا الموضوع.`;
         }
@@ -174,12 +183,7 @@ export const AIAssistantModal: React.FC<AIAssistantModalProps> = ({
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex items-start gap-3 ${
-                msg.sender === 'user' ? 'flex-row-reverse' : ''
-              }`}
-            >
+            <div key={msg.id} className={`flex items-start gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
               <div
                 className={`p-2 rounded-xl shrink-0 ${
                   msg.sender === 'user'
@@ -202,9 +206,7 @@ export const AIAssistantModal: React.FC<AIAssistantModalProps> = ({
                 {/* Suggested Note Card if created by AI */}
                 {msg.suggestedNote && (
                   <div className="mt-3 p-3 bg-white dark:bg-slate-900 rounded-xl border border-purple-200 dark:border-purple-800 text-xs space-y-2">
-                    <div className="font-bold text-purple-700 dark:text-purple-300">
-                      📄 {msg.suggestedNote.title}
-                    </div>
+                    <div className="font-bold text-purple-700 dark:text-purple-300">📄 {msg.suggestedNote.title}</div>
                     <div className="text-slate-600 dark:text-slate-300 whitespace-pre-wrap max-h-32 overflow-y-auto">
                       {msg.suggestedNote.content}
                     </div>

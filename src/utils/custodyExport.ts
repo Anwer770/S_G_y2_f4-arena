@@ -18,10 +18,7 @@ export function normalizeArabicText(text: string): string {
 /**
  * Filter and search custody records with Arabic normalization
  */
-export function searchCustodyRecords(
-  records: CustodyIssueRecord[],
-  query: string
-): CustodyIssueRecord[] {
+export function searchCustodyRecords(records: CustodyIssueRecord[], query: string): CustodyIssueRecord[] {
   if (!query || !query.trim()) return records;
   const normalizedQuery = normalizeArabicText(query);
 
@@ -126,19 +123,19 @@ export function exportCustodyToJSON(records: CustodyIssueRecord[], filename = 'c
  */
 export function exportCustodyToExcel(records: CustodyIssueRecord[], filename = 'سجل_العهد_والاشكاليات.xlsx'): void {
   const rows = records.map((r) => ({
-    'المعرف': r.id || '',
-    'القسم': r.section === 'custody' ? 'العهد وحسابات' : 'الاشكاليات المعلقة',
-    'التاريخ': r.date || '',
+    المعرف: r.id || '',
+    القسم: r.section === 'custody' ? 'العهد وحسابات' : 'الاشكاليات المعلقة',
+    التاريخ: r.date || '',
     'الاسم/الجهة': r.name || '',
     'الوصف التفصيلي': r.desc || '',
-    'الفئة': r.cat || '',
-    'الأولوية': r.pri || '',
-    'الحالة': r.status || 'بدون حالة',
-    'المسؤول': r.resp || '',
-    'المبلغ': r.amount !== undefined ? r.amount : '',
-    'العملة': r.currency || 'ريال يمني',
-    'ملاحظات': r.notes || '',
-    'الرابط': r.link || '',
+    الفئة: r.cat || '',
+    الأولوية: r.pri || '',
+    الحالة: r.status || 'بدون حالة',
+    المسؤول: r.resp || '',
+    المبلغ: r.amount !== undefined ? r.amount : '',
+    العملة: r.currency || 'ريال يمني',
+    ملاحظات: r.notes || '',
+    الرابط: r.link || '',
   }));
 
   const wb = XLSX.utils.book_new();

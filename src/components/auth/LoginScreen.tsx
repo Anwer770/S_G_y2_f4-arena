@@ -28,9 +28,7 @@ export const LoginScreen: React.FC = () => {
   const selectedUser = availableUsers.find((u) => u.id === selectedUserId) || null;
   const hasStoredSecret =
     !!selectedUser &&
-    (!!selectedUser.pinHash ||
-      !!(selectedUser.pin || '').trim() ||
-      !!(selectedUser.password || '').trim());
+    (!!selectedUser.pinHash || !!(selectedUser.pin || '').trim() || !!(selectedUser.password || '').trim());
   // R2: حساب بلا رمز ⇒ مسار «تعيين الرمز أول مرة» بدل أي دخول بضغطة
   const needsPinSetup = !!selectedUser && !hasStoredSecret;
 
@@ -89,7 +87,9 @@ export const LoginScreen: React.FC = () => {
     const credential = pin.trim();
     // R2: لا رمز افتراضي — الرمز مطلوب دائماً، وحساب بلا رمز يمرّ بخطوة التعيين
     if (!credential) {
-      setErrorMessage(needsPinSetup ? 'عيّن رمز مرور جديداً (4 إلى 6 أرقام) للمتابعة' : 'أدخل رمز المرور (PIN) للمتابعة');
+      setErrorMessage(
+        needsPinSetup ? 'عيّن رمز مرور جديداً (4 إلى 6 أرقام) للمتابعة' : 'أدخل رمز المرور (PIN) للمتابعة'
+      );
       pinInputRef.current?.focus();
       return;
     }
@@ -173,12 +173,8 @@ export const LoginScreen: React.FC = () => {
                 <Building2 className="w-6 h-6 text-emerald-300" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight">
-                  {APP_NAME}
-                </h1>
-                <p className="text-xs sm:text-sm text-teal-200/90 font-medium mt-0.5">
-                  {APP_TAGLINE}
-                </p>
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight">{APP_NAME}</h1>
+                <p className="text-xs sm:text-sm text-teal-200/90 font-medium mt-0.5">{APP_TAGLINE}</p>
               </div>
             </div>
 
@@ -242,9 +238,7 @@ export const LoginScreen: React.FC = () => {
                         {user.avatarInitial || user.name.charAt(0) || 'م'}
                       </div>
                       <div className="min-w-0">
-                        <div className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
-                          {user.name}
-                        </div>
+                        <div className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">{user.name}</div>
                         <div className="text-xs text-slate-500 dark:text-slate-400 font-mono truncate">
                           {user.email}
                         </div>
@@ -252,16 +246,14 @@ export const LoginScreen: React.FC = () => {
                     </div>
 
                     <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                      <span
-                        className={`px-1.5 py-0.5 rounded text-xs font-bold border ${roleBadge.bg}`}
-                      >
+                      <span className={`px-1.5 py-0.5 rounded text-xs font-bold border ${roleBadge.bg}`}>
                         {user.role === 'admin'
                           ? 'مدير عام'
                           : user.role === 'accountant'
-                          ? 'محاسب'
-                          : user.role === 'sales'
-                          ? 'مبيعات'
-                          : 'مستعرض'}
+                            ? 'محاسب'
+                            : user.role === 'sales'
+                              ? 'مبيعات'
+                              : 'مستعرض'}
                       </span>
 
                       <button
@@ -404,19 +396,27 @@ export const LoginScreen: React.FC = () => {
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs">
               <li className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-teal-500" />
-                <span><strong>مدير النظام:</strong> وصول كامل، تعديل الإعدادات والنسخ والمالية</span>
+                <span>
+                  <strong>مدير النظام:</strong> وصول كامل، تعديل الإعدادات والنسخ والمالية
+                </span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-blue-500" />
-                <span><strong>المحاسب المالي:</strong> إدارة السجل المالي، الديون، المطابقات والأرصدة</span>
+                <span>
+                  <strong>المحاسب المالي:</strong> إدارة السجل المالي، الديون، المطابقات والأرصدة
+                </span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span><strong>المندوب الميداني:</strong> زيارات العملاء، زيارات الأطباء، المهام، المخزون</span>
+                <span>
+                  <strong>المندوب الميداني:</strong> زيارات العملاء، زيارات الأطباء، المهام، المخزون
+                </span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-slate-400" />
-                <span><strong>المستعرض:</strong> استعراض القيود والتقارير العامة دون إمكانية التعديل</span>
+                <span>
+                  <strong>المستعرض:</strong> استعراض القيود والتقارير العامة دون إمكانية التعديل
+                </span>
               </li>
             </ul>
           </div>

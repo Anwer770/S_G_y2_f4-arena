@@ -1,11 +1,6 @@
 import { Customer, CustomerSource, CustomerVisitRecord } from '../types';
 
-export const CUSTOMER_SOURCES: CustomerSource[] = [
-  'القيصر الذهبي',
-  'توب مكياجي',
-  'عفيف',
-  'الأطباء',
-];
+export const CUSTOMER_SOURCES: CustomerSource[] = ['القيصر الذهبي', 'توب مكياجي', 'عفيف', 'الأطباء'];
 
 export const CUSTOMER_REGIONS: string[] = [
   'صنعاء',
@@ -58,15 +53,7 @@ export const CUSTOMER_RESPONSIBLES: string[] = [
 
 export const CUSTOMER_SIGNIFICANCES = ['A', 'B', 'C', '√'] as const;
 
-export const CUSTOMER_STATUSES = [
-  'مخطط',
-  'قيد تنفيذ',
-  'مكتمل',
-  'ملغي',
-  'مرحل',
-  'متابعة',
-  'مصفر',
-] as const;
+export const CUSTOMER_STATUSES = ['مخطط', 'قيد تنفيذ', 'مكتمل', 'ملغي', 'مرحل', 'متابعة', 'مصفر'] as const;
 
 // Realistic baseline customer data constructed in alignment with the PRD statistics:
 // - 623 total customers across 3 primary brands + doctor clinics

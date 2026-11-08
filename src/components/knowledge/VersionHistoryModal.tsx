@@ -63,9 +63,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
         <div className="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x md:divide-x-reverse divide-slate-200 dark:divide-slate-800">
           {/* Versions List (Col 4) */}
           <div className="md:col-span-4 p-4 overflow-y-auto space-y-2 bg-slate-50/50 dark:bg-slate-800/30">
-            <h4 className="text-xs font-bold text-slate-600 dark:text-slate-400 mb-2">
-              النسخ المحفوظة:
-            </h4>
+            <h4 className="text-xs font-bold text-slate-600 dark:text-slate-400 mb-2">النسخ المحفوظة:</h4>
 
             {versions.map((ver, idx) => (
               <div
@@ -100,22 +98,14 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                      {selectedVersion.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      تاريخ النسخة: {selectedVersion.date}
-                    </p>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">{selectedVersion.title}</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">تاريخ النسخة: {selectedVersion.date}</p>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => {
-                      if (
-                        window.confirm(
-                          'هل أنت متأكد من استعادة هذه النسخة واستبدال المحتوى الحالي بها؟'
-                        )
-                      ) {
+                      if (window.confirm('هل أنت متأكد من استعادة هذه النسخة واستبدال المحتوى الحالي بها؟')) {
                         onRestoreVersion(note.id, selectedVersion);
                         onClose();
                       }

@@ -9,11 +9,41 @@ import {
 } from '../types/routines';
 
 export const DEFAULT_ROUTINE_CATEGORIES: RoutineCategoryItem[] = [
-  { id: 'cat-work', name: 'عمل وإدارة', icon: '💼', color: 'emerald', description: 'الأنشطة والروتينات المؤسسية والإدارية' },
-  { id: 'cat-sales', name: 'مبيعات وعملاء', icon: '🤝', color: 'blue', description: 'متابعة العملاء والمبيعات والزيارات' },
-  { id: 'cat-finance', name: 'مالي ومحاسبي', icon: '💰', color: 'amber', description: 'التسويات اليومية ومراجعة الحسابات والديون' },
-  { id: 'cat-morning', name: 'صباحي وتخطيط', icon: '🌅', color: 'indigo', description: 'الانطلاق اليومي ومراجعة الأولويات والأهداف' },
-  { id: 'cat-evening', name: 'مسائي وإغلاق', icon: '🌙', color: 'purple', description: 'الإغلاق اليومي، التقييم، وجدولة الغد' },
+  {
+    id: 'cat-work',
+    name: 'عمل وإدارة',
+    icon: '💼',
+    color: 'emerald',
+    description: 'الأنشطة والروتينات المؤسسية والإدارية',
+  },
+  {
+    id: 'cat-sales',
+    name: 'مبيعات وعملاء',
+    icon: '🤝',
+    color: 'blue',
+    description: 'متابعة العملاء والمبيعات والزيارات',
+  },
+  {
+    id: 'cat-finance',
+    name: 'مالي ومحاسبي',
+    icon: '💰',
+    color: 'amber',
+    description: 'التسويات اليومية ومراجعة الحسابات والديون',
+  },
+  {
+    id: 'cat-morning',
+    name: 'صباحي وتخطيط',
+    icon: '🌅',
+    color: 'indigo',
+    description: 'الانطلاق اليومي ومراجعة الأولويات والأهداف',
+  },
+  {
+    id: 'cat-evening',
+    name: 'مسائي وإغلاق',
+    icon: '🌙',
+    color: 'purple',
+    description: 'الإغلاق اليومي، التقييم، وجدولة الغد',
+  },
   { id: 'cat-health', name: 'صحي وشخصي', icon: '🌿', color: 'teal', description: 'الصحة، المشي، وتطوير الذات' },
   { id: 'cat-review', name: 'مراجعة وتدقيق', icon: '📊', color: 'rose', description: 'التدقيق الأسبوعي والمطابقات' },
 ];
@@ -56,7 +86,12 @@ export const DEFAULT_ROUTINE_TEMPLATES: RoutineTemplate[] = [
     completionRule: 'REQUIRED_ONLY',
     tags: ['أساسي يومي', 'عالي الأهمية'],
     steps: [
-      { title: 'مراجعة جدول المواعيد والاجتماعات لليوم', duration: 5, isRequired: true, description: 'التحقق من الزيارات المجدولة' },
+      {
+        title: 'مراجعة جدول المواعيد والاجتماعات لليوم',
+        duration: 5,
+        isRequired: true,
+        description: 'التحقق من الزيارات المجدولة',
+      },
       { title: 'فحص الرسائل والبريد العاجل والمهام المعلقة', duration: 5, isRequired: true },
       { title: 'تحديد الأولويات الـ 3 الكبرى ليوم العمل', duration: 10, isRequired: true },
       { title: 'تجهيز بيئة العمل وكوب القهوة / الماء', duration: 5, isRequired: false },
@@ -101,7 +136,11 @@ export const DEFAULT_ROUTINE_TEMPLATES: RoutineTemplate[] = [
     completionRule: 'REQUIRED_ONLY',
     tags: ['مالي', 'عالي الأهمية'],
     steps: [
-      { title: 'مطابقة النقد الفعلي بالصندوق مع رصيد السجل المالي (ريال، سعودي، دولار)', duration: 10, isRequired: true },
+      {
+        title: 'مطابقة النقد الفعلي بالصندوق مع رصيد السجل المالي (ريال، سعودي، دولار)',
+        duration: 10,
+        isRequired: true,
+      },
       { title: 'التأكد من تسجيل فواتير وتوريدات وصرف المخزون لليوم', duration: 10, isRequired: true },
       { title: 'تصدير نسخة احتياطية يومية للنظام', duration: 5, isRequired: true },
       { title: 'إعداد ملخص الإيرادات والمصروفات للإدارة', duration: 5, isRequired: false },
@@ -242,7 +281,13 @@ export const DEFAULT_ROUTINES: RoutineRecord[] = [
     completionRule: 'ALL_STEPS',
     autoCreateTasks: true,
     steps: [
-      { id: 'stp-201', title: 'استخراج قائمة عملاء مسار اليوم من دفتر العملاء', order: 1, duration: 5, isRequired: true },
+      {
+        id: 'stp-201',
+        title: 'استخراج قائمة عملاء مسار اليوم من دفتر العملاء',
+        order: 1,
+        duration: 5,
+        isRequired: true,
+      },
       { id: 'stp-202', title: 'مراجعة المبالغ المطلوبة وأرصدة الديون', order: 2, duration: 10, isRequired: true },
       { id: 'stp-203', title: 'التواصل الهاتفي مع مسؤولي المشتريات', order: 3, duration: 20, isRequired: true },
       { id: 'stp-204', title: 'تسجيل المواعيد والتحصيلات المتوقعة', order: 4, duration: 10, isRequired: true },
@@ -289,7 +334,13 @@ export const DEFAULT_ROUTINES: RoutineRecord[] = [
     completionRule: 'REQUIRED_ONLY',
     steps: [
       { id: 'stp-301', title: 'جرد النقدية بالخزينة بمختلف العملات', order: 1, duration: 10, isRequired: true },
-      { id: 'stp-302', title: 'مطابقة الأرصدة مع القيود اليومية في السجل المالي', order: 2, duration: 10, isRequired: true },
+      {
+        id: 'stp-302',
+        title: 'مطابقة الأرصدة مع القيود اليومية في السجل المالي',
+        order: 2,
+        duration: 10,
+        isRequired: true,
+      },
       { id: 'stp-303', title: 'حفظ نسخة احتياطية مشفرة للنظام', order: 3, duration: 5, isRequired: true },
       { id: 'stp-304', title: 'إرسال إشعار الإغلاق اليومي', order: 4, duration: 5, isRequired: false },
     ],
@@ -334,7 +385,13 @@ export const DEFAULT_ROUTINES: RoutineRecord[] = [
     completionRule: 'REQUIRED_ONLY',
     steps: [
       { id: 'stp-401', title: 'فتح دفتر زيارات الأطباء وتحديد خط السير', order: 1, duration: 5, isRequired: true },
-      { id: 'stp-402', title: 'تجهيز العينات المجانية والبروشورات الترويجية', order: 2, duration: 10, isRequired: true },
+      {
+        id: 'stp-402',
+        title: 'تجهيز العينات المجانية والبروشورات الترويجية',
+        order: 2,
+        duration: 10,
+        isRequired: true,
+      },
       { id: 'stp-403', title: 'التواصل الميداني وتنفيذ الزيارات المجدولة', order: 3, duration: 20, isRequired: true },
       { id: 'stp-404', title: 'توثيق تقارير الزيارات والملاحظات السريرية', order: 4, duration: 5, isRequired: false },
     ],
@@ -380,7 +437,13 @@ export const DEFAULT_ROUTINES: RoutineRecord[] = [
     completionRule: 'ALL_STEPS',
     steps: [
       { id: 'stp-501', title: 'مراجعة مؤشرات الأداء ولوحة القيادة الموحدة', order: 1, duration: 15, isRequired: true },
-      { id: 'stp-502', title: 'تدقيق سجلات الديون المتأخرة وتحديد إجراءات التحصيل', order: 2, duration: 15, isRequired: true },
+      {
+        id: 'stp-502',
+        title: 'تدقيق سجلات الديون المتأخرة وتحديد إجراءات التحصيل',
+        order: 2,
+        duration: 15,
+        isRequired: true,
+      },
       { id: 'stp-503', title: 'فحص مستويات الرواكد ونواقص المخزون', order: 3, duration: 15, isRequired: true },
       { id: 'stp-504', title: 'توزيع خطط العمل والمهام للأسبوع القادم', order: 4, duration: 15, isRequired: true },
     ],

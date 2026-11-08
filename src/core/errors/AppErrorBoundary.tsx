@@ -37,7 +37,10 @@ export class AppErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center p-4 font-sans" dir="rtl">
+        <div
+          className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center p-4 font-sans"
+          dir="rtl"
+        >
           <div className="max-w-md w-full bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-2xl text-center space-y-4">
             <div className="w-16 h-16 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-8 h-8" />

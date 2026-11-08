@@ -30,7 +30,7 @@ export function calculateTaskStats(
   referenceDate: Date = new Date()
 ): TaskStats {
   const todayStr = referenceDate.toISOString().split('T')[0];
-  
+
   // Calculate start and end of current week (Saturday to Friday in Arab business week)
   const currentDay = referenceDate.getDay(); // 0: Sun, 6: Sat
   const diffToSaturday = (currentDay + 1) % 7; // days since Saturday
@@ -38,7 +38,7 @@ export function calculateTaskStats(
   weekStart.setDate(referenceDate.getDate() - diffToSaturday);
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekStart.getDate() + 6);
-  
+
   const weekStartStr = weekStart.toISOString().split('T')[0];
   const weekEndStr = weekEnd.toISOString().split('T')[0];
 
@@ -229,7 +229,9 @@ export function generateICS(tasks: Task[], commitments: Commitment[] = []): stri
     lines.push(`DTSTART;VALUE=DATE:${startFormatted}`);
     lines.push(`DTEND;VALUE=DATE:${endFormatted}`);
     lines.push(`SUMMARY:[${t.pri}] ${t.title}`);
-    lines.push(`DESCRIPTION:الفئة: ${t.cat} | العملية: ${t.op} | المسؤول: ${t.resp} | الحالة: ${t.status}\\n${t.desc || ''}`);
+    lines.push(
+      `DESCRIPTION:الفئة: ${t.cat} | العملية: ${t.op} | المسؤول: ${t.resp} | الحالة: ${t.status}\\n${t.desc || ''}`
+    );
     lines.push(`CATEGORIES:${t.cat}`);
     lines.push(`STATUS:${t.status === 'تم الانجاز' ? 'COMPLETED' : 'CONFIRMED'}`);
     lines.push('END:VEVENT');
@@ -258,7 +260,11 @@ export function generateICS(tasks: Task[], commitments: Commitment[] = []): stri
   return lines.join('\r\n');
 }
 
-export function downloadICS(tasks: Task[], commitments: Commitment[] = [], filename = 'almaha_tasks_calendar.ics'): void {
+export function downloadICS(
+  tasks: Task[],
+  commitments: Commitment[] = [],
+  filename = 'almaha_tasks_calendar.ics'
+): void {
   const icsContent = generateICS(tasks, commitments);
   const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
   const url = URL.createObjectURL(blob);

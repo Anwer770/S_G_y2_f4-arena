@@ -12,8 +12,13 @@ interface Props {
   users: SystemUser[];
 }
 
-
-export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onChange, customRoles, onCustomRolesChange, users }) => {
+export const SecurityPermissionsTab: React.FC<Props> = ({
+  rolePermissions,
+  onChange,
+  customRoles,
+  onCustomRolesChange,
+  users,
+}) => {
   const [activeRole, setActiveRole] = useState<string>('accountant');
   const [newRoleLabel, setNewRoleLabel] = useState('');
   const [copyFrom, setCopyFrom] = useState<string>('viewer');
@@ -32,9 +37,12 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
   ];
 
   const addRole = () => {
-    const perms = Array.from(new Set([...((rolePermissions[copyFrom] || []).slice(0, 6))]));
+    const perms = Array.from(new Set([...(rolePermissions[copyFrom] || []).slice(0, 6)]));
     const err = validateCustomRole(newRoleLabel, perms, customRoles);
-    if (err) { setRoleError(err); return; }
+    if (err) {
+      setRoleError(err);
+      return;
+    }
     const role: CustomRole = {
       id: makeRoleId(newRoleLabel),
       label: newRoleLabel.trim(),
@@ -50,7 +58,10 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
 
   const deleteRole = (roleId: string) => {
     const err = canDeleteCustomRole(roleId, users);
-    if (err) { setRoleError(err); return; }
+    if (err) {
+      setRoleError(err);
+      return;
+    }
     if (!window.confirm('حذف هذا الدور نهائياً؟')) return;
     onCustomRolesChange(customRoles.filter((r) => r.id !== roleId));
     const next = { ...rolePermissions };
@@ -69,9 +80,7 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
     }
 
     const hasPerm = currentRolePerms.includes(permId);
-    const updatedPerms = hasPerm
-      ? currentRolePerms.filter((p) => p !== permId)
-      : [...currentRolePerms, permId];
+    const updatedPerms = hasPerm ? currentRolePerms.filter((p) => p !== permId) : [...currentRolePerms, permId];
 
     onChange({
       ...rolePermissions,
@@ -124,7 +133,8 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
           </span>
         </div>
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          أنشئ دوراً جديداً (مثل «مراقب مخزون») بنسخ صلاحيات دور قائم ثم عدّلها. وحدات الشاشات تُشتق آلياً من الصلاحيات الممنوحة.
+          أنشئ دوراً جديداً (مثل «مراقب مخزون») بنسخ صلاحيات دور قائم ثم عدّلها. وحدات الشاشات تُشتق آلياً من الصلاحيات
+          الممنوحة.
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <input
@@ -139,19 +149,31 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
             className="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
             title="نسخ الصلاحيات من"
           >
-            {allRoles.map((r) => (<option key={r.id} value={r.id}>نسخ من: {r.title}</option>))}
+            {allRoles.map((r) => (
+              <option key={r.id} value={r.id}>
+                نسخ من: {r.title}
+              </option>
+            ))}
           </select>
-          <button type="button" onClick={addRole}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold cursor-pointer">
+          <button
+            type="button"
+            onClick={addRole}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold cursor-pointer"
+          >
             <Plus className="w-3.5 h-3.5" /> إنشاء دور
           </button>
           {activeIsCustom && (
-            <button type="button" onClick={() => deleteRole(activeRole)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-300 text-xs font-bold hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer">
+            <button
+              type="button"
+              onClick={() => deleteRole(activeRole)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-300 text-xs font-bold hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer"
+            >
               <Trash2 className="w-3.5 h-3.5" /> حذف الدور الحالي
             </button>
           )}
-          <span className="text-xs text-slate-400 dark:text-slate-500">تغطية الدور الحالي: {roleCoverage(currentRolePerms, ALL_PERMISSIONS_LIST.length)}%</span>
+          <span className="text-xs text-slate-400 dark:text-slate-500">
+            تغطية الدور الحالي: {roleCoverage(currentRolePerms, ALL_PERMISSIONS_LIST.length)}%
+          </span>
         </div>
         {roleError && <div className="text-xs font-bold text-rose-600 dark:text-rose-300">{roleError}</div>}
       </div>
@@ -177,9 +199,7 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
                   <span className={`px-2 py-0.5 rounded-md text-xs font-bold ${r.badgeBg} ${r.badgeColor}`}>
                     {r.title}
                   </span>
-                  <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
-                    {count} صلاحية
-                  </span>
+                  <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">{count} صلاحية</span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                   {r.description}
@@ -203,9 +223,7 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
           <div>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span>
-                صلاحيات دور: {allRoles.find((r) => r.id === activeRole)?.title}
-              </span>
+              <span>صلاحيات دور: {allRoles.find((r) => r.id === activeRole)?.title}</span>
             </h3>
             <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
               مجموع الصلاحيات الممنوحة: {currentRolePerms.length} من أصل {ALL_PERMISSIONS_LIST.length} صلاحية
@@ -262,7 +280,9 @@ export const SecurityPermissionsTab: React.FC<Props> = ({ rolePermissions, onCha
                           )}
                         </div>
                         <div className="space-y-0.5">
-                          <div className={`text-xs font-bold ${isChecked ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400'}`}>
+                          <div
+                            className={`text-xs font-bold ${isChecked ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400'}`}
+                          >
                             {perm.name}
                           </div>
                           <div className="text-xs text-slate-400 dark:text-slate-500">{perm.description}</div>

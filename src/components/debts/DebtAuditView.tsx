@@ -34,7 +34,9 @@ export const DebtAuditView: React.FC<DebtAuditViewProps> = ({ logs, onClearLogs 
             <History className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-black text-slate-900 dark:text-slate-100 text-base">سجل العمليات والرقابة (Audit Log)</h3>
+            <h3 className="font-black text-slate-900 dark:text-slate-100 text-base">
+              سجل العمليات والرقابة (Audit Log)
+            </h3>
             <p className="text-xs text-slate-400 dark:text-slate-500">
               تتبع جميع عمليات الإضافة والتعديل والحذف وسداد الدفعات في دفاتر الدين والالتزامات
             </p>
@@ -93,7 +95,10 @@ export const DebtAuditView: React.FC<DebtAuditViewProps> = ({ logs, onClearLogs 
             </div>
           ) : (
             filteredLogs.map((log) => (
-              <div key={log.id} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors flex items-start justify-between gap-4 text-xs">
+              <div
+                key={log.id}
+                className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors flex items-start justify-between gap-4 text-xs"
+              >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span
@@ -101,12 +106,12 @@ export const DebtAuditView: React.FC<DebtAuditViewProps> = ({ logs, onClearLogs 
                         log.action === 'إضافة'
                           ? 'bg-emerald-100 text-emerald-800'
                           : log.action === 'تعديل'
-                          ? 'bg-amber-100 text-amber-800'
-                          : log.action === 'حذف'
-                          ? 'bg-rose-100 text-rose-800'
-                          : log.action === 'سداد'
-                          ? 'bg-indigo-100 text-indigo-800'
-                          : 'bg-slate-100 text-slate-700'
+                            ? 'bg-amber-100 text-amber-800'
+                            : log.action === 'حذف'
+                              ? 'bg-rose-100 text-rose-800'
+                              : log.action === 'سداد'
+                                ? 'bg-indigo-100 text-indigo-800'
+                                : 'bg-slate-100 text-slate-700'
                       }`}
                     >
                       {log.action}

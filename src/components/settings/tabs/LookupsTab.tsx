@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, ArrowUp, ArrowDown, RotateCcw, ListFilter, AlertCircle, CheckCircle2, Palette } from 'lucide-react';
+import {
+  Plus,
+  Trash2,
+  ArrowUp,
+  ArrowDown,
+  RotateCcw,
+  ListFilter,
+  AlertCircle,
+  CheckCircle2,
+  Palette,
+} from 'lucide-react';
 import {
   GRADE_TONE_CLASSES,
   LOOKUP_META,
@@ -45,11 +55,7 @@ export const LookupsTab: React.FC = () => {
     const items = kind === 'grades' ? lookups.grades : lookups[kind];
     const isGrades = kind === 'grades';
     return (
-      <section
-        key={kind}
-        className="surface-card p-4 sm:p-5 space-y-4"
-        data-lookup-section={kind}
-      >
+      <section key={kind} className="surface-card p-4 sm:p-5 space-y-4" data-lookup-section={kind}>
         <header className="flex items-start justify-between gap-3 flex-wrap">
           <div className="min-w-0">
             <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
@@ -176,9 +182,9 @@ export const LookupsTab: React.FC = () => {
       <div className="surface-card p-4 sm:p-5 flex items-start gap-3">
         <Palette className="w-5 h-5 text-teal-600 dark:text-teal-400 mt-0.5 shrink-0" />
         <div className="text-xs leading-6 text-slate-600 dark:text-slate-300">
-          <strong className="text-slate-900 dark:text-white">مصدر واحد موثوق للبيانات.</strong> أي إضافة أو تعديل
-          هنا يظهر فوراً في كل القوائم المنسدلة (المخزون · الديون · المهام · الزيارات) بلا إعادة تشغيل، ويُسجَّل في
-          سجل التدقيق، ويُدرَج في النسخة الاحتياطية الموحدة.
+          <strong className="text-slate-900 dark:text-white">مصدر واحد موثوق للبيانات.</strong> أي إضافة أو تعديل هنا
+          يظهر فوراً في كل القوائم المنسدلة (المخزون · الديون · المهام · الزيارات) بلا إعادة تشغيل، ويُسجَّل في سجل
+          التدقيق، ويُدرَج في النسخة الاحتياطية الموحدة.
         </div>
       </div>
 

@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  NoteAuditLog,
-  NoteFolder,
-  NoteRecord,
-  NoteTagItem,
-  NoteTemplate,
-  NoteVersion,
-} from '../../types';
+import { NoteAuditLog, NoteFolder, NoteRecord, NoteTagItem, NoteTemplate, NoteVersion } from '../../types';
 import {
   FileText,
   Plus,
@@ -49,12 +42,7 @@ import {
   saveNoteTags,
   saveNoteTemplates,
 } from '../../utils/storage';
-import {
-  exportNotesToCSV,
-  exportNotesToExcel,
-  exportNotesToJSON,
-  smartAnalyzeNoteText,
-} from '../../utils/notes';
+import { exportNotesToCSV, exportNotesToExcel, exportNotesToJSON, smartAnalyzeNoteText } from '../../utils/notes';
 import { NotesDashboard } from './NotesDashboard';
 import { NotesListView, NoteViewMode } from './NotesListView';
 import { NoteEditorModal } from './NoteEditorModal';
@@ -361,9 +349,7 @@ export const KnowledgeModule: React.FC<KnowledgeModuleProps> = ({
     });
     setNotes(updated);
     if (selectedNote && selectedNote.id === noteId && selectedNote.tasks) {
-      const updatedTasks = selectedNote.tasks.map((t) =>
-        t.id === taskId ? { ...t, completed: !t.completed } : t
-      );
+      const updatedTasks = selectedNote.tasks.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t));
       setSelectedNote({ ...selectedNote, tasks: updatedTasks });
     }
   };
@@ -414,9 +400,7 @@ export const KnowledgeModule: React.FC<KnowledgeModuleProps> = ({
     });
     setIsEditorOpen(true);
     // increment usage count
-    setTemplates(
-      templates.map((t) => (t.id === template.id ? { ...t, usageCount: (t.usageCount || 0) + 1 } : t))
-    );
+    setTemplates(templates.map((t) => (t.id === template.id ? { ...t, usageCount: (t.usageCount || 0) + 1 } : t)));
   };
 
   // Open note detail
@@ -440,9 +424,7 @@ export const KnowledgeModule: React.FC<KnowledgeModuleProps> = ({
       case 'favorites':
         return activeNotesList.filter((n) => n.isFavorite);
       case 'needs_review':
-        return activeNotesList.filter(
-          (n) => n.nextReviewDate && n.nextReviewDate <= today && n.status !== 'مكتملة'
-        );
+        return activeNotesList.filter((n) => n.nextReviewDate && n.nextReviewDate <= today && n.status !== 'مكتملة');
       default:
         return activeNotesList;
     }
@@ -458,9 +440,7 @@ export const KnowledgeModule: React.FC<KnowledgeModuleProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">
-                ادارة الملاحظات
-              </h1>
+              <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">ادارة الملاحظات</h1>
               <span className="bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300 font-black text-xs px-2.5 py-0.5 rounded-full border border-teal-200/50 dark:border-teal-800/50">
                 قاعدة المعرفة
               </span>
@@ -792,9 +772,7 @@ export const KnowledgeModule: React.FC<KnowledgeModuleProps> = ({
                 className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 flex flex-col justify-between space-y-2"
               >
                 <div>
-                  <h4 className="text-xs font-bold text-slate-800 dark:text-white line-clamp-1">
-                    {note.title}
-                  </h4>
+                  <h4 className="text-xs font-bold text-slate-800 dark:text-white line-clamp-1">{note.title}</h4>
                   <p className="text-xs text-slate-400 dark:text-slate-500 line-clamp-2 mt-1">
                     {note.summary || note.content}
                   </p>
@@ -835,9 +813,7 @@ export const KnowledgeModule: React.FC<KnowledgeModuleProps> = ({
           <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <History className="w-5 h-5 text-indigo-500" />
-              <h3 className="text-sm font-bold text-slate-800 dark:text-white">
-                سجل العمليات والتدقيق (Audit Logs)
-              </h3>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-white">سجل العمليات والتدقيق (Audit Logs)</h3>
             </div>
             <span className="text-xs text-slate-400 dark:text-slate-500">{auditLogs.length} عملية مسجلة</span>
           </div>
@@ -854,18 +830,16 @@ export const KnowledgeModule: React.FC<KnowledgeModuleProps> = ({
                       log.action === 'إضافة'
                         ? 'bg-emerald-100 text-emerald-700'
                         : log.action === 'تعديل'
-                        ? 'bg-amber-100 text-amber-700'
-                        : log.action === 'حذف'
-                        ? 'bg-rose-100 text-rose-700'
-                        : 'bg-indigo-100 text-indigo-700'
+                          ? 'bg-amber-100 text-amber-700'
+                          : log.action === 'حذف'
+                            ? 'bg-rose-100 text-rose-700'
+                            : 'bg-indigo-100 text-indigo-700'
                     }`}
                   >
                     {log.action}
                   </span>
                   <div>
-                    <span className="font-bold text-slate-800 dark:text-slate-200 block">
-                      {log.title}
-                    </span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200 block">{log.title}</span>
                     <span className="text-xs text-slate-500 dark:text-slate-400">{log.details}</span>
                   </div>
                 </div>

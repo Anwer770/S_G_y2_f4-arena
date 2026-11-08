@@ -21,12 +21,7 @@ import {
   AlertCircle,
   HelpCircle,
 } from 'lucide-react';
-import {
-  RoutineRecord,
-  RoutineStep,
-  RoutineCategoryItem,
-  RoutineTagItem,
-} from '../../types/routines';
+import { RoutineRecord, RoutineStep, RoutineCategoryItem, RoutineTagItem } from '../../types/routines';
 import { minutesToTime, timeToMinutes, getAIRoutineOptimizationAdvice } from '../../utils/routines';
 
 interface RoutineWizardModalProps {
@@ -279,8 +274,7 @@ export const RoutineWizardModal: React.FC<RoutineWizardModalProps> = ({
                 {initialData ? 'تعديل الروتين / العادة' : 'معالج إنشاء روتين ذكي جديد'}
               </h2>
               <p className="text-xs text-emerald-100">
-                الخطوة {step} من 6 :{' '}
-                {step === 1 && 'البيانات الأساسية والهوية'}
+                الخطوة {step} من 6 : {step === 1 && 'البيانات الأساسية والهوية'}
                 {step === 2 && 'التكرار والجدولة الزمنية'}
                 {step === 3 && 'هيكلة خطوات الروتين'}
                 {step === 4 && 'الربط بالأهداف والمهام'}
@@ -308,8 +302,8 @@ export const RoutineWizardModal: React.FC<RoutineWizardModalProps> = ({
                 step === st
                   ? 'bg-emerald-600 text-white shadow-sm'
                   : step > st
-                  ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40'
-                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
               <span className="w-4 h-4 rounded-full flex items-center justify-center text-xs border border-current">
@@ -470,9 +464,7 @@ export const RoutineWizardModal: React.FC<RoutineWizardModalProps> = ({
             <div className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    نمط التكرار
-                  </label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">نمط التكرار</label>
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value as RoutineRecord['type'])}
@@ -848,7 +840,9 @@ export const RoutineWizardModal: React.FC<RoutineWizardModalProps> = ({
                     }`}
                   >
                     <div className="font-bold text-xs mb-1">الخطوات الإلزامية فقط</div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">يعتبر الروتين مكتملاً بمجرد إنهاء جميع الخطوات الإلزامية.</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      يعتبر الروتين مكتملاً بمجرد إنهاء جميع الخطوات الإلزامية.
+                    </p>
                   </button>
 
                   <button
@@ -861,7 +855,9 @@ export const RoutineWizardModal: React.FC<RoutineWizardModalProps> = ({
                     }`}
                   >
                     <div className="font-bold text-xs mb-1">كافة الخطوات 100%</div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">يتطلب إنهاء جميع الخطوات دون استثناء لأعلى دقة.</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      يتطلب إنهاء جميع الخطوات دون استثناء لأعلى دقة.
+                    </p>
                   </button>
 
                   <button
@@ -874,7 +870,9 @@ export const RoutineWizardModal: React.FC<RoutineWizardModalProps> = ({
                     }`}
                   >
                     <div className="font-bold text-xs mb-1">نسبة مئوية (70% فأعلى)</div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">يكفي إنجاز الأغلبية العظمى لاحتساب الـ Streak.</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      يكفي إنجاز الأغلبية العظمى لاحتساب الـ Streak.
+                    </p>
                   </button>
                 </div>
               </div>

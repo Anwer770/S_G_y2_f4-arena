@@ -29,13 +29,7 @@ interface Props {
   onUpdateStatus: (customerId: string, status: VisitStatus) => void;
 }
 
-export const VisitsPlanner: React.FC<Props> = ({
-  customers,
-  visits,
-  onRecordVisit,
-  onViewDetails,
-  onUpdateStatus,
-}) => {
+export const VisitsPlanner: React.FC<Props> = ({ customers, visits, onRecordVisit, onViewDetails, onUpdateStatus }) => {
   const todayArabic = getTodayArabicDay();
   const [selectedRoute, setSelectedRoute] = useState<string>(todayArabic);
   const [search, setSearch] = useState('');
@@ -85,9 +79,7 @@ export const VisitsPlanner: React.FC<Props> = ({
   }, [todayDueCustomers]);
 
   const todayRate =
-    todayDueCustomers.length > 0
-      ? Math.round((todayCompletedCount / todayDueCustomers.length) * 100)
-      : 0;
+    todayDueCustomers.length > 0 ? Math.round((todayCompletedCount / todayDueCustomers.length) * 100) : 0;
 
   return (
     <div className="space-y-4">
@@ -106,8 +98,8 @@ export const VisitsPlanner: React.FC<Props> = ({
                 </span>
               </div>
               <p className="text-xs text-indigo-200/80 mt-0.5">
-                لديك <strong className="text-white">{todayDueCustomers.length}</strong> عميل مجدول للمتابعة اليوم
-                وفق خطة المسارات الأسبوعية والشهرية
+                لديك <strong className="text-white">{todayDueCustomers.length}</strong> عميل مجدول للمتابعة اليوم وفق
+                خطة المسارات الأسبوعية والشهرية
               </p>
             </div>
           </div>
@@ -158,8 +150,8 @@ export const VisitsPlanner: React.FC<Props> = ({
                   isSelected
                     ? 'bg-indigo-600 text-white shadow-xs'
                     : isTodayTab
-                    ? 'bg-amber-50 text-amber-900 border border-amber-300'
-                    : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
+                      ? 'bg-amber-50 text-amber-900 border border-amber-300'
+                      : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
                 }`}
               >
                 <span>مسار {day}</span>
@@ -168,15 +160,13 @@ export const VisitsPlanner: React.FC<Props> = ({
                     isSelected
                       ? 'bg-white/20 text-white'
                       : isTodayTab
-                      ? 'bg-amber-200 text-amber-900'
-                      : 'bg-slate-200 text-slate-700'
+                        ? 'bg-amber-200 text-amber-900'
+                        : 'bg-slate-200 text-slate-700'
                   }`}
                 >
                   {count}
                 </span>
-                {isTodayTab && !isSelected && (
-                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                )}
+                {isTodayTab && !isSelected && <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>}
               </button>
             );
           })}
@@ -232,8 +222,8 @@ export const VisitsPlanner: React.FC<Props> = ({
                   isCompleted
                     ? 'border-emerald-200 bg-emerald-50/10'
                     : isInProgress
-                    ? 'border-blue-200 bg-blue-50/10'
-                    : 'border-slate-200/80 hover:border-indigo-300'
+                      ? 'border-blue-200 bg-blue-50/10'
+                      : 'border-slate-200/80 hover:border-indigo-300'
                 }`}
               >
                 {/* Header */}

@@ -10,12 +10,7 @@ import {
   FolderKanban,
   CheckCircle2,
 } from 'lucide-react';
-import {
-  WorkTask,
-  WorkProject,
-  TeamMember,
-  TaskPriority,
-} from '../../types/workos';
+import { WorkTask, WorkProject, TeamMember, TaskPriority } from '../../types/workos';
 
 interface WorkOSPrioritiesTabProps {
   tasks: WorkTask[];
@@ -115,9 +110,7 @@ export const WorkOSPrioritiesTab: React.FC<WorkOSPrioritiesTabProps> = ({
             ))}
 
             {quadrants.q1.length === 0 && (
-              <div className="text-center py-8 text-rose-300 text-xs font-medium">
-                لا توجد مهام حرجة في هذا المربع.
-              </div>
+              <div className="text-center py-8 text-rose-300 text-xs font-medium">لا توجد مهام حرجة في هذا المربع.</div>
             )}
           </div>
         </div>
@@ -163,9 +156,7 @@ export const WorkOSPrioritiesTab: React.FC<WorkOSPrioritiesTabProps> = ({
             ))}
 
             {quadrants.q2.length === 0 && (
-              <div className="text-center py-8 text-indigo-300 text-xs font-medium">
-                لا توجد مهام في هذا المربع.
-              </div>
+              <div className="text-center py-8 text-indigo-300 text-xs font-medium">لا توجد مهام في هذا المربع.</div>
             )}
           </div>
         </div>
@@ -211,9 +202,7 @@ export const WorkOSPrioritiesTab: React.FC<WorkOSPrioritiesTabProps> = ({
             ))}
 
             {quadrants.q3.length === 0 && (
-              <div className="text-center py-8 text-amber-300 text-xs font-medium">
-                لا توجد مهام في هذا المربع.
-              </div>
+              <div className="text-center py-8 text-amber-300 text-xs font-medium">لا توجد مهام في هذا المربع.</div>
             )}
           </div>
         </div>
@@ -259,9 +248,7 @@ export const WorkOSPrioritiesTab: React.FC<WorkOSPrioritiesTabProps> = ({
             ))}
 
             {quadrants.q4.length === 0 && (
-              <div className="text-center py-8 text-slate-300 text-xs font-medium">
-                لا توجد مهام في هذا المربع.
-              </div>
+              <div className="text-center py-8 text-slate-300 text-xs font-medium">لا توجد مهام في هذا المربع.</div>
             )}
           </div>
         </div>

@@ -50,12 +50,14 @@ export const UniversalDataExchangeModal: React.FC<UniversalDataExchangeModalProp
   jsonSubtitle = 'حفظ نسخة أصلية من كافة البيانات',
   extraExportButtons,
 }) => {
-  if (!isOpen) return null;
-
+  // الخطافات تُنادى دائماً قبل أي return شرطي (rules-of-hooks) — كان `if (!isOpen) return null`
+  // قبل useState/useRef وهو خلل ترتيب خطافات حقيقي عند أول فتح للنافذة.
   const [isLoading, setIsLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  if (!isOpen) return null;
 
   const colorStyles = {
     teal: {
@@ -140,7 +142,9 @@ export const UniversalDataExchangeModal: React.FC<UniversalDataExchangeModalProp
         setStatusMessage(null);
       }
     } catch (err: unknown) {
-      setErrorMessage(`حدث خطأ أثناء قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'خطأ غير معروف'}`);
+      setErrorMessage(
+        `حدث خطأ أثناء قراءة الملف: ${(err instanceof Error ? err.message : String(err)) || 'خطأ غير معروف'}`
+      );
       setStatusMessage(null);
     } finally {
       setIsLoading(false);
@@ -166,7 +170,10 @@ export const UniversalDataExchangeModal: React.FC<UniversalDataExchangeModalProp
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs overflow-y-auto" dir="rtl">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs overflow-y-auto"
+      dir="rtl"
+    >
       <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xl max-w-xl w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8 text-right">
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-800/60">
@@ -175,7 +182,9 @@ export const UniversalDataExchangeModal: React.FC<UniversalDataExchangeModalProp
               <Icon className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-black text-slate-900 dark:text-slate-100">استيراد وتصدير بيانات {moduleTitle}</h3>
+              <h3 className="text-base font-black text-slate-900 dark:text-slate-100">
+                استيراد وتصدير بيانات {moduleTitle}
+              </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{moduleSubtitle}</p>
             </div>
           </div>
@@ -223,10 +232,14 @@ export const UniversalDataExchangeModal: React.FC<UniversalDataExchangeModalProp
             </div>
 
             {/* Template Notice Banner */}
-            <div className={`p-3 rounded-xl border flex items-center justify-between gap-3 text-xs ${colorStyles.bannerBg}`}>
+            <div
+              className={`p-3 rounded-xl border flex items-center justify-between gap-3 text-xs ${colorStyles.bannerBg}`}
+            >
               <div className="flex items-center gap-2">
                 <FileSpreadsheet className={`w-4 h-4 ${colorStyles.textAccent} shrink-0`} />
-                <span className="font-medium">نوفر لك نموذج إكسل جاهز بالأعمدة والبيانات التوضيحية لتعبئته مباشرة:</span>
+                <span className="font-medium">
+                  نوفر لك نموذج إكسل جاهز بالأعمدة والبيانات التوضيحية لتعبئته مباشرة:
+                </span>
               </div>
               <button
                 type="button"
@@ -262,7 +275,9 @@ export const UniversalDataExchangeModal: React.FC<UniversalDataExchangeModalProp
                     يتعرف النظام تلقائياً على أعمدة: {supportedColumnsText}
                   </p>
                   <div className="flex items-center justify-center gap-3">
-                    <label className={`cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl transition-all shadow-xs ${colorStyles.btnPrimary}`}>
+                    <label
+                      className={`cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl transition-all shadow-xs ${colorStyles.btnPrimary}`}
+                    >
                       <span>تحديد ملف Excel</span>
                       <input
                         ref={fileInputRef}

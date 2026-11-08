@@ -10,9 +10,7 @@ import {
   DEFAULT_ROUTINE_TAGS,
   DEFAULT_ROUTINE_TEMPLATES,
 } from '../../data/defaultRoutines';
-import {
-  dbStorage,
-} from '../../database/dbStorage';
+import { dbStorage } from '../../database/dbStorage';
 import {
   RoutineAuditLog,
   RoutineCategoryItem,
@@ -24,9 +22,7 @@ import {
   RoutineTagItem,
   RoutineTemplate,
 } from '../../types';
-import {
-  STORAGE_KEYS,
-} from './keys';
+import { STORAGE_KEYS } from './keys';
 
 export function loadRoutines(): RoutineRecord[] {
   try {
@@ -205,12 +201,7 @@ export function saveRoutineAuditLogs(logs: RoutineAuditLog[]): void {
   }
 }
 
-export function logRoutineAudit(
-  action: string,
-  routineName: string,
-  details: string,
-  routineId?: string
-): void {
+export function logRoutineAudit(action: string, routineName: string, details: string, routineId?: string): void {
   const current = loadRoutineAuditLogs();
   const newLog: RoutineAuditLog = {
     id: `LOG-RTN-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,

@@ -86,9 +86,7 @@ export const LinkModal: React.FC<LinkModalProps> = ({
     }
 
     const finalClassification =
-      showCustomClassification && customClassification.trim()
-        ? customClassification.trim()
-        : classification;
+      showCustomClassification && customClassification.trim() ? customClassification.trim() : classification;
 
     const record: LinkRecord = {
       id: initialData?.id || `LNK-${Date.now().toString(36).toUpperCase()}`,

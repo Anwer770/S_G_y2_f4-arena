@@ -102,10 +102,4 @@ export const DEFAULT_CATEGORIES: string[] = [
   'أخرى',
 ];
 
-export const DEFAULT_STATUSES: string[] = [
-  'تم التنفيذ',
-  'قيد التنفيذ',
-  'تم ترحيل',
-  'ملغي',
-  'أخرى',
-];
+export const DEFAULT_STATUSES: string[] = ['تم التنفيذ', 'قيد التنفيذ', 'تم ترحيل', 'ملغي', 'أخرى'];

@@ -1,11 +1,5 @@
 import * as XLSX from 'xlsx';
-import {
-  DoctorFilterState,
-  DoctorRecord,
-  DoctorSignificance,
-  DoctorVisitLog,
-  DoctorVisitStatus,
-} from '../types';
+import { DoctorFilterState, DoctorRecord, DoctorSignificance, DoctorVisitLog, DoctorVisitStatus } from '../types';
 import { ImportReport, autoKey, IMPORT_FIDELITY_BANNER } from './importFidelity';
 import { assertFileSize, readFirstSheetSafe } from './xlsxSafe';
 
@@ -68,10 +62,7 @@ export interface DoctorDashboardStats {
   }[];
 }
 
-export function calculateDoctorStats(
-  doctors: DoctorRecord[],
-  visits: DoctorVisitLog[] = []
-): DoctorDashboardStats {
+export function calculateDoctorStats(doctors: DoctorRecord[], visits: DoctorVisitLog[] = []): DoctorDashboardStats {
   let completedCount = 0;
   let inProgressCount = 0;
   let plannedCount = 0;
@@ -95,10 +86,7 @@ export function calculateDoctorStats(
     مرحل: 0,
     متابعة: 0,
   };
-  const respMap: Record<
-    string,
-    { total: number; completed: number; inProgress: number; planned: number }
-  > = {};
+  const respMap: Record<string, { total: number; completed: number; inProgress: number; planned: number }> = {};
 
   doctors.forEach((d) => {
     // Status counts
@@ -309,16 +297,16 @@ export function findDoctorDuplicates(
 // ============================================================================
 export function exportDoctorsToExcel(doctors: DoctorRecord[], fileName?: string): void {
   const exportData = doctors.map((d, index) => ({
-    'م': index + 1,
-    'المعرف': d.id,
+    م: index + 1,
+    المعرف: d.id,
     'اسم الطبيب / المركز': d.name,
-    'المصدر': d.source || 'الأطباء',
-    'التخصص': d.specialty || '',
+    المصدر: d.source || 'الأطباء',
+    التخصص: d.specialty || '',
     'العيادة / المستشفى': d.clinicName || '',
-    'المنطقة': d.region,
-    'المسار': d.route,
-    'الأهمية': d.significance,
-    'المسؤول': d.responsible,
+    المنطقة: d.region,
+    المسار: d.route,
+    الأهمية: d.significance,
+    المسؤول: d.responsible,
     'وصف المهمة': d.taskDesc || '',
     'تاريخ بدء المهمة': d.dateBegin || '',
     'تاريخ انتهاء المهمة': d.dateEnd || '',
@@ -327,7 +315,7 @@ export function exportDoctorsToExcel(doctors: DoctorRecord[], fileName?: string)
     'العنوان والموقع': d.address || '',
     'العينات المسلمة': d.samplesGiven || '',
     'نتيجة الزيارة': d.visitResult || '',
-    'ملاحظات': d.notes || '',
+    ملاحظات: d.notes || '',
   }));
 
   const worksheet = XLSX.utils.json_to_sheet(exportData);
@@ -400,16 +388,16 @@ export function exportDoctorsToCSV(doctors: DoctorRecord[], fileName?: string): 
 
 export function exportDoctorVisitsToExcel(visits: DoctorVisitLog[], fileName?: string): void {
   const exportData = visits.map((v, index) => ({
-    'م': index + 1,
+    م: index + 1,
     'معرف الزيارة': v.id,
     'اسم الطبيب': v.doctorName,
-    'التاريخ': v.date,
-    'اليوم': v.dayOfWeek,
+    التاريخ: v.date,
+    اليوم: v.dayOfWeek,
     'المندوب المنفذ': v.responsible,
     'حالة الزيارة': v.status,
     'العينات المقدمة': v.samplesGiven || '',
     'نتيجة الزيارة وتفاعل الطبيب': v.visitResult || '',
-    'الملاحظات': v.notes || '',
+    الملاحظات: v.notes || '',
     'موعد المتابعة القادمة': v.nextFollowUpDate || '',
   }));
 
@@ -473,10 +461,7 @@ export async function parseDoctorsExcelOrCSV(
             for (const key of Object.keys(row)) {
               const cleanKey = key.trim().toLowerCase();
               for (const alias of aliases) {
-                if (
-                  cleanKey === alias.toLowerCase() ||
-                  cleanKey.includes(alias.toLowerCase())
-                ) {
+                if (cleanKey === alias.toLowerCase() || cleanKey.includes(alias.toLowerCase())) {
                   const val = row[key];
                   return val !== undefined && val !== null ? String(val).trim() : '';
                 }
@@ -527,20 +512,21 @@ export async function parseDoctorsExcelOrCSV(
           let significance: DoctorSignificance = '';
           if (significanceRaw.includes('A') || significanceRaw === 'أ') significance = 'A';
           else if (significanceRaw.includes('C') || significanceRaw === 'ج') significance = 'C';
-          else if (significanceRaw.includes('√') || significanceRaw.includes('v') || significanceRaw.includes('صح')) significance = '√';
+          else if (significanceRaw.includes('√') || significanceRaw.includes('v') || significanceRaw.includes('صح'))
+            significance = '√';
 
           // Normalize status (فارغ ⇒ '' لا 'مخطط')
           let status: DoctorVisitStatus = '';
-          if (statusRaw.includes('مكتمل') || statusRaw.includes('منجز') || statusRaw.includes('completed')) status = 'مكتمل';
+          if (statusRaw.includes('مكتمل') || statusRaw.includes('منجز') || statusRaw.includes('completed'))
+            status = 'مكتمل';
           else if (statusRaw.includes('تنفيذ') || statusRaw.includes('progress')) status = 'قيد تنفيذ';
           else if (statusRaw.includes('متابعة') || statusRaw.includes('follow')) status = 'متابعة';
-          else if (statusRaw.includes('مرحل') || statusRaw.includes('مؤجل') || statusRaw.includes('postponed')) status = 'مرحل';
+          else if (statusRaw.includes('مرحل') || statusRaw.includes('مؤجل') || statusRaw.includes('postponed'))
+            status = 'مرحل';
           else if (statusRaw.includes('ملغي') || statusRaw.includes('cancel')) status = 'ملغي';
 
           // Duplicate check
-          const isDup = existingDoctors.some(
-            (e) => e.name.trim().toLowerCase() === name.trim().toLowerCase()
-          );
+          const isDup = existingDoctors.some((e) => e.name.trim().toLowerCase() === name.trim().toLowerCase());
           if (isDup) {
             duplicateCount++;
           }

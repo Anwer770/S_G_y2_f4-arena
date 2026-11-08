@@ -58,7 +58,10 @@ export const SubMenuDrawer: React.FC<Props> = ({ activeTab, isSidebarCollapsed, 
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto scrollbar-thin py-2 px-2 space-y-1" aria-label={`أقسام ${definition.title}`}>
+      <nav
+        className="flex-1 overflow-y-auto scrollbar-thin py-2 px-2 space-y-1"
+        aria-label={`أقسام ${definition.title}`}
+      >
         {definition.items.map((item) => {
           const isActive = activeSub === item.id;
           return (
@@ -74,7 +77,9 @@ export const SubMenuDrawer: React.FC<Props> = ({ activeTab, isSidebarCollapsed, 
                   : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/70 font-medium'
               }`}
             >
-              <ChevronRight className={`w-3 h-3 shrink-0 ${isActive ? 'text-teal-600' : 'text-slate-300 dark:text-slate-600'}`} />
+              <ChevronRight
+                className={`w-3 h-3 shrink-0 ${isActive ? 'text-teal-600' : 'text-slate-300 dark:text-slate-600'}`}
+              />
               <span className="truncate">{item.label}</span>
             </button>
           );

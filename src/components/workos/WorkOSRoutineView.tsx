@@ -44,7 +44,9 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
   const [newTimeSlot, setNewTimeSlot] = useState('');
   const [newTitle, setNewTitle] = useState('');
   const [newActivity, setNewActivity] = useState('');
-  const [newCategory, setNewCategory] = useState<'work' | 'planning' | 'health' | 'learning' | 'review' | 'personal'>('work');
+  const [newCategory, setNewCategory] = useState<'work' | 'planning' | 'health' | 'learning' | 'review' | 'personal'>(
+    'work'
+  );
 
   const handleCreateBlock = (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,7 +125,10 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
       {activeTab === 'routine' && (
         <div className="space-y-4">
           {isAddingBlock && (
-            <form onSubmit={handleCreateBlock} className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-teal-300 shadow-sm space-y-3">
+            <form
+              onSubmit={handleCreateBlock}
+              className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-teal-300 shadow-sm space-y-3"
+            >
               <h4 className="font-bold text-xs text-teal-900">إضافة فترة روتين جديدة للجدول اليومي</h4>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <input
@@ -187,8 +192,8 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
                   block.status === 'completed'
                     ? 'border-emerald-200 bg-emerald-50/20'
                     : block.status === 'postponed'
-                    ? 'border-amber-200 bg-amber-50/20'
-                    : 'border-slate-200'
+                      ? 'border-amber-200 bg-amber-50/20'
+                      : 'border-slate-200'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -197,9 +202,13 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-900 dark:text-slate-100 text-xs">{block.title}</h4>
-                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 leading-relaxed">{block.plannedActivity}</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 leading-relaxed">
+                      {block.plannedActivity}
+                    </p>
                     {block.notes && (
-                      <div className="mt-1 text-xs text-teal-700 dark:text-teal-300 font-medium">ملاحظة: {block.notes}</div>
+                      <div className="mt-1 text-xs text-teal-700 dark:text-teal-300 font-medium">
+                        ملاحظة: {block.notes}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -243,7 +252,9 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
       {activeTab === 'review' && (
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs p-6 space-y-6">
           <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
-            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">مراجعة نهاية اليوم والمساءلة الذاتية (Daily Review)</h3>
+            <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
+              مراجعة نهاية اليوم والمساءلة الذاتية (Daily Review)
+            </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               جلسة تقييم هادئة في ختام ساعات العمل: قياس الإنجاز، توثيق الدروس المستفادة، وتجهيز خطة الغد.
             </p>
@@ -252,7 +263,9 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
           <form onSubmit={handleSaveReview} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">ماذا خططت لليوم؟</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
+                  ماذا خططت لليوم؟
+                </label>
                 <textarea
                   rows={3}
                   value={plannedSummary}
@@ -264,7 +277,9 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-emerald-700 dark:text-emerald-300 mb-1">ماذا أنجزت بالفعل؟ (النجاحات)</label>
+                <label className="block text-xs font-bold text-emerald-700 dark:text-emerald-300 mb-1">
+                  ماذا أنجزت بالفعل؟ (النجاحات)
+                </label>
                 <textarea
                   rows={3}
                   value={achievedSummary}
@@ -276,7 +291,9 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-rose-700 dark:text-rose-300 mb-1">ماذا لم تنجز؟ ولماذا؟ (العقبات)</label>
+                <label className="block text-xs font-bold text-rose-700 dark:text-rose-300 mb-1">
+                  ماذا لم تنجز؟ ولماذا؟ (العقبات)
+                </label>
                 <textarea
                   rows={3}
                   value={blockersReason}
@@ -287,7 +304,9 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-indigo-700 dark:text-indigo-300 mb-1">ماذا ينتقل كأولوية لصباح الغد؟</label>
+                <label className="block text-xs font-bold text-indigo-700 dark:text-indigo-300 mb-1">
+                  ماذا ينتقل كأولوية لصباح الغد؟
+                </label>
                 <textarea
                   rows={3}
                   value={carryOverTomorrow}
@@ -303,16 +322,9 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
               <span className="text-xs font-bold text-slate-700 dark:text-slate-200">تقييمك لإنتاجية اليوم:</span>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setRating(star)}
-                    className="p-1 cursor-pointer"
-                  >
+                  <button key={star} type="button" onClick={() => setRating(star)} className="p-1 cursor-pointer">
                     <Star
-                      className={`w-5 h-5 ${
-                        star <= rating ? 'text-amber-400 fill-amber-400' : 'text-slate-300'
-                      }`}
+                      className={`w-5 h-5 ${star <= rating ? 'text-amber-400 fill-amber-400' : 'text-slate-300'}`}
                     />
                   </button>
                 ))}

@@ -1,16 +1,6 @@
 import React, { useState } from 'react';
 import { LinkRecord } from '../../types/linksLibrary';
-import {
-  ExternalLink,
-  Copy,
-  Check,
-  Star,
-  Edit2,
-  Trash2,
-  CopyPlus,
-  ArrowUpDown,
-  SearchX,
-} from 'lucide-react';
+import { ExternalLink, Copy, Check, Star, Edit2, Trash2, CopyPlus, ArrowUpDown, SearchX } from 'lucide-react';
 import { formatValidUrl } from '../../utils/linksExport';
 
 interface LinksTableViewProps {
@@ -53,8 +43,8 @@ export const LinksTableView: React.FC<LinksTableViewProps> = ({
   };
 
   const sortedLinks = [...links].sort((a, b) => {
-    let valA = a[sortField] || '';
-    let valB = b[sortField] || '';
+    const valA = a[sortField] || '';
+    const valB = b[sortField] || '';
 
     if (typeof valA === 'number' && typeof valB === 'number') {
       return sortAsc ? valA - valB : valB - valA;
@@ -136,10 +126,7 @@ export const LinksTableView: React.FC<LinksTableViewProps> = ({
               const isCopied = copiedId === link.id;
 
               return (
-                <tr
-                  key={link.id}
-                  className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors group"
-                >
+                <tr key={link.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors group">
                   {/* Row number & favorite */}
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center gap-1">
@@ -183,7 +170,9 @@ export const LinksTableView: React.FC<LinksTableViewProps> = ({
                   {/* Category & Type */}
                   <td className="py-3 px-4">
                     <div className="flex flex-col gap-1">
-                      <span className="text-slate-700 dark:text-slate-200 font-medium">{link.category || 'غير محدد'}</span>
+                      <span className="text-slate-700 dark:text-slate-200 font-medium">
+                        {link.category || 'غير محدد'}
+                      </span>
                       <span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded w-fit">
                         {link.type || 'موقع'}
                       </span>
@@ -192,9 +181,7 @@ export const LinksTableView: React.FC<LinksTableViewProps> = ({
 
                   {/* Importance */}
                   <td className="py-3 px-4 text-center">
-                    <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-black border ${impClass}`}
-                    >
+                    <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-black border ${impClass}`}>
                       {link.importance || 'C'}
                     </span>
                   </td>

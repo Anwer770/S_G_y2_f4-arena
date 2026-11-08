@@ -35,7 +35,8 @@ const statusTone = (status: string) => {
   if (status === 'مكتمل') return 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300';
   if (status === 'قيد تنفيذ') return 'bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300';
   if (status === 'ملغي') return 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400';
-  if (status === 'مرحل' || status === 'متابعة') return 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300';
+  if (status === 'مرحل' || status === 'متابعة')
+    return 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300';
   return 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300';
 };
 
@@ -104,8 +105,9 @@ export const WorkOSVisitsView: React.FC = () => {
       <div className="rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50/70 dark:bg-sky-950/30 p-3.5 flex items-start gap-2.5">
         <Eye className="w-4 h-4 text-sky-700 dark:text-sky-300 mt-0.5 shrink-0" />
         <p className="text-xs text-sky-900 dark:text-sky-200 leading-5">
-          <strong>عرض للقراءة فقط.</strong> الزيارات ملكُ وحدة «العملاء والزيارات» و«الأطباء والزيارات» — إدارة العمل تعرضها
-          للتنظيم والربط فقط. أي إضافة أو تعديل أو حذف يجري من الوحدة الأصلية، ولا تُنسخ أي زيارة إلى مخزن إدارة العمل.
+          <strong>عرض للقراءة فقط.</strong> الزيارات ملكُ وحدة «العملاء والزيارات» و«الأطباء والزيارات» — إدارة العمل
+          تعرضها للتنظيم والربط فقط. أي إضافة أو تعديل أو حذف يجري من الوحدة الأصلية، ولا تُنسخ أي زيارة إلى مخزن إدارة
+          العمل.
         </p>
       </div>
 
@@ -202,13 +204,20 @@ export const WorkOSVisitsView: React.FC = () => {
             {shown.map((v) => {
               const isPast = v.date < todayStr;
               return (
-                <div key={v.key} className="py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+                <div
+                  key={v.key}
+                  className="py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1"
+                >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xs font-bold text-slate-800 dark:text-slate-100">{v.party || '—'}</span>
-                      <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md ${statusTone(v.status)}`}>{v.status}</span>
+                      <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md ${statusTone(v.status)}`}>
+                        {v.status}
+                      </span>
                       {v.followUp && (
-                        <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">متابعة: {v.followUp}</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
+                          متابعة: {v.followUp}
+                        </span>
                       )}
                     </div>
                     {v.notes && <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">{v.notes}</p>}

@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import {
-  LinkRecord,
-  LinksKPIs,
-  LinkClassification,
-  LinkCategory,
-} from '../../types/linksLibrary';
+import { LinkRecord, LinksKPIs, LinkClassification, LinkCategory } from '../../types/linksLibrary';
 import {
   loadLinksRecords,
   saveLinksRecords,
@@ -15,12 +10,7 @@ import {
   calculateLinksKPIs,
   resetLinksToDefault,
 } from '../../utils/storage';
-import {
-  filterLinks,
-  exportLinksToCSV,
-  exportLinksToExcel,
-  exportLinksToJSON,
-} from '../../utils/linksExport';
+import { filterLinks, exportLinksToCSV, exportLinksToExcel, exportLinksToJSON } from '../../utils/linksExport';
 import { UniversalDataExchangeModal } from '../common/UniversalDataExchangeModal';
 import { downloadLinksExcelTemplate } from '../../utils/universalDataTemplates';
 import { parseLinksExcelFile } from '../../utils/universalImporters';
@@ -182,17 +172,13 @@ export const LinksLibraryModule: React.FC = () => {
   };
 
   const handleToggleFavorite = (id: string) => {
-    const updated = links.map((l) =>
-      l.id === id ? { ...l, isFavorite: !l.isFavorite } : l
-    );
+    const updated = links.map((l) => (l.id === id ? { ...l, isFavorite: !l.isFavorite } : l));
     setLinks(updated);
     saveLinksRecords(updated);
   };
 
   const handleVisit = (id: string, _url: string) => {
-    const updated = links.map((l) =>
-      l.id === id ? { ...l, visitCount: (l.visitCount || 0) + 1 } : l
-    );
+    const updated = links.map((l) => (l.id === id ? { ...l, visitCount: (l.visitCount || 0) + 1 } : l));
     setLinks(updated);
     saveLinksRecords(updated);
   };
@@ -208,11 +194,7 @@ export const LinksLibraryModule: React.FC = () => {
   };
 
   const handleResetToDefault = () => {
-    if (
-      window.confirm(
-        'هل ترغب في استعادة القائمة الافتراضية الشاملة لمكتبة الروابط (+50 رابط مصنف وموثق)؟'
-      )
-    ) {
+    if (window.confirm('هل ترغب في استعادة القائمة الافتراضية الشاملة لمكتبة الروابط (+50 رابط مصنف وموثق)؟')) {
       resetLinksToDefault();
       setLinks(loadLinksRecords());
       showToast('تمت استعادة القائمة الافتراضية بنجاح (+50 رابط)');
@@ -232,9 +214,7 @@ export const LinksLibraryModule: React.FC = () => {
         if (Array.isArray(importedLinks) && importedLinks.length > 0) {
           const merged = [...importedLinks, ...links];
           // Deduplicate by URL or ID
-          const unique = Array.from(
-            new Map(merged.map((item) => [item.url, item])).values()
-          );
+          const unique = Array.from(new Map(merged.map((item) => [item.url, item])).values());
           setLinks(unique);
           saveLinksRecords(unique);
           showToast(`تم استيراد ${importedLinks.length} رابط بنجاح`);
@@ -267,9 +247,7 @@ export const LinksLibraryModule: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">
-                مكتبة الروابط
-              </h1>
+              <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">مكتبة الروابط</h1>
               <span className="bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300 font-black text-xs px-2.5 py-0.5 rounded-full border border-teal-200/50 dark:border-teal-800/50">
                 {links.length} رابط
               </span>
@@ -324,13 +302,7 @@ export const LinksLibraryModule: React.FC = () => {
           </button>
 
           {/* Import JSON */}
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImportJSON}
-            accept=".json"
-            className="hidden"
-          />
+          <input type="file" ref={fileInputRef} onChange={handleImportJSON} accept=".json" className="hidden" />
           <button
             onClick={() => fileInputRef.current?.click()}
             title="استيراد روابط من ملف JSON"
@@ -593,11 +565,7 @@ export const LinksLibraryModule: React.FC = () => {
 
       {/* Main Content Area */}
       {viewMode === 'print' ? (
-        <LinksPrintReport
-          links={filteredLinks}
-          kpis={kpis}
-          onBack={() => setViewMode('grid')}
-        />
+        <LinksPrintReport links={filteredLinks} kpis={kpis} onBack={() => setViewMode('grid')} />
       ) : viewMode === 'table' ? (
         <LinksTableView
           links={filteredLinks}

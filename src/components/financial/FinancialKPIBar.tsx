@@ -20,7 +20,9 @@ interface Props {
 export const FinancialKPIBar: React.FC<Props> = ({ summary, count, periodLabel }) => (
   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" data-financial-kpi>
     <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between hover:border-emerald-300 dark:hover:border-emerald-700 transition-all">
-      <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">وارد الفترة</div>
+      <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">
+        وارد الفترة
+      </div>
       <div className="mt-2 text-2xl sm:text-3xl font-black font-mono text-emerald-600 dark:text-emerald-400 tracking-tight text-right leading-none">
         {summary.totalIncomeYER.toLocaleString()}
       </div>
@@ -33,7 +35,9 @@ export const FinancialKPIBar: React.FC<Props> = ({ summary, count, periodLabel }
     </div>
 
     <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between hover:border-rose-300 dark:hover:border-rose-700 transition-all">
-      <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">مصروف الفترة</div>
+      <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">
+        مصروف الفترة
+      </div>
       <div className="mt-2 text-2xl sm:text-3xl font-black font-mono text-[#e11d48] dark:text-[#f43f5e] tracking-tight text-right leading-none">
         {summary.totalExpenseYER.toLocaleString()}
       </div>
@@ -41,7 +45,9 @@ export const FinancialKPIBar: React.FC<Props> = ({ summary, count, periodLabel }
     </div>
 
     <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between hover:border-teal-300 dark:hover:border-teal-700 transition-all">
-      <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">صافي الفترة</div>
+      <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">
+        صافي الفترة
+      </div>
       <div
         className={`mt-2 text-2xl sm:text-3xl font-black font-mono tracking-tight text-right leading-none ${
           summary.netBalanceYER >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
@@ -53,7 +59,9 @@ export const FinancialKPIBar: React.FC<Props> = ({ summary, count, periodLabel }
     </div>
 
     <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col justify-between hover:border-teal-300 dark:hover:border-teal-700 transition-all">
-      <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">عدد الحركات</div>
+      <div className="text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400 text-right">
+        عدد الحركات
+      </div>
       <div className="mt-2 text-2xl sm:text-3xl font-black font-mono text-teal-600 dark:text-teal-400 tracking-tight text-right leading-none">
         {count}
       </div>

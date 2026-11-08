@@ -1,15 +1,9 @@
 /**
  * مخزن وحدة «system» — مُستخرج من storage.ts (R26).
  */
-import {
-  dbStorage,
-} from '../../database/dbStorage';
-import {
-  AuditLog,
-} from '../../types';
-import {
-  STORAGE_KEYS,
-} from './keys';
+import { dbStorage } from '../../database/dbStorage';
+import { AuditLog } from '../../types';
+import { STORAGE_KEYS } from './keys';
 
 export function loadSystemAuditLogs(): AuditLog[] {
   try {
@@ -41,12 +35,7 @@ export function saveSystemAuditLogs(logs: AuditLog[]): void {
   }
 }
 
-export function logSystemAudit(
-  module: AuditLog['module'],
-  action: string,
-  details: string,
-  recordId?: string
-): void {
+export function logSystemAudit(module: AuditLog['module'], action: string, details: string, recordId?: string): void {
   const current = loadSystemAuditLogs();
   const newLog: AuditLog = {
     id: `LOG-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,

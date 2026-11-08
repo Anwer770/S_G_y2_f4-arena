@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Flame,
-  Award,
-  TrendingUp,
-  Calendar,
-  Filter,
-  CheckCircle2,
-  Sparkles,
-  ChevronLeft,
-  Info,
-} from 'lucide-react';
+import { Flame, Award, TrendingUp, Calendar, Filter, CheckCircle2, Sparkles, ChevronLeft, Info } from 'lucide-react';
 import { HabitStreakItem, RoutineRecord } from '../../types/routines';
 
 interface HabitsStreakViewProps {
@@ -133,7 +123,9 @@ export const HabitsStreakView: React.FC<HabitsStreakViewProps> = ({
                       </span>
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                      معدل الالتزام: <span className="font-bold text-emerald-600 dark:text-emerald-400">{habit.consistencyRate}%</span> • أطول مسار مستمر: {habit.longestStreak} يوم
+                      معدل الالتزام:{' '}
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400">{habit.consistencyRate}%</span>{' '}
+                      • أطول مسار مستمر: {habit.longestStreak} يوم
                     </p>
                   </div>
                 </div>

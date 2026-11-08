@@ -1,16 +1,6 @@
 import React from 'react';
 import { MovementRecord } from '../types';
-import {
-  X,
-  Printer,
-  Package,
-  Calendar,
-  User,
-  ArrowDownLeft,
-  ArrowUpRight,
-  FileText,
-  CheckCircle,
-} from 'lucide-react';
+import { X, Printer, Package, Calendar, User, ArrowDownLeft, ArrowUpRight, FileText, CheckCircle } from 'lucide-react';
 import {
   calculateArabicDay,
   formatNumberLatin,
@@ -25,11 +15,7 @@ interface MovementDetailsModalProps {
   onEdit: (record: MovementRecord) => void;
 }
 
-export const MovementDetailsModal: React.FC<MovementDetailsModalProps> = ({
-  record,
-  onClose,
-  onEdit,
-}) => {
+export const MovementDetailsModal: React.FC<MovementDetailsModalProps> = ({ record, onClose, onEdit }) => {
   if (!record) return null;
 
   const moveStyle = getMovementTypeStyle(record.movementType);
@@ -108,16 +94,16 @@ export const MovementDetailsModal: React.FC<MovementDetailsModalProps> = ({
               <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">
                 {record.movementType === 'توريد' ? 'سند توريد مخزني (IN)' : 'سند صرف مخزني (OUT)'}
               </h2>
-              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">دفتر صرف وتوريد الأصناف - مستحضرات التجميل والعناية</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+                دفتر صرف وتوريد الأصناف - مستحضرات التجميل والعناية
+              </p>
             </div>
 
             <div className="text-left font-mono space-y-0.5">
               <div className="text-sm font-black text-slate-900 dark:text-slate-100 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg inline-block border border-slate-300 dark:border-slate-600">
                 {record.subId}
               </div>
-              {record.mainId && (
-                <div className="text-xs text-slate-400 dark:text-slate-500">Main: {record.mainId}</div>
-              )}
+              {record.mainId && <div className="text-xs text-slate-400 dark:text-slate-500">Main: {record.mainId}</div>}
             </div>
           </div>
 
@@ -136,14 +122,18 @@ export const MovementDetailsModal: React.FC<MovementDetailsModalProps> = ({
 
             <div>
               <span className="text-xs text-slate-400 dark:text-slate-500 block font-semibold">الفئة:</span>
-              <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold border mt-0.5 ${getCategoryBadgeStyle(record.category)}`}>
+              <span
+                className={`inline-block px-2 py-0.5 rounded text-xs font-bold border mt-0.5 ${getCategoryBadgeStyle(record.category)}`}
+              >
                 {record.category}
               </span>
             </div>
 
             <div>
               <span className="text-xs text-slate-400 dark:text-slate-500 block font-semibold">الحالة:</span>
-              <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium border mt-0.5 ${getStatusStyle(record.status)}`}>
+              <span
+                className={`inline-block px-2 py-0.5 rounded text-xs font-medium border mt-0.5 ${getStatusStyle(record.status)}`}
+              >
                 {record.status}
               </span>
             </div>
@@ -169,48 +159,51 @@ export const MovementDetailsModal: React.FC<MovementDetailsModalProps> = ({
             </span>
 
             <div className="w-full overflow-x-auto print:overflow-visible">
-            <table className="w-full text-right text-xs border border-slate-300 dark:border-slate-600 min-w-[440px] print:min-w-0">
-              <thead>
-                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 font-bold">
-                  <th className="py-2 px-3 w-12 text-center border-l border-slate-300 dark:border-slate-600">#</th>
-                  <th className="py-2 px-3 border-l border-slate-300 dark:border-slate-600">اسم الصنف والمستحضر</th>
-                  <th className="py-2 px-3 text-left w-32">الكمية المسلمة</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                {itemsEntries.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} className="py-6 text-center text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/60 font-medium">
-                      سند تاريخي مسجل بدون كميات رقمية بالملف الأصلي
-                    </td>
+              <table className="w-full text-right text-xs border border-slate-300 dark:border-slate-600 min-w-[440px] print:min-w-0">
+                <thead>
+                  <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 font-bold">
+                    <th className="py-2 px-3 w-12 text-center border-l border-slate-300 dark:border-slate-600">#</th>
+                    <th className="py-2 px-3 border-l border-slate-300 dark:border-slate-600">اسم الصنف والمستحضر</th>
+                    <th className="py-2 px-3 text-left w-32">الكمية المسلمة</th>
                   </tr>
-                ) : (
-                  itemsEntries.map(([name, qty], idx) => (
-                    <tr key={name} className="hover:bg-slate-50 dark:hover:bg-slate-800/60">
-                      <td className="py-2 px-3 text-center font-mono border-l border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
-                        {idx + 1}
-                      </td>
-                      <td className="py-2 px-3 font-bold text-slate-900 dark:text-slate-100 border-l border-slate-200 dark:border-slate-700">
-                        {name}
-                      </td>
-                      <td className="py-2 px-3 text-left font-mono font-bold text-slate-900 dark:text-slate-100">
-                        {formatNumberLatin(Number(qty))} حبة
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  {itemsEntries.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={3}
+                        className="py-6 text-center text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/60 font-medium"
+                      >
+                        سند تاريخي مسجل بدون كميات رقمية بالملف الأصلي
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-              <tfoot>
-                <tr className="bg-slate-100 dark:bg-slate-800 font-black text-slate-900 dark:text-slate-100 border-t-2 border-slate-300 dark:border-slate-600">
-                  <td colSpan={2} className="py-2 px-3 text-left border-l border-slate-300 dark:border-slate-600">
-                    الإجمالي الكلي للوحدات:
-                  </td>
-                  <td className="py-2 px-3 text-left font-mono text-blue-700 dark:text-blue-300 font-black">
-                    {formatNumberLatin(totalUnits)} وحدة
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
+                  ) : (
+                    itemsEntries.map(([name, qty], idx) => (
+                      <tr key={name} className="hover:bg-slate-50 dark:hover:bg-slate-800/60">
+                        <td className="py-2 px-3 text-center font-mono border-l border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
+                          {idx + 1}
+                        </td>
+                        <td className="py-2 px-3 font-bold text-slate-900 dark:text-slate-100 border-l border-slate-200 dark:border-slate-700">
+                          {name}
+                        </td>
+                        <td className="py-2 px-3 text-left font-mono font-bold text-slate-900 dark:text-slate-100">
+                          {formatNumberLatin(Number(qty))} حبة
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+                <tfoot>
+                  <tr className="bg-slate-100 dark:bg-slate-800 font-black text-slate-900 dark:text-slate-100 border-t-2 border-slate-300 dark:border-slate-600">
+                    <td colSpan={2} className="py-2 px-3 text-left border-l border-slate-300 dark:border-slate-600">
+                      الإجمالي الكلي للوحدات:
+                    </td>
+                    <td className="py-2 px-3 text-left font-mono text-blue-700 dark:text-blue-300 font-black">
+                      {formatNumberLatin(totalUnits)} وحدة
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
           </div>
 

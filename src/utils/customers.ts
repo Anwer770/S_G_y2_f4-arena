@@ -177,8 +177,7 @@ export function calculateCustomerStats(
   });
 
   const totalCustomers = customers.length;
-  const visitCompletionRate =
-    totalCustomers > 0 ? Math.round((completedVisitsCount / totalCustomers) * 100) : 0;
+  const visitCompletionRate = totalCustomers > 0 ? Math.round((completedVisitsCount / totalCustomers) * 100) : 0;
 
   // Region breakdown sorted
   const regionBreakdown = Object.entries(regionMap)
@@ -215,9 +214,7 @@ export function calculateCustomerStats(
     .slice(0, 10);
 
   // Top Balances
-  const topBalances = [...customers]
-    .sort((a, b) => b.balanceYER - a.balanceYER)
-    .slice(0, 10);
+  const topBalances = [...customers].sort((a, b) => b.balanceYER - a.balanceYER).slice(0, 10);
 
   return {
     totalCustomers,
@@ -247,10 +244,7 @@ export function calculateCustomerStats(
   };
 }
 
-export function filterCustomersList(
-  customers: Customer[],
-  filters: CustomerFilterState
-): Customer[] {
+export function filterCustomersList(customers: Customer[], filters: CustomerFilterState): Customer[] {
   return customers.filter((c) => {
     // Search query
     if (filters.search) {
@@ -321,10 +315,7 @@ export function filterCustomersList(
   });
 }
 
-export function generateNextCustomerId(
-  customers: Customer[],
-  source: CustomerSource
-): { id: string; subId: string } {
+export function generateNextCustomerId(customers: Customer[], source: CustomerSource): { id: string; subId: string } {
   let maxIdNum = 1000;
   customers.forEach((c) => {
     const match = c.id?.match(/CUST-(\d+)/i);

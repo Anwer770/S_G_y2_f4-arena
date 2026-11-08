@@ -9,17 +9,9 @@ import {
   DEFAULT_CUSTOMERS,
   DEFAULT_CUSTOMER_VISITS,
 } from '../../data/defaultCustomers';
-import {
-  dbStorage,
-} from '../../database/dbStorage';
-import {
-  Customer,
-  CustomerAuditLog,
-  CustomerVisitRecord,
-} from '../../types';
-import {
-  STORAGE_KEYS,
-} from './keys';
+import { dbStorage } from '../../database/dbStorage';
+import { Customer, CustomerAuditLog, CustomerVisitRecord } from '../../types';
+import { STORAGE_KEYS } from './keys';
 
 export function loadCustomers(): Customer[] {
   try {
@@ -177,11 +169,7 @@ export function saveCustomerAuditLogs(logs: CustomerAuditLog[]): void {
   }
 }
 
-export function logCustomerAudit(
-  action: CustomerAuditLog['action'],
-  customerName: string,
-  details: string
-): void {
+export function logCustomerAudit(action: CustomerAuditLog['action'], customerName: string, details: string): void {
   const current = loadCustomerAuditLogs();
   const newLog: CustomerAuditLog = {
     id: `LOG-C-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,

@@ -17,12 +17,7 @@ import {
   AlertCircle,
   Award,
 } from 'lucide-react';
-import {
-  RoutineRecord,
-  RoutineOccurrence,
-  RoutineExecution,
-  RoutineSession,
-} from '../../types/routines';
+import { RoutineRecord, RoutineOccurrence, RoutineExecution, RoutineSession } from '../../types/routines';
 import { formatTimerSeconds } from '../../utils/routines';
 
 interface RoutineTimerModalProps {
@@ -40,7 +35,7 @@ export const RoutineTimerModal: React.FC<RoutineTimerModalProps> = ({
   occurrence,
   onComplete,
 }) => {
-  const totalDurationSeconds = ((routine?.duration) || 30) * 60;
+  const totalDurationSeconds = (routine?.duration || 30) * 60;
   const [secondsRemaining, setSecondsRemaining] = useState<number>(totalDurationSeconds);
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(true);
@@ -133,7 +128,9 @@ export const RoutineTimerModal: React.FC<RoutineTimerModalProps> = ({
       // Play subtle chime sound effect via Web Audio API if enabled
       if (nextVal && soundEnabled) {
         try {
-          const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+          const ctx = new (
+            window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+          )();
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'sine';
@@ -367,13 +364,17 @@ export const RoutineTimerModal: React.FC<RoutineTimerModalProps> = ({
                         isChecked
                           ? 'bg-emerald-50/70 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
                           : isCurrent
-                          ? 'bg-white dark:bg-slate-800 border-indigo-400 dark:border-indigo-500 ring-2 ring-indigo-400/20'
-                          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                            ? 'bg-white dark:bg-slate-800 border-indigo-400 dark:border-indigo-500 ring-2 ring-indigo-400/20'
+                            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="text-emerald-600 dark:text-emerald-400">
-                          {isChecked ? <CheckCircle2 size={20} className="fill-emerald-500 text-white" /> : <Square size={20} />}
+                          {isChecked ? (
+                            <CheckCircle2 size={20} className="fill-emerald-500 text-white" />
+                          ) : (
+                            <Square size={20} />
+                          )}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
@@ -390,9 +391,7 @@ export const RoutineTimerModal: React.FC<RoutineTimerModalProps> = ({
                             )}
                           </div>
                           {st.description && (
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 mr-7">
-                              {st.description}
-                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 mr-7">{st.description}</p>
                           )}
                         </div>
                       </div>
@@ -413,11 +412,10 @@ export const RoutineTimerModal: React.FC<RoutineTimerModalProps> = ({
               <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-xl mx-auto flex items-center justify-center text-3xl shadow-inner">
                 <Award size={36} />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 dark:text-white">
-                رائع! تم استكمال جلسة الروتين بنجاح
-              </h3>
+              <h3 className="text-xl font-bold text-slate-800 dark:text-white">رائع! تم استكمال جلسة الروتين بنجاح</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                استغرقت {Math.max(1, Math.round(secondsElapsed / 60))} دقيقة، وأنجزت {completedSteps} من أصل {steps.length} خطوات.
+                استغرقت {Math.max(1, Math.round(secondsElapsed / 60))} دقيقة، وأنجزت {completedSteps} من أصل{' '}
+                {steps.length} خطوات.
               </p>
             </div>
 

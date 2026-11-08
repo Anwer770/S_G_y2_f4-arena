@@ -43,11 +43,7 @@ export interface StorageHealth {
 }
 
 function hasStorageManager(): boolean {
-  return (
-    typeof navigator !== 'undefined' &&
-    typeof navigator.storage !== 'undefined' &&
-    navigator.storage !== null
-  );
+  return typeof navigator !== 'undefined' && typeof navigator.storage !== 'undefined' && navigator.storage !== null;
 }
 
 /** طلب تخزين دائم — يُستدعى مرة عند الإقلاع ومرة بعد أول حفظ ناجح */

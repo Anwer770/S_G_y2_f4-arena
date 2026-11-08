@@ -148,7 +148,10 @@ export const GRADE_TONE_CLASSES: Record<GradeTone, { chip: string; dot: string; 
 /** يعيد التسميات النشطة مرتّبة — هذه هي التي تُغذّي القوائم المنسدلة. */
 export function activeLabels(state: LookupsState, kind: LookupKind): string[] {
   const list = kind === 'grades' ? state.grades : state[kind];
-  return [...list].filter((i) => i.active).sort((a, b) => a.order - b.order).map((i) => i.label);
+  return [...list]
+    .filter((i) => i.active)
+    .sort((a, b) => a.order - b.order)
+    .map((i) => i.label);
 }
 
 export function findGrade(state: LookupsState, label: string): GradeItem | undefined {

@@ -1,16 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Customer } from '../../types';
 import { parseCustomersExcelFile, downloadCustomersExcelTemplate } from '../../utils/excel';
-import {
-  X,
-  UploadCloud,
-  FileSpreadsheet,
-  AlertTriangle,
-  CheckCircle2,
-  Users,
-  Download,
-  Sparkles,
-} from 'lucide-react';
+import { X, UploadCloud, FileSpreadsheet, AlertTriangle, CheckCircle2, Users, Download, Sparkles } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -18,11 +9,7 @@ interface Props {
   onImport: (customers: Customer[]) => void;
 }
 
-export const ImportCustomersModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  onImport,
-}) => {
+export const ImportCustomersModal: React.FC<Props> = ({ isOpen, onClose, onImport }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -204,28 +191,28 @@ export const ImportCustomersModal: React.FC<Props> = ({
               {/* Sample preview table */}
               <div className="max-h-48 overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-2xs">
                 <div className="w-full overflow-x-auto print:overflow-visible">
-                <table className="w-full text-right border-collapse text-xs min-w-[600px] print:min-w-0">
-                  <thead className="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold">
-                    <tr>
-                      <th className="p-2">الاسم</th>
-                      <th className="p-2">المصدر</th>
-                      <th className="p-2">المنطقة</th>
-                      <th className="p-2">المسار</th>
-                      <th className="p-2">الرصيد YER</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
-                    {parsedData.customers.slice(0, 5).map((c, i) => (
-                      <tr key={i}>
-                        <td className="p-2 font-bold text-slate-800 dark:text-slate-200">{c.name}</td>
-                        <td className="p-2 text-amber-700 dark:text-amber-300 font-bold">{c.source}</td>
-                        <td className="p-2 text-slate-600 dark:text-slate-300">{c.region}</td>
-                        <td className="p-2 text-blue-700 dark:text-blue-300 font-bold">{c.route}</td>
-                        <td className="p-2 font-mono font-bold">{(c.balanceYER || 0).toLocaleString()} ريال</td>
+                  <table className="w-full text-right border-collapse text-xs min-w-[600px] print:min-w-0">
+                    <thead className="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold">
+                      <tr>
+                        <th className="p-2">الاسم</th>
+                        <th className="p-2">المصدر</th>
+                        <th className="p-2">المنطقة</th>
+                        <th className="p-2">المسار</th>
+                        <th className="p-2">الرصيد YER</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
+                      {parsedData.customers.slice(0, 5).map((c, i) => (
+                        <tr key={i}>
+                          <td className="p-2 font-bold text-slate-800 dark:text-slate-200">{c.name}</td>
+                          <td className="p-2 text-amber-700 dark:text-amber-300 font-bold">{c.source}</td>
+                          <td className="p-2 text-slate-600 dark:text-slate-300">{c.region}</td>
+                          <td className="p-2 text-blue-700 dark:text-blue-300 font-bold">{c.route}</td>
+                          <td className="p-2 font-mono font-bold">{(c.balanceYER || 0).toLocaleString()} ريال</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

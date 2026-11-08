@@ -70,7 +70,9 @@ const subtle = (): SubtleCrypto => {
 };
 
 async function deriveKey(pin: string, salt: Uint8Array): Promise<CryptoKey> {
-  const base = await subtle().importKey('raw', encodeText(pin) as unknown as BufferSource, 'PBKDF2', false, ['deriveKey']);
+  const base = await subtle().importKey('raw', encodeText(pin) as unknown as BufferSource, 'PBKDF2', false, [
+    'deriveKey',
+  ]);
   return subtle().deriveKey(
     { name: 'PBKDF2', salt: salt as unknown as BufferSource, iterations: SNAPSHOT_KDF_ITERATIONS, hash: 'SHA-256' },
     base,

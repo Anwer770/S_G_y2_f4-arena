@@ -58,15 +58,9 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
 
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
 
-  const completedTasks = useMemo(
-    () => filteredTasks.filter((t) => t.status === 'completed'),
-    [filteredTasks]
-  );
+  const completedTasks = useMemo(() => filteredTasks.filter((t) => t.status === 'completed'), [filteredTasks]);
 
-  const inProgressTasks = useMemo(
-    () => filteredTasks.filter((t) => t.status === 'in_progress'),
-    [filteredTasks]
-  );
+  const inProgressTasks = useMemo(() => filteredTasks.filter((t) => t.status === 'in_progress'), [filteredTasks]);
 
   const overdueTasks = useMemo(
     () => filteredTasks.filter((t) => t.status !== 'completed' && t.dueDate < todayStr),
@@ -83,9 +77,8 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
     [filteredTasks]
   );
 
-  const completionRate = filteredTasks.length > 0
-    ? Math.round((completedTasks.length / filteredTasks.length) * 100)
-    : 0;
+  const completionRate =
+    filteredTasks.length > 0 ? Math.round((completedTasks.length / filteredTasks.length) * 100) : 0;
 
   // Status Distribution
   const statusCounts = useMemo(() => {
@@ -221,15 +214,11 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
             <span>المهام المتأخرة</span>
             <AlertTriangle className="w-4 h-4 text-rose-600" />
           </div>
-          <div className="text-2xl font-black text-rose-700 dark:text-rose-300 font-mono">
-            {overdueTasks.length}
-          </div>
+          <div className="text-2xl font-black text-rose-700 dark:text-rose-300 font-mono">{overdueTasks.length}</div>
           <div className="text-xs text-rose-500 font-bold mt-1">
             {overdueTasks.length > 0 ? 'تتطلب إعادة جدولة فورية' : 'لا توجد مهام متأخرة حالياً'}
           </div>
-          <div className="text-xs text-slate-400 dark:text-slate-500">
-            تجاوزت موعد التسليم المحدد
-          </div>
+          <div className="text-xs text-slate-400 dark:text-slate-500">تجاوزت موعد التسليم المحدد</div>
         </div>
 
         <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
@@ -240,9 +229,7 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
           <div className="text-2xl font-black text-slate-800 dark:text-slate-100 font-mono">
             {totalEstimatedHours} س
           </div>
-          <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-            المخطط لها في خطط العمل
-          </div>
+          <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">المخطط لها في خطط العمل</div>
           <div className="text-xs text-slate-400 dark:text-slate-500">
             معدل {filteredTasks.length > 0 ? (totalEstimatedHours / filteredTasks.length).toFixed(1) : 0} س/مهمة
           </div>
@@ -253,14 +240,11 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
             <span>ساعات العمل الفعلية</span>
             <TrendingUp className="w-4 h-4 text-teal-600" />
           </div>
-          <div className="text-2xl font-black text-teal-700 dark:text-teal-300 font-mono">
-            {totalActualHours} س
-          </div>
-          <div className="text-xs text-teal-600 dark:text-teal-400 font-bold mt-1">
-            المسجلة في مؤقت العمل
-          </div>
+          <div className="text-2xl font-black text-teal-700 dark:text-teal-300 font-mono">{totalActualHours} س</div>
+          <div className="text-xs text-teal-600 dark:text-teal-400 font-bold mt-1">المسجلة في مؤقت العمل</div>
           <div className="text-xs text-slate-400 dark:text-slate-500">
-            نسبة الالتزام بالوقت: {totalEstimatedHours > 0 ? Math.round((totalActualHours / totalEstimatedHours) * 100) : 0}%
+            نسبة الالتزام بالوقت:{' '}
+            {totalEstimatedHours > 0 ? Math.round((totalActualHours / totalEstimatedHours) * 100) : 0}%
           </div>
         </div>
       </div>
@@ -284,7 +268,10 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
               const pRate = pTasks.length > 0 ? Math.round((pDone.length / pTasks.length) * 100) : p.progress;
 
               return (
-                <div key={p.id} className="p-3 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 space-y-2">
+                <div
+                  key={p.id}
+                  className="p-3 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 space-y-2"
+                >
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{p.code}</span>
@@ -304,7 +291,9 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
 
                   <div className="flex items-center justify-between text-xs text-slate-400">
                     <span>المدير: {p.manager}</span>
-                    <span>المهام: {pDone.length} من {pTasks.length} مكتملة</span>
+                    <span>
+                      المهام: {pDone.length} من {pTasks.length} مكتملة
+                    </span>
                     <span>التسليم: {p.dueDate}</span>
                   </div>
                 </div>
@@ -326,7 +315,9 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                 <span className="font-bold text-emerald-950 dark:text-emerald-200">مكتملة وناجحة</span>
               </div>
-              <span className="font-mono font-bold text-emerald-700 dark:text-emerald-300">{statusCounts.completed}</span>
+              <span className="font-mono font-bold text-emerald-700 dark:text-emerald-300">
+                {statusCounts.completed}
+              </span>
             </div>
 
             <div className="flex items-center justify-between p-2.5 rounded-xl bg-teal-50/60 dark:bg-teal-950/30 border border-teal-100 dark:border-teal-800/60">
@@ -383,9 +374,7 @@ export const WorkOSReportsView: React.FC<WorkOSReportsViewProps> = ({
               {team.map((m) => {
                 const mTasks = tasks.filter((t) => t.assigneeId === m.id);
                 const mDone = mTasks.filter((t) => t.status === 'completed');
-                const mOverdue = mTasks.filter(
-                  (t) => t.status !== 'completed' && t.dueDate < todayStr
-                );
+                const mOverdue = mTasks.filter((t) => t.status !== 'completed' && t.dueDate < todayStr);
                 const mActualHours = mTasks.reduce((acc, t) => acc + (t.actualHours || 0), 0);
                 const rate = mTasks.length > 0 ? Math.round((mDone.length / mTasks.length) * 100) : 0;
 

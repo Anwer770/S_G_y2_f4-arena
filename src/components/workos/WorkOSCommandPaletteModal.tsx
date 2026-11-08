@@ -113,19 +113,23 @@ export const WorkOSCommandPaletteModal: React.FC<WorkOSCommandPaletteModalProps>
     { label: 'الانتقال إلى المشاريع والمبادرات', icon: FolderKanban, action: () => handleNavigate('projects') },
   ];
 
-  const matchedTasks = (tasks || []).filter((t) =>
-    t && (
-      (t.title && t.title.toLowerCase().includes(query.toLowerCase())) ||
-      (t.taskNumber && t.taskNumber.toLowerCase().includes(query.toLowerCase()))
+  const matchedTasks = (tasks || [])
+    .filter(
+      (t) =>
+        t &&
+        ((t.title && t.title.toLowerCase().includes(query.toLowerCase())) ||
+          (t.taskNumber && t.taskNumber.toLowerCase().includes(query.toLowerCase())))
     )
-  ).slice(0, 5);
+    .slice(0, 5);
 
-  const matchedProjects = (projects || []).filter((p) =>
-    p && (
-      (p.name && p.name.toLowerCase().includes(query.toLowerCase())) ||
-      (p.code && p.code.toLowerCase().includes(query.toLowerCase()))
+  const matchedProjects = (projects || [])
+    .filter(
+      (p) =>
+        p &&
+        ((p.name && p.name.toLowerCase().includes(query.toLowerCase())) ||
+          (p.code && p.code.toLowerCase().includes(query.toLowerCase())))
     )
-  ).slice(0, 3);
+    .slice(0, 3);
 
   return (
     <div

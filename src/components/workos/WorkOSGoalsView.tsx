@@ -21,8 +21,12 @@ export const WorkOSGoalsView: React.FC<WorkOSGoalsViewProps> = ({
             <Target className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">الأهداف الاستراتيجية والمخرجات الرئيسية (OKRs & Goals)</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">ربط الأعمال اليومية والمشاريع بالرؤية الكبرى للشركة</p>
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              الأهداف الاستراتيجية والمخرجات الرئيسية (OKRs & Goals)
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              ربط الأعمال اليومية والمشاريع بالرؤية الكبرى للشركة
+            </p>
           </div>
         </div>
 
@@ -57,7 +61,9 @@ export const WorkOSGoalsView: React.FC<WorkOSGoalsViewProps> = ({
                 </div>
 
                 <div className="text-left sm:text-right shrink-0">
-                  <span className="text-2xl font-black text-teal-700 dark:text-teal-300 font-mono">{goal.progress}%</span>
+                  <span className="text-2xl font-black text-teal-700 dark:text-teal-300 font-mono">
+                    {goal.progress}%
+                  </span>
                   <div className="w-24 bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden mt-1">
                     <div className="bg-teal-600 h-full rounded-full" style={{ width: `${goal.progress}%` }} />
                   </div>
@@ -66,12 +72,17 @@ export const WorkOSGoalsView: React.FC<WorkOSGoalsViewProps> = ({
 
               {/* Objectives */}
               <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <div className="text-xs font-bold text-slate-700 dark:text-slate-200">الأهداف المرحلية المرتبطة (Key Objectives):</div>
+                <div className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                  الأهداف المرحلية المرتبطة (Key Objectives):
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {goal.objectives.map((obj) => {
                     const linkedPrj = projects.find((p) => p.id === obj.linkedProjectId);
                     return (
-                      <div key={obj.id} className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs space-y-1.5">
+                      <div
+                        key={obj.id}
+                        className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs space-y-1.5"
+                      >
                         <div className="flex items-center justify-between font-bold text-slate-800 dark:text-slate-200">
                           <span>{obj.title}</span>
                           <span className="font-mono text-teal-700 dark:text-teal-300">{obj.progress}%</span>

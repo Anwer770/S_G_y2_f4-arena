@@ -212,7 +212,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      const timePart = now.toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      const timePart = now.toLocaleTimeString('ar-YE', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      });
       const dayPart = now.toLocaleDateString('ar-YE', { weekday: 'long', day: 'numeric', month: 'long' });
       setCurrentTimeStr(`${timePart} • ${dayPart}`);
     };
@@ -243,9 +248,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         id="app-right-sidebar"
         className={`fixed top-0 right-0 h-screen sidebar-surface bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border-l border-slate-200/90 dark:border-slate-800 z-50 flex flex-col transition-all duration-300 shadow-xl ${
           isCollapsed ? 'w-20' : 'w-72 sm:w-80'
-        } ${
-          isMobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
-        }`}
+        } ${isMobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}`}
         dir="rtl"
       >
         {/* Sidebar Header & Brand Profile */}
@@ -260,15 +263,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             {!isCollapsed && (
               <div className="min-w-0 transition-opacity">
-                <h1 className="text-sm font-black text-slate-900 dark:text-white truncate tracking-tight flex items-center gap-1.5" title={APP_NAME}>
+                <h1
+                  className="text-sm font-black text-slate-900 dark:text-white truncate tracking-tight flex items-center gap-1.5"
+                  title={APP_NAME}
+                >
                   <span className="truncate">{APP_NAME}</span>
                   <span className="version-chip shrink-0 rounded-md bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800 px-1.5 py-0.5 text-xs font-bold">
                     {APP_VERSION_LABEL}
                   </span>
                 </h1>
-                <p className="text-xs text-slate-400 dark:text-slate-500 truncate mt-0.5 font-medium">
-                  {APP_TAGLINE}
-                </p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 truncate mt-0.5 font-medium">{APP_TAGLINE}</p>
               </div>
             )}
           </div>
@@ -279,11 +283,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer border border-slate-200/60 dark:border-slate-700 shrink-0"
             title={isCollapsed ? 'توسيع القائمة الجانبية' : 'تصغير القائمة الجانبية'}
           >
-            {isCollapsed ? (
-              <ChevronLeft className="w-4 h-4" />
-            ) : (
-              <ChevronRight className="w-4 h-4" />
-            )}
+            {isCollapsed ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </button>
 
           {/* Mobile Close Button */}
@@ -300,8 +300,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive =
-              activeTab === item.id ||
-              (item.id === 'workos' && (activeTab === 'tasks' || activeTab === 'taskflow'));
+              activeTab === item.id || (item.id === 'workos' && (activeTab === 'tasks' || activeTab === 'taskflow'));
             const isAllowed = canAccessModule(item.id);
 
             return (
@@ -319,8 +318,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   !isAllowed
                     ? 'opacity-35 bg-slate-100 dark:bg-slate-800 text-slate-400'
                     : isActive
-                    ? 'bg-[#E6F4F1] dark:bg-teal-950/60 text-[#0F3935] dark:text-teal-200 font-black shadow-2xs'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 font-medium'
+                      ? 'bg-[#E6F4F1] dark:bg-teal-950/60 text-[#0F3935] dark:text-teal-200 font-black shadow-2xs'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 font-medium'
                 } ${isCollapsed ? 'justify-center px-2' : 'justify-between'}`}
                 title={!isAllowed ? `${item.label} (مغلق ومحمي بالصلاحيات)` : `${item.index}. ${item.label}`}
               >
@@ -330,30 +329,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       !isAllowed
                         ? 'text-slate-400'
                         : isActive
-                        ? 'text-[#0D9488] dark:text-teal-400'
-                        : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-200'
+                          ? 'text-[#0D9488] dark:text-teal-400'
+                          : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-200'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
                   </div>
 
-                  {!isCollapsed && (
-                    <span className="truncate text-right">{item.label}</span>
-                  )}
+                  {!isCollapsed && <span className="truncate text-right">{item.label}</span>}
                 </div>
 
                 {/* Badge / Count or Lock */}
-                {!isCollapsed && (
-                  !isAllowed ? (
+                {!isCollapsed &&
+                  (!isAllowed ? (
                     <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" title="مغلق بالصلاحيات" />
                   ) : typeof item.count === 'number' && item.count > 0 ? (
-                    <span
-                      className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full shrink-0 bg-[#0F3935] text-white shadow-2xs"
-                    >
+                    <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full shrink-0 bg-[#0F3935] text-white shadow-2xs">
                       {item.count}
                     </span>
-                  ) : null
-                )}
+                  ) : null)}
               </button>
             );
           })}
@@ -374,9 +368,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
 
               {/* User Profile Card */}
-              <div
-                className="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 shadow-2xs select-none"
-              >
+              <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 shadow-2xs select-none">
                 <div
                   onClick={() => handleSelectTab('settings')}
                   className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer group"
@@ -393,10 +385,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       {currentUser?.role === 'admin'
                         ? 'مدير النظام التنفيذي'
                         : currentUser?.role === 'accountant'
-                        ? 'المحاسب المالي'
-                        : currentUser?.role === 'sales'
-                        ? 'المندوب الميداني'
-                        : 'مستعرض'}
+                          ? 'المحاسب المالي'
+                          : currentUser?.role === 'sales'
+                            ? 'المندوب الميداني'
+                            : 'مستعرض'}
                     </div>
                   </div>
                 </div>

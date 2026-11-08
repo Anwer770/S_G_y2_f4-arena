@@ -16,23 +16,9 @@ export const DEFAULT_CUSTODY_CATEGORIES = [
   'أخرى',
 ];
 
-export const DEFAULT_CUSTODY_RESPONSIBLES = [
-  'انا',
-  'صدام',
-  'الفريق',
-  'الإدارة',
-  'انا وصدام',
-];
+export const DEFAULT_CUSTODY_RESPONSIBLES = ['انا', 'صدام', 'الفريق', 'الإدارة', 'انا وصدام'];
 
-export const DEFAULT_CUSTODY_STATUSES = [
-  'مخطط',
-  'مكتمل',
-  'مؤجل',
-  'متأخر',
-  'شركة',
-  'ملغي',
-  'بدون حالة',
-];
+export const DEFAULT_CUSTODY_STATUSES = ['مخطط', 'مكتمل', 'مؤجل', 'متأخر', 'شركة', 'ملغي', 'بدون حالة'];
 
 export const DEFAULT_CUSTODY_PRIORITIES = ['A', 'B', 'C', 'D', '√'];
 

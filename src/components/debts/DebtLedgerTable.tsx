@@ -206,25 +206,17 @@ export const DebtLedgerTable: React.FC<DebtLedgerTableProps> = ({
         <div className="flex items-center gap-3 text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700">
           <div>
             <span className="text-slate-400 dark:text-slate-500 block text-xs">إجمالي المدين (عليه):</span>
-            <span className="font-black text-rose-400">
-              {formatDebtAmount(totals.totalDebitYER, 'YER')}
-            </span>
+            <span className="font-black text-rose-400">{formatDebtAmount(totals.totalDebitYER, 'YER')}</span>
           </div>
           <div className="w-px h-6 bg-slate-700" />
           <div>
             <span className="text-slate-400 dark:text-slate-500 block text-xs">إجمالي الدائن (له):</span>
-            <span className="font-black text-emerald-400">
-              {formatDebtAmount(totals.totalCreditYER, 'YER')}
-            </span>
+            <span className="font-black text-emerald-400">{formatDebtAmount(totals.totalCreditYER, 'YER')}</span>
           </div>
           <div className="w-px h-6 bg-slate-700" />
           <div>
             <span className="text-slate-400 dark:text-slate-500 block text-xs">صافي الرصيد:</span>
-            <span
-              className={`font-black ${
-                totals.netYER >= 0 ? 'text-emerald-300' : 'text-rose-300'
-              }`}
-            >
+            <span className={`font-black ${totals.netYER >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
               {totals.netYER >= 0 ? 'له ' : 'عليه '}
               {formatDebtAmount(Math.abs(totals.netYER), 'YER')}
             </span>
@@ -326,7 +318,9 @@ export const DebtLedgerTable: React.FC<DebtLedgerTableProps> = ({
           <table className="w-full text-right text-xs border-collapse min-w-[960px] print:min-w-0">
             <thead className="sticky top-0 z-20">
               <tr className="bg-slate-900 text-white font-bold border-b border-slate-800 shadow-2xs select-none">
-                <th className="py-2.5 px-3 w-10 text-center sticky right-0 z-30 bg-slate-900 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.2)]">#</th>
+                <th className="py-2.5 px-3 w-10 text-center sticky right-0 z-30 bg-slate-900 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.2)]">
+                  #
+                </th>
                 <th className="py-2.5 px-2.5 w-24">التاريخ</th>
                 <th className="py-2.5 px-2 w-14 text-center">الرمز</th>
                 <th className="py-2.5 px-3 min-w-[200px]">البيان / الوصف</th>
@@ -334,12 +328,12 @@ export const DebtLedgerTable: React.FC<DebtLedgerTableProps> = ({
                 <th className="py-2.5 px-2.5 w-24 text-left text-rose-300">مدين (عليه)</th>
                 <th className="py-2.5 px-2.5 w-24 text-left text-emerald-300">دائن (له)</th>
                 {activeBook === 'ali_qat' && (
-                  <th className="py-2.5 px-2.5 w-28 text-left text-amber-300 bg-slate-800">
-                    الرصيد التراكمي
-                  </th>
+                  <th className="py-2.5 px-2.5 w-28 text-left text-amber-300 bg-slate-800">الرصيد التراكمي</th>
                 )}
                 <th className="py-2.5 px-2.5 min-w-[140px]">ملاحظات</th>
-                <th className="py-2.5 px-3 w-24 text-center sticky left-0 z-30 bg-slate-900 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.2)]">إجراءات</th>
+                <th className="py-2.5 px-3 w-24 text-center sticky left-0 z-30 bg-slate-900 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.2)]">
+                  إجراءات
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
@@ -400,16 +394,12 @@ export const DebtLedgerTable: React.FC<DebtLedgerTableProps> = ({
                             onClick={() => onToggleComplete(record.id)}
                             title={isGray ? 'إلغاء وسم الاكتمال' : 'وسم كمنجز / مكتمل'}
                             className={`p-1 rounded transition-colors cursor-pointer ${
-                              isGray
-                                ? 'text-emerald-600 bg-emerald-50'
-                                : 'text-slate-300 hover:text-emerald-600'
+                              isGray ? 'text-emerald-600 bg-emerald-50' : 'text-slate-300 hover:text-emerald-600'
                             }`}
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
                           </button>
-                          <span className={isGray ? 'line-through text-slate-400' : ''}>
-                            {record.name}
-                          </span>
+                          <span className={isGray ? 'line-through text-slate-400' : ''}>{record.name}</span>
                         </div>
                       </td>
 
@@ -439,15 +429,15 @@ export const DebtLedgerTable: React.FC<DebtLedgerTableProps> = ({
                                 (record.runningBalance || 0) > 0
                                   ? 'bg-emerald-100 text-emerald-800'
                                   : (record.runningBalance || 0) < 0
-                                  ? 'bg-rose-100 text-rose-800'
-                                  : 'bg-slate-200 text-slate-700'
+                                    ? 'bg-rose-100 text-rose-800'
+                                    : 'bg-slate-200 text-slate-700'
                               }`}
                             >
                               {(record.runningBalance || 0) > 0
                                 ? `+${(record.runningBalance || 0).toLocaleString()} (له)`
                                 : (record.runningBalance || 0) < 0
-                                ? `${(record.runningBalance || 0).toLocaleString()} (عليه)`
-                                : '0'}
+                                  ? `${(record.runningBalance || 0).toLocaleString()} (عليه)`
+                                  : '0'}
                             </span>
                           ) : (
                             '—'
@@ -521,17 +511,28 @@ export const DebtLedgerTable: React.FC<DebtLedgerTableProps> = ({
                 </td>
                 <td className="p-3 text-left font-mono font-black text-rose-400">
                   {(totals.totalDebitYER || 0).toLocaleString()} YER
-                  {(totals.totalDebitSAR || 0) > 0 && <div className="text-xs text-rose-300">{(totals.totalDebitSAR || 0).toLocaleString()} SAR</div>}
-                  {(totals.totalDebitUSD || 0) > 0 && <div className="text-xs text-rose-300">{(totals.totalDebitUSD || 0).toLocaleString()} USD</div>}
+                  {(totals.totalDebitSAR || 0) > 0 && (
+                    <div className="text-xs text-rose-300">{(totals.totalDebitSAR || 0).toLocaleString()} SAR</div>
+                  )}
+                  {(totals.totalDebitUSD || 0) > 0 && (
+                    <div className="text-xs text-rose-300">{(totals.totalDebitUSD || 0).toLocaleString()} USD</div>
+                  )}
                 </td>
                 <td className="p-3 text-left font-mono font-black text-emerald-400">
                   {(totals.totalCreditYER || 0).toLocaleString()} YER
-                  {(totals.totalCreditSAR || 0) > 0 && <div className="text-xs text-emerald-300">{(totals.totalCreditSAR || 0).toLocaleString()} SAR</div>}
-                  {(totals.totalCreditUSD || 0) > 0 && <div className="text-xs text-emerald-300">{(totals.totalCreditUSD || 0).toLocaleString()} USD</div>}
+                  {(totals.totalCreditSAR || 0) > 0 && (
+                    <div className="text-xs text-emerald-300">{(totals.totalCreditSAR || 0).toLocaleString()} SAR</div>
+                  )}
+                  {(totals.totalCreditUSD || 0) > 0 && (
+                    <div className="text-xs text-emerald-300">{(totals.totalCreditUSD || 0).toLocaleString()} USD</div>
+                  )}
                 </td>
                 {activeBook === 'ali_qat' && (
                   <td className="p-3 text-left font-mono font-black text-amber-300 bg-slate-800">
-                    صافي الرصيد: {(totals.netYER || 0) > 0 ? `+${(totals.netYER || 0).toLocaleString()} (له)` : `${(totals.netYER || 0).toLocaleString()} (عليه)`}
+                    صافي الرصيد:{' '}
+                    {(totals.netYER || 0) > 0
+                      ? `+${(totals.netYER || 0).toLocaleString()} (له)`
+                      : `${(totals.netYER || 0).toLocaleString()} (عليه)`}
                   </td>
                 )}
                 <td colSpan={2} className="p-3 text-center text-xs text-slate-400 dark:text-slate-500">

@@ -164,7 +164,9 @@ export const DEFAULT_COMMITMENTS: Commitment[] = [
   // Remaining items to reach 32 commitments with total sum approx 1,046,000
   ...Array.from({ length: 16 }, (_, i) => {
     const idx = i + 17;
-    const amounts = [12000, 18000, 15000, 20000, 24000, 16000, 19000, 22000, 14000, 17000, 21000, 13000, 25000, 18000, 15000, 16000];
+    const amounts = [
+      12000, 18000, 15000, 20000, 24000, 16000, 19000, 22000, 14000, 17000, 21000, 13000, 25000, 18000, 15000, 16000,
+    ];
     const amt = amounts[i % amounts.length];
     const isDone = i % 4 === 0;
     const dueDay = String(5 + ((i * 3) % 25)).padStart(2, '0');

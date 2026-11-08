@@ -243,11 +243,7 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
             {selectedSubIds.length > 0 && (
               <button
                 onClick={() => {
-                  if (
-                    confirm(
-                      `هل أنت متأكد من حذف ${selectedSubIds.length} حركة محددة نهائياً؟`
-                    )
-                  ) {
+                  if (confirm(`هل أنت متأكد من حذف ${selectedSubIds.length} حركة محددة نهائياً؟`)) {
                     onBulkDelete(selectedSubIds);
                     setSelectedSubIds([]);
                   }
@@ -468,15 +464,23 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
         <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-4 flex-wrap">
             <span className="font-bold text-slate-700 dark:text-slate-200">
-              نتائج الفلترة: <strong className="text-blue-600 dark:text-blue-400 font-mono font-black">{filteredTotals.totalCount}</strong> حركة
+              نتائج الفلترة:{' '}
+              <strong className="text-blue-600 dark:text-blue-400 font-mono font-black">
+                {filteredTotals.totalCount}
+              </strong>{' '}
+              حركة
             </span>
             <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-200 font-bold">
               <ArrowDownLeft className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>توريد: {filteredTotals.inCount} حركة ({formatNumberLatin(filteredTotals.inUnits)} وحدة)</span>
+              <span>
+                توريد: {filteredTotals.inCount} حركة ({formatNumberLatin(filteredTotals.inUnits)} وحدة)
+              </span>
             </div>
             <div className="flex items-center gap-1.5 text-rose-800 dark:text-rose-200 font-bold">
               <ArrowUpRight className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
-              <span>صرف: {filteredTotals.outCount} حركة ({formatNumberLatin(filteredTotals.outUnits)} وحدة)</span>
+              <span>
+                صرف: {filteredTotals.outCount} حركة ({formatNumberLatin(filteredTotals.outUnits)} وحدة)
+              </span>
             </div>
           </div>
 
@@ -544,7 +548,10 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
                   const isSelected = selectedSubIds.includes(r.subId);
 
                   const itemsCount = Object.keys(r.items || {}).length;
-                  const totalUnits = (Object.values(r.items || {}) as (number | string)[]).reduce<number>((s, q) => s + (Number(q) || 0), 0);
+                  const totalUnits = (Object.values(r.items || {}) as (number | string)[]).reduce<number>(
+                    (s, q) => s + (Number(q) || 0),
+                    0
+                  );
 
                   return (
                     <div
@@ -583,24 +590,25 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
                       <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1">
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-slate-400 dark:text-slate-500 text-xs">المستفيد:</span>
-                          <span className="font-bold text-slate-900 dark:text-slate-100 truncate max-w-[200px]" title={r.beneficiary}>
+                          <span
+                            className="font-bold text-slate-900 dark:text-slate-100 truncate max-w-[200px]"
+                            title={r.beneficiary}
+                          >
                             {r.beneficiary || 'غير محدد'}
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                          <span className={`px-1.5 py-0.2 rounded border ${categoryStyle}`}>
-                            {r.category}
-                          </span>
-                          <span className="font-mono text-slate-400 dark:text-slate-500">
-                            {r.mainId}
-                          </span>
+                          <span className={`px-1.5 py-0.2 rounded border ${categoryStyle}`}>{r.category}</span>
+                          <span className="font-mono text-slate-400 dark:text-slate-500">{r.mainId}</span>
                         </div>
                       </div>
 
                       {/* Quantities summary */}
                       <div className="pt-1 flex items-baseline justify-between border-t border-slate-100 dark:border-slate-800 text-xs">
                         <div>
-                          <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">الأصناف المصروفة/الموردة:</span>
+                          <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">
+                            الأصناف المصروفة/الموردة:
+                          </span>
                           <span className="font-bold text-slate-800 dark:text-slate-200">
                             {itemsCount} أصناف ({formatNumberLatin(totalUnits)} وحدة)
                           </span>
@@ -613,11 +621,16 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
                       {/* Items list pill preview */}
                       {itemsCount > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          {Object.entries(r.items || {}).slice(0, 3).map(([item, qty]) => (
-                            <span key={item} className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs text-slate-700 dark:text-slate-200 truncate max-w-[140px]">
-                              {item}: <strong>{formatNumberLatin(Number(qty) || 0)}</strong>
-                            </span>
-                          ))}
+                          {Object.entries(r.items || {})
+                            .slice(0, 3)
+                            .map(([item, qty]) => (
+                              <span
+                                key={item}
+                                className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs text-slate-700 dark:text-slate-200 truncate max-w-[140px]"
+                              >
+                                {item}: <strong>{formatNumberLatin(Number(qty) || 0)}</strong>
+                              </span>
+                            ))}
                           {itemsCount > 3 && (
                             <span className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded text-xs">
                               +{itemsCount - 3} أخرى
@@ -681,239 +694,263 @@ export const RecordsView: React.FC<RecordsViewProps> = ({
         ) : (
           <div className="overflow-x-auto max-h-[calc(100vh-270px)] min-h-[380px] overflow-y-auto scrollbar-thin">
             <table className="w-full text-right text-xs border-collapse min-w-[820px] print:min-w-0">
-            <thead className="sticky top-0 z-20">
-              <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold select-none shadow-2xs">
-                <th className="py-2.5 px-3 w-10 text-center sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
-                  <button
-                    onClick={handleToggleSelectAll}
-                    className="cursor-pointer text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"
-                    title="تحديد / إلغاء تحديد الكل في هذه الصفحة"
-                  >
-                    {paginatedRecords.length > 0 &&
-                    paginatedRecords.every((r) => selectedSubIds.includes(r.subId)) ? (
-                      <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                    ) : (
-                      <Square className="w-4 h-4" />
-                    )}
-                  </button>
-                </th>
-                <th
-                  onClick={() => {
-                    if (sortField === 'subId') {
-                      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-                    } else {
-                      setSortField('subId');
-                      setSortOrder('desc');
-                    }
-                  }}
-                  className="py-2.5 px-3 cursor-pointer hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-colors"
-                >
-                  الرقم الفرعي {sortField === 'subId' && (sortOrder === 'asc' ? '↑' : '↓')}
-                </th>
-                <th
-                  onClick={() => {
-                    if (sortField === 'date') {
-                      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-                    } else {
-                      setSortField('date');
-                      setSortOrder('desc');
-                    }
-                  }}
-                  className="py-2.5 px-3 cursor-pointer hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-colors"
-                >
-                  التاريخ {sortField === 'date' && (sortOrder === 'asc' ? '↑' : '↓')}
-                </th>
-                <th className="py-2.5 px-2.5">نوع الحركة</th>
-                <th className="py-2.5 px-2.5">المستفيد</th>
-                <th className="py-2.5 px-2.5">البيان والوصف</th>
-                <th className="py-2.5 px-2.5">الفئة / الحالة</th>
-                <th className="py-2.5 px-2.5">تفاصيل الأصناف والكميات</th>
-                <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-28">الإجراءات</th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
-              {paginatedRecords.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-400 dark:text-slate-500">
-                    <div className="flex flex-col items-center justify-center gap-2">
-                      <AlertCircle className="w-6 h-6 text-slate-300" />
-                      <span>لا توجد حركات تطابق معايير الفلترة والبحث الحالية</span>
-                      <button
-                        onClick={handleResetFilters}
-                        className="text-xs text-blue-600 dark:text-blue-400 font-bold hover:underline mt-1"
-                      >
-                        إعادة ضبط الفلاتر
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                paginatedRecords.map((r) => {
-                  const isSelected = selectedSubIds.includes(r.subId);
-                  const moveStyle = getMovementTypeStyle(r.movementType);
-                  const itemsEntries = Object.entries(r.items || {});
-                  const totalUnits = itemsEntries.reduce((sum, [, q]) => sum + (Number(q) || 0), 0);
-                  const dayName = calculateArabicDay(r.date);
-
-                  return (
-                    <tr
-                      key={r.subId}
-                      className={`transition-colors text-[12px] group ${
-                        isSelected ? 'bg-blue-50/60' : 'hover:bg-slate-50'
-                      }`}
+              <thead className="sticky top-0 z-20">
+                <tr className="bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold select-none shadow-2xs">
+                  <th className="py-2.5 px-3 w-10 text-center sticky right-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)]">
+                    <button
+                      onClick={handleToggleSelectAll}
+                      className="cursor-pointer text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"
+                      title="تحديد / إلغاء تحديد الكل في هذه الصفحة"
                     >
-                      {/* Checkbox */}
-                      <td className={`py-2 px-3 text-center sticky right-0 z-10 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)] transition-colors ${
-                        isSelected ? 'bg-blue-50/90' : 'bg-white group-hover:bg-slate-50'
-                      }`}>
+                      {paginatedRecords.length > 0 &&
+                      paginatedRecords.every((r) => selectedSubIds.includes(r.subId)) ? (
+                        <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      ) : (
+                        <Square className="w-4 h-4" />
+                      )}
+                    </button>
+                  </th>
+                  <th
+                    onClick={() => {
+                      if (sortField === 'subId') {
+                        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                      } else {
+                        setSortField('subId');
+                        setSortOrder('desc');
+                      }
+                    }}
+                    className="py-2.5 px-3 cursor-pointer hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-colors"
+                  >
+                    الرقم الفرعي {sortField === 'subId' && (sortOrder === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th
+                    onClick={() => {
+                      if (sortField === 'date') {
+                        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                      } else {
+                        setSortField('date');
+                        setSortOrder('desc');
+                      }
+                    }}
+                    className="py-2.5 px-3 cursor-pointer hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-colors"
+                  >
+                    التاريخ {sortField === 'date' && (sortOrder === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th className="py-2.5 px-2.5">نوع الحركة</th>
+                  <th className="py-2.5 px-2.5">المستفيد</th>
+                  <th className="py-2.5 px-2.5">البيان والوصف</th>
+                  <th className="py-2.5 px-2.5">الفئة / الحالة</th>
+                  <th className="py-2.5 px-2.5">تفاصيل الأصناف والكميات</th>
+                  <th className="py-2.5 px-3 text-center sticky left-0 z-30 bg-slate-100/95 dark:bg-slate-800/95 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] w-28">
+                    الإجراءات
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
+                {paginatedRecords.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="py-12 text-center text-slate-400 dark:text-slate-500">
+                      <div className="flex flex-col items-center justify-center gap-2">
+                        <AlertCircle className="w-6 h-6 text-slate-300" />
+                        <span>لا توجد حركات تطابق معايير الفلترة والبحث الحالية</span>
                         <button
-                          onClick={() => handleToggleSelectOne(r.subId)}
-                          className="cursor-pointer text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400"
+                          onClick={handleResetFilters}
+                          className="text-xs text-blue-600 dark:text-blue-400 font-bold hover:underline mt-1"
                         >
-                          {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                          ) : (
-                            <Square className="w-4 h-4" />
-                          )}
+                          إعادة ضبط الفلاتر
                         </button>
-                      </td>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedRecords.map((r) => {
+                    const isSelected = selectedSubIds.includes(r.subId);
+                    const moveStyle = getMovementTypeStyle(r.movementType);
+                    const itemsEntries = Object.entries(r.items || {});
+                    const totalUnits = itemsEntries.reduce((sum, [, q]) => sum + (Number(q) || 0), 0);
+                    const dayName = calculateArabicDay(r.date);
 
-                      {/* Sub ID */}
-                      <td className="py-2 px-3 font-mono font-bold text-slate-900 dark:text-slate-100">
-                        <div className="flex flex-col">
-                          <span className={`px-2 py-0.5 rounded text-xs font-bold w-fit ${
-                            r.movementType === 'توريد' ? 'bg-emerald-100 text-emerald-900' : 'bg-slate-100 text-slate-900'
-                          }`}>
-                            {r.subId}
-                          </span>
-                          {r.mainId && (
-                            <span className="text-xs text-slate-400 dark:text-slate-500 font-mono mt-0.5">
-                              {r.mainId}
+                    return (
+                      <tr
+                        key={r.subId}
+                        className={`transition-colors text-[12px] group ${
+                          isSelected ? 'bg-blue-50/60' : 'hover:bg-slate-50'
+                        }`}
+                      >
+                        {/* Checkbox */}
+                        <td
+                          className={`py-2 px-3 text-center sticky right-0 z-10 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.06)] transition-colors ${
+                            isSelected ? 'bg-blue-50/90' : 'bg-white group-hover:bg-slate-50'
+                          }`}
+                        >
+                          <button
+                            onClick={() => handleToggleSelectOne(r.subId)}
+                            className="cursor-pointer text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400"
+                          >
+                            {isSelected ? (
+                              <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                            ) : (
+                              <Square className="w-4 h-4" />
+                            )}
+                          </button>
+                        </td>
+
+                        {/* Sub ID */}
+                        <td className="py-2 px-3 font-mono font-bold text-slate-900 dark:text-slate-100">
+                          <div className="flex flex-col">
+                            <span
+                              className={`px-2 py-0.5 rounded text-xs font-bold w-fit ${
+                                r.movementType === 'توريد'
+                                  ? 'bg-emerald-100 text-emerald-900'
+                                  : 'bg-slate-100 text-slate-900'
+                              }`}
+                            >
+                              {r.subId}
                             </span>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Date & Day */}
-                      <td className="py-2 px-3 text-slate-600 dark:text-slate-300 font-mono text-xs">
-                        <div>{r.date}</div>
-                        {dayName && <div className="text-xs text-slate-400 dark:text-slate-500 font-sans">{dayName}</div>}
-                      </td>
-
-                      {/* Movement Type */}
-                      <td className="py-2 px-2.5">
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold border ${moveStyle.badge}`}>
-                          {r.movementType === 'توريد' ? (
-                            <ArrowDownLeft className="w-3 h-3" />
-                          ) : (
-                            <ArrowUpRight className="w-3 h-3" />
-                          )}
-                          <span>{r.movementType}</span>
-                        </span>
-                      </td>
-
-                      {/* Beneficiary */}
-                      <td className="py-2 px-2.5 font-bold text-slate-900 dark:text-slate-100 max-w-[160px] truncate" title={r.beneficiary}>
-                        {r.beneficiary}
-                      </td>
-
-                      {/* Description */}
-                      <td className="py-2 px-2.5 text-slate-600 dark:text-slate-300 max-w-[200px] truncate text-xs" title={r.description}>
-                        {r.description}
-                        {r.note && (
-                          <div className="text-xs text-amber-700 dark:text-amber-300 italic truncate" title={r.note}>
-                            ملاحظة: {r.note}
-                          </div>
-                        )}
-                      </td>
-
-                      {/* Category & Status */}
-                      <td className="py-2 px-2.5">
-                        <div className="flex items-center gap-1 flex-wrap">
-                          <span className={`px-2 py-0.5 rounded text-xs font-bold border ${getCategoryBadgeStyle(r.category)}`}>
-                            {r.category}
-                          </span>
-                          <span className={`px-1.5 py-0.5 rounded text-xs font-medium border ${getStatusStyle(r.status)}`}>
-                            {r.status}
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* Items Chips (FR-13, FR-22) */}
-                      <td className="py-2 px-2.5">
-                        {itemsEntries.length === 0 ? (
-                          <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2 py-0.5 rounded text-xs font-semibold">
-                            <AlertCircle className="w-3 h-3" />
-                            <span>بدون كميات رقمية</span>
-                          </span>
-                        ) : (
-                          <div className="flex items-center gap-1 flex-wrap max-w-sm">
-                            {itemsEntries.slice(0, 3).map(([name, qty]) => (
-                              <span
-                                key={name}
-                                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-medium px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700"
-                              >
-                                {name} <strong className="font-mono text-blue-700 dark:text-blue-300">×{qty}</strong>
-                              </span>
-                            ))}
-                            {itemsEntries.length > 3 && (
-                              <span className="text-xs text-slate-400 dark:text-slate-500 font-bold bg-slate-50 dark:bg-slate-800/60 px-1.5 py-0.5 rounded">
-                                +{itemsEntries.length - 3}
+                            {r.mainId && (
+                              <span className="text-xs text-slate-400 dark:text-slate-500 font-mono mt-0.5">
+                                {r.mainId}
                               </span>
                             )}
-                            <span className="text-xs text-slate-600 dark:text-slate-300 font-mono font-bold mr-1 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                              الإجمالي: {totalUnits}
+                          </div>
+                        </td>
+
+                        {/* Date & Day */}
+                        <td className="py-2 px-3 text-slate-600 dark:text-slate-300 font-mono text-xs">
+                          <div>{r.date}</div>
+                          {dayName && (
+                            <div className="text-xs text-slate-400 dark:text-slate-500 font-sans">{dayName}</div>
+                          )}
+                        </td>
+
+                        {/* Movement Type */}
+                        <td className="py-2 px-2.5">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold border ${moveStyle.badge}`}
+                          >
+                            {r.movementType === 'توريد' ? (
+                              <ArrowDownLeft className="w-3 h-3" />
+                            ) : (
+                              <ArrowUpRight className="w-3 h-3" />
+                            )}
+                            <span>{r.movementType}</span>
+                          </span>
+                        </td>
+
+                        {/* Beneficiary */}
+                        <td
+                          className="py-2 px-2.5 font-bold text-slate-900 dark:text-slate-100 max-w-[160px] truncate"
+                          title={r.beneficiary}
+                        >
+                          {r.beneficiary}
+                        </td>
+
+                        {/* Description */}
+                        <td
+                          className="py-2 px-2.5 text-slate-600 dark:text-slate-300 max-w-[200px] truncate text-xs"
+                          title={r.description}
+                        >
+                          {r.description}
+                          {r.note && (
+                            <div className="text-xs text-amber-700 dark:text-amber-300 italic truncate" title={r.note}>
+                              ملاحظة: {r.note}
+                            </div>
+                          )}
+                        </td>
+
+                        {/* Category & Status */}
+                        <td className="py-2 px-2.5">
+                          <div className="flex items-center gap-1 flex-wrap">
+                            <span
+                              className={`px-2 py-0.5 rounded text-xs font-bold border ${getCategoryBadgeStyle(r.category)}`}
+                            >
+                              {r.category}
+                            </span>
+                            <span
+                              className={`px-1.5 py-0.5 rounded text-xs font-medium border ${getStatusStyle(r.status)}`}
+                            >
+                              {r.status}
                             </span>
                           </div>
-                        )}
-                      </td>
+                        </td>
 
-                      {/* Actions */}
-                      <td className={`py-2 px-3 text-center sticky left-0 z-10 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] transition-colors ${
-                        isSelected ? 'bg-blue-50/90' : 'bg-white group-hover:bg-slate-50'
-                      }`}>
-                        <div className="flex items-center justify-center gap-1">
-                          <button
-                            onClick={() => onViewRecord(r)}
-                            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg transition-colors cursor-pointer"
-                            title="معاينة السند / طباعة"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                          </button>
+                        {/* Items Chips (FR-13, FR-22) */}
+                        <td className="py-2 px-2.5">
+                          {itemsEntries.length === 0 ? (
+                            <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2 py-0.5 rounded text-xs font-semibold">
+                              <AlertCircle className="w-3 h-3" />
+                              <span>بدون كميات رقمية</span>
+                            </span>
+                          ) : (
+                            <div className="flex items-center gap-1 flex-wrap max-w-sm">
+                              {itemsEntries.slice(0, 3).map(([name, qty]) => (
+                                <span
+                                  key={name}
+                                  className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-medium px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700"
+                                >
+                                  {name} <strong className="font-mono text-blue-700 dark:text-blue-300">×{qty}</strong>
+                                </span>
+                              ))}
+                              {itemsEntries.length > 3 && (
+                                <span className="text-xs text-slate-400 dark:text-slate-500 font-bold bg-slate-50 dark:bg-slate-800/60 px-1.5 py-0.5 rounded">
+                                  +{itemsEntries.length - 3}
+                                </span>
+                              )}
+                              <span className="text-xs text-slate-600 dark:text-slate-300 font-mono font-bold mr-1 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                                الإجمالي: {totalUnits}
+                              </span>
+                            </div>
+                          )}
+                        </td>
 
-                          <button
-                            onClick={() => onEditRecord(r)}
-                            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-lg transition-colors cursor-pointer"
-                            title="تعديل الحركة"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
+                        {/* Actions */}
+                        <td
+                          className={`py-2 px-3 text-center sticky left-0 z-10 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.06)] transition-colors ${
+                            isSelected ? 'bg-blue-50/90' : 'bg-white group-hover:bg-slate-50'
+                          }`}
+                        >
+                          <div className="flex items-center justify-center gap-1">
+                            <button
+                              onClick={() => onViewRecord(r)}
+                              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg transition-colors cursor-pointer"
+                              title="معاينة السند / طباعة"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
 
-                          <button
-                            onClick={() => onCloneRecord(r)}
-                            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-lg transition-colors cursor-pointer"
-                            title="تكرار / استنساخ الحركة"
-                          >
-                            <Copy className="w-3.5 h-3.5" />
-                          </button>
+                            <button
+                              onClick={() => onEditRecord(r)}
+                              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-lg transition-colors cursor-pointer"
+                              title="تعديل الحركة"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
 
-                          <button
-                            onClick={() => onDeleteRecord(r)}
-                            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
-                            title="حذف الحركة"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                            <button
+                              onClick={() => onCloneRecord(r)}
+                              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-lg transition-colors cursor-pointer"
+                              title="تكرار / استنساخ الحركة"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+
+                            <button
+                              onClick={() => onDeleteRecord(r)}
+                              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
+                              title="حذف الحركة"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         )}
 
         {/* 5. Pagination Bar (FR-12) */}

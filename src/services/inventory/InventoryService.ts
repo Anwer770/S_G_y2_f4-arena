@@ -52,15 +52,8 @@ export class InventoryService {
     const records = stockMovementRepository.getAll();
 
     if (oldName !== newProduct.name) {
-      const { updatedProducts, updatedRecords } = cascadeRenameProduct(
-        oldName,
-        newProduct.name,
-        products,
-        records
-      );
-      productRepository.saveAll(
-        updatedProducts.map((p) => (p.id === newProduct.id ? newProduct : p))
-      );
+      const { updatedProducts, updatedRecords } = cascadeRenameProduct(oldName, newProduct.name, products, records);
+      productRepository.saveAll(updatedProducts.map((p) => (p.id === newProduct.id ? newProduct : p)));
       stockMovementRepository.saveAll(updatedRecords);
       return { updatedProducts, updatedRecords };
     } else {
@@ -70,11 +63,7 @@ export class InventoryService {
     }
   }
 
-  public cloneMovement(
-    record: Movement,
-    records: Movement[],
-    seq: { IN: number; OUT: number }
-  ): Movement {
+  public cloneMovement(record: Movement, records: Movement[], seq: { IN: number; OUT: number }): Movement {
     const { subId: nextSubId } = getNextSubId(record.movementType, records, seq);
     const cloned: Movement = {
       ...record,

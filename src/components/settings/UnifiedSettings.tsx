@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UnifiedBackupState } from '../../types';
 import { CompleteSystemSettings } from '../../types/settings';
-import {
-  loadCompleteSystemSettings,
-  saveCompleteSystemSettings,
-} from '../../utils/settingsStorage';
+import { loadCompleteSystemSettings, saveCompleteSystemSettings } from '../../utils/settingsStorage';
 
 import {
   Building2,
@@ -133,12 +130,8 @@ export const UnifiedSettings: React.FC<Props> = ({
             <SettingsIcon className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
-              الإعدادات
-            </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              تخصيص النظام وإدارة الإعدادات والبيانات
-            </p>
+            <h1 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">الإعدادات</h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">تخصيص النظام وإدارة الإعدادات والبيانات</p>
           </div>
         </div>
 

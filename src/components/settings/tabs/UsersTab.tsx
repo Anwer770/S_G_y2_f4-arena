@@ -9,7 +9,11 @@ interface Props {
 }
 
 const ROLE_LABELS: Record<UserRole, { title: string; color: string; bg: string }> = {
-  admin: { title: 'مدير النظام', color: 'text-purple-700 dark:text-purple-300', bg: 'bg-purple-100 dark:bg-purple-950/70' },
+  admin: {
+    title: 'مدير النظام',
+    color: 'text-purple-700 dark:text-purple-300',
+    bg: 'bg-purple-100 dark:bg-purple-950/70',
+  },
   accountant: { title: 'محاسب', color: 'text-teal-700 dark:text-teal-300', bg: 'bg-teal-100 dark:bg-teal-950/70' },
   sales: { title: 'موظف مبيعات', color: 'text-amber-700 dark:text-amber-300', bg: 'bg-amber-100 dark:bg-amber-950/70' },
   viewer: { title: 'مشاهد فقط', color: 'text-slate-700 dark:text-slate-300', bg: 'bg-slate-100 dark:bg-slate-800' },
@@ -127,18 +131,26 @@ export const UsersTab: React.FC<Props> = ({ users, onChange, customRoles = [] })
           <table className="w-full text-right border-collapse text-xs min-w-[820px] print:min-w-0">
             <thead className="sticky top-0 z-10 bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur-xs text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700 shadow-2xs select-none">
               <tr>
-                <th className="py-2.5 px-3 sticky right-0 z-20 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-2px_0_4px_-1px_rgba(0,0,0,0.06)]">المستخدم</th>
+                <th className="py-2.5 px-3 sticky right-0 z-20 bg-slate-100/95 dark:bg-slate-800/95 shadow-[-2px_0_4px_-1px_rgba(0,0,0,0.06)]">
+                  المستخدم
+                </th>
                 <th className="py-2.5 px-3">البريد الإلكتروني</th>
                 <th className="py-2.5 px-3">الهاتف</th>
                 <th className="py-2.5 px-3">الدور الوظيفي</th>
                 <th className="py-2.5 px-3">الحالة</th>
                 <th className="py-2.5 px-3">آخر تسجيل دخول</th>
-                <th className="py-2.5 px-3 text-center sticky left-0 z-20 bg-slate-100/95 dark:bg-slate-800/95 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.06)] w-24">الإجراءات</th>
+                <th className="py-2.5 px-3 text-center sticky left-0 z-20 bg-slate-100/95 dark:bg-slate-800/95 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.06)] w-24">
+                  الإجراءات
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
               {users.map((user) => {
-                const roleMeta = ROLE_LABELS[user.role as UserRole] || { title: customRoles.find((r) => r.id === user.role)?.label || 'دور مخصص', color: 'text-indigo-700 dark:text-indigo-300', bg: 'bg-indigo-100 dark:bg-indigo-950/70' };
+                const roleMeta = ROLE_LABELS[user.role as UserRole] || {
+                  title: customRoles.find((r) => r.id === user.role)?.label || 'دور مخصص',
+                  color: 'text-indigo-700 dark:text-indigo-300',
+                  bg: 'bg-indigo-100 dark:bg-indigo-950/70',
+                };
                 return (
                   <tr key={user.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors group">
                     <td className="py-2 px-3 sticky right-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50/90 dark:group-hover:bg-slate-800/80 shadow-[-2px_0_4px_-1px_rgba(0,0,0,0.06)]">
@@ -180,7 +192,9 @@ export const UsersTab: React.FC<Props> = ({ users, onChange, customRoles = [] })
                       )}
                     </td>
 
-                    <td className="py-2 px-3 text-slate-500 dark:text-slate-400 text-xs">{user.lastLogin || 'اليوم'}</td>
+                    <td className="py-2 px-3 text-slate-500 dark:text-slate-400 text-xs">
+                      {user.lastLogin || 'اليوم'}
+                    </td>
 
                     <td className="py-2 px-3 sticky left-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50/90 dark:group-hover:bg-slate-800/80 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.06)]">
                       <div className="flex items-center justify-center gap-1.5">
@@ -258,9 +272,7 @@ export const UsersTab: React.FC<Props> = ({ users, onChange, customRoles = [] })
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                  رقم الهاتف
-                </label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">رقم الهاتف</label>
                 <input
                   type="tel"
                   dir="ltr"
@@ -285,15 +297,15 @@ export const UsersTab: React.FC<Props> = ({ users, onChange, customRoles = [] })
                   <option value="sales">موظف مبيعات (فواتير، عملاء، مخزون)</option>
                   <option value="viewer">مشاهد فقط (اطلاع واستعراض فقط)</option>
                   {customRoles.map((r) => (
-                    <option key={r.id} value={r.id}>{r.label} (دور مخصص)</option>
+                    <option key={r.id} value={r.id}>
+                      {r.label} (دور مخصص)
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                  حالة الحساب
-                </label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">حالة الحساب</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"

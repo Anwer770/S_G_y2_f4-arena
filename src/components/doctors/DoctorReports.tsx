@@ -1,16 +1,7 @@
 import React, { useMemo } from 'react';
 import { DoctorRecord, DoctorVisitLog } from '../../types';
 import { calculateDoctorStats } from '../../utils/doctors';
-import {
-  Stethoscope,
-  Calendar,
-  User,
-  MapPin,
-  Award,
-  Clock,
-  Target,
-  Printer,
-} from 'lucide-react';
+import { Stethoscope, Calendar, User, MapPin, Award, Clock, Target, Printer } from 'lucide-react';
 
 interface Props {
   doctors: DoctorRecord[];
@@ -31,8 +22,12 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
       {/* Print Trigger Bar */}
       <div className="flex items-center justify-between bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs print:hidden">
         <div>
-          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200">التقرير الإحصائي والتحليلي لزيارات الأطباء</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">تحليل التغطية الميدانية، نسب إنجاز المناديب، ومؤشرات الأداء</p>
+          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+            التقرير الإحصائي والتحليلي لزيارات الأطباء
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            تحليل التغطية الميدانية، نسب إنجاز المناديب، ومؤشرات الأداء
+          </p>
         </div>
         <button
           onClick={handlePrint}
@@ -59,22 +54,14 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
         {/* Completion Rate Target Benchmark */}
         <div
           className={`p-4 rounded-xl border shadow-2xs ${
-            benchmarkMet
-              ? 'bg-emerald-50/50 border-emerald-200'
-              : 'bg-amber-50/50 border-amber-200'
+            benchmarkMet ? 'bg-emerald-50/50 border-emerald-200' : 'bg-amber-50/50 border-amber-200'
           }`}
         >
           <div className="flex items-center justify-between text-slate-700 dark:text-slate-200 font-bold text-xs">
             <span>نسبة إنجاز خطة الزيارات</span>
-            <Target
-              className={`w-4 h-4 ${benchmarkMet ? 'text-emerald-600' : 'text-amber-600'}`}
-            />
+            <Target className={`w-4 h-4 ${benchmarkMet ? 'text-emerald-600' : 'text-amber-600'}`} />
           </div>
-          <div
-            className={`text-2xl font-black font-mono mt-1 ${
-              benchmarkMet ? 'text-emerald-700' : 'text-amber-700'
-            }`}
-          >
+          <div className={`text-2xl font-black font-mono mt-1 ${benchmarkMet ? 'text-emerald-700' : 'text-amber-700'}`}>
             {stats.completionRate}%
           </div>
           <div className="flex items-center justify-between text-xs mt-0.5">
@@ -83,9 +70,7 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
             </span>
             <span
               className={`font-bold px-1.5 py-0.2 rounded-md ${
-                benchmarkMet
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : 'bg-amber-100 text-amber-800'
+                benchmarkMet ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
               }`}
             >
               الهدف: ≥ 80%
@@ -99,9 +84,7 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
             <span>سجلات الزيارات الموثقة</span>
             <Calendar className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
           </div>
-          <div className="text-2xl font-black font-mono text-indigo-700 dark:text-indigo-300 mt-1">
-            {visits.length}
-          </div>
+          <div className="text-2xl font-black font-mono text-indigo-700 dark:text-indigo-300 mt-1">{visits.length}</div>
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">تقرير زيارة مسجل في قاعدة البيانات</p>
         </div>
 
@@ -111,9 +94,7 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
             <span>المناديب والفرق الميدانية</span>
             <User className="w-4 h-4 text-purple-600 dark:text-purple-400" />
           </div>
-          <div className="text-2xl font-black font-mono text-purple-700 mt-1">
-            {stats.responsibleStats.length}
-          </div>
+          <div className="text-2xl font-black font-mono text-purple-700 mt-1">{stats.responsibleStats.length}</div>
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">مندوب نشط يغطي المسارات</p>
         </div>
       </div>
@@ -123,7 +104,9 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
         <div className="flex items-center justify-between flex-wrap gap-2 text-xs">
           <div className="flex items-center gap-2">
             <Award className="w-4 h-4 text-teal-700 dark:text-teal-300" />
-            <span className="font-black text-slate-900 dark:text-slate-100">مؤشر التقدم العام نحو الهدف (Target Gauge)</span>
+            <span className="font-black text-slate-900 dark:text-slate-100">
+              مؤشر التقدم العام نحو الهدف (Target Gauge)
+            </span>
           </div>
           <span className="text-slate-500 dark:text-slate-400 font-bold">
             {stats.completedCount} من أصل {stats.totalDoctors} زيارة مطلوبة ({stats.completionRate}%)
@@ -205,9 +188,7 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
               <div key={item.specialty} className="space-y-1 text-xs">
                 <div className="flex items-center justify-between font-bold">
                   <span className="text-slate-800 dark:text-slate-200">{item.specialty}</span>
-                  <span className="text-slate-500 dark:text-slate-400 font-mono">
-                    {item.count} طبيب
-                  </span>
+                  <span className="text-slate-500 dark:text-slate-400 font-mono">{item.count} طبيب</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div
@@ -270,11 +251,7 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
                         <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full ${
-                              isHigh
-                                ? 'bg-emerald-600'
-                                : isMed
-                                ? 'bg-teal-500'
-                                : 'bg-amber-500'
+                              isHigh ? 'bg-emerald-600' : isMed ? 'bg-teal-500' : 'bg-amber-500'
                             }`}
                             style={{ width: `${rep.completionRate}%` }}
                           />
@@ -287,8 +264,8 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
                           isHigh
                             ? 'bg-emerald-100 text-emerald-800'
                             : isMed
-                            ? 'bg-teal-100 text-teal-800'
-                            : 'bg-amber-100 text-amber-800'
+                              ? 'bg-teal-100 text-teal-800'
+                              : 'bg-amber-100 text-amber-800'
                         }`}
                       >
                         {isHigh ? 'ممتاز (مستهدف)' : isMed ? 'جيد جداً' : 'يحتاج متابعة'}
@@ -319,10 +296,7 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
                 <span className="text-xs font-bold text-slate-500 dark:text-slate-400">الفئة {item.key}</span>
                 <p className="text-lg font-black font-mono text-purple-800">{item.count}</p>
                 <p className="text-xs text-slate-400 dark:text-slate-500">
-                  {stats.totalDoctors > 0
-                    ? Math.round((item.count / stats.totalDoctors) * 100)
-                    : 0}
-                  % من الإجمالي
+                  {stats.totalDoctors > 0 ? Math.round((item.count / stats.totalDoctors) * 100) : 0}% من الإجمالي
                 </p>
               </div>
             ))}
@@ -345,9 +319,7 @@ export const DoctorReports: React.FC<Props> = ({ doctors, visits }) => {
                 <span className="text-base font-black font-mono text-slate-900 dark:text-slate-100 block">
                   {st.count}
                 </span>
-                <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
-                  {st.percentage}%
-                </span>
+                <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">{st.percentage}%</span>
               </div>
             ))}
           </div>

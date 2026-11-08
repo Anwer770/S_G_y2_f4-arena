@@ -2,7 +2,7 @@
 
 | البند | القيمة |
 |---|---|
-| **الإصدار** | `3.17.0` — 2026-11-08 |
+| **الإصدار** | `3.18.0` — 2026-11-08 |
 | **الحالة** | مرجع الحقيقة الوحيد للنطاق والسلوك ومعايير القبول |
 | **الأساس** | مستخلص من الكود الفعلي (238 ملفاً · ~86 ألف سطر) + مراجعة نقدية بعد تنفيذ إصلاحات R12–R16 |
 | **الملفات المرتبطة** | [`BUILD_PROMPT.md`](./BUILD_PROMPT.md) · [`BUILD_PROMPT_SHORT.md`](./BUILD_PROMPT_SHORT.md) · [`PROMPTS_LIBRARY.md`](./PROMPTS_LIBRARY.md) · [`QA_CHECKLISTS.md`](./QA_CHECKLISTS.md) |
@@ -749,6 +749,9 @@ interface UnifiedBackupState {
 | السكربت | ماذا يتحقق | إلزامي قبل التسليم |
 |---|---|---|
 | `npm run lint` → `tsc --noEmit` | صفر أخطاء أنواع | ✅ |
+| `npm run lint:eslint` | ESLint flat config: الخطافات · النوع · console · سقف تحذيرات | ✅ |
+| `npm run format:check` | تنسيق Prettier إلزامي لكل `src` و`tests` | ✅ |
+| `npm run test:unit:coverage` | اختبارات وحدات Vitest + عتبات تغطية (سطور 75 · فروع 65 · دوال 70) | ✅ |
 | `npm run build` | بناء إنتاجي + PWA | ✅ |
 | `npm run regression` | لقطة سلوكية شاملة (`--save` لتحديث خط الأساس) | ✅ |
 | `npm run data-loss` | سيناريوهات فقدان البيانات (مفاتيح كبيرة، بدء بارد) | ✅ |
@@ -892,7 +895,10 @@ P0 → P1 → P2 → {P3, P4} → P5 → P6 → P7 → P8
 | `npm run security` | ✅ 9/9 | R3 — كل قراءة Excel عبر حارس `xlsxSafe` (حجم · صفوف · تنظيف prototype) |
 | `npm run settings` | ✅ 39/39 | R19–R22 — القوائم · التنبيهات · الأدوار · أرشفة التدقيق · **تصدير تلقائي** · **درج القوائم الفرعية** |
 | `npm run hygiene` | ✅ 12/12 | R23/R28 — لا ملفات يتيمة · لا console.log · لا TODO · لا مخرجات محفوظة · لا تبعيات ميتة · لا ملف > 100KB · **`any` = 0** (H7) · لا حالة مهمة خارج الاتحاد (H8) · **سقف حجم الوحدات المفكَّكة** (H9) · **لا `@ts-ignore`** (H10) · **CI يشغّل كل البوابات** (H11) · **CI يفحص الأنواع ويبني** (H12) |
-| `npm run storage-keys` | ✅ 7/7 | R24 — لا مفتاح تخزين تغيّر/تكرار بعد تفكيك `storage.ts` (13 وحدة) |
+| `npm run storage-keys` | ✅ 7/7 |
+| `npm run lint:eslint` | ✅ 0 أخطاء · 784 تحذيراً | P3 — سقف التحذيرات 800 (ratchet) فلا تتضخّم |
+| `npm run format:check` | ✅ كل الملفات | P3 — Prettier إلزامي؛ 198 ملفاً وُحّدت في 3.18.0 |
+| `npm run test:unit:coverage` | ✅ 64/64 · 86.4% سطور | P3 — `pinCrypto` · `authGuard` · `importFidelity` · `autoJournaling` · `formatters` · `storage/system` | R24 — لا مفتاح تخزين تغيّر/تكرار بعد تفكيك `storage.ts` (13 وحدة) |
 | `npm run regression` | ✅ لا انحدار · 0 أخطاء JS · 25 تبويباً | الأداة محصّنة (Keep-Alive + حقل ملف) |
 | `npm run verify` | ✅ **أخضر بالكامل** (2026-11-08) | كل ما سبق متسلسلاً عبر أمر واحد |
 | **GitHub Actions** | ✅ 5 مهام · 0 فشل | `.github/workflows/verify.yml` — تعمل عند كل دفع/طلب سحب، ولا يمكن الدمج مع فشل |
@@ -1036,6 +1042,7 @@ npm run tables       # استجابة الجداول
 
 | الإصدار | التاريخ | التغيير |
 |---|---|---|
+| 3.18.0 | 2026-11-08 | **ESLint + Prettier + Vitest (P3)**: (١) **ESLint 10** (flat config) بقواعد أخطاء حقيقية (`react-hooks/rules-of-hooks` · `no-explicit-any` · `no-console` · `no-empty` مع السماح بـ`catch{}` · `eqeqeq` · `prefer-const`) وسقف تحذيرات **800** (ratchet) — النتيجة **0 أخطاء · 784 تحذيراً**. (٢) **Prettier 3** إلزامي: وُحّد تنسيق **198 ملفاً** (8,545+/5,769‑) في تغيير تنسيقي بحت، وأصبح `format:check` بوابة. (٣) **Vitest 5** — **64 اختبار وحدات** في `tests/unit/` بتغطية **86.4% سطور / 81.8% فروع / 90.8% دوال** لنواة المنطق (`pinCrypto` · `authGuard` · `importFidelity` · `autoJournaling` · `formatters` · `storage/system`) مع عتبات تفرض عدم التراجع. (٤) **إصلاحان حقيقيان كشفهما ESLint**: ترتيب خطافات في `AppRouter` (خطافات بعد `return` شرطي لحارس الصلاحيات) و`UniversalDataExchangeModal` (خطافات بعد `return` عند `!isOpen`) — كانا يسببان خلل ترتيب خطافات عند أول تنقّل/فتح. (٥) `attemptsRemaining` صارت **0 أثناء الإقفال** (كانت تعيد رصيداً مضلّلاً). مهمة CI خامسة: **ESLint + Prettier + unit tests**، وقائمة `H11` تشمل الثلاثة |
 | 3.17.0 | 2026-11-08 | **تقوية المصادقة (P2)**: (١) **تجزئة رمز المرور** — `src/utils/pinCrypto.ts`: PBKDF2-SHA256 **150,000 دورة** + ملح عشوائي 16 بايت لكل مستخدم + مقارنة **زمنية ثابتة**، والرمز لا يُخزَّن نصاً صريحاً إطلاقاً؛ ترقية تلقائية للرموز النصية القديمة عند أول دخول ناجح (تُحذف `pin`/`password` النصية). (٢) **إقفال بعد المحاولات**: `src/utils/authGuard.ts` — 5 محاولات فاشلة ⇒ إقفال **5 دقائق** محفوظ في التخزين (لا يُصفَّر بإعادة التحميل) مع رسالة عربية وعدد المحاولات المتبقية وتعطيل الزر في الواجهة. (٣) **جلسة بانتهاء صريح**: **8 ساعات** + لا تُحفظ إن لم يُطلب «تذكّر الدخول»، وأي جلسة قديمة بلا `expiresAt` تُعدّ منتهية ⇒ **لا استعادة صامتة**. (٤) `login` يرفض بأمان عند غياب Web Crypto بدل تخزين نص صريح، وحُذف `quickSwitchUser` (كان يعتمد على الرمز النصي). المفاتيح: `suite_auth_guard_v1` + `suite_active_auth_session_v1` مسجّلة في `STORAGE_KEYS` مع دوال تخزين في `storage/system.ts`. البوابة `auth` **16 → 26 فحصاً** (تجزئة، إقفال، انتهاء جلسة، رفض الجلسة القديمة) · بوابات jsdom تزرع Web Crypto الحقيقي عبر `ensureWebCrypto` |
 | 3.16.0 | 2026-11-08 | **حائط الحماية الآلي (CI)**: `.github/workflows/verify.yml` — خمس مهام متوازية على GitHub Actions عند كل `push` وكل `pull_request` (+ `workflow_dispatch`): (١) **أنواع + بناء** `npm ci` → `npm run lint` → `npm run build` مع تأكيد مخرجات PWA (`dist/sw.js` + بيان precache + حجم الحزمة) · (٢) **البوابات الساكنة** hygiene · identity · integrity · imports · security · storage-keys · (٣) **بوابات jsdom** auth · data-loss · workos · outbox · settings · snapshots · (٤) **البوابات البصرية** tables:assert · typography · darkmode · tables (مع Python 3.12) · (٥) **الانحدار الشامل** 25 تبويباً مع رفع `last-run.json` كأثر — إلغاء التشغيلات المتقادمة (`concurrency`) · `permissions: contents: read` · `--max-old-space-size=2048` · زمن الحائط ≈ 5 دقائق؛ وبوابتان جديدتان في `hygiene`: **H11** (كل بوابة في `verify` يجب أن تكون في الـ CI وإلا فشل الفحص) و**H12** (الـ CI يثبّت من lockfile ويفحص الأنواع ويبني) ⇒ 10 → **12/12** |
 | 3.15.0 | 2026-11-08 | **إلزام تعيين رمز المرور (R2)**: لا رمز افتراضي في أي مسار — `AuthContext` صار يرفض الرمز الفارغ، ويُعيد `needsPinSetup` لحساب بلا `pin`/`password` بدل قبوله بـ `1234`، وأُضيف `setUserPin` + `isAcceptablePin` (4–6 أرقام، رفض 1234/0000/1111/…/123456/654321) و`login` يقرأ الإعدادات من المصدر لا من حالة الإغلاق؛ `LoginScreen` يعرض مسار «تعيين الرمز أول مرة» (رمز + تأكيد + رسائل عربية صريحة) بدل `1234` الافتراضي، وصار اختيار الحساب بالمعرّف حتى يقرأ الرمز المحفوظ حديثاً، وزر «دخول سريع» صار «دخول» يطلب الرمز دائماً؛ الاختبارات: مساعد `tools/regression/_login.mjs` موحّد (`withTestPin`/`loginWithPin`) وبذور `pin` في darkmode/responsive/typography/workos، وdata-loss/run يمرّان عبر مسار التعيين الحقيقي · بوابة `auth` **9 → 16 فحصاً** (رفض 1234 عند التعيين، تأكيد غير مطابق، حفظ الرمز، رفض الفارغ) |

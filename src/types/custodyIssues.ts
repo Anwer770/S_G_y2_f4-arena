@@ -7,15 +7,7 @@ export type CustodySection = 'custody' | 'issues';
 
 export type CustodyPriority = 'A' | 'B' | 'C' | 'D' | '√' | string;
 
-export type CustodyStatus =
-  | 'مخطط'
-  | 'مكتمل'
-  | 'مؤجل'
-  | 'متأخر'
-  | 'شركة'
-  | 'ملغي'
-  | 'بدون حالة'
-  | string;
+export type CustodyStatus = 'مخطط' | 'مكتمل' | 'مؤجل' | 'متأخر' | 'شركة' | 'ملغي' | 'بدون حالة' | string;
 
 export interface CustodyIssueRecord {
   id: string;

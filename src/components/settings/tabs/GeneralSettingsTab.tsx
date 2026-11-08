@@ -48,7 +48,8 @@ export const GeneralSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
         <div>
           <h2 className="text-base font-bold text-slate-900 dark:text-white">إعدادات النظام العامة</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            تحديد اسم المستخدم ومدير النظام، العملة الافتراضية، المنطقة الزمنية، نوع التقويم المعتمد، وبادئات أرقام السندات
+            تحديد اسم المستخدم ومدير النظام، العملة الافتراضية، المنطقة الزمنية، نوع التقويم المعتمد، وبادئات أرقام
+            السندات
           </p>
         </div>
       </div>
@@ -173,9 +174,7 @@ export const GeneralSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
 
         {/* Calendar Type */}
         <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-            نوع التقويم المعتمد
-          </label>
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">نوع التقويم المعتمد</label>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
@@ -304,9 +303,7 @@ export const GeneralSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
                 <div className="text-base font-black text-slate-900 dark:text-white mb-0.5">{c.symbol}</div>
                 <div className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">{c.code}</div>
                 <div className="text-xs text-slate-400 dark:text-slate-500 truncate">{c.nameAr}</div>
-                {isSelected && (
-                  <span className="absolute top-1 left-1 w-2 h-2 rounded-full bg-blue-600"></span>
-                )}
+                {isSelected && <span className="absolute top-1 left-1 w-2 h-2 rounded-full bg-blue-600"></span>}
               </button>
             );
           })}

@@ -29,7 +29,10 @@ export class FinancialRepository extends BaseRepository<FinancialTransaction> {
    * Reverse a historical transaction instead of hard-deleting it,
    * creating a balancing reversal entry to maintain audit integrity.
    */
-  public reverseTransaction(originalId: string, reason: string): { original: FinancialTransaction; reversal: FinancialTransaction } | null {
+  public reverseTransaction(
+    originalId: string,
+    reason: string
+  ): { original: FinancialTransaction; reversal: FinancialTransaction } | null {
     const original = this.getById(originalId);
     if (!original) return null;
 

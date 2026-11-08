@@ -33,7 +33,7 @@ export interface TaskFlowTask {
   assigneeId?: string;
   status: TaskFlowStatus;
   startDate: string; // YYYY-MM-DD
-  dueDate: string;   // YYYY-MM-DD
+  dueDate: string; // YYYY-MM-DD
   priority?: TaskFlowPriority;
   createdAt: string;
   updatedAt: string;

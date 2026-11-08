@@ -55,10 +55,13 @@ export const WorkOSInbox: React.FC<WorkOSInboxProps> = ({
               <div className="p-2 rounded-xl bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300">
                 <Inbox className="w-5 h-5" />
               </div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">صندوق الوارد المركزي (Inbox & Brain Dump)</h2>
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                صندوق الوارد المركزي (Inbox & Brain Dump)
+              </h2>
             </div>
             <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
-              التقط أي فكرة أو مهمة أو مكالمة أو ملاحظة واردة هنا فوراً لتصفية ذهنك، ثم قم بفرزها وتحويلها بنقرة واحدة إلى الكيان المناسب.
+              التقط أي فكرة أو مهمة أو مكالمة أو ملاحظة واردة هنا فوراً لتصفية ذهنك، ثم قم بفرزها وتحويلها بنقرة واحدة
+              إلى الكيان المناسب.
             </p>
           </div>
           <span className="px-3 py-1 rounded-full bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-200 text-xs font-bold border border-teal-200 dark:border-teal-800 self-start">
@@ -109,9 +112,16 @@ export const WorkOSInbox: React.FC<WorkOSInboxProps> = ({
                   <span className="flex items-center gap-1 text-teal-700 dark:text-teal-300 font-bold">
                     <Sparkles className="w-3 h-3 text-teal-600 dark:text-teal-400" /> تحليل ذكي:
                   </span>
-                  <span>الموعد المقترح: <strong className="font-mono text-slate-700 dark:text-slate-200">{parsed.dueDate} {parsed.dueTime}</strong></span>
+                  <span>
+                    الموعد المقترح:{' '}
+                    <strong className="font-mono text-slate-700 dark:text-slate-200">
+                      {parsed.dueDate} {parsed.dueTime}
+                    </strong>
+                  </span>
                   <span>•</span>
-                  <span>الأولوية: <strong className="text-slate-700 dark:text-slate-200">{parsed.priority}</strong></span>
+                  <span>
+                    الأولوية: <strong className="text-slate-700 dark:text-slate-200">{parsed.priority}</strong>
+                  </span>
                 </div>
               </div>
 
@@ -168,8 +178,12 @@ export const WorkOSInbox: React.FC<WorkOSInboxProps> = ({
         {inbox.length === 0 && (
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-dashed border-slate-300 dark:border-slate-600 p-12 text-center text-slate-400 dark:text-slate-500">
             <CheckCircle className="w-8 h-8 text-teal-500 mx-auto mb-2 opacity-60" />
-            <h3 className="font-bold text-slate-700 dark:text-slate-200 text-sm">صندوق الوارد فارغ تماماً (Inbox Zero)!</h3>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">كافة الأفكار تم فرزها وتحويلها إلى أعمال ومشاريع مجدولة.</p>
+            <h3 className="font-bold text-slate-700 dark:text-slate-200 text-sm">
+              صندوق الوارد فارغ تماماً (Inbox Zero)!
+            </h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+              كافة الأفكار تم فرزها وتحويلها إلى أعمال ومشاريع مجدولة.
+            </p>
           </div>
         )}
       </div>

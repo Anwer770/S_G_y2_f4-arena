@@ -113,9 +113,7 @@ export const RoutineTemplatesModal: React.FC<RoutineTemplatesModalProps> = ({
                         <h3 className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-emerald-600 transition">
                           {tpl.name}
                         </h3>
-                        <span className="text-xs text-slate-500 dark:text-slate-400">
-                          {tpl.category}
-                        </span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">{tpl.category}</span>
                       </div>
                     </div>
 
@@ -125,9 +123,7 @@ export const RoutineTemplatesModal: React.FC<RoutineTemplatesModalProps> = ({
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">
-                    {tpl.description}
-                  </p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">{tpl.description}</p>
 
                   {/* Steps preview */}
                   <div className="space-y-1 pt-1">

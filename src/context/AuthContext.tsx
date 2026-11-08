@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SystemUser, UserRole, CompleteSystemSettings } from '../types/settings';
 import { ActiveModuleTab } from '../types';
-import { loadCompleteSystemSettings, saveCompleteSystemSettings, SETTINGS_UPDATED_EVENT } from '../utils/settingsStorage';
+import {
+  loadCompleteSystemSettings,
+  saveCompleteSystemSettings,
+  SETTINGS_UPDATED_EVENT,
+} from '../utils/settingsStorage';
 import { modulesForRole, permissionsForRole } from '../utils/roles';
 import { PinDigest, hashPin, verifyPin, hasPinDigest, isAcceptablePin, isWebCryptoAvailable } from '../utils/pinCrypto';
 import {
@@ -113,21 +117,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [settings.users]);
 
   // Login handler
-  const login = async (
-    identifier: string,
-    pinOrPassword?: string,
-    options?: LoginOptions
-  ): Promise<LoginResult> => {
+  const login = async (identifier: string, pinOrPassword?: string, options?: LoginOptions): Promise<LoginResult> => {
     const remember = options?.remember !== false;
     // نقرأ الإعدادات من المصدر مباشرة لا من حالة الإغلاق (closure): الرمز قد يكون
     // عُيِّن للتوّ عبر setUserPin في نفس الدورة، وحالة React لم تكن لتظهر بعد.
     const freshSettings = loadCompleteSystemSettings();
     const cleanId = identifier.trim().toLowerCase();
     const user = freshSettings.users.find(
-      (u) =>
-        u.id.toLowerCase() === cleanId ||
-        u.email.toLowerCase() === cleanId ||
-        u.name.toLowerCase() === cleanId
+      (u) => u.id.toLowerCase() === cleanId || u.email.toLowerCase() === cleanId || u.name.toLowerCase() === cleanId
     );
 
     if (!user) {
@@ -240,10 +237,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           user.role === 'admin'
             ? 'مدير عام المنظومة والعمليات'
             : user.role === 'accountant'
-            ? 'المحاسب المالي المعتمد'
-            : user.role === 'sales'
-            ? 'مسؤول المبيعات والميدان'
-            : 'مستعرض النظام',
+              ? 'المحاسب المالي المعتمد'
+              : user.role === 'sales'
+                ? 'مسؤول المبيعات والميدان'
+                : 'مستعرض النظام',
       },
     };
 

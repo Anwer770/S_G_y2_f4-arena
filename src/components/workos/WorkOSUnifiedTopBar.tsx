@@ -26,7 +26,9 @@ import { ActiveTimerState, QuickAddType, WorkTask, WorkProject } from '../../typ
 interface WorkOSUnifiedTopBarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  onOpenQuickAdd?: (type: 'project' | 'task' | 'meeting' | 'appointment' | 'goal' | 'note' | 'order' | 'commitment' | 'habit') => void;
+  onOpenQuickAdd?: (
+    type: 'project' | 'task' | 'meeting' | 'appointment' | 'goal' | 'note' | 'order' | 'commitment' | 'habit'
+  ) => void;
   onOpenAddModal?: (type: QuickAddType) => void;
   tasks?: WorkTask[];
   projects?: WorkProject[];
@@ -119,13 +121,15 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
   }, []);
 
   const todayStr = new Date().toISOString().split('T')[0];
-  const computedOverdue = typeof overdueTasksCount === 'number'
-    ? overdueTasksCount
-    : tasks.filter((t) => t && t.status !== 'completed' && t.dueDate && t.dueDate < todayStr).length;
+  const computedOverdue =
+    typeof overdueTasksCount === 'number'
+      ? overdueTasksCount
+      : tasks.filter((t) => t && t.status !== 'completed' && t.dueDate && t.dueDate < todayStr).length;
 
-  const computedUrgent = typeof urgentTasksCount === 'number'
-    ? urgentTasksCount
-    : tasks.filter((t) => t && t.status !== 'completed' && t.priority === 'urgent').length;
+  const computedUrgent =
+    typeof urgentTasksCount === 'number'
+      ? urgentTasksCount
+      : tasks.filter((t) => t && t.status !== 'completed' && t.priority === 'urgent').length;
 
   const totalAlerts = computedOverdue + computedUrgent;
 
@@ -205,8 +209,12 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
             >
               <Plus className="w-4 h-4" />
               <span>+ إضافة</span>
-              <span className="hidden sm:inline-block px-1 py-0.2 text-xs font-mono bg-teal-800 text-teal-200 rounded">N</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isAddMenuOpen ? 'rotate-180' : ''}`} />
+              <span className="hidden sm:inline-block px-1 py-0.2 text-xs font-mono bg-teal-800 text-teal-200 rounded">
+                N
+              </span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${isAddMenuOpen ? 'rotate-180' : ''}`}
+              />
             </button>
 
             {/* Dropdown Options */}
@@ -384,7 +392,9 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
                         <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
                         <div>
                           <span className="font-bold block">مهام متأخرة</span>
-                          <span className="text-xs text-rose-600 dark:text-rose-400">تجاوزت تاريخ الاستحقاق المحدد</span>
+                          <span className="text-xs text-rose-600 dark:text-rose-400">
+                            تجاوزت تاريخ الاستحقاق المحدد
+                          </span>
                         </div>
                       </div>
                       <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white font-mono text-xs font-bold">
@@ -405,7 +415,9 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
                         <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                         <div>
                           <span className="font-bold block">مهام عاجلة وحرجة</span>
-                          <span className="text-xs text-amber-700 dark:text-amber-300">تتطلب إجراءات فورية ذات أولوية</span>
+                          <span className="text-xs text-amber-700 dark:text-amber-300">
+                            تتطلب إجراءات فورية ذات أولوية
+                          </span>
                         </div>
                       </div>
                       <span className="px-2 py-0.5 rounded-full bg-amber-600 text-white font-mono text-xs font-bold">
@@ -444,7 +456,9 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
 
                 {/* Density Setting */}
                 <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1.5">كثافة عرض الجداول:</label>
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1.5">
+                    كثافة عرض الجداول:
+                  </label>
                   <div className="grid grid-cols-2 gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
                     <button
                       onClick={() => handleDensityChange('comfortable')}
@@ -468,18 +482,20 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
                 {/* Hide Completed Tasks Setting */}
                 <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
                   <div>
-                    <span className="font-bold text-slate-800 dark:text-slate-200 block text-xs">إخفاء المهام المنجزة</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200 block text-xs">
+                      إخفاء المهام المنجزة
+                    </span>
                     <span className="text-xs text-slate-400 dark:text-slate-500 block">تقليل الازدحام البصري</span>
                   </div>
                   <button
                     onClick={handleToggleCompleted}
                     className={`w-10 h-5.5 rounded-full transition-colors relative cursor-pointer ${
-                      (hideCompleted ?? (showCompleted === false)) ? 'bg-teal-700' : 'bg-slate-200'
+                      (hideCompleted ?? showCompleted === false) ? 'bg-teal-700' : 'bg-slate-200'
                     }`}
                   >
                     <div
                       className={`w-4 h-4 rounded-full bg-white dark:bg-slate-900 shadow-xs transition-transform absolute top-0.5 ${
-                        (hideCompleted ?? (showCompleted === false)) ? 'right-5.5' : 'right-0.5'
+                        (hideCompleted ?? showCompleted === false) ? 'right-5.5' : 'right-0.5'
                       }`}
                     />
                   </button>
@@ -487,8 +503,6 @@ export const WorkOSUnifiedTopBar: React.FC<WorkOSUnifiedTopBarProps> = ({
               </div>
             )}
           </div>
-
-
         </div>
       </div>
     </header>

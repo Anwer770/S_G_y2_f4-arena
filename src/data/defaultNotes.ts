@@ -299,15 +299,26 @@ export const DEFAULT_NOTES: NoteRecord[] = [
     attachments: [],
     tasks: [
       { id: 'nt-1', text: 'تجهيز الكتالوج التسعيري المحدث', completed: true, priority: 'عالية', dueDate: '2026-09-01' },
-      { id: 'nt-2', text: 'توزيع العينات على مشرفي المناطق', completed: false, priority: 'عالية', dueDate: '2026-09-05' },
+      {
+        id: 'nt-2',
+        text: 'توزيع العينات على مشرفي المناطق',
+        completed: false,
+        priority: 'عالية',
+        dueDate: '2026-09-05',
+      },
       { id: 'nt-3', text: 'مراجعة نسب التحصيل الأسبوعي', completed: false, priority: 'متوسطة', dueDate: '2026-09-15' },
     ],
     reminders: [
-      { id: 'rem-1', date: '2026-09-10', time: '09:30', repeat: 'weekly', active: true, noteText: 'مراجعة مبيعات خط التوزيع' },
+      {
+        id: 'rem-1',
+        date: '2026-09-10',
+        time: '09:30',
+        repeat: 'weekly',
+        active: true,
+        noteText: 'مراجعة مبيعات خط التوزيع',
+      },
     ],
-    links: [
-      { id: 'link-1', targetType: 'project', targetId: 'PRJ-DIST', targetTitle: 'مشروع التوزيع 2026' },
-    ],
+    links: [{ id: 'link-1', targetType: 'project', targetId: 'PRJ-DIST', targetTitle: 'مشروع التوزيع 2026' }],
     versions: [
       {
         versionId: 'v1',
@@ -350,8 +361,20 @@ export const DEFAULT_NOTES: NoteRecord[] = [
     reviewReminderEnabled: true,
     attachments: [],
     tasks: [
-      { id: 'nt-4', text: 'إرسال تعميم السياسة الائتمانية لجميع المندوبين', completed: true, priority: 'عالية', dueDate: '2026-08-30' },
-      { id: 'nt-5', text: 'تحديث شاشة القيصر والدين بسقوف العملاء', completed: false, priority: 'عالية', dueDate: '2026-09-02' },
+      {
+        id: 'nt-4',
+        text: 'إرسال تعميم السياسة الائتمانية لجميع المندوبين',
+        completed: true,
+        priority: 'عالية',
+        dueDate: '2026-08-30',
+      },
+      {
+        id: 'nt-5',
+        text: 'تحديث شاشة القيصر والدين بسقوف العملاء',
+        completed: false,
+        priority: 'عالية',
+        dueDate: '2026-09-02',
+      },
     ],
     reminders: [],
     links: [],
@@ -391,7 +414,13 @@ export const DEFAULT_NOTES: NoteRecord[] = [
     reviewReminderEnabled: false,
     attachments: [],
     tasks: [
-      { id: 'nt-6', text: 'حساب التكلفة المالية المتوقعة لنسبة الخصم', completed: false, priority: 'متوسطة', dueDate: '2026-09-08' },
+      {
+        id: 'nt-6',
+        text: 'حساب التكلفة المالية المتوقعة لنسبة الخصم',
+        completed: false,
+        priority: 'متوسطة',
+        dueDate: '2026-09-08',
+      },
     ],
     reminders: [],
     links: [],
@@ -402,7 +431,8 @@ export const DEFAULT_NOTES: NoteRecord[] = [
   {
     id: 'NOTE-1004',
     title: 'ملاحظة سريعة: اتصال د. وجدان - صيدلية الشفاء',
-    content: 'طلب توفير 20 علبة من كريم التفتيح الطبي الجديد مع كتيب الإرشادات. وأفاد بأنه جاهز لتسوية الحساب السابق البالغ 85,000 ريال عند تسليم الطلبية يوم الأحد القادم.',
+    content:
+      'طلب توفير 20 علبة من كريم التفتيح الطبي الجديد مع كتيب الإرشادات. وأفاد بأنه جاهز لتسوية الحساب السابق البالغ 85,000 ريال عند تسليم الطلبية يوم الأحد القادم.',
     summary: 'طلبية 20 علبة كريم تفتيح + تسوية رصيد سابق 85,000 ريال يوم الأحد.',
     type: 'اتصال',
     category: 'العملاء',
@@ -422,11 +452,30 @@ export const DEFAULT_NOTES: NoteRecord[] = [
     reviewReminderEnabled: true,
     attachments: [],
     tasks: [
-      { id: 'nt-7', text: 'تجهيز 20 علبة كريم تفتيح من المستودع', completed: false, priority: 'عالية', dueDate: '2026-08-31' },
-      { id: 'nt-8', text: 'تحصيل مبلغ 85,000 ريال مع الفاتورة', completed: false, priority: 'عالية', dueDate: '2026-08-31' },
+      {
+        id: 'nt-7',
+        text: 'تجهيز 20 علبة كريم تفتيح من المستودع',
+        completed: false,
+        priority: 'عالية',
+        dueDate: '2026-08-31',
+      },
+      {
+        id: 'nt-8',
+        text: 'تحصيل مبلغ 85,000 ريال مع الفاتورة',
+        completed: false,
+        priority: 'عالية',
+        dueDate: '2026-08-31',
+      },
     ],
     reminders: [
-      { id: 'rem-2', date: '2026-08-31', time: '10:00', repeat: 'once', active: true, noteText: 'تسليم طلبية د. وجدان وتحصيل الرصيد' },
+      {
+        id: 'rem-2',
+        date: '2026-08-31',
+        time: '10:00',
+        repeat: 'once',
+        active: true,
+        noteText: 'تسليم طلبية د. وجدان وتحصيل الرصيد',
+      },
     ],
     links: [],
     versions: [],
@@ -436,7 +485,8 @@ export const DEFAULT_NOTES: NoteRecord[] = [
   {
     id: 'NOTE-1005',
     title: 'ملاحظة سريعة: فحص ثلاجة حفظ العينات والمواد الحساسة',
-    content: 'درجة حرارة الثلاجة الرئيسية استقرت عند 4 درجات مئوية. يجب التأكد من عمل المولد الاحتياطي وفحص الحساسات كل صباح.',
+    content:
+      'درجة حرارة الثلاجة الرئيسية استقرت عند 4 درجات مئوية. يجب التأكد من عمل المولد الاحتياطي وفحص الحساسات كل صباح.',
     summary: 'فحص استقرار درجة حرارة ثلاجة العينات والتأكد من المولد الاحتياطي.',
     type: 'سجل',
     category: 'العمل',
@@ -454,9 +504,7 @@ export const DEFAULT_NOTES: NoteRecord[] = [
     nextReviewDate: '2026-09-01',
     reviewReminderEnabled: false,
     attachments: [],
-    tasks: [
-      { id: 'nt-9', text: 'تسجيل قراءة العداد الصباحية يومياً', completed: false, priority: 'متوسطة' },
-    ],
+    tasks: [{ id: 'nt-9', text: 'تسجيل قراءة العداد الصباحية يومياً', completed: false, priority: 'متوسطة' }],
     reminders: [],
     links: [],
     versions: [],
@@ -495,7 +543,13 @@ export const DEFAULT_NOTES: NoteRecord[] = [
     reviewReminderEnabled: true,
     attachments: [],
     tasks: [
-      { id: 'nt-10', text: 'توقيع عقد التوريد مع مطابع الوفاء وتعميد العينة', completed: false, priority: 'عالية', dueDate: '2026-09-04' },
+      {
+        id: 'nt-10',
+        text: 'توقيع عقد التوريد مع مطابع الوفاء وتعميد العينة',
+        completed: false,
+        priority: 'عالية',
+        dueDate: '2026-09-04',
+      },
     ],
     reminders: [],
     links: [],

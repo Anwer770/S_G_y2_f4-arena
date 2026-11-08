@@ -317,7 +317,9 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           <table className="w-full text-right text-xs border-collapse min-w-[960px] print:min-w-0">
             <thead className="sticky top-0 z-20">
               <tr className="bg-slate-900 text-white font-bold border-b border-slate-800 shadow-2xs select-none">
-                <th className="py-2.5 px-3 w-24 sticky right-0 z-30 bg-slate-900 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.2)]">المعرف</th>
+                <th className="py-2.5 px-3 w-24 sticky right-0 z-30 bg-slate-900 shadow-[-3px_0_6px_-2px_rgba(0,0,0,0.2)]">
+                  المعرف
+                </th>
                 <th className="py-2.5 px-2 w-14 text-center">الأهمية</th>
                 <th className="py-2.5 px-2 w-14 text-center">الرمز</th>
                 <th className="py-2.5 px-3 min-w-[180px]">الالتزام والوصف</th>
@@ -327,7 +329,9 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                 <th className="py-2.5 px-2.5 w-24 text-left text-rose-300">المتبقي</th>
                 <th className="py-2.5 px-2 w-20 text-center">نسبة السداد</th>
                 <th className="py-2.5 px-2.5 w-28">تاريخ الاستحقاق</th>
-                <th className="py-2.5 px-3 w-28 text-center sticky left-0 z-30 bg-slate-900 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.2)]">إجراءات</th>
+                <th className="py-2.5 px-3 w-28 text-center sticky left-0 z-30 bg-slate-900 shadow-[3px_0_6px_-2px_rgba(0,0,0,0.2)]">
+                  إجراءات
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
@@ -343,11 +347,7 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                   const { paid, remaining, progressPercent, isCompleted } = calculateCommitmentRemaining(c);
                   const isOverdue = !isCompleted && remaining > 0 && c.endDate && c.endDate < todayStr;
                   const isDueSoon =
-                    !isCompleted &&
-                    remaining > 0 &&
-                    c.endDate &&
-                    c.endDate >= todayStr &&
-                    c.endDate <= in30DaysStr;
+                    !isCompleted && remaining > 0 && c.endDate && c.endDate >= todayStr && c.endDate <= in30DaysStr;
 
                   const iconObj = DEBT_ICONS.find((ic) => ic.symbol === c.icon);
 
@@ -358,10 +358,10 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                         isCompleted
                           ? 'bg-slate-50/70 text-slate-400'
                           : isOverdue
-                          ? 'bg-rose-50/40'
-                          : isDueSoon
-                          ? 'bg-amber-50/30'
-                          : ''
+                            ? 'bg-rose-50/40'
+                            : isDueSoon
+                              ? 'bg-amber-50/30'
+                              : ''
                       }`}
                     >
                       {/* ID */}
@@ -376,8 +376,8 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                             c.priority === 'A'
                               ? 'bg-rose-100 text-rose-800 border border-rose-200'
                               : c.priority === 'B'
-                              ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                              : 'bg-blue-100 text-blue-800 border border-blue-200'
+                                ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                : 'bg-blue-100 text-blue-800 border border-blue-200'
                           }`}
                         >
                           {c.priority}
@@ -404,7 +404,11 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                       {/* Name & Desc */}
                       <td className="py-2 px-3">
                         <div className="font-bold text-slate-900 dark:text-slate-100">{c.name}</div>
-                        {c.desc && <div className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-xs">{c.desc}</div>}
+                        {c.desc && (
+                          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-xs">
+                            {c.desc}
+                          </div>
+                        )}
                         {c.note && (
                           <div className="text-xs text-slate-400 dark:text-slate-500 italic">ملاحظة: {c.note}</div>
                         )}
@@ -443,8 +447,8 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
                                 progressPercent === 100
                                   ? 'bg-emerald-500'
                                   : progressPercent > 50
-                                  ? 'bg-indigo-500'
-                                  : 'bg-amber-500'
+                                    ? 'bg-indigo-500'
+                                    : 'bg-amber-500'
                               }`}
                               style={{ width: `${progressPercent}%` }}
                             />

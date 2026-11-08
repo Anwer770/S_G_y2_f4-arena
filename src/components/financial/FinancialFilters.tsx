@@ -113,7 +113,9 @@ export const FinancialFilters: React.FC<Props> = ({
               <Calendar className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
               <span>{PERIOD_BUTTON_LABEL[filters.periodFilter] ?? PERIOD_BUTTON_LABEL.all}</span>
             </div>
-            <ChevronDown className={`w-3.5 h-3.5 text-teal-600 dark:text-teal-400 transition-transform shrink-0 ${isPeriodDropdownOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-teal-600 dark:text-teal-400 transition-transform shrink-0 ${isPeriodDropdownOpen ? 'rotate-180' : ''}`}
+            />
           </button>
 
           {/* Dropdown Options Popup */}
@@ -236,7 +238,9 @@ export const FinancialFilters: React.FC<Props> = ({
             {draftsCount > 0 && (
               <span
                 className={`px-1.5 py-0.2 rounded-full text-xs font-mono font-bold ${
-                  filters.isDraftOnly ? 'bg-amber-600 text-white' : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+                  filters.isDraftOnly
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
                 }`}
               >
                 {draftsCount}

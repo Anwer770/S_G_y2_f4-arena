@@ -116,13 +116,15 @@ export async function getFolderHandle(): Promise<FileSystemDirectoryHandle | nul
 }
 
 export const supportsFolderPicker = (): boolean =>
-  typeof window !== 'undefined' && typeof (window as unknown as { showDirectoryPicker?: unknown }).showDirectoryPicker === 'function';
+  typeof window !== 'undefined' &&
+  typeof (window as unknown as { showDirectoryPicker?: unknown }).showDirectoryPicker === 'function';
 
 /** يطلب من المستخدم اختيار مجلد الأرشيف (يجب أن يكون بفعل مستخدم). */
 export async function pickFolder(): Promise<string | null> {
   if (!supportsFolderPicker()) return null;
   try {
-    const picker = (window as unknown as { showDirectoryPicker: () => Promise<FileSystemDirectoryHandle> }).showDirectoryPicker;
+    const picker = (window as unknown as { showDirectoryPicker: () => Promise<FileSystemDirectoryHandle> })
+      .showDirectoryPicker;
     const handle = await picker();
     await saveFolderHandle(handle);
     const config = readAutoConfig();
@@ -183,7 +185,9 @@ export async function runAutoExport(force = false, now: Date = new Date()): Prom
     const handle = await getFolderHandle();
     if (handle) {
       try {
-        const perm = await (handle as unknown as { queryPermission?: (o: { mode: string }) => Promise<string> }).queryPermission?.({ mode: 'readwrite' });
+        const perm = await (
+          handle as unknown as { queryPermission?: (o: { mode: string }) => Promise<string> }
+        ).queryPermission?.({ mode: 'readwrite' });
         if (perm === 'granted' || perm === undefined) {
           const fileHandle = await handle.getFileHandle(fileName, { create: true });
           const writable = await fileHandle.createWritable();

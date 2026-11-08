@@ -34,12 +34,13 @@ export function lockRemainingMs(userId: string, now: number = Date.now()): numbe
   return remaining > 0 ? remaining : 0;
 }
 
-/** عدد المحاولات الفاشلة المتبقية قبل الإقفال */
-export function attemptsRemaining(userId: string): number {
+/** عدد المحاولات الفاشلة المتبقية قبل الإقفال (0 أثناء الإقفال الفعلي) */
+export function attemptsRemaining(userId: string, now: number = Date.now()): number {
   const state = loadAuthGuardState();
   const record = state[userId];
-  const failures = record ? record.failures : 0;
-  return Math.max(0, MAX_FAILED_ATTEMPTS - failures);
+  if (!record) return MAX_FAILED_ATTEMPTS;
+  if (record.lockedUntil > now) return 0;
+  return Math.max(0, MAX_FAILED_ATTEMPTS - record.failures);
 }
 
 /** يُسجّل محاولة فاشلة ويعيد الحالة بعدها (وقد يُقفل الحساب) */

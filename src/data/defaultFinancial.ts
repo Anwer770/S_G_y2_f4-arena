@@ -381,23 +381,55 @@ export const DEFAULT_FINANCIAL_TRANSACTIONS: FinancialTransaction[] = [
 export function getMovementBadgeStyle(movement: string): { bg: string; text: string; border: string } {
   switch (movement) {
     case 'الصندوق':
-      return { bg: 'bg-slate-100 dark:bg-slate-800/80', text: 'text-slate-800 dark:text-slate-200', border: 'border-slate-300 dark:border-slate-700' };
+      return {
+        bg: 'bg-slate-100 dark:bg-slate-800/80',
+        text: 'text-slate-800 dark:text-slate-200',
+        border: 'border-slate-300 dark:border-slate-700',
+      };
     case 'ايرادات':
-      return { bg: 'bg-emerald-500/10 dark:bg-emerald-500/15', text: 'text-emerald-700 dark:text-emerald-300 font-bold', border: 'border-emerald-500/30' };
+      return {
+        bg: 'bg-emerald-500/10 dark:bg-emerald-500/15',
+        text: 'text-emerald-700 dark:text-emerald-300 font-bold',
+        border: 'border-emerald-500/30',
+      };
     case 'منصرف':
-      return { bg: 'bg-rose-500/10 dark:bg-rose-500/15', text: 'text-rose-700 dark:text-rose-300 font-bold', border: 'border-rose-500/30' };
+      return {
+        bg: 'bg-rose-500/10 dark:bg-rose-500/15',
+        text: 'text-rose-700 dark:text-rose-300 font-bold',
+        border: 'border-rose-500/30',
+      };
     case 'حساب له':
     case 'حساب دائن (له)':
-      return { bg: 'bg-blue-500/10 dark:bg-blue-500/15', text: 'text-blue-700 dark:text-blue-300 font-bold', border: 'border-blue-500/30' };
+      return {
+        bg: 'bg-blue-500/10 dark:bg-blue-500/15',
+        text: 'text-blue-700 dark:text-blue-300 font-bold',
+        border: 'border-blue-500/30',
+      };
     case 'حساب عليه':
     case 'حساب مدين (ع)':
-      return { bg: 'bg-amber-500/10 dark:bg-amber-500/15', text: 'text-amber-700 dark:text-amber-300 font-bold', border: 'border-amber-500/30' };
+      return {
+        bg: 'bg-amber-500/10 dark:bg-amber-500/15',
+        text: 'text-amber-700 dark:text-amber-300 font-bold',
+        border: 'border-amber-500/30',
+      };
     case 'سلفه':
-      return { bg: 'bg-amber-500/10 dark:bg-amber-500/15', text: 'text-amber-800 dark:text-amber-300 font-bold', border: 'border-amber-500/30' };
+      return {
+        bg: 'bg-amber-500/10 dark:bg-amber-500/15',
+        text: 'text-amber-800 dark:text-amber-300 font-bold',
+        border: 'border-amber-500/30',
+      };
     case 'ملاحظة':
-      return { bg: 'bg-violet-500/10 dark:bg-violet-500/15', text: 'text-violet-700 dark:text-violet-300 font-bold', border: 'border-violet-500/30' };
+      return {
+        bg: 'bg-violet-500/10 dark:bg-violet-500/15',
+        text: 'text-violet-700 dark:text-violet-300 font-bold',
+        border: 'border-violet-500/30',
+      };
     default:
-      return { bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-700 dark:text-slate-300', border: 'border-slate-200 dark:border-slate-700' };
+      return {
+        bg: 'bg-slate-100 dark:bg-slate-800',
+        text: 'text-slate-700 dark:text-slate-300',
+        border: 'border-slate-200 dark:border-slate-700',
+      };
   }
 }
 
@@ -406,16 +438,32 @@ export function getImportanceBadgeStyle(importance: string): { bg: string; text:
     case '√':
     case 'تم التنفيذ':
     case 'تم ترحيل':
-      return { bg: 'bg-emerald-500/10 dark:bg-emerald-500/15', text: 'text-emerald-700 dark:text-emerald-300 font-bold', border: 'border-emerald-500/30' };
+      return {
+        bg: 'bg-emerald-500/10 dark:bg-emerald-500/15',
+        text: 'text-emerald-700 dark:text-emerald-300 font-bold',
+        border: 'border-emerald-500/30',
+      };
     case 'A':
     case 'اشكال':
     case 'ملغي':
-      return { bg: 'bg-rose-500/10 dark:bg-rose-500/15', text: 'text-rose-700 dark:text-rose-300 font-bold', border: 'border-rose-500/30' };
+      return {
+        bg: 'bg-rose-500/10 dark:bg-rose-500/15',
+        text: 'text-rose-700 dark:text-rose-300 font-bold',
+        border: 'border-rose-500/30',
+      };
     case 'B':
     case 'معلق':
     case 'قيد التنفيذ':
-      return { bg: 'bg-amber-500/10 dark:bg-amber-500/15', text: 'text-amber-700 dark:text-amber-300 font-bold', border: 'border-amber-500/30' };
+      return {
+        bg: 'bg-amber-500/10 dark:bg-amber-500/15',
+        text: 'text-amber-700 dark:text-amber-300 font-bold',
+        border: 'border-amber-500/30',
+      };
     default:
-      return { bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-700 dark:text-slate-300', border: 'border-slate-200 dark:border-slate-700' };
+      return {
+        bg: 'bg-slate-100 dark:bg-slate-800',
+        text: 'text-slate-700 dark:text-slate-300',
+        border: 'border-slate-200 dark:border-slate-700',
+      };
   }
 }

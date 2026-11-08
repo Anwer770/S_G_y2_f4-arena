@@ -10,13 +10,7 @@ interface RoutineSkipModalProps {
   onSkip: (occurrenceId: string, reason: string) => void;
 }
 
-export const RoutineSkipModal: React.FC<RoutineSkipModalProps> = ({
-  isOpen,
-  onClose,
-  occurrence,
-  routine,
-  onSkip,
-}) => {
+export const RoutineSkipModal: React.FC<RoutineSkipModalProps> = ({ isOpen, onClose, occurrence, routine, onSkip }) => {
   const [reasonCategory, setReasonCategory] = useState<string>('ظروف طارئة');
   const [notes, setNotes] = useState('');
 
@@ -53,7 +47,8 @@ export const RoutineSkipModal: React.FC<RoutineSkipModalProps> = ({
           <div className="p-3 bg-rose-50 dark:bg-rose-950/30 rounded-xl border border-rose-200 dark:border-rose-800/40 text-xs text-rose-800 dark:text-rose-300 flex items-start gap-2">
             <AlertCircle size={16} className="shrink-0 mt-0.5" />
             <span>
-              تخطي الروتين يسجله كـ &quot;تم التخطي بعذر&quot; دون التأثير السلبي الحاد على إحصاءات الانضباط، مع حفظ سبب التخطي للتحليل.
+              تخطي الروتين يسجله كـ &quot;تم التخطي بعذر&quot; دون التأثير السلبي الحاد على إحصاءات الانضباط، مع حفظ سبب
+              التخطي للتحليل.
             </span>
           </div>
 

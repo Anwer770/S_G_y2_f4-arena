@@ -99,7 +99,9 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
   const [commitmentType, setCommitmentType] = useState<'receivable' | 'payable' | 'contractual'>('receivable');
   const [commitmentPaymentMethod, setCommitmentPaymentMethod] = useState('نقداً');
   const [commitmentInvoices, setCommitmentInvoices] = useState('');
-  const [commitmentStatus, setCommitmentStatus] = useState<'pending' | 'in_progress' | 'fulfilled' | 'breached'>('pending');
+  const [commitmentStatus, setCommitmentStatus] = useState<'pending' | 'in_progress' | 'fulfilled' | 'breached'>(
+    'pending'
+  );
 
   // 4. Dynamic: Task Fields (مهمة + مهام فرعية)
   const [projectId, setProjectId] = useState(initialProjectId || projects[0]?.id || '');
@@ -134,7 +136,13 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
       setInvoiceNumber(`INV-${Date.now().toString().slice(-4)}`);
       setCommitmentInvoices(`INV-${Date.now().toString().slice(-4)}`);
       setAssignedRep(team[0]?.name || 'م. يحيى الشامي');
-      setClientOrParty(initialType === 'order' ? 'صيدلية النور الحديثة' : initialType === 'commitment' ? 'مؤسسة الشفاء الطبية' : 'الجهة المعنية / العميل');
+      setClientOrParty(
+        initialType === 'order'
+          ? 'صيدلية النور الحديثة'
+          : initialType === 'commitment'
+            ? 'مؤسسة الشفاء الطبية'
+            : 'الجهة المعنية / العميل'
+      );
       setAppointmentPerson('د. عبد الرحمن الهاملي');
     }
   }, [isOpen, initialType, initialPriority, initialProjectId, team]);
@@ -143,10 +151,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
 
   const handleAddSubtask = () => {
     if (!newSubtaskTitle.trim()) return;
-    setSubtasks([
-      ...subtasks,
-      { id: Date.now().toString(), title: newSubtaskTitle.trim(), completed: false },
-    ]);
+    setSubtasks([...subtasks, { id: Date.now().toString(), title: newSubtaskTitle.trim(), completed: false }]);
     setNewSubtaskTitle('');
   };
 
@@ -348,7 +353,10 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs max-h-[calc(85vh-130px)] overflow-y-auto scrollbar-thin">
+        <form
+          onSubmit={handleSubmit}
+          className="p-5 space-y-4 text-xs max-h-[calc(85vh-130px)] overflow-y-auto scrollbar-thin"
+        >
           {/* SECTION A: الحقول المشتركة الثابتة (تظهر دائماً في كل الأنواع) */}
           <div className="space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/70 dark:border-slate-700">
             <div className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-slate-200/50 dark:border-slate-700/50">
@@ -370,10 +378,10 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   activeType === 'order'
                     ? 'مثال: طلبية صيدلية النور - شحنة مستحضرات فيتامين سي'
                     : activeType === 'commitment'
-                    ? 'مثال: تحصيل دفعة مبيعات صيدلية الأمل'
-                    : activeType === 'project'
-                    ? 'مثال: مشروع إطلاق خط مستحضرات العناية Q3'
-                    : 'اكتب العنوان الرئيسي هنا...'
+                      ? 'مثال: تحصيل دفعة مبيعات صيدلية الأمل'
+                      : activeType === 'project'
+                        ? 'مثال: مشروع إطلاق خط مستحضرات العناية Q3'
+                        : 'اكتب العنوان الرئيسي هنا...'
                 }
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
               />
@@ -382,9 +390,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
             {/* 2 & 3. تاريخ البداية + تاريخ الاستحقاق/التسليم + مستوى الأولوية (A/B/C/D) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  تاريخ البداية
-                </label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">تاريخ البداية</label>
                 <input
                   type="date"
                   value={startDate}
@@ -489,9 +495,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    نوع الطلبية
-                  </label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">نوع الطلبية</label>
                   <select
                     value={orderType}
                     onChange={(e) => setOrderType(e.target.value)}
@@ -525,9 +529,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   <input
                     type="number"
                     value={orderTotalAmount !== undefined ? orderTotalAmount : ''}
-                    onChange={(e) =>
-                      setOrderTotalAmount(e.target.value === '' ? '' : Number(e.target.value))
-                    }
+                    onChange={(e) => setOrderTotalAmount(e.target.value === '' ? '' : Number(e.target.value))}
                     placeholder="0.00"
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-mono font-bold text-blue-700 dark:text-blue-300"
                   />
@@ -539,7 +541,9 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   </label>
                   <select
                     value={orderStatus}
-                    onChange={(e) => setOrderStatus(e.target.value as 'processing' | 'shipped' | 'delivered' | 'pending')}
+                    onChange={(e) =>
+                      setOrderStatus(e.target.value as 'processing' | 'shipped' | 'delivered' | 'pending')
+                    }
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-bold cursor-pointer"
                   >
                     <option value="processing">قيد التجهيز</option>
@@ -646,9 +650,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                     type="number"
                     required
                     value={commitmentAmount !== undefined ? commitmentAmount : ''}
-                    onChange={(e) =>
-                      setCommitmentAmount(e.target.value === '' ? '' : Number(e.target.value))
-                    }
+                    onChange={(e) => setCommitmentAmount(e.target.value === '' ? '' : Number(e.target.value))}
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-mono font-bold text-amber-800 dark:text-amber-200"
                   />
                 </div>
@@ -690,7 +692,9 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   </label>
                   <select
                     value={commitmentStatus}
-                    onChange={(e) => setCommitmentStatus(e.target.value as 'pending' | 'in_progress' | 'fulfilled' | 'breached')}
+                    onChange={(e) =>
+                      setCommitmentStatus(e.target.value as 'pending' | 'in_progress' | 'fulfilled' | 'breached')
+                    }
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-bold cursor-pointer"
                   >
                     <option value="pending">قيد الانتظار</option>
@@ -724,9 +728,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                   <CheckSquare className="w-4 h-4 text-emerald-600" />
                   <span>المشروع التابع والمهام الفرعية (Sub-tasks)</span>
                 </span>
-                <span className="text-xs font-mono font-bold text-emerald-700">
-                  {subtasks.length} مهام فرعية
-                </span>
+                <span className="text-xs font-mono font-bold text-emerald-700">{subtasks.length} مهام فرعية</span>
               </div>
 
               <div>
@@ -782,9 +784,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                         key={st.id}
                         className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs"
                       >
-                        <span className="font-medium text-slate-800 dark:text-slate-200">
-                          • {st.title}
-                        </span>
+                        <span className="font-medium text-slate-800 dark:text-slate-200">• {st.title}</span>
                         <button
                           type="button"
                           onClick={() => handleRemoveSubtask(st.id)}
@@ -811,9 +811,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    الوقت
-                  </label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">الوقت</label>
                   <input
                     type="time"
                     value={appointmentTime}
@@ -823,9 +821,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    المكان
-                  </label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">المكان</label>
                   <input
                     type="text"
                     value={appointmentLocation}
@@ -860,17 +856,13 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
                 <input
                   type="number"
                   value={projectBudget !== undefined ? projectBudget : ''}
-                  onChange={(e) =>
-                    setProjectBudget(e.target.value === '' ? '' : Number(e.target.value))
-                  }
+                  onChange={(e) => setProjectBudget(e.target.value === '' ? '' : Number(e.target.value))}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs font-mono font-bold"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  تصنيف المشروع
-                </label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">تصنيف المشروع</label>
                 <input
                   type="text"
                   value={projectCategory}
@@ -885,9 +877,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
           {activeType === 'habit' && (
             <div className="grid grid-cols-2 gap-3 p-4 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  تكرار العادة
-                </label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">تكرار العادة</label>
                 <select
                   value={habitFrequency}
                   onChange={(e) => setHabitFrequency(e.target.value as 'daily' | 'weekdays')}

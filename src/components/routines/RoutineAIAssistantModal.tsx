@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-  X,
-  Sparkles,
-  Zap,
-  CheckCircle2,
-  Clock,
-  ArrowRight,
-  Send,
-  HelpCircle,
-  Layers,
-} from 'lucide-react';
+import { X, Sparkles, Zap, CheckCircle2, Clock, ArrowRight, Send, HelpCircle, Layers } from 'lucide-react';
 import { RoutineRecord } from '../../types/routines';
 import { parseAIPromptToRoutine } from '../../utils/routines';
 
@@ -152,11 +142,10 @@ export const RoutineAIAssistantModal: React.FC<RoutineAIAssistantModalProps> = (
                     {generatedRoutine.icon}
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                      {generatedRoutine.name}
-                    </h3>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">{generatedRoutine.name}</h3>
                     <p className="text-xs text-emerald-800 dark:text-emerald-300">
-                      {generatedRoutine.startTime} ({generatedRoutine.duration} دقيقة) • {generatedRoutine.categoryName} • {generatedRoutine.frequency}
+                      {generatedRoutine.startTime} ({generatedRoutine.duration} دقيقة) • {generatedRoutine.categoryName}{' '}
+                      • {generatedRoutine.frequency}
                     </p>
                   </div>
                 </div>

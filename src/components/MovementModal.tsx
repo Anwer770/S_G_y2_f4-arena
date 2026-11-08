@@ -46,26 +46,14 @@ export const MovementModal: React.FC<MovementModalProps> = ({
   seq,
 }) => {
   // Form Fields
-  const [movementType, setMovementType] = useState<MovementType>(
-    editingRecord ? editingRecord.movementType : 'صرف'
-  );
+  const [movementType, setMovementType] = useState<MovementType>(editingRecord ? editingRecord.movementType : 'صرف');
   const [subId, setSubId] = useState(editingRecord ? editingRecord.subId : '');
   const [mainId, setMainId] = useState(editingRecord ? editingRecord.mainId : '');
-  const [date, setDate] = useState(
-    editingRecord ? editingRecord.date : new Date().toISOString().split('T')[0]
-  );
-  const [beneficiary, setBeneficiary] = useState(
-    editingRecord ? editingRecord.beneficiary : ''
-  );
-  const [description, setDescription] = useState(
-    editingRecord ? editingRecord.description : ''
-  );
-  const [category, setCategory] = useState(
-    editingRecord ? editingRecord.category : categories[0] || 'مبيعات'
-  );
-  const [status, setStatus] = useState(
-    editingRecord ? editingRecord.status : statuses[0] || 'تم التنفيذ'
-  );
+  const [date, setDate] = useState(editingRecord ? editingRecord.date : new Date().toISOString().split('T')[0]);
+  const [beneficiary, setBeneficiary] = useState(editingRecord ? editingRecord.beneficiary : '');
+  const [description, setDescription] = useState(editingRecord ? editingRecord.description : '');
+  const [category, setCategory] = useState(editingRecord ? editingRecord.category : categories[0] || 'مبيعات');
+  const [status, setStatus] = useState(editingRecord ? editingRecord.status : statuses[0] || 'تم التنفيذ');
   const [note, setNote] = useState(editingRecord?.note || '');
 
   // Item Lines
@@ -91,13 +79,11 @@ export const MovementModal: React.FC<MovementModalProps> = ({
       setStatus(editingRecord.status);
       setNote(editingRecord.note || '');
 
-      const lines: ItemLine[] = Object.entries(editingRecord.items || {}).map(
-        ([name, qty], idx) => ({
-          id: `line-${idx}-${Date.now()}`,
-          productName: name,
-          quantity: String(qty),
-        })
-      );
+      const lines: ItemLine[] = Object.entries(editingRecord.items || {}).map(([name, qty], idx) => ({
+        id: `line-${idx}-${Date.now()}`,
+        productName: name,
+        quantity: String(qty),
+      }));
       setItemLines(lines.length > 0 ? lines : []);
     } else {
       // New Movement: auto sequence ID
@@ -149,8 +135,7 @@ export const MovementModal: React.FC<MovementModalProps> = ({
   // Add Item Line
   const handleAddItemLine = () => {
     const nextProduct =
-      activeProducts.find((p) => !itemLines.some((l) => l.productName === p.name)) ||
-      activeProducts[0];
+      activeProducts.find((p) => !itemLines.some((l) => l.productName === p.name)) || activeProducts[0];
 
     setItemLines([
       ...itemLines,
@@ -168,14 +153,8 @@ export const MovementModal: React.FC<MovementModalProps> = ({
   };
 
   // Update Item Line
-  const handleUpdateItemLine = (
-    id: string,
-    field: 'productName' | 'quantity',
-    value: string
-  ) => {
-    setItemLines(
-      itemLines.map((l) => (l.id === id ? { ...l, [field]: value } : l))
-    );
+  const handleUpdateItemLine = (id: string, field: 'productName' | 'quantity', value: string) => {
+    setItemLines(itemLines.map((l) => (l.id === id ? { ...l, [field]: value } : l)));
   };
 
   // Total Units in Modal
@@ -271,11 +250,7 @@ export const MovementModal: React.FC<MovementModalProps> = ({
                 movementType === 'توريد' ? 'bg-emerald-600' : 'bg-rose-600'
               }`}
             >
-              {movementType === 'توريد' ? (
-                <ArrowDownLeft className="w-5 h-5" />
-              ) : (
-                <ArrowUpRight className="w-5 h-5" />
-              )}
+              {movementType === 'توريد' ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
             </div>
             <div>
               <h3 className="text-base font-black text-slate-900 dark:text-slate-100">
@@ -549,9 +524,7 @@ export const MovementModal: React.FC<MovementModalProps> = ({
                     <div className="flex-1">
                       <select
                         value={line.productName}
-                        onChange={(e) =>
-                          handleUpdateItemLine(line.id, 'productName', e.target.value)
-                        }
+                        onChange={(e) => handleUpdateItemLine(line.id, 'productName', e.target.value)}
                         className="w-full p-1.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-600 rounded-lg text-xs font-bold text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 truncate"
                         required
                       >
@@ -571,9 +544,7 @@ export const MovementModal: React.FC<MovementModalProps> = ({
                         min="0.01"
                         step="any"
                         value={line.quantity}
-                        onChange={(e) =>
-                          handleUpdateItemLine(line.id, 'quantity', e.target.value)
-                        }
+                        onChange={(e) => handleUpdateItemLine(line.id, 'quantity', e.target.value)}
                         placeholder="الكمية"
                         className="w-full p-1.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-600 rounded-lg text-xs font-mono font-bold text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 text-center"
                         required

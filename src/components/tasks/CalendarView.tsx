@@ -98,17 +98,23 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
   // Helper for priority badge styling
   const getPriorityStyle = (pri: string) => {
-    if (pri === 'A') return 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200 dark:border-rose-800';
-    if (pri === 'B') return 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 dark:border-amber-800';
-    if (pri === 'C') return 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+    if (pri === 'A')
+      return 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200 dark:border-rose-800';
+    if (pri === 'B')
+      return 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 dark:border-amber-800';
+    if (pri === 'C')
+      return 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 dark:border-blue-800';
     return 'bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700';
   };
 
   // Helper for status badge styling
   const getStatusColor = (status: string) => {
-    if (status === 'تم الانجاز') return 'text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
-    if (status === 'متأخر') return 'text-rose-700 bg-rose-50 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200 dark:border-rose-800';
-    if (status === 'قيد التنفيذ') return 'text-indigo-700 bg-indigo-50 dark:bg-indigo-950/40 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800';
+    if (status === 'تم الانجاز')
+      return 'text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
+    if (status === 'متأخر')
+      return 'text-rose-700 bg-rose-50 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200 dark:border-rose-800';
+    if (status === 'قيد التنفيذ')
+      return 'text-indigo-700 bg-indigo-50 dark:bg-indigo-950/40 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800';
     return 'text-slate-700 bg-slate-50 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700';
   };
 
@@ -268,8 +274,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
       viewMode === 'monthly'
         ? monthDays.filter((d) => d.isCurrentMonth).map((d) => d.dateStr)
         : viewMode === 'weekly'
-        ? weekDays.map((d) => d.dateStr)
-        : [selectedDateStr];
+          ? weekDays.map((d) => d.dateStr)
+          : [selectedDateStr];
 
     const targetDateSet = new Set(targetDates);
 
@@ -435,9 +441,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               <button
                 onClick={() => setTypeFilter('all')}
                 className={`px-2.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer ${
-                  typeFilter === 'all'
-                    ? 'bg-teal-600 text-white'
-                    : 'text-slate-600 dark:text-slate-300'
+                  typeFilter === 'all' ? 'bg-teal-600 text-white' : 'text-slate-600 dark:text-slate-300'
                 }`}
               >
                 الكل ({tasks.length + commitments.length})
@@ -445,9 +449,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               <button
                 onClick={() => setTypeFilter('tasks')}
                 className={`px-2.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer ${
-                  typeFilter === 'tasks'
-                    ? 'bg-teal-600 text-white'
-                    : 'text-slate-600 dark:text-slate-300'
+                  typeFilter === 'tasks' ? 'bg-teal-600 text-white' : 'text-slate-600 dark:text-slate-300'
                 }`}
               >
                 المهام ({tasks.length})
@@ -455,9 +457,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               <button
                 onClick={() => setTypeFilter('commitments')}
                 className={`px-2.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer ${
-                  typeFilter === 'commitments'
-                    ? 'bg-amber-600 text-white'
-                    : 'text-slate-600 dark:text-slate-300'
+                  typeFilter === 'commitments' ? 'bg-amber-600 text-white' : 'text-slate-600 dark:text-slate-300'
                 }`}
               >
                 الالتزامات ({commitments.length})
@@ -562,8 +562,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             isToday
                               ? 'bg-teal-600 text-white font-black shadow-xs'
                               : d.isCurrentMonth
-                              ? 'text-slate-800 dark:text-slate-200'
-                              : 'text-slate-400 dark:text-slate-600'
+                                ? 'text-slate-800 dark:text-slate-200'
+                                : 'text-slate-400 dark:text-slate-600'
                           }`}
                         >
                           {d.dayNum}
@@ -612,8 +612,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             t.status === 'تم الانجاز'
                               ? 'bg-slate-100 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 line-through border-slate-200 dark:border-slate-700'
                               : t.pri === 'A'
-                              ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200 border-rose-200 dark:border-rose-900/60'
-                              : 'bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-200 border-teal-200 dark:border-teal-900/60'
+                                ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200 border-rose-200 dark:border-rose-900/60'
+                                : 'bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-200 border-teal-200 dark:border-teal-900/60'
                           }`}
                           title={`${t.title} (${t.status})`}
                         >
@@ -705,9 +705,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   <div>
                     <div className="border-b border-slate-100 dark:border-slate-800 pb-2 mb-2.5">
                       <div className="flex items-center justify-between">
-                        <span className="block text-xs font-black text-slate-600 dark:text-slate-400">
-                          {w.dayName}
-                        </span>
+                        <span className="block text-xs font-black text-slate-600 dark:text-slate-400">{w.dayName}</span>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full font-mono font-bold ${
                             isToday
@@ -969,12 +967,21 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                           )}
 
                           <div className="flex items-center flex-wrap gap-3 text-xs text-slate-500 dark:text-slate-400 mt-2">
-                            <span>الفئة: <strong className="text-slate-700 dark:text-slate-200">{t.cat}</strong></span>
-                            <span>العملية: <strong className="text-slate-700 dark:text-slate-200">{t.op}</strong></span>
-                            <span>المسؤول: <strong className="text-slate-700 dark:text-slate-200">{t.resp}</strong></span>
+                            <span>
+                              الفئة: <strong className="text-slate-700 dark:text-slate-200">{t.cat}</strong>
+                            </span>
+                            <span>
+                              العملية: <strong className="text-slate-700 dark:text-slate-200">{t.op}</strong>
+                            </span>
+                            <span>
+                              المسؤول: <strong className="text-slate-700 dark:text-slate-200">{t.resp}</strong>
+                            </span>
                             {t.amount && (
                               <span>
-                                المبلغ: <strong className="text-emerald-600 dark:text-emerald-400">{formatCurrency(t.amount)} YER</strong>
+                                المبلغ:{' '}
+                                <strong className="text-emerald-600 dark:text-emerald-400">
+                                  {formatCurrency(t.amount)} YER
+                                </strong>
                               </span>
                             )}
                           </div>
@@ -982,7 +989,9 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${getStatusColor(t.status)}`}>
+                        <span
+                          className={`text-xs font-bold px-2 py-0.5 rounded-full border ${getStatusColor(t.status)}`}
+                        >
                           {t.status}
                         </span>
                         {onEditTask && (
@@ -1069,14 +1078,14 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             {formatCurrency(c.amount)} YER
                           </div>
 
-                          {c.desc && (
-                            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{c.desc}</p>
-                          )}
+                          {c.desc && <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{c.desc}</p>}
                         </div>
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${getStatusColor(c.status)}`}>
+                        <span
+                          className={`text-xs font-bold px-2 py-0.5 rounded-full border ${getStatusColor(c.status)}`}
+                        >
                           {c.status}
                         </span>
                         {onEditCommitment && (
@@ -1186,9 +1195,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       >
                         <div className="flex items-center gap-2 truncate">
                           <CheckCircle2 className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-                          <span className="font-bold text-slate-800 dark:text-slate-100 truncate">
-                            {t.title}
-                          </span>
+                          <span className="font-bold text-slate-800 dark:text-slate-100 truncate">{t.title}</span>
                         </div>
                         <span className={`text-xs px-2 py-0.5 rounded font-bold ${getPriorityStyle(t.pri)}`}>
                           أولوية {t.pri}
@@ -1207,9 +1214,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       >
                         <div className="flex items-center gap-2 truncate">
                           <Coins className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                          <span className="font-bold text-amber-900 dark:text-amber-100 truncate">
-                            {c.name}
-                          </span>
+                          <span className="font-bold text-amber-900 dark:text-amber-100 truncate">{c.name}</span>
                         </div>
                         <span className="font-mono font-bold text-amber-700 dark:text-amber-300">
                           {formatCurrency(c.amount)} YER

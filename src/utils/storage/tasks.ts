@@ -1,26 +1,11 @@
 /**
  * مخزن وحدة «tasks» — مُستخرج من storage.ts (R26).
  */
-import {
-  DEFAULT_COMMITMENTS,
-} from '../../data/defaultCommitments';
-import {
-  DEFAULT_TASKS,
-  TASK_ASSIGNEES,
-  TASK_CATEGORIES,
-  TASK_OPERATIONS,
-} from '../../data/defaultTasks';
-import {
-  dbStorage,
-} from '../../database/dbStorage';
-import {
-  Commitment,
-  Task,
-  TaskAuditLog,
-} from '../../types';
-import {
-  STORAGE_KEYS,
-} from './keys';
+import { DEFAULT_COMMITMENTS } from '../../data/defaultCommitments';
+import { DEFAULT_TASKS, TASK_ASSIGNEES, TASK_CATEGORIES, TASK_OPERATIONS } from '../../data/defaultTasks';
+import { dbStorage } from '../../database/dbStorage';
+import { Commitment, Task, TaskAuditLog } from '../../types';
+import { STORAGE_KEYS } from './keys';
 
 export function loadTasks(): Task[] {
   try {

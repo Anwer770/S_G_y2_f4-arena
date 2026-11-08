@@ -62,9 +62,7 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
             <span className="text-xs font-bold">متأخر (تجاوز الموعد)</span>
             <ShieldAlert className="w-4 h-4 text-rose-600 dark:text-rose-400" />
           </div>
-          <div className="mt-2 text-2xl font-black text-rose-700 dark:text-rose-100">
-            {kpis.lateCount}
-          </div>
+          <div className="mt-2 text-2xl font-black text-rose-700 dark:text-rose-100">{kpis.lateCount}</div>
           <div className="mt-1 text-xs font-medium text-rose-700/80 dark:text-rose-300/80">
             {kpis.lateCount > 0 ? '⚠️ يتطلب تدخلاً ومتابعة فورية' : 'لا توجد متأخرات حرجة'}
           </div>
@@ -83,12 +81,8 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
             <span className="text-xs font-bold">مؤجل (متوقف مؤقتاً)</span>
             <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
           </div>
-          <div className="mt-2 text-2xl font-black text-amber-700 dark:text-amber-300">
-            {kpis.postponedCount}
-          </div>
-          <div className="mt-1 text-xs text-amber-700/80 dark:text-amber-300/80">
-            بانتظار قرار أو تسوية
-          </div>
+          <div className="mt-2 text-2xl font-black text-amber-700 dark:text-amber-300">{kpis.postponedCount}</div>
+          <div className="mt-1 text-xs text-amber-700/80 dark:text-amber-300/80">بانتظار قرار أو تسوية</div>
         </div>
 
         {/* Planned */}
@@ -104,12 +98,8 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
             <span className="text-xs font-bold">مخطط (قيد الإنجاز)</span>
             <Calendar className="w-4 h-4 text-sky-600 dark:text-sky-400" />
           </div>
-          <div className="mt-2 text-2xl font-black text-sky-700 dark:text-sky-300">
-            {kpis.plannedCount}
-          </div>
-          <div className="mt-1 text-xs text-sky-700/80 dark:text-sky-300/80">
-            مجدول ومسند للتنفيذ
-          </div>
+          <div className="mt-2 text-2xl font-black text-sky-700 dark:text-sky-300">{kpis.plannedCount}</div>
+          <div className="mt-1 text-xs text-sky-700/80 dark:text-sky-300/80">مجدول ومسند للتنفيذ</div>
         </div>
 
         {/* Company Transferred */}
@@ -125,12 +115,8 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
             <span className="text-xs font-bold">مرحل للشركة</span>
             <Building2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
           </div>
-          <div className="mt-2 text-2xl font-black text-purple-700">
-            {kpis.companyCount}
-          </div>
-          <div className="mt-1 text-xs text-purple-700/80">
-            مطالبات واعتمادات مركزية
-          </div>
+          <div className="mt-2 text-2xl font-black text-purple-700">{kpis.companyCount}</div>
+          <div className="mt-1 text-xs text-purple-700/80">مطالبات واعتمادات مركزية</div>
         </div>
 
         {/* Completed */}
@@ -146,9 +132,7 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
             <span className="text-xs font-bold">مكتمل ومُقفل</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <div className="mt-2 text-2xl font-black text-emerald-700 dark:text-emerald-300">
-            {kpis.completedCount}
-          </div>
+          <div className="mt-2 text-2xl font-black text-emerald-700 dark:text-emerald-300">{kpis.completedCount}</div>
           <div className="mt-1 text-xs text-emerald-700/80 dark:text-emerald-300/80">
             نسبة الإقفال: {kpis.total > 0 ? Math.round((kpis.completedCount / kpis.total) * 100) : 0}%
           </div>
@@ -170,14 +154,10 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
             <HelpCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
             <div>
               <div className="text-xs font-black">سجلات بدون حالة تصنيف</div>
-              <div className="text-xs opacity-80">
-                هدف الـ PRD: خفضها إلى أقل من 10%
-              </div>
+              <div className="text-xs opacity-80">هدف الـ PRD: خفضها إلى أقل من 10%</div>
             </div>
           </div>
-          <div className="text-xl font-black font-mono">
-            {kpis.unclassifiedCount}
-          </div>
+          <div className="text-xl font-black font-mono">{kpis.unclassifiedCount}</div>
         </div>
 
         {/* Corrupted Schedule! References Alert */}
@@ -190,7 +170,9 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
           }`}
         >
           <div className="flex items-center gap-2.5">
-            <AlertTriangle className={`w-5 h-5 ${kpis.corruptedCount > 0 ? 'text-rose-600 animate-pulse' : 'text-slate-400'} shrink-0`} />
+            <AlertTriangle
+              className={`w-5 h-5 ${kpis.corruptedCount > 0 ? 'text-rose-600 animate-pulse' : 'text-slate-400'} shrink-0`}
+            />
             <div>
               <div className="text-xs font-black">مراجع Schedule! التالفة ⚠️</div>
               <div className="text-xs opacity-80">
@@ -198,9 +180,7 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
               </div>
             </div>
           </div>
-          <div className="text-xl font-black font-mono text-rose-700 dark:text-rose-300">
-            {kpis.corruptedCount}
-          </div>
+          <div className="text-xl font-black font-mono text-rose-700 dark:text-rose-300">{kpis.corruptedCount}</div>
         </div>
 
         {/* Financial Summary */}
@@ -210,7 +190,9 @@ export const CustodyStatsCards: React.FC<CustodyStatsCardsProps> = ({
             <div>
               <div className="text-xs font-black text-slate-800 dark:text-slate-200">إجمالي المبالغ المرصودة</div>
               <div className="text-xs text-slate-500 dark:text-slate-400">
-                {(kpis.totalAmountUSD || 0) > 0 ? `+ ${(kpis.totalAmountUSD || 0).toLocaleString()} $` : 'مبالغ العهد والتعويضات'}
+                {(kpis.totalAmountUSD || 0) > 0
+                  ? `+ ${(kpis.totalAmountUSD || 0).toLocaleString()} $`
+                  : 'مبالغ العهد والتعويضات'}
               </div>
             </div>
           </div>

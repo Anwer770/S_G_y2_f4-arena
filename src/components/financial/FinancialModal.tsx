@@ -32,7 +32,10 @@ interface Props {
   categoryAccounts: string[];
   restrictionAccounts: string[];
   accountNames: string[];
-  onAddOption?: (type: 'category' | 'account' | 'restriction' | 'movementType' | 'restrictionAccount' | 'accountName', value: string) => void;
+  onAddOption?: (
+    type: 'category' | 'account' | 'restriction' | 'movementType' | 'restrictionAccount' | 'accountName',
+    value: string
+  ) => void;
 }
 
 export const FinancialModal: React.FC<Props> = ({
@@ -137,7 +140,18 @@ export const FinancialModal: React.FC<Props> = ({
     setShowAddRestAccount(false);
     setAccountSearch('');
     setRestAccountSearch('');
-  }, [isOpen, editingTransaction, existingTransactions, movements, restrictions, movementTypes, importanceList, categoryAccounts, restrictionAccounts, accountNames]);
+  }, [
+    isOpen,
+    editingTransaction,
+    existingTransactions,
+    movements,
+    restrictions,
+    movementTypes,
+    importanceList,
+    categoryAccounts,
+    restrictionAccounts,
+    accountNames,
+  ]);
 
   const filteredAccountNames = useMemo(() => {
     if (!accountSearch.trim()) return accountNames;
@@ -250,9 +264,7 @@ export const FinancialModal: React.FC<Props> = ({
               <h2 className="text-lg font-black tracking-tight">
                 {editingTransaction ? 'تعديل قيد في السجل المالي' : 'إضافة قيد / عملية مالية جديدة'}
               </h2>
-              <p className="text-xs text-slate-300">
-                تسجيل الحركات المالية متعددة العملات والربط المحاسبي الدقيق
-              </p>
+              <p className="text-xs text-slate-300">تسجيل الحركات المالية متعددة العملات والربط المحاسبي الدقيق</p>
             </div>
           </div>
           <button
@@ -348,7 +360,9 @@ export const FinancialModal: React.FC<Props> = ({
                 ))}
               </select>
               <div className="mt-1.5 flex items-center gap-1.5">
-                <span className={`px-2 py-0.5 rounded text-xs font-bold border ${movementBadge.bg} ${movementBadge.text} ${movementBadge.border}`}>
+                <span
+                  className={`px-2 py-0.5 rounded text-xs font-bold border ${movementBadge.bg} ${movementBadge.text} ${movementBadge.border}`}
+                >
                   المعاينة: {movement}
                 </span>
               </div>
@@ -371,7 +385,9 @@ export const FinancialModal: React.FC<Props> = ({
                 ))}
               </select>
               <div className="mt-1.5 flex items-center gap-1.5">
-                <span className={`px-2 py-0.5 rounded text-xs font-bold border ${importanceBadge.bg} ${importanceBadge.text} ${importanceBadge.border}`}>
+                <span
+                  className={`px-2 py-0.5 rounded text-xs font-bold border ${importanceBadge.bg} ${importanceBadge.text} ${importanceBadge.border}`}
+                >
                   الحالة: {importance}
                 </span>
               </div>
@@ -555,17 +571,13 @@ export const FinancialModal: React.FC<Props> = ({
                 <DollarSign className="w-5 h-5 text-amber-400" />
                 <h3 className="text-sm font-black tracking-wide">المبالغ متعددة العملات (موجبة فقط)</h3>
               </div>
-              <span className="text-xs text-slate-300">
-                (يجب إدخال مبلغ واحد على الأقل)
-              </span>
+              <span className="text-xs text-slate-300">(يجب إدخال مبلغ واحد على الأقل)</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {/* Amount YER */}
               <div className="bg-white/5 dark:bg-slate-900/5 p-3.5 rounded-xl border border-white/10 space-y-1.5">
-                <label className="block text-xs font-bold text-emerald-300">
-                  المبلغ (ريال يمني - YER)
-                </label>
+                <label className="block text-xs font-bold text-emerald-300">المبلغ (ريال يمني - YER)</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -576,15 +588,15 @@ export const FinancialModal: React.FC<Props> = ({
                     placeholder="0"
                     className="w-full px-3 py-2 bg-white/10 dark:bg-slate-900/10 border border-white/20 rounded-xl text-lg font-mono font-black text-white focus:outline-none focus:ring-2 focus:ring-emerald-400"
                   />
-                  <span className="absolute left-3 top-2.5 text-xs text-slate-400 dark:text-slate-500 font-bold">YER</span>
+                  <span className="absolute left-3 top-2.5 text-xs text-slate-400 dark:text-slate-500 font-bold">
+                    YER
+                  </span>
                 </div>
               </div>
 
               {/* Amount SAR */}
               <div className="bg-white/5 dark:bg-slate-900/5 p-3.5 rounded-xl border border-white/10 space-y-1.5">
-                <label className="block text-xs font-bold text-amber-300">
-                  المبلغ (ريال سعودي - SAR)
-                </label>
+                <label className="block text-xs font-bold text-amber-300">المبلغ (ريال سعودي - SAR)</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -595,15 +607,15 @@ export const FinancialModal: React.FC<Props> = ({
                     placeholder="0"
                     className="w-full px-3 py-2 bg-white/10 dark:bg-slate-900/10 border border-white/20 rounded-xl text-lg font-mono font-black text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                   />
-                  <span className="absolute left-3 top-2.5 text-xs text-slate-400 dark:text-slate-500 font-bold">SAR</span>
+                  <span className="absolute left-3 top-2.5 text-xs text-slate-400 dark:text-slate-500 font-bold">
+                    SAR
+                  </span>
                 </div>
               </div>
 
               {/* Amount USD */}
               <div className="bg-white/5 dark:bg-slate-900/5 p-3.5 rounded-xl border border-white/10 space-y-1.5">
-                <label className="block text-xs font-bold text-blue-300">
-                  المبلغ (دولار أمريكي - USD)
-                </label>
+                <label className="block text-xs font-bold text-blue-300">المبلغ (دولار أمريكي - USD)</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -614,7 +626,9 @@ export const FinancialModal: React.FC<Props> = ({
                     placeholder="0"
                     className="w-full px-3 py-2 bg-white/10 dark:bg-slate-900/10 border border-white/20 rounded-xl text-lg font-mono font-black text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
-                  <span className="absolute left-3 top-2.5 text-xs text-slate-400 dark:text-slate-500 font-bold">USD</span>
+                  <span className="absolute left-3 top-2.5 text-xs text-slate-400 dark:text-slate-500 font-bold">
+                    USD
+                  </span>
                 </div>
               </div>
             </div>

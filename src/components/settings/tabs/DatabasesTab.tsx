@@ -17,12 +17,7 @@ import {
   isEncryptedSnapshotPayload,
   type EncryptedSnapshotPayload,
 } from '../../../utils/snapshotCrypto';
-import {
-  getOutboxStats,
-  markAllOutboxSynced,
-  clearSyncedOutbox,
-  loadSyncOutbox,
-} from '../../../utils/syncOutbox';
+import { getOutboxStats, markAllOutboxSynced, clearSyncedOutbox, loadSyncOutbox } from '../../../utils/syncOutbox';
 import {
   Database,
   Download,
@@ -183,9 +178,7 @@ export const DatabasesTab: React.FC<Props> = ({
     setUsePin(false);
     setIsCreatingSnapshot(false);
     setStatusMessage(
-      payload
-        ? 'تم إنشاء نقطة الاستعادة وتشفيرها (AES-GCM) وحفظها بنجاح!'
-        : 'تم إنشاء نقطة الاستعادة وحفظها بنجاح!'
+      payload ? 'تم إنشاء نقطة الاستعادة وتشفيرها (AES-GCM) وحفظها بنجاح!' : 'تم إنشاء نقطة الاستعادة وحفظها بنجاح!'
     );
     setTimeout(() => setStatusMessage(null), 3000);
   };
@@ -212,11 +205,7 @@ export const DatabasesTab: React.FC<Props> = ({
       return;
     }
 
-    if (
-      window.confirm(
-        `هل أنت متأكد من استعادة نقطة "${snap.name}"؟ سيتم استبدال البيانات الحالية ببيانات النسخة.`
-      )
-    ) {
+    if (window.confirm(`هل أنت متأكد من استعادة نقطة "${snap.name}"؟ سيتم استبدال البيانات الحالية ببيانات النسخة.`)) {
       onImportBackup(restoreData);
       setStatusMessage(`تمت استعادة نقطة "${snap.name}" بنجاح!`);
       setTimeout(() => setStatusMessage(null), 3000);
@@ -311,7 +300,8 @@ export const DatabasesTab: React.FC<Props> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                تخزين محلي عالي السعة وغير متزامن يمنع فقدان البيانات ويتحمل آلاف القيود والمرفقات الكبيرة دون حدود الـ 5MB التقليدية.
+                تخزين محلي عالي السعة وغير متزامن يمنع فقدان البيانات ويتحمل آلاف القيود والمرفقات الكبيرة دون حدود الـ
+                5MB التقليدية.
               </p>
             </div>
           </div>
@@ -338,9 +328,7 @@ export const DatabasesTab: React.FC<Props> = ({
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-sm font-black text-slate-900 dark:text-white">
-                  استمرارية التخزين وحصة الجهاز
-                </h3>
+                <h3 className="text-sm font-black text-slate-900 dark:text-white">استمرارية التخزين وحصة الجهاز</h3>
                 <span
                   className={`px-2 py-0.5 rounded-full text-xs font-bold border ${
                     health?.persisted
@@ -460,16 +448,19 @@ export const DatabasesTab: React.FC<Props> = ({
                 <h3 className="text-sm font-black text-slate-900 dark:text-white">
                   طابور المزامنة المحلي (sync_outbox)
                 </h3>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                  outboxStats.pending > 0
-                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300'
-                    : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300'
-                }`}>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                    outboxStats.pending > 0
+                      ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300'
+                      : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300'
+                  }`}
+                >
                   {outboxStats.pending > 0 ? `${outboxStats.pending} عملية معلقة` : 'كافة العمليات متزامنة'}
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                يسجل كافة عمليات الإضافة والحذف والتعديل المحلية تلقائياً أثناء انقطاع الإنترنت، لتجهيزها للمزامنة مع الخادم فور توفر الاتصال.
+                يسجل كافة عمليات الإضافة والحذف والتعديل المحلية تلقائياً أثناء انقطاع الإنترنت، لتجهيزها للمزامنة مع
+                الخادم فور توفر الاتصال.
               </p>
             </div>
           </div>
@@ -508,16 +499,28 @@ export const DatabasesTab: React.FC<Props> = ({
         {/* Stats Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
           <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60">
-            <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">إجمالي العمليات المسجلة</span>
-            <span className="font-mono font-bold text-sm text-slate-800 dark:text-slate-200">{outboxStats.total} عملية</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">
+              إجمالي العمليات المسجلة
+            </span>
+            <span className="font-mono font-bold text-sm text-slate-800 dark:text-slate-200">
+              {outboxStats.total} عملية
+            </span>
           </div>
           <div className="p-2.5 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/40">
-            <span className="text-xs text-amber-600 dark:text-amber-400 block font-medium">بانتظار المزامنة (Pending)</span>
-            <span className="font-mono font-bold text-sm text-amber-700 dark:text-amber-300">{outboxStats.pending}</span>
+            <span className="text-xs text-amber-600 dark:text-amber-400 block font-medium">
+              بانتظار المزامنة (Pending)
+            </span>
+            <span className="font-mono font-bold text-sm text-amber-700 dark:text-amber-300">
+              {outboxStats.pending}
+            </span>
           </div>
           <div className="p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40">
-            <span className="text-xs text-emerald-600 dark:text-emerald-400 block font-medium">المكتمل بنجاح (Synced)</span>
-            <span className="font-mono font-bold text-sm text-emerald-700 dark:text-emerald-300">{outboxStats.synced}</span>
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 block font-medium">
+              المكتمل بنجاح (Synced)
+            </span>
+            <span className="font-mono font-bold text-sm text-emerald-700 dark:text-emerald-300">
+              {outboxStats.synced}
+            </span>
           </div>
           <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60">
             <span className="text-xs text-slate-400 dark:text-slate-500 block font-medium">آخر عملية مسجلة</span>
@@ -536,7 +539,8 @@ export const DatabasesTab: React.FC<Props> = ({
         </div>
 
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          حفظ نسخة كاملة من كافة القيود والحسابات والمخزون والعملاء في ملف JSON (غير مشفّر — احفظه في مكان آمن؛ نقاط الاستعادة داخل التطبيق وحدها يمكن تشفيرها بـ PIN).
+          حفظ نسخة كاملة من كافة القيود والحسابات والمخزون والعملاء في ملف JSON (غير مشفّر — احفظه في مكان آمن؛ نقاط
+          الاستعادة داخل التطبيق وحدها يمكن تشفيرها بـ PIN).
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -559,13 +563,7 @@ export const DatabasesTab: React.FC<Props> = ({
             <span>تصدير نسخة احتياطية (JSON)</span>
           </button>
 
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept=".json"
-            className="hidden"
-          />
+          <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json" className="hidden" />
 
           <button
             type="button"
@@ -583,9 +581,7 @@ export const DatabasesTab: React.FC<Props> = ({
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <Cloud className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-            <h3 className="text-xs font-bold text-slate-900 dark:text-white">
-              النسخ الاحتياطي الخارجي (يدوي)
-            </h3>
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white">النسخ الاحتياطي الخارجي (يدوي)</h3>
           </div>
           <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
             غير مربوط بخدمة سحابية
@@ -593,9 +589,9 @@ export const DatabasesTab: React.FC<Props> = ({
         </div>
 
         <p className="text-xs text-slate-500 dark:text-slate-400 leading-5">
-          <strong>لا يوجد ربط مبرمج بـ Google Drive ولا بأي خدمة سحابية.</strong> الزر السابق كان يبدّل حالة
-          في الإعدادات فقط دون أي تنفيذ فعلي. للنسخ الخارجي: صدّر نسخة JSON من الزر أعلاه واحفظها في
-          خدمتك السحابية أو على قرص خارجي بنفسك — هذا هو المسار المعتمد والموثّق.
+          <strong>لا يوجد ربط مبرمج بـ Google Drive ولا بأي خدمة سحابية.</strong> الزر السابق كان يبدّل حالة في
+          الإعدادات فقط دون أي تنفيذ فعلي. للنسخ الخارجي: صدّر نسخة JSON من الزر أعلاه واحفظها في خدمتك السحابية أو على
+          قرص خارجي بنفسك — هذا هو المسار المعتمد والموثّق.
         </p>
       </div>
 
@@ -603,9 +599,7 @@ export const DatabasesTab: React.FC<Props> = ({
       <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="text-xs font-bold text-slate-900 dark:text-white">
-              نقاط الاستعادة الفورية في المتصفح
-            </h3>
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white">نقاط الاستعادة الفورية في المتصفح</h3>
             <p className="text-xs text-slate-400 dark:text-slate-500">
               إنشاء لقطات زمنية سريعة تتيح العودة إلى حالة النظام في أي وقت بضغطة زر واحدة
             </p>
@@ -625,9 +619,7 @@ export const DatabasesTab: React.FC<Props> = ({
 
         {isCreatingSnapshot && (
           <div className="p-4 rounded-xl bg-teal-50/50 dark:bg-teal-950/30 border border-teal-200/60 dark:border-teal-900/40 space-y-3">
-            <div className="text-xs font-bold text-teal-900 dark:text-teal-200">
-              حفظ نقطة استعادة جديدة
-            </div>
+            <div className="text-xs font-bold text-teal-900 dark:text-teal-200">حفظ نقطة استعادة جديدة</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input
                 type="text"
@@ -681,71 +673,71 @@ export const DatabasesTab: React.FC<Props> = ({
         {/* Snapshots Table */}
         <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
           <div className="w-full overflow-x-auto print:overflow-visible">
-          <table className="w-full text-right border-collapse text-xs min-w-[600px] print:min-w-0">
-            <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold">
-              <tr>
-                <th className="p-3">اسم النقطة</th>
-                <th className="p-3">التاريخ والوقت</th>
-                <th className="p-3">السجلات</th>
-                <th className="p-3">الحجم</th>
-                <th className="p-3 text-center">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-              {snapshots.length === 0 ? (
+            <table className="w-full text-right border-collapse text-xs min-w-[600px] print:min-w-0">
+              <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold">
                 <tr>
-                  <td colSpan={5} className="p-4 text-center text-slate-400 dark:text-slate-500">
-                    لا توجد نقاط استعادة محفوظة حتى الآن. انقر على &quot;إنشاء نقطة استعادة الآن&quot; للبدء.
-                  </td>
+                  <th className="p-3">اسم النقطة</th>
+                  <th className="p-3">التاريخ والوقت</th>
+                  <th className="p-3">السجلات</th>
+                  <th className="p-3">الحجم</th>
+                  <th className="p-3 text-center">الإجراءات</th>
                 </tr>
-              ) : (
-                snapshots.map((snap) => (
-                  <tr key={snap.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
-                    <td className="p-3 font-bold text-slate-900 dark:text-white">{snap.name}</td>
-                    <td className="p-3 text-slate-500 dark:text-slate-400 font-mono">{snap.timestamp}</td>
-                    <td className="p-3 font-bold text-teal-600 dark:text-teal-400">{snap.totalRecords} سجل</td>
-                    <td className="p-3 text-slate-500 dark:text-slate-400 font-mono">{snap.sizeKb} KB</td>
-                    <td className="p-3">
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => handleRestoreSnapshot(snap)}
-                          className="px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold text-xs cursor-pointer"
-                        >
-                          استعادة
-                        </button>
-                        {snap.data ? (
-                          <button
-                            type="button"
-                            onClick={() => triggerDownload(snap.data, `${snap.name}.json`)}
-                            className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white"
-                            title="تنزيل JSON"
-                          >
-                            <Download className="w-3.5 h-3.5" />
-                          </button>
-                        ) : (
-                          <span
-                            className="p-1 text-teal-600 dark:text-teal-400"
-                            title="نقطة مشفّرة — تُفتح بالـ PIN فقط داخل التطبيق"
-                          >
-                            <Lock className="w-3.5 h-3.5" />
-                          </span>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteSnapshot(snap.id)}
-                          className="p-1 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400"
-                          title="حذف"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                {snapshots.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-4 text-center text-slate-400 dark:text-slate-500">
+                      لا توجد نقاط استعادة محفوظة حتى الآن. انقر على &quot;إنشاء نقطة استعادة الآن&quot; للبدء.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  snapshots.map((snap) => (
+                    <tr key={snap.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
+                      <td className="p-3 font-bold text-slate-900 dark:text-white">{snap.name}</td>
+                      <td className="p-3 text-slate-500 dark:text-slate-400 font-mono">{snap.timestamp}</td>
+                      <td className="p-3 font-bold text-teal-600 dark:text-teal-400">{snap.totalRecords} سجل</td>
+                      <td className="p-3 text-slate-500 dark:text-slate-400 font-mono">{snap.sizeKb} KB</td>
+                      <td className="p-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleRestoreSnapshot(snap)}
+                            className="px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold text-xs cursor-pointer"
+                          >
+                            استعادة
+                          </button>
+                          {snap.data ? (
+                            <button
+                              type="button"
+                              onClick={() => triggerDownload(snap.data, `${snap.name}.json`)}
+                              className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white"
+                              title="تنزيل JSON"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                            </button>
+                          ) : (
+                            <span
+                              className="p-1 text-teal-600 dark:text-teal-400"
+                              title="نقطة مشفّرة — تُفتح بالـ PIN فقط داخل التطبيق"
+                            >
+                              <Lock className="w-3.5 h-3.5" />
+                            </span>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSnapshot(snap.id)}
+                            className="p-1 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400"
+                            title="حذف"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -765,11 +757,7 @@ export const DatabasesTab: React.FC<Props> = ({
         <button
           type="button"
           onClick={() => {
-            if (
-              window.confirm(
-                'تحذير: هل أنت متأكد من إعادة تعيين كافة البيانات إلى الحالة الافتراضية؟'
-              )
-            ) {
+            if (window.confirm('تحذير: هل أنت متأكد من إعادة تعيين كافة البيانات إلى الحالة الافتراضية؟')) {
               onResetAllData();
             }
           }}

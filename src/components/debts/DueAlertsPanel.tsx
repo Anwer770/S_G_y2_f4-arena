@@ -48,13 +48,7 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
   const dueSoonList = commitments
     .filter((c) => {
       const { remaining, isCompleted } = calculateCommitmentRemaining(c);
-      return (
-        !isCompleted &&
-        remaining > 0 &&
-        c.endDate &&
-        c.endDate >= todayStr &&
-        c.endDate <= in30DaysStr
-      );
+      return !isCompleted && remaining > 0 && c.endDate && c.endDate >= todayStr && c.endDate <= in30DaysStr;
     })
     .sort((a, b) => (a.endDate || '').localeCompare(b.endDate || ''));
 
@@ -114,11 +108,7 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
             className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer"
           >
             <Bell className="w-4 h-4" />
-            <span>
-              {notificationStatus === 'granted'
-                ? 'فحص وإرسال إشعار فوري'
-                : 'تفعيل إشعارات المتصفح (FR-27)'}
-            </span>
+            <span>{notificationStatus === 'granted' ? 'فحص وإرسال إشعار فوري' : 'تفعيل إشعارات المتصفح (FR-27)'}</span>
           </button>
         </div>
       </div>
@@ -154,7 +144,9 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
               <div className="text-center py-12 text-slate-400 dark:text-slate-500">
                 <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2 opacity-80" />
                 <p className="font-bold text-sm text-slate-600 dark:text-slate-300">رائع! لا توجد أي التزامات متأخرة</p>
-                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">جميع الالتزامات مسددة أو ضمن فترات السماح</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                  جميع الالتزامات مسددة أو ضمن فترات السماح
+                </p>
               </div>
             ) : (
               overdueList.map((c) => {
@@ -166,15 +158,17 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-black text-indigo-700 dark:text-indigo-300">{c.id}</span>
+                          <span className="font-mono text-xs font-black text-indigo-700 dark:text-indigo-300">
+                            {c.id}
+                          </span>
                           <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">{c.name}</span>
                           <span
                             className={`px-1.5 py-0.5 rounded-md text-xs font-bold ${
                               c.priority === 'A'
                                 ? 'bg-rose-100 text-rose-800'
                                 : c.priority === 'B'
-                                ? 'bg-amber-100 text-amber-800'
-                                : 'bg-blue-100 text-blue-800'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-blue-100 text-blue-800'
                             }`}
                           >
                             درجة {c.priority}
@@ -206,10 +200,7 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
                     <div className="flex items-center justify-between gap-3 pt-1">
                       <div className="flex-1">
                         <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className="bg-rose-500 h-1.5 rounded-full"
-                            style={{ width: `${progressPercent}%` }}
-                          />
+                          <div className="bg-rose-500 h-1.5 rounded-full" style={{ width: `${progressPercent}%` }} />
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -244,7 +235,9 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
               </div>
               <div>
                 <h4 className="font-black text-amber-900 text-sm">مستحق قريباً (خلال 30 يوم)</h4>
-                <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">الاستحقاقات القادمة للشهر الحالي</p>
+                <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">
+                  الاستحقاقات القادمة للشهر الحالي
+                </p>
               </div>
             </div>
             <span className="px-3 py-1 rounded-full text-xs font-mono font-black bg-amber-200 text-amber-900">
@@ -256,7 +249,9 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
             {dueSoonList.length === 0 ? (
               <div className="text-center py-12 text-slate-400 dark:text-slate-500">
                 <Clock className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                <p className="font-bold text-sm text-slate-600 dark:text-slate-300">لا توجد التزامات مستحقة خلال 30 يوم القادمة</p>
+                <p className="font-bold text-sm text-slate-600 dark:text-slate-300">
+                  لا توجد التزامات مستحقة خلال 30 يوم القادمة
+                </p>
               </div>
             ) : (
               dueSoonList.map((c) => {
@@ -268,15 +263,17 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-black text-indigo-700 dark:text-indigo-300">{c.id}</span>
+                          <span className="font-mono text-xs font-black text-indigo-700 dark:text-indigo-300">
+                            {c.id}
+                          </span>
                           <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">{c.name}</span>
                           <span
                             className={`px-1.5 py-0.5 rounded-md text-xs font-bold ${
                               c.priority === 'A'
                                 ? 'bg-rose-100 text-rose-800'
                                 : c.priority === 'B'
-                                ? 'bg-amber-100 text-amber-800'
-                                : 'bg-blue-100 text-blue-800'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-blue-100 text-blue-800'
                             }`}
                           >
                             درجة {c.priority}
@@ -308,10 +305,7 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
                     <div className="flex items-center justify-between gap-3 pt-1">
                       <div className="flex-1">
                         <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className="bg-amber-500 h-1.5 rounded-full"
-                            style={{ width: `${progressPercent}%` }}
-                          />
+                          <div className="bg-amber-500 h-1.5 rounded-full" style={{ width: `${progressPercent}%` }} />
                         </div>
                       </div>
                       <div className="flex items-center gap-2">

@@ -5,15 +5,7 @@
 
 /** الأنواع التي يفتحها زر «إضافة سريعة» (R28) */
 export type QuickAddType =
-  | 'task'
-  | 'project'
-  | 'order'
-  | 'commitment'
-  | 'appointment'
-  | 'note'
-  | 'goal'
-  | 'habit'
-  | 'meeting';
+  'task' | 'project' | 'order' | 'commitment' | 'appointment' | 'note' | 'goal' | 'habit' | 'meeting';
 
 export type WorkOSView =
   | 'dashboard'
@@ -83,20 +75,9 @@ export type TaskStatus =
 
 export type TaskPriority = 'urgent' | 'high' | 'medium' | 'low' | 'none';
 
-export type ProjectStatus =
-  | 'planned'
-  | 'active'
-  | 'paused'
-  | 'delayed'
-  | 'completed'
-  | 'cancelled'
-  | 'archived';
+export type ProjectStatus = 'planned' | 'active' | 'paused' | 'delayed' | 'completed' | 'cancelled' | 'archived';
 
-export type DependencyType =
-  | 'finish_to_start'
-  | 'start_to_start'
-  | 'finish_to_finish'
-  | 'start_to_finish';
+export type DependencyType = 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
 
 export interface TaskDependency {
   taskId: string;
@@ -419,11 +400,7 @@ export interface AutomationRule {
     | 'new_customer_task'
     | 'daily_plan_start';
   actionType:
-    | 'notify_team'
-    | 'create_followup_task'
-    | 'mark_project_completed'
-    | 'archive_item'
-    | 'tag_priority_urgent';
+    'notify_team' | 'create_followup_task' | 'mark_project_completed' | 'archive_item' | 'tag_priority_urgent';
   isActive: boolean;
   executionsCount: number;
   lastExecutedAt?: string;
@@ -458,4 +435,3 @@ export interface ActiveTimerState {
   elapsedSeconds: number;
   isRunning: boolean;
 }
-

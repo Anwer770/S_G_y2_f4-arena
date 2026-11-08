@@ -51,9 +51,9 @@ export const CustomersModule: React.FC<Props> = ({
   onUpdateVisits,
   onAddAuditLog,
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<
-    'directory' | 'planner' | 'balances' | 'reports' | 'audit'
-  >('directory');
+  const [activeSubTab, setActiveSubTab] = useState<'directory' | 'planner' | 'balances' | 'reports' | 'audit'>(
+    'directory'
+  );
 
   // Modals state
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
@@ -179,11 +179,7 @@ export const CustomersModule: React.FC<Props> = ({
     // Merge or replace
     const merged = [...imported, ...customers.filter((c) => !imported.some((imp) => imp.id === c.id))];
     onUpdateCustomers(merged);
-    logCustomerAudit(
-      'استيراد',
-      'قاعدة البيانات',
-      `تم استيراد ${imported.length} عميل من ملف Excel بنجاح`
-    );
+    logCustomerAudit('استيراد', 'قاعدة البيانات', `تم استيراد ${imported.length} عميل من ملف Excel بنجاح`);
   };
 
   const handleExportExcel = () => {
@@ -202,9 +198,7 @@ export const CustomersModule: React.FC<Props> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">
-                  ادارة العملاء وزيارات
-                </h1>
+                <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">ادارة العملاء وزيارات</h1>
                 <span className="bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300 font-black text-xs px-2.5 py-0.5 rounded-full border border-teal-200/50 dark:border-teal-800/50">
                   الميدانية
                 </span>
@@ -269,7 +263,9 @@ export const CustomersModule: React.FC<Props> = ({
           <span>دليل العملاء والمنشآت</span>
           <span
             className={`text-xs px-1.5 py-0.5 rounded-md font-mono ${
-              activeSubTab === 'directory' ? 'bg-teal-700 dark:bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+              activeSubTab === 'directory'
+                ? 'bg-teal-700 dark:bg-teal-600 text-white'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
             }`}
           >
             {customers.length}
@@ -399,9 +395,7 @@ export const CustomersModule: React.FC<Props> = ({
         />
       )}
 
-      {activeSubTab === 'reports' && (
-        <CustomerReports customers={customers} visits={visits} />
-      )}
+      {activeSubTab === 'reports' && <CustomerReports customers={customers} visits={visits} />}
 
       {activeSubTab === 'audit' && (
         <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-4">
@@ -410,9 +404,7 @@ export const CustomersModule: React.FC<Props> = ({
               <History className="w-4 h-4 text-slate-700 dark:text-slate-200" />
               سجل تدقيق وإجراءات العملاء والزيارات
             </h3>
-            <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
-              {auditLogs.length} سجل مسجل
-            </span>
+            <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">{auditLogs.length} سجل مسجل</span>
           </div>
 
           <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
@@ -430,9 +422,7 @@ export const CustomersModule: React.FC<Props> = ({
                     </div>
                     <p className="text-slate-600 dark:text-slate-300 font-medium text-xs">{log.details}</p>
                   </div>
-                  <span className="text-xs text-slate-400 dark:text-slate-500 font-mono shrink-0">
-                    {log.time}
-                  </span>
+                  <span className="text-xs text-slate-400 dark:text-slate-500 font-mono shrink-0">{log.time}</span>
                 </div>
               ))
             )}

@@ -33,7 +33,9 @@ export const NotificationsTab: React.FC<Props> = ({ settings, onChange }) => {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white">تنبيهات انخفاض المخزون</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">إشعار عند اقتراب كمية أي صنف من نقطة الطلب</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  إشعار عند اقتراب كمية أي صنف من نقطة الطلب
+                </p>
               </div>
             </div>
 
@@ -71,7 +73,9 @@ export const NotificationsTab: React.FC<Props> = ({ settings, onChange }) => {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white">تذكير استحقاق الفواتير والديون</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">تذكير مبكر بمواعيد سداد فواتير المشتريات ومستحقات العملاء</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  تذكير مبكر بمواعيد سداد فواتير المشتريات ومستحقات العملاء
+                </p>
               </div>
             </div>
 
@@ -109,7 +113,9 @@ export const NotificationsTab: React.FC<Props> = ({ settings, onChange }) => {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white">ملخص يومي بنهاية كل يوم عمل</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">عرض ملخص الإيرادات والمصروفات وصافي الصندوق تلقائياً</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  عرض ملخص الإيرادات والمصروفات وصافي الصندوق تلقائياً
+                </p>
               </div>
             </div>
 
@@ -134,7 +140,9 @@ export const NotificationsTab: React.FC<Props> = ({ settings, onChange }) => {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white">الإشعارات والتأثيرات الصوتية</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">تشغيل صوت خفيف عند إتمام الحركات وتسجيل السندات</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  تشغيل صوت خفيف عند إتمام الحركات وتسجيل السندات
+                </p>
               </div>
             </div>
 
@@ -159,7 +167,9 @@ export const NotificationsTab: React.FC<Props> = ({ settings, onChange }) => {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white">تنبيه عدم اتزان القيد المحاسبي</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">تنبيه مباشر في حال وجود فارق بين إجمالي المدين والدائن</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  تنبيه مباشر في حال وجود فارق بين إجمالي المدين والدائن
+                </p>
               </div>
             </div>
 
@@ -184,7 +194,9 @@ export const NotificationsTab: React.FC<Props> = ({ settings, onChange }) => {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white">تنبيه رصيد الخزينة والصناديق</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">إشعار عند انخفاض الرصيد النقدي في الصندوق عن الحد الآمن</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  إشعار عند انخفاض الرصيد النقدي في الصندوق عن الحد الآمن
+                </p>
               </div>
             </div>
 

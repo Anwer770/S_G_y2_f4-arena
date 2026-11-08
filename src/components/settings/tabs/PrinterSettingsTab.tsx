@@ -32,9 +32,7 @@ export const PrinterSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-              حجم ونوع الورق المعتمد
-            </label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">حجم ونوع الورق المعتمد</label>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: 'A4', label: 'ورق A4 عادي (210×297 مم)' },
@@ -60,9 +58,7 @@ export const PrinterSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
 
           {/* Orientation */}
           <div className="space-y-2 pt-2">
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-              اتجاه الطباعة
-            </label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">اتجاه الطباعة</label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
@@ -305,7 +301,8 @@ export const PrinterSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
       <div className="p-4 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/40 flex items-start gap-3">
         <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
         <p className="text-xs text-blue-800 dark:text-blue-300 leading-relaxed">
-          جميع النماذج المطبوعة متوافقة تماماً مع معايير الفاتورة الضريبية وقارئات الباركود QR Code المعتمدة في هيئات الزكاة والضريبة.
+          جميع النماذج المطبوعة متوافقة تماماً مع معايير الفاتورة الضريبية وقارئات الباركود QR Code المعتمدة في هيئات
+          الزكاة والضريبة.
         </p>
       </div>
     </div>
