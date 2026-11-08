@@ -16,6 +16,8 @@ import {
 import { RoutineRecord } from '../types/routines';
 import { CustodyIssueRecord, CustodySection } from '../types/custodyIssues';
 import { LinkRecord } from '../types/linksLibrary';
+import { autoKey } from './importFidelity';
+import { assertFileSize, readFirstSheetSafe, safeSheetWarnings } from './xlsxSafe';
 
 // Helper to read file to JSON rows
 export const readFileToRows = (file: File): Promise<any[]> => {
@@ -23,12 +25,10 @@ export const readFileToRows = (file: File): Promise<any[]> => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const data = e.target?.result;
-        const workbook = XLSX.read(data, { type: 'binary' });
-        const firstSheet = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheet];
-        const rows = XLSX.utils.sheet_to_json(worksheet);
-        resolve(rows || []);
+        assertFileSize(file);
+        const result = readFirstSheetSafe<any>(e.target?.result as string, 'binary');
+        for (const w of safeSheetWarnings(result)) console.warn('[import]', w);
+        resolve(result.rows || []);
       } catch (err) {
         reject(err);
       }
@@ -52,14 +52,14 @@ export const parseDebtsExcelFile = async (
 
   rows.forEach((row, idx) => {
     const bookRaw = String(row['دفتر الحساب'] || row['الدفتر'] || row['Book'] || '').trim();
-    const name = String(row['الاسم / الجهة'] || row['الاسم'] || row['الجهة'] || row['Name'] || `حساب مستورد ${idx + 1}`).trim();
+    const name = String(row['الاسم / الجهة'] || row['الاسم'] || row['الجهة'] || row['Name'] || '').trim();
     const amount = parseFloat(row['المبلغ'] || row['Amount'] || 0) || 0;
-    const currency = String(row['العملة'] || row['Currency'] || 'ريال يمني').trim();
-    const transType = String(row['نوع المعاملة'] || row['النوع'] || 'لنا').trim();
-    const category = String(row['التصنيف'] || row['Category'] || 'عام').trim();
-    const date = String(row['التاريخ'] || row['Date'] || todayStr).substring(0, 10);
-    const dueDate = String(row['تاريخ الاستحقاق'] || row['Due Date'] || date).substring(0, 10);
-    const owner = String(row['الشخص المسؤول'] || row['المسؤول'] || 'أنور').trim();
+    const currency = String(row['العملة'] || row['Currency'] || '').trim();
+    const transType = String(row['نوع المعاملة'] || row['النوع'] || '').trim();
+    const category = String(row['التصنيف'] || row['Category'] || '').trim();
+    const date = String(row['التاريخ'] || row['Date'] || '').substring(0, 10);
+    const dueDate = String(row['تاريخ الاستحقاق'] || row['Due Date'] || '').substring(0, 10);
+    const owner = String(row['الشخص المسؤول'] || row['المسؤول'] || '').trim();
     const notes = String(row['ملاحظات'] || row['Notes'] || '').trim();
 
     const isCommitment = bookRaw.includes('التزام') || bookRaw.includes('أقساط') || transType.includes('علينا');
@@ -124,26 +124,29 @@ export const parseStockExcelFile = async (
   const todayStr = nowStr.split('T')[0];
 
   rows.forEach((row, idx) => {
-    const typeRaw = String(row['نوع الحركة'] || row['النوع'] || row['Type'] || 'IN').toUpperCase();
+    const typeRaw = String(row['نوع الحركة'] || row['النوع'] || row['Type'] || '').toUpperCase();
     const isOut = typeRaw.includes('صرف') || typeRaw.includes('OUT');
     const movementType = isOut ? 'صرف' : 'توريد';
     const subPrefix = isOut ? 'OUT' : 'IN';
-    const date = String(row['التاريخ'] || row['Date'] || todayStr).substring(0, 10);
-    const itemName = String(row['اسم الصنف'] || row['الصنف'] || row['Item'] || 'صنف غير محدد').trim();
-    const quantity = Math.abs(parseFloat(row['الكمية'] || row['Quantity'] || 1) || 1);
-    const beneficiary = String(row['الجهة / المورد'] || row['الجهة'] || row['العميل'] || 'طرف عام').trim();
+    const rawSubId = String(row['المعرف الفرعي'] || row['Sub_ID'] || row['الكود'] || '').trim();
+    const date = String(row['التاريخ'] || row['Date'] || '').substring(0, 10);
+    const itemName = String(row['اسم الصنف'] || row['الصنف'] || row['Item'] || '').trim();
+    const quantity = Math.abs(parseFloat(row['الكمية'] || row['Quantity'] || 0) || 0);
+    const beneficiary = String(row['الجهة / المورد'] || row['الجهة'] || row['العميل'] || '').trim();
     const notes = String(row['ملاحظات'] || row['Notes'] || '').trim();
-    const category = String(row['التصنيف'] || 'مبيعات').trim();
+    const category = String(row['التصنيف'] || '').trim();
+
+    if (!itemName || quantity <= 0) return;
 
     movements.push({
-      id: `mov-imp-${Date.now()}-${idx}`,
-      mainId: `Categ-100${(idx % 5) + 1}`,
-      subId: `${subPrefix}-${Date.now().toString().slice(-4)}-${idx + 1}`,
+      id: autoKey('MOV', idx + 2),
+      mainId: autoKey('MAIN', idx + 2),
+      subId: rawSubId || autoKey(subPrefix, idx + 2),
       date,
       beneficiary,
-      description: notes || `حركة ${movementType} لصنف ${itemName}`,
+      description: notes,
       movementType,
-      status: 'تم التنفيذ',
+      status: '',
       category,
       items: { [itemName]: quantity },
       note: notes,
@@ -172,7 +175,7 @@ export const parseDailyTasksExcelFile = async (
     const op = String(row['العملية'] || row['Operation'] || 'إجراء دوري').trim();
     const priorityRaw = String(row['الأولوية'] || row['Priority'] || 'C').toUpperCase();
     const pri: TaskPriority = ['A', 'B', 'C', 'D'].includes(priorityRaw) ? (priorityRaw as TaskPriority) : 'B';
-    const resp = String(row['المسؤول'] || row['Assignee'] || 'أنور').trim();
+    const resp = String(row['المسؤول'] || row['Assignee'] || '').trim();
     const dueDate = String(row['تاريخ الاستحقاق'] || row['Due Date'] || todayStr).substring(0, 10);
     const desc = String(row['ملاحظات'] || row['الوصف'] || row['Notes'] || '').trim();
     const statusRaw = String(row['الحالة'] || row['Status'] || 'مخطط').trim();
@@ -213,23 +216,25 @@ export const parseCustomersExcelFile = async (
 
   rows.forEach((row, idx) => {
     const code = String(row['كود العميل'] || row['الكود'] || `ذهبي-${Date.now().toString().slice(-4)}-${idx + 1}`).trim();
-    const name = String(row['اسم العميل / الصيدلية'] || row['اسم العميل'] || row['الاسم'] || row['Name'] || `عميل مستورد ${idx + 1}`).trim();
-    const region = String(row['المحافظة'] || row['المنطقة'] || 'صنعاء').trim();
-    const route = String(row['المسار / اليوم'] || row['المسار'] || 'السبت').trim();
+    const name = String(row['اسم العميل / الصيدلية'] || row['اسم العميل'] || row['الاسم'] || row['Name'] || '').trim();
+    const region = String(row['المحافظة'] || row['المنطقة'] || '').trim();
+    const route = String(row['المسار / اليوم'] || row['المسار'] || '').trim();
     const phone = String(row['رقم الهاتف'] || row['الهاتف'] || '').trim();
-    const responsible = String(row['الشخص المسؤول'] || row['المسؤول'] || 'انور').trim();
+    const responsible = String(row['الشخص المسؤول'] || row['المسؤول'] || '').trim();
     const initialDebt = parseFloat(row['مديونية سابقة'] || row['المديونية'] || 0) || 0;
     const notes = String(row['ملاحظات'] || '').trim();
 
+    if (!name) return;
+
     customers.push({
-      id: `CUST-imp-${Date.now()}-${idx}`,
+      id: autoKey('CUST', idx + 2),
       subId: code,
       name,
-      source: 'القيصر الذهبي' as CustomerSource,
+      source: '' as CustomerSource,
       region,
       route,
-      significance: 'B' as CustomerSignificance,
-      status: 'مخطط' as VisitStatus,
+      significance: '' as CustomerSignificance,
+      status: '' as VisitStatus,
       responsible,
       balanceYER: initialDebt,
       balanceSAR: 0,
@@ -257,8 +262,8 @@ export const parseRoutinesExcelFile = async (
 
   rows.forEach((row, idx) => {
     const name = String(row['اسم الروتين'] || row['الروتين'] || row['Title'] || `روتين مستورد ${idx + 1}`).trim();
-    const categoryName = String(row['التصنيف'] || 'عام').trim();
-    const startTime = String(row['الوقت'] || '08:00').trim();
+    const categoryName = String(row['التصنيف'] || '').trim();
+    const startTime = String(row['الوقت'] || '').trim();
     const duration = parseInt(String(row['المدة (دقائق)'] || row['المدة'] || 30), 10) || 30;
     const description = String(row['الهدف'] || row['الوصف'] || row['ملاحظات'] || '').trim();
 
@@ -315,7 +320,7 @@ export const parseNotesExcelFile = async (
   rows.forEach((row, idx) => {
     const title = String(row['عنوان الملاحظة'] || row['العنوان'] || row['Title'] || `ملاحظة مستوردة ${idx + 1}`).trim();
     const content = String(row['المحتوى'] || row['النص'] || row['Content'] || '').trim();
-    const type = String(row['النوع'] || 'خطة عمل').trim();
+    const type = String(row['النوع'] || '').trim();
     const category = String(row['التصنيف'] || 'عام').trim();
     const priority = 'متوسطة';
     const status = 'نشطة';
@@ -359,14 +364,14 @@ export const parseCustodyExcelFile = async (
   const todayStr = nowStr.split('T')[0];
 
   rows.forEach((row, idx) => {
-    const secRaw = String(row['القسم'] || row['Section'] || 'custody').trim();
+    const secRaw = String(row['القسم'] || row['Section'] || '').trim();
     const section: CustodySection = secRaw.includes('إشكال') || secRaw.includes('issue') ? 'issues' : 'custody';
     const name = String(row['العنوان / البيان'] || row['الاسم'] || row['العنوان'] || `سجل مستورد ${idx + 1}`).trim();
     const desc = String(row['الوصف'] || row['الملاحظات'] || name).trim();
-    const responsible = String(row['الشخص المسؤول'] || row['المسؤول'] || 'أنور').trim();
+    const responsible = String(row['الشخص المسؤول'] || row['المسؤول'] || '').trim();
     const category = String(row['التصنيف'] || 'عام').trim();
     const amount = parseFloat(row['المبلغ'] || 0) || 0;
-    const currency = String(row['العملة'] || 'ريال يمني').trim();
+    const currency = String(row['العملة'] || '').trim();
     const date = String(row['التاريخ'] || todayStr).substring(0, 10);
     const notes = String(row['الملاحظات'] || '').trim();
 
@@ -403,11 +408,11 @@ export const parseLinksExcelFile = async (
 
   rows.forEach((row, idx) => {
     const siteName = String(row['عنوان الرابط'] || row['اسم الموقع'] || row['العنوان'] || `رابط مستورد ${idx + 1}`).trim();
-    const url = String(row['الرابط (URL)'] || row['الرابط'] || row['URL'] || 'https://google.com').trim();
-    const classification = String(row['التصنيف الأساسي'] || 'أدوات عامة').trim();
-    const category = String(row['الفئة'] || 'أخرى').trim();
-    const type = String(row['النوع'] || 'موقع رسمي').trim();
-    const importance = String(row['الأهمية'] || 'B').trim();
+    const url = String(row['الرابط (URL)'] || row['الرابط'] || row['URL'] || '').trim();
+    const classification = String(row['التصنيف الأساسي'] || '').trim();
+    const category = String(row['الفئة'] || '').trim();
+    const type = String(row['النوع'] || '').trim();
+    const importance = String(row['الأهمية'] || '').trim();
     const desc = String(row['الوصف'] || siteName).trim();
     const isFavorite = String(row['مميز بنجمة'] || '').includes('نعم');
 

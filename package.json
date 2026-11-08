@@ -1,7 +1,7 @@
 {
   "name": "caesar-erp-unified",
   "private": true,
-  "version": "3.4.0",
+  "version": "3.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -24,9 +24,10 @@
     "identity": "node tools/regression/identity.test.mjs",
     "snapshots": "node --max-old-space-size=2048 tools/regression/snapshots.test.mjs",
     "imports": "node tools/regression/imports.test.mjs",
+    "security": "node tools/regression/security.test.mjs",
     "tables:assert": "python3 tools/audit/tables_audit.py --assert",
     "tables:measure": "python3 tools/audit/tables_audit.py --json",
-    "verify": "npx tsc --noEmit && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/run.mjs",
+    "verify": "npx tsc --noEmit && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/security.test.mjs && node tools/regression/run.mjs",
     "integrity": "node tools/regression/integrity.test.mjs"
   },
   "dependencies": {

@@ -40,7 +40,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
   return (
     <div
-      className="min-h-screen bg-canvas-pattern text-slate-900 dark:text-slate-100 antialiased selection:bg-teal-600 selection:text-white transition-colors duration-200"
+      className="app-canvas min-h-screen bg-canvas-pattern text-slate-900 dark:text-slate-100 antialiased selection:bg-teal-600 selection:text-white transition-colors duration-200"
       dir="rtl"
     >
       {/* 1. Global Right-Hand Navigation Drawer */}

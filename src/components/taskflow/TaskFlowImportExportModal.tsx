@@ -22,6 +22,7 @@ import {
   Sparkles,
   FileDown,
 } from 'lucide-react';
+import { assertFileSize, readFirstSheetSafe } from '../../utils/xlsxSafe';
 
 interface TaskFlowImportExportModalProps {
   isOpen: boolean;
@@ -58,11 +59,8 @@ export const TaskFlowImportExportModal: React.FC<TaskFlowImportExportModalProps>
     const reader = new FileReader();
     reader.onload = (evt) => {
       try {
-        const bstr = evt.target?.result;
-        const wb = XLSX.read(bstr, { type: 'binary' });
-        const wsName = wb.SheetNames[0];
-        const ws = wb.Sheets[wsName];
-        const rows: any[] = XLSX.utils.sheet_to_json(ws);
+        assertFileSize(file);
+        const rows: any[] = readFirstSheetSafe<any>(evt.target?.result as string, 'binary').rows;
 
         if (!rows || rows.length === 0) {
           setError('الملف المرفق فارغ أو لا يحتوي على صفوف بيانات صالحة.');

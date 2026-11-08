@@ -203,3 +203,84 @@
 }
 
 
+
+/* ============================================================================
+   طبقة تصميم (Design layer) — إضافات بصرية موحّدة (2026-11-08)
+   كل الأصناف هنا تُحترم في الوضع الليلي عبر .dark وتعمل مع RTL.
+   ========================================================================== */
+:root {
+  --ring-focus: #0D9488;
+  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 18px 36px -18px rgb(15 23 42 / 0.22);
+}
+.dark {
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.35), 0 10px 26px -14px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 2px 6px rgb(0 0 0 / 0.4), 0 22px 44px -20px rgb(0 0 0 / 0.7);
+}
+
+/* مساحة العمل: خلفية ناعمة بتدرّج خفيف بدل الرمادي المسطّح */
+.app-canvas {
+  background-image:
+    radial-gradient(1200px 380px at 100% -60%, rgb(13 148 136 / 0.10), transparent 60%),
+    radial-gradient(900px 320px at 0% 0%, rgb(59 130 246 / 0.07), transparent 55%);
+  background-repeat: no-repeat;
+}
+.dark .app-canvas {
+  background-image:
+    radial-gradient(1200px 380px at 100% -60%, rgb(13 148 136 / 0.16), transparent 60%),
+    radial-gradient(900px 320px at 0% 0%, rgb(59 130 246 / 0.10), transparent 55%);
+}
+
+/* بطاقة موحّدة: ظل ناعم + رفع عند التحويم + حدّ متغيّر */
+.surface-card {
+  background-color: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 180ms ease, transform 180ms ease, border-color 180ms ease;
+}
+.dark .surface-card { background-color: #0f172a; border-color: #1e293b; }
+.surface-card:hover { box-shadow: var(--shadow-lift); border-color: #cbd5e1; }
+.dark .surface-card:hover { border-color: #334155; }
+
+/* عنصر تنقّل: شريط تمييز جانبي عند التفعيل (يعمل RTL) */
+.nav-pill { position: relative; isolation: isolate; }
+.nav-pill::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #0D9488, #14b8a6);
+  opacity: 0;
+  transform: scaleY(0.4);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+.nav-pill[data-active='true']::before { opacity: 1; transform: scaleY(1); }
+.nav-pill:hover { transform: translateX(-2px); }
+
+/* حلقة تركيز واضحة للوصولية (keyboard) */
+:where(button, a, input, select, textarea, [role='button']):focus-visible {
+  outline: 2px solid var(--ring-focus);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* شريط جانبي أعمق قليلاً مع تدرّج علوي */
+.sidebar-surface {
+  background-image: linear-gradient(180deg, rgb(13 148 136 / 0.05), transparent 160px);
+}
+
+/* شريط تمرير أنحف وأنظف */
+.scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+.dark .scrollbar-thin::-webkit-scrollbar-thumb { background: #334155; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+
+/* شارة إصدار */
+.version-chip {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}

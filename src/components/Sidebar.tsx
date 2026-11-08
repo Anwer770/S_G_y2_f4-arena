@@ -28,6 +28,7 @@ import {
   UserCheck,
   Lock,
 } from 'lucide-react';
+import { APP_NAME, APP_SHORT_NAME, APP_TAGLINE, APP_VERSION_LABEL } from '../constants/appMeta';
 
 interface SidebarProps {
   activeTab: ActiveModuleTab;
@@ -240,7 +241,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Main Right Sidebar (مطابق تماماً لألوان وستايل لقطة الشاشة) */}
       <aside
         id="app-right-sidebar"
-        className={`fixed top-0 right-0 h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border-l border-slate-200/90 dark:border-slate-800 z-50 flex flex-col transition-all duration-300 shadow-xl ${
+        className={`fixed top-0 right-0 h-screen sidebar-surface bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border-l border-slate-200/90 dark:border-slate-800 z-50 flex flex-col transition-all duration-300 shadow-xl ${
           isCollapsed ? 'w-20' : 'w-72 sm:w-80'
         } ${
           isMobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
@@ -253,17 +254,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => handleSelectTab('dashboard')}
             className="flex items-center gap-3 cursor-pointer overflow-hidden group select-none"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#0B2B26] text-white flex items-center justify-center font-black text-xl shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F3935] to-[#0D9488] text-white flex items-center justify-center font-black text-lg shadow-xs shrink-0 group-hover:scale-105 transition-transform ring-1 ring-white/20">
               م
             </div>
 
             {!isCollapsed && (
               <div className="min-w-0 transition-opacity">
-                <h1 className="text-sm font-black text-slate-900 dark:text-white truncate tracking-tight flex items-center gap-1.5" title="المنظومة-الإدارية-المتكاملة">
-                  <span>المنظومة-الإدارية-المتكاملة</span>
+                <h1 className="text-sm font-black text-slate-900 dark:text-white truncate tracking-tight flex items-center gap-1.5" title={APP_NAME}>
+                  <span className="truncate">{APP_NAME}</span>
+                  <span className="version-chip shrink-0 rounded-md bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800 px-1.5 py-0.5 text-xs font-bold">
+                    {APP_VERSION_LABEL}
+                  </span>
                 </h1>
                 <p className="text-xs text-slate-400 dark:text-slate-500 truncate mt-0.5 font-medium">
-                  نظام الإدارة والتشغيل الموحد
+                  {APP_TAGLINE}
                 </p>
               </div>
             )}
@@ -310,7 +314,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   }
                   handleSelectTab(item.id);
                 }}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs transition-all cursor-pointer select-none group relative ${
+                data-active={isActive ? 'true' : 'false'}
+                className={`nav-pill w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs transition-all cursor-pointer select-none group relative ${
                   !isAllowed
                     ? 'opacity-35 bg-slate-100 dark:bg-slate-800 text-slate-400'
                     : isActive
@@ -359,8 +364,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!isCollapsed ? (
             <>
               {/* Date & Time */}
-              <div className="text-xs font-mono font-medium text-slate-400 dark:text-slate-500 px-1 text-center truncate">
-                {currentTimeStr || 'جاري تحديث الوقت...'}
+              <div className="flex items-center justify-between gap-2 px-1">
+                <span className="text-xs font-mono font-medium text-slate-400 dark:text-slate-500 truncate">
+                  {currentTimeStr || 'جاري تحديث الوقت...'}
+                </span>
+                <span className="version-chip shrink-0 text-xs font-bold text-slate-400 dark:text-slate-500">
+                  {APP_SHORT_NAME} · {APP_VERSION_LABEL}
+                </span>
               </div>
 
               {/* User Profile Card */}

@@ -108,7 +108,10 @@ export const Header: React.FC<HeaderProps> = ({
   const currentTabMeta = TAB_TITLES[activeTab] || TAB_TITLES.dashboard;
 
   return (
-    <header className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-2xs transition-colors" dir="rtl">
+    <header
+      className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 sticky top-0 z-30 transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-gradient-to-l after:from-transparent after:via-teal-500/40 after:to-transparent"
+      dir="rtl"
+    >
       <div className="w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 flex items-center justify-between gap-3">
         {/* Right side: Mobile Menu Toggle + Search Bar */}
         <div className="flex items-center gap-2.5 min-w-0">

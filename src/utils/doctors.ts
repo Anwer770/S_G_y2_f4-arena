@@ -7,6 +7,7 @@ import {
   DoctorVisitStatus,
 } from '../types';
 import { ImportReport, autoKey, IMPORT_FIDELITY_BANNER } from './importFidelity';
+import { assertFileSize, readFirstSheetSafe } from './xlsxSafe';
 
 export function getTodayArabicDay(): string {
   const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
@@ -442,11 +443,10 @@ export async function parseDoctorsExcelOrCSV(
 
     reader.onload = (e) => {
       try {
+        assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+        const safeSheet = readFirstSheetSafe<any>(data, 'array');
+        const rawJson: any[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({

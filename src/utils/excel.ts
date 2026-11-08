@@ -6,6 +6,7 @@ import {
   autoKey,
   IMPORT_FIDELITY_BANNER,
 } from './importFidelity';
+import { assertFileSize, readFirstSheetSafe, readFirstSheetAoaSafe } from './xlsxSafe';
 import {
   AppSettings,
   AuditLog,
@@ -423,15 +424,9 @@ export async function parseExcelForImport(
   knownProducts: Product[],
   defaultYear: number = 2024
 ): Promise<ImportPreviewResult> {
+  assertFileSize(file);
   const buffer = await file.arrayBuffer();
-  const workbook = XLSX.read(buffer, { type: 'array' });
-  const firstSheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[firstSheetName];
-
-  const rawRows: any[][] = XLSX.utils.sheet_to_json(worksheet, {
-    header: 1,
-    defval: '',
-  });
+  const rawRows: any[][] = readFirstSheetAoaSafe(buffer, 'array').rows as any[][];
 
   if (!rawRows || rawRows.length < 2) {
     throw new Error('الملف فارغ أو لا يحتوي على صفوف بيانات صالحة.');
@@ -667,10 +662,8 @@ export async function parseCustomersExcelFile(
   warnings: string[];
 }> {
   const data = await file.arrayBuffer();
-  const workbook = XLSX.read(data, { type: 'array' });
-  const firstSheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[firstSheetName];
-  const rawRows: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+  const safeSheet = readFirstSheetSafe<any>(data, 'array');
+  const rawRows: any[] = safeSheet.rows;
 
   const customers: Customer[] = [];
   const warnings: string[] = [IMPORT_FIDELITY_BANNER];
@@ -973,10 +966,8 @@ export async function parseFinancialExcelOrCSV(
     reader.onload = (e) => {
       try {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+        const safeSheet = readFirstSheetSafe<any>(data, 'array');
+        const rawJson: any[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({

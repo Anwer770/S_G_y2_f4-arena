@@ -158,6 +158,29 @@ check(
     /export type DoctorVisitStatus = ''/.test(types)
 );
 
+// ── 3) المُحلّلات الشاملة (universalImporters) — نفس السياسة
+const universal = read('src/utils/universalImporters.ts');
+const universalBad = [
+  "'صنف غير محدد'",
+  "'طرف عام'",
+  "'https://google.com'",
+  'عميل مستورد',
+  'حساب مستورد',
+  "'تم التنفيذ'",
+  "'القيصر الذهبي'",
+  "'انور'",
+  "'أنور'",
+  "'صنعاء'",
+  "'السبت'",
+  "'مبيعات'",
+  "'08:00'",
+].filter((needle) => universal.includes(needle));
+check('P14 · المُحلّلات الشاملة: لا أسماء/جهات/روابط/أوقات مخترعة', universalBad.length === 0,
+  universalBad.length ? universalBad.join(' · ') : 'نظيف');
+
+check('P15 · المُحلّلات الشاملة تولّد مفاتيحها بوسم AUTO- وتتخطّى الصفوف بلا محتوى',
+  universal.includes("autoKey('CUST'") && universal.includes("autoKey('MOV'") && /if \(!name\) return;/.test(universal) && /if \(!itemName \|\| quantity <= 0\) return;/.test(universal));
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة اختبار أمانة الاستيراد (imports) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
