@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 import {defineConfig} from 'vite';
+import { APP_NAME, APP_SHORT_NAME, APP_TAGLINE } from './src/constants/appMeta';
 
 export default defineConfig(() => {
   return {
@@ -14,9 +15,9 @@ export default defineConfig(() => {
         includeAssets: ['apple-touch-icon.png', 'icon.svg'],
         manifest: {
           id: '/',
-          name: 'المنظومة الإدارية والمالية الشاملة - القيصر الذهبي',
-          short_name: 'القيصر ERP',
-          description: 'نظام إدارة العمليات والمخزون والحسابات والمهام الميدانية والمطابقات',
+          name: APP_NAME,
+          short_name: APP_SHORT_NAME,
+          description: APP_TAGLINE,
           theme_color: '#0d6854',
           background_color: '#0f172a',
           display: 'standalone',

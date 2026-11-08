@@ -30,8 +30,11 @@ import { NotificationsTab } from './tabs/NotificationsTab';
 import { PrinterSettingsTab } from './tabs/PrinterSettingsTab';
 import { UsersTab } from './tabs/UsersTab';
 import { SecurityPermissionsTab } from './tabs/SecurityPermissionsTab';
+import { LookupsTab } from './tabs/LookupsTab';
+import { AuditLogTab } from './tabs/AuditLogTab';
 import { DatabasesTab } from './tabs/DatabasesTab';
 import { AboutAppTab } from './tabs/AboutAppTab';
+import { useSubTabSync } from '../../utils/subMenuStore';
 
 interface Props {
   onExportBackup: () => UnifiedBackupState | void;
@@ -62,6 +65,8 @@ type TabKey =
   | 'printer'
   | 'users'
   | 'security'
+  | 'lookups'
+  | 'audit'
   | 'databases'
   | 'about';
 
@@ -74,12 +79,14 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { id: 'company', label: 'بيانات الشركة', icon: Building2 },
   { id: 'general', label: 'إعدادات عامة', icon: Sliders },
+  { id: 'lookups', label: 'القوائم والثوابت', icon: Package },
   { id: 'inventory', label: 'المخزون', icon: Package },
   { id: 'fiscalYear', label: 'السنة المالية', icon: Calendar },
   { id: 'notifications', label: 'الإشعارات', icon: Bell },
   { id: 'printer', label: 'إعدادات الطابعة', icon: Printer },
   { id: 'users', label: 'المستخدمين', icon: Users },
   { id: 'security', label: 'الأمان والصلاحيات', icon: ShieldCheck },
+  { id: 'audit', label: 'سجل التدقيق', icon: ShieldCheck },
   { id: 'databases', label: 'قواعد البيانات', icon: Database },
   { id: 'about', label: 'عن التطبيق', icon: Info },
 ];
@@ -101,6 +108,7 @@ export const UnifiedSettings: React.FC<Props> = ({
   linksCount = 0,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('company');
+  useSubTabSync('settings', activeTab, setActiveTab as (next: string) => void);
   const [settings, setSettings] = useState<CompleteSystemSettings>(() => loadCompleteSystemSettings());
   const [isSavedRecently, setIsSavedRecently] = useState(false);
 
@@ -204,6 +212,8 @@ export const UnifiedSettings: React.FC<Props> = ({
             />
           )}
 
+          {activeTab === 'lookups' && <LookupsTab />}
+
           {activeTab === 'inventory' && (
             <InventorySettingsTab
               settings={settings.inventory}
@@ -234,6 +244,7 @@ export const UnifiedSettings: React.FC<Props> = ({
 
           {activeTab === 'users' && (
             <UsersTab
+              customRoles={settings.customRoles || []}
               users={settings.users}
               onChange={(updated) => {
                 const adminUser = updated.find((u) => u.role === 'admin' || u.id === 'usr-1');
@@ -253,8 +264,13 @@ export const UnifiedSettings: React.FC<Props> = ({
             <SecurityPermissionsTab
               rolePermissions={settings.rolePermissions}
               onChange={(updated) => setSettings({ ...settings, rolePermissions: updated })}
+              customRoles={settings.customRoles || []}
+              onCustomRolesChange={(roles) => setSettings({ ...settings, customRoles: roles })}
+              users={settings.users}
             />
           )}
+
+          {activeTab === 'audit' && <AuditLogTab />}
 
           {activeTab === 'databases' && (
             <DatabasesTab

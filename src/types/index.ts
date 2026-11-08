@@ -14,6 +14,8 @@ export interface Product {
   id: string;
   name: string;
   openingStock: number;
+  /** حدّ الطلب الخاص بالصنف (اختياري — يستخدم الافتراضي من الإعدادات) */
+  reorderPoint?: number;
   unit: string;
   isActive: boolean;
   description?: string;
@@ -188,9 +190,10 @@ export type CalendarViewMode = 'daily' | 'weekly' | 'monthly';
 // ----------------------------------------------------------------------------
 // 4. CUSTOMERS & VISITS MANAGEMENT TYPES (دفتر إدارة العملاء والزيارات - القيصر الذهبي)
 // ----------------------------------------------------------------------------
-export type CustomerSource = 'القيصر الذهبي' | 'توب مكياجي' | 'عفيف' | 'الأطباء' | 'أخرى';
-export type CustomerSignificance = 'A' | 'B' | 'C' | '√';
-export type VisitStatus = 'مخطط' | 'قيد تنفيذ' | 'مكتمل' | 'ملغي' | 'مرحل' | 'متابعة' | 'مصفر';
+/** `''` = لم يُذكر في الملف المستورد (لا تُخترع قيمة افتراضية — سياسة أمانة الاستيراد) */
+export type CustomerSource = '' | 'القيصر الذهبي' | 'توب مكياجي' | 'عفيف' | 'الأطباء' | 'أخرى';
+export type CustomerSignificance = '' | 'A' | 'B' | 'C' | '√';
+export type VisitStatus = '' | 'مخطط' | 'قيد تنفيذ' | 'مكتمل' | 'ملغي' | 'مرحل' | 'متابعة' | 'مصفر';
 
 export interface Customer {
   id: string; // المعرف الرئيسي (CUST-XXXX)
@@ -258,8 +261,8 @@ export interface CustomerFilterState {
 // ----------------------------------------------------------------------------
 // 5. DOCTOR & MEDICAL VISITS TYPES (دفتر إدارة زيارات الأطباء - PRD v1.0)
 // ----------------------------------------------------------------------------
-export type DoctorSignificance = 'A' | 'B' | 'C' | '√';
-export type DoctorVisitStatus = 'مخطط' | 'قيد تنفيذ' | 'مكتمل' | 'ملغي' | 'مرحل' | 'متابعة';
+export type DoctorSignificance = '' | 'A' | 'B' | 'C' | '√';
+export type DoctorVisitStatus = '' | 'مخطط' | 'قيد تنفيذ' | 'مكتمل' | 'ملغي' | 'مرحل' | 'متابعة';
 
 export interface DoctorRecord {
   id: string; // DOC-1001
@@ -716,6 +719,8 @@ export interface UnifiedBackupState {
     };
     workos?: any;
     settings: AppSettings;
+    /** القوائم والثوابت المركزية (Master Lookups) — R19 */
+    lookups?: any;
     systemLogs: AuditLog[];
   };
 }

@@ -44,6 +44,7 @@ export const DEFAULT_SYSTEM_SETTINGS: CompleteSystemSettings = {
       'أخرى',
     ],
     units: ['قطعة', 'كرتونة', 'دستة', 'باكت', 'كجم', 'جم', 'متر', 'لتر', 'ساعة', 'طرد'],
+    reorderPointDefault: 5,
   },
   fiscalYear: {
     currentYear: 2026,
@@ -139,6 +140,7 @@ export const DEFAULT_SYSTEM_SETTINGS: CompleteSystemSettings = {
       'fin_view', 'inv_view', 'sales_view'
     ],
   },
+  customRoles: [],
   database: {
     googleDriveClientId: '',
     isGoogleDriveConnected: false,
@@ -207,6 +209,10 @@ export function loadCompleteSystemSettings(): CompleteSystemSettings {
           warehouses: parsed.inventory?.warehouses || DEFAULT_SYSTEM_SETTINGS.inventory.warehouses,
           productCategories: parsed.inventory?.productCategories || DEFAULT_SYSTEM_SETTINGS.inventory.productCategories,
           units: parsed.inventory?.units || DEFAULT_SYSTEM_SETTINGS.inventory.units,
+          reorderPointDefault:
+            typeof parsed.inventory?.reorderPointDefault === 'number'
+              ? parsed.inventory.reorderPointDefault
+              : DEFAULT_SYSTEM_SETTINGS.inventory.reorderPointDefault,
         },
         fiscalYear: { ...DEFAULT_SYSTEM_SETTINGS.fiscalYear, ...(parsed.fiscalYear || {}) },
         notifications: { ...DEFAULT_SYSTEM_SETTINGS.notifications, ...(parsed.notifications || {}) },
@@ -217,6 +223,9 @@ export function loadCompleteSystemSettings(): CompleteSystemSettings {
         },
         users,
         rolePermissions: { ...DEFAULT_SYSTEM_SETTINGS.rolePermissions, ...(parsed.rolePermissions || {}) },
+        customRoles: Array.isArray(parsed.customRoles)
+          ? parsed.customRoles.filter((r: unknown) => r && typeof r === 'object')
+          : [],
         database: { ...DEFAULT_SYSTEM_SETTINGS.database, ...(parsed.database || {}) },
       };
     }

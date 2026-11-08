@@ -81,6 +81,7 @@ export function calculateCustomerStats(
   let todayVisitsCompleted = 0;
 
   const sourceMap: Record<CustomerSource, any> = {
+    '': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
     'القيصر الذهبي': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
     'توب مكياجي': { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
     عفيف: { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 },
@@ -343,4 +344,36 @@ export function generateNextCustomerId(
   const nextSubId = `${prefix}-${nextSubNum}`;
 
   return { id: nextId, subId: nextSubId };
+}
+
+// ---------------------------------------------------------------------------
+// خطة حذف العميل (إصلاح R14) — منطق نقي قابل للاختبار
+// ---------------------------------------------------------------------------
+
+/**
+ * خطة حذف عميل مع زياراته:
+ * - لا وجود → found=false
+ * - بلا زيارات → requiresCascade=false (تأكيد واحد)
+ * - بزيارات → requiresCascade=true (يجب حذف الزيارات معه بتأكيد مزدوج)
+ *
+ * يمنع بقاء زيارات «يتيمة» بمعرّف عميل غير موجود تُلوّث تقارير الزيارات والتحصيل.
+ */
+export function planCustomerDeletion(
+  customers: Customer[],
+  visits: CustomerVisitRecord[],
+  customerId: string
+): {
+  found: boolean;
+  customer: Customer | null;
+  relatedVisits: CustomerVisitRecord[];
+  requiresCascade: boolean;
+} {
+  const customer = customers.find((c) => c.id === customerId) || null;
+  const relatedVisits = visits.filter((v) => v.customerId === customerId);
+  return {
+    found: Boolean(customer),
+    customer,
+    relatedVisits,
+    requiresCascade: relatedVisits.length > 0,
+  };
 }

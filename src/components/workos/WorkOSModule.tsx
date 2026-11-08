@@ -1011,7 +1011,7 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
             >
               <Printer className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" />
               <span>طباعة تقرير</span>
-              <span className="hidden sm:inline-block px-1 py-0.2 text-[9px] font-mono bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded">P</span>
+              <span className="hidden sm:inline-block px-1 py-0.2 text-xs font-mono bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded">P</span>
             </button>
 
             {/* Data Exchange (Excel & Backup) Button */}

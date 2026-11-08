@@ -125,7 +125,7 @@ export class IndexedDBAdapter implements IStorageEngine {
   private async migrateFromLocalStorage(): Promise<void> {
     if (typeof window === 'undefined' || !window.localStorage) return;
     try {
-      console.log('IndexedDBAdapter: Migrating existing data from localStorage to IndexedDB...');
+      console.info('IndexedDBAdapter: Migrating existing data from localStorage to IndexedDB...');
       for (let i = 0; i < window.localStorage.length; i++) {
         const key = window.localStorage.key(i);
         if (key) {
@@ -136,7 +136,7 @@ export class IndexedDBAdapter implements IStorageEngine {
           }
         }
       }
-      console.log('IndexedDBAdapter: Migration completed successfully.');
+      console.info('IndexedDBAdapter: Migration completed successfully.');
     } catch (e) {
       console.warn('IndexedDBAdapter: Migration partial failure', e);
     }

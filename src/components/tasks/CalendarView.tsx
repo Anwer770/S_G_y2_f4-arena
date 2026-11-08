@@ -434,7 +434,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             <div className="flex items-center bg-slate-50 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200/80 dark:border-slate-700">
               <button
                 onClick={() => setTypeFilter('all')}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer ${
                   typeFilter === 'all'
                     ? 'bg-teal-600 text-white'
                     : 'text-slate-600 dark:text-slate-300'
@@ -444,7 +444,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               </button>
               <button
                 onClick={() => setTypeFilter('tasks')}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer ${
                   typeFilter === 'tasks'
                     ? 'bg-teal-600 text-white'
                     : 'text-slate-600 dark:text-slate-300'
@@ -454,7 +454,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               </button>
               <button
                 onClick={() => setTypeFilter('commitments')}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-colors cursor-pointer ${
                   typeFilter === 'commitments'
                     ? 'bg-amber-600 text-white'
                     : 'text-slate-600 dark:text-slate-300'
@@ -468,7 +468,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value as any)}
-              className="bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500 cursor-pointer"
+              className="bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500 cursor-pointer"
             >
               <option value="all">كافة الأولويات</option>
               <option value="A">أولوية عاجلة (A)</option>
@@ -484,7 +484,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="بحث في التقويم..."
-                className="bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-lg pr-8 pl-6 py-1 text-[11px] text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-500 w-36 sm:w-44"
+                className="bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-lg pr-8 pl-6 py-1 text-xs text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-500 w-36 sm:w-44"
               />
               {searchQuery && (
                 <button
@@ -498,7 +498,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
           </div>
 
           {/* Quick Period Summary Counters */}
-          <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+          <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-medium">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-teal-500" />
               <span>مهام الفترة:</span>
@@ -570,7 +570,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                         </span>
 
                         {isToday && (
-                          <span className="text-[10px] font-black text-teal-600 dark:text-teal-400 hidden sm:inline">
+                          <span className="text-xs font-black text-teal-600 dark:text-teal-400 hidden sm:inline">
                             اليوم
                           </span>
                         )}
@@ -579,7 +579,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       {/* Quick Add Button on Day (Visible on hover and on touch) */}
                       <div className="flex items-center gap-1">
                         {totalEvents > 0 && (
-                          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono font-bold">
+                          <span className="text-xs px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono font-bold">
                             {totalEvents}
                           </span>
                         )}
@@ -608,7 +608,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             e.stopPropagation();
                             if (onEditTask) onEditTask(t);
                           }}
-                          className={`text-[11px] p-1 rounded-md border truncate font-medium flex items-center justify-between gap-1 transition-all hover:scale-[1.01] ${
+                          className={`text-xs p-1 rounded-md border truncate font-medium flex items-center justify-between gap-1 transition-all hover:scale-[1.01] ${
                             t.status === 'تم الانجاز'
                               ? 'bg-slate-100 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 line-through border-slate-200 dark:border-slate-700'
                               : t.pri === 'A'
@@ -645,7 +645,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             e.stopPropagation();
                             if (onEditCommitment) onEditCommitment(c);
                           }}
-                          className={`text-[11px] p-1 rounded-md border truncate font-medium flex items-center justify-between gap-1 transition-all hover:scale-[1.01] ${
+                          className={`text-xs p-1 rounded-md border truncate font-medium flex items-center justify-between gap-1 transition-all hover:scale-[1.01] ${
                             c.status === 'تم الانجاز'
                               ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 line-through border-slate-200 dark:border-slate-700'
                               : 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border-amber-200 dark:border-amber-800/60'
@@ -656,7 +656,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             <Coins className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400 shrink-0" />
                             <span className="truncate">{c.name}</span>
                           </div>
-                          <span className="text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 shrink-0">
+                          <span className="text-xs font-mono font-bold text-amber-700 dark:text-amber-300 shrink-0">
                             {Number(c.amount) >= 1000 ? `${Math.round(c.amount / 1000)}k` : c.amount}
                           </span>
                         </div>
@@ -664,7 +664,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
                       {/* Overflow Badge */}
                       {totalEvents > 3 && (
-                        <div className="text-[10px] text-teal-600 dark:text-teal-400 text-center font-bold pt-0.5">
+                        <div className="text-xs text-teal-600 dark:text-teal-400 text-center font-bold pt-0.5">
                           +{totalEvents - 3} أخرى (اضغط للعرض)
                         </div>
                       )}
@@ -673,7 +673,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
                   {/* Empty Day Prompt (Subtle on hover) */}
                   {totalEvents === 0 && d.isCurrentMonth && (
-                    <div className="text-[10px] text-slate-300 dark:text-slate-600 text-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="text-xs text-slate-300 dark:text-slate-600 text-center opacity-0 group-hover:opacity-100 transition-opacity">
                       + اضغط لإضافة مهمة
                     </div>
                   )}
@@ -727,7 +727,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                           {w.dayNum}
                         </span>
                         {isToday && (
-                          <span className="text-[10px] font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/60 px-1.5 py-0.5 rounded">
+                          <span className="text-xs font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/60 px-1.5 py-0.5 rounded">
                             اليوم
                           </span>
                         )}
@@ -739,7 +739,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       <button
                         type="button"
                         onClick={() => handleQuickAddTask(w.dateStr)}
-                        className="flex-1 py-1 px-2 rounded-lg bg-teal-50 dark:bg-teal-950/50 hover:bg-teal-100 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 text-[11px] font-bold transition-all flex items-center justify-center gap-1 cursor-pointer border border-teal-200/60 dark:border-teal-800/60 shadow-2xs"
+                        className="flex-1 py-1 px-2 rounded-lg bg-teal-50 dark:bg-teal-950/50 hover:bg-teal-100 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer border border-teal-200/60 dark:border-teal-800/60 shadow-2xs"
                       >
                         <Plus className="w-3 h-3" />
                         <span>مهمة</span>
@@ -748,7 +748,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                         <button
                           type="button"
                           onClick={() => handleQuickAddCommitment(w.dateStr)}
-                          className="py-1 px-2 rounded-lg bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-[11px] font-bold transition-all flex items-center justify-center gap-1 cursor-pointer border border-amber-200/60 dark:border-amber-800/60 shadow-2xs"
+                          className="py-1 px-2 rounded-lg bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer border border-amber-200/60 dark:border-amber-800/60 shadow-2xs"
                           title="إضافة التزام مالي لهذا اليوم"
                         >
                           <Coins className="w-3 h-3" />
@@ -764,7 +764,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                           className="text-center py-12 text-slate-300 dark:text-slate-600 hover:text-teal-600 transition-colors cursor-pointer border-2 border-dashed border-slate-100 dark:border-slate-800/80 rounded-xl"
                         >
                           <Plus className="w-6 h-6 mx-auto mb-1 opacity-50" />
-                          <p className="text-[11px] font-medium">اضغط للإضافة</p>
+                          <p className="text-xs font-medium">اضغط للإضافة</p>
                         </div>
                       ) : (
                         <>
@@ -803,7 +803,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                                 )}
                               </div>
 
-                              <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-700/60">
+                              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-700/60">
                                 <span className={`px-1.5 py-0.2 rounded border font-bold ${getPriorityStyle(t.pri)}`}>
                                   {t.pri}
                                 </span>
@@ -835,7 +835,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                                 </span>
                               </div>
 
-                              <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 pt-1 border-t border-amber-100 dark:border-amber-900/40">
+                              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-amber-100 dark:border-amber-900/40">
                                 <span className="text-amber-700 dark:text-amber-300 font-semibold">{c.status}</span>
                                 <span className="font-bold text-slate-600 dark:text-slate-300">أولوية {c.pri}</span>
                               </div>
@@ -850,7 +850,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   <button
                     type="button"
                     onClick={() => handleDayClick(w.dateStr, w.dayNum, w.dayName)}
-                    className="w-full mt-2 py-1.5 text-[11px] font-bold text-slate-500 hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer text-center"
+                    className="w-full mt-2 py-1.5 text-xs font-bold text-slate-500 hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer text-center"
                   >
                     عرض تفاصيل اليوم →
                   </button>
@@ -949,7 +949,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                         )}
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <span className="font-mono text-[10px] font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/60 px-1.5 py-0.2 rounded">
+                            <span className="font-mono text-xs font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/60 px-1.5 py-0.2 rounded">
                               {t.id}
                             </span>
                             <h5
@@ -959,7 +959,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             >
                               {t.title}
                             </h5>
-                            <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${getPriorityStyle(t.pri)}`}>
+                            <span className={`text-xs px-2 py-0.5 rounded border font-bold ${getPriorityStyle(t.pri)}`}>
                               أولوية {t.pri}
                             </span>
                           </div>
@@ -968,7 +968,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mt-0.5">{t.desc}</p>
                           )}
 
-                          <div className="flex items-center flex-wrap gap-3 text-[11px] text-slate-500 dark:text-slate-400 mt-2">
+                          <div className="flex items-center flex-wrap gap-3 text-xs text-slate-500 dark:text-slate-400 mt-2">
                             <span>الفئة: <strong className="text-slate-700 dark:text-slate-200">{t.cat}</strong></span>
                             <span>العملية: <strong className="text-slate-700 dark:text-slate-200">{t.op}</strong></span>
                             <span>المسؤول: <strong className="text-slate-700 dark:text-slate-200">{t.resp}</strong></span>
@@ -982,7 +982,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">
-                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${getStatusColor(t.status)}`}>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${getStatusColor(t.status)}`}>
                           {t.status}
                         </span>
                         {onEditTask && (
@@ -1050,7 +1050,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                         )}
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <span className="font-mono text-[10px] font-bold text-amber-700 dark:text-amber-300 bg-amber-100/70 dark:bg-amber-950/60 px-1.5 py-0.2 rounded">
+                            <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-100/70 dark:bg-amber-950/60 px-1.5 py-0.2 rounded">
                               {c.id}
                             </span>
                             <h5
@@ -1060,7 +1060,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             >
                               {c.name}
                             </h5>
-                            <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${getPriorityStyle(c.pri)}`}>
+                            <span className={`text-xs px-2 py-0.5 rounded border font-bold ${getPriorityStyle(c.pri)}`}>
                               أولوية {c.pri}
                             </span>
                           </div>
@@ -1076,7 +1076,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">
-                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${getStatusColor(c.status)}`}>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${getStatusColor(c.status)}`}>
                           {c.status}
                         </span>
                         {onEditCommitment && (
@@ -1137,7 +1137,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   <span className="font-black text-xs group-hover:text-teal-700">مهمة جديدة</span>
                   <Plus className="w-4 h-4 text-teal-600" />
                 </div>
-                <span className="text-[11px] text-teal-600/80 dark:text-teal-400/80">
+                <span className="text-xs text-teal-600/80 dark:text-teal-400/80">
                   إضافة مهمة تنفيذية مجدولة لهذا التاريخ
                 </span>
               </button>
@@ -1151,7 +1151,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   <span className="font-black text-xs group-hover:text-amber-700">التزام مالي</span>
                   <Coins className="w-4 h-4 text-amber-600" />
                 </div>
-                <span className="text-[11px] text-amber-600/80 dark:text-amber-400/80">
+                <span className="text-xs text-amber-600/80 dark:text-amber-400/80">
                   تسجيل دفعة أو قسط أو مستحق مالي
                 </span>
               </button>
@@ -1161,7 +1161,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             <div>
               <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
                 <span>المسجل في هذا اليوم:</span>
-                <span className="text-[11px] font-mono text-slate-400">
+                <span className="text-xs font-mono text-slate-400">
                   {getTasksForDate(selectedDayModal.dateStr).length} مهام •{' '}
                   {getCommitmentsForDate(selectedDayModal.dateStr).length} التزامات
                 </span>
@@ -1190,7 +1190,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             {t.title}
                           </span>
                         </div>
-                        <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getPriorityStyle(t.pri)}`}>
+                        <span className={`text-xs px-2 py-0.5 rounded font-bold ${getPriorityStyle(t.pri)}`}>
                           أولوية {t.pri}
                         </span>
                       </div>

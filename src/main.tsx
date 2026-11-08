@@ -4,6 +4,11 @@ import App from './App.tsx';
 import './index.css';
 import { ThemeProvider } from './context/ThemeContext.tsx';
 import { indexedDBStorage } from './database/adapters/IndexedDBAdapter';
+import { requestPersistentStorage } from './utils/storagePersistence';
+import { APP_NAME, APP_VERSION_LABEL } from './constants/appMeta';
+
+// عنوان الصفحة من المصدر الوحيد للهوية (إصلاح R7)
+document.title = `${APP_NAME} · ${APP_VERSION_LABEL}`;
 
 const container = document.getElementById('root')!;
 
@@ -34,5 +39,7 @@ function renderApp() {
   } catch (err) {
     console.warn('Data safety gate: readiness failed, rendering with current cache', err);
   }
+  // طلب تخزين دائم حتى لا يُخلي المتصفح البيانات عند ضغط المساحة (إصلاح R13)
+  void requestPersistentStorage();
   renderApp();
 })();

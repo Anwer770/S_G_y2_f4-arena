@@ -22,6 +22,7 @@ import {
   Package,
   CheckCircle2,
 } from 'lucide-react';
+import { useLookups } from '../../utils/lookupsStore';
 
 interface Props {
   isOpen: boolean;
@@ -46,6 +47,9 @@ export const DoctorModal: React.FC<Props> = ({
   customResponsibles = DOCTOR_RESPONSIBLES,
   customSpecialties = DOCTOR_SPECIALTIES,
 }) => {
+  const { lookups } = useLookups();
+  const gradeOptions = lookups.grades.filter((g) => g.active);
+
   const [formData, setFormData] = useState<Partial<DoctorRecord>>({
     name: '',
     source: 'الأطباء',
@@ -318,10 +322,11 @@ export const DoctorModal: React.FC<Props> = ({
                 }
                 className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white dark:bg-slate-900 font-bold"
               >
-                <option value="A">درجة A (أولوية قصوى)</option>
-                <option value="B">درجة B (أولوية متوسطة)</option>
-                <option value="C">درجة C (أولوية عادية)</option>
-                <option value="√">درجة √ (مميز / معتمد)</option>
+                {gradeOptions.map((g) => (
+                  <option key={g.id} value={g.label}>
+                    {g.hint ? `درجة ${g.label} (${g.hint})` : `درجة ${g.label}`}
+                  </option>
+                ))}
               </select>
             </div>
 

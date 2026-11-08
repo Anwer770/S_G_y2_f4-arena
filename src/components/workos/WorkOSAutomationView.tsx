@@ -171,7 +171,7 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
                   </span>
                   <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">{rule.name}</h3>
                   <span
-                    className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                    className={`px-2 py-0.5 rounded-md text-xs font-bold ${
                       rule.isActive
                         ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
                         : 'bg-slate-100 dark:bg-slate-800 text-slate-500'

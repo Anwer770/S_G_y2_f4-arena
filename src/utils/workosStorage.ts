@@ -20,6 +20,7 @@ import {
 import confetti from 'canvas-confetti';
 import * as XLSX from 'xlsx';
 import { dbStorage } from '../database/dbStorage';
+import { assertFileSize, readFirstSheetSafe } from './xlsxSafe';
 
 // Storage keys
 const STORAGE_PREFIX = 'workos_v1_';
@@ -1368,11 +1369,10 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
+        assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+        const safeSheet = readFirstSheetSafe<any>(data, 'array');
+        const rawJson: any[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({ success: false, message: 'الملف فارغ أو لا يحتوي على أسطر صالحة.' });
@@ -1828,11 +1828,10 @@ export function importUnifiedWorkOSFromExcel(
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
+        assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+        const safeSheet = readFirstSheetSafe<any>(data, 'array');
+        const rawJson: any[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({ success: false, message: 'الملف فارغ أو لا يحتوي على أسطر صالحة.' });

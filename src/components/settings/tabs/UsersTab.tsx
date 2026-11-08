@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { SystemUser, UserRole } from '../../../types/settings';
+import { CustomRole, SystemUser, UserRole } from '../../../types/settings';
 import { Users, Plus, Edit2, Trash2, Shield, CheckCircle2, XCircle, Mail, Phone, Lock, X } from 'lucide-react';
 
 interface Props {
   users: SystemUser[];
   onChange: (updated: SystemUser[]) => void;
+  customRoles?: CustomRole[];
 }
 
 const ROLE_LABELS: Record<UserRole, { title: string; color: string; bg: string }> = {
@@ -14,14 +15,14 @@ const ROLE_LABELS: Record<UserRole, { title: string; color: string; bg: string }
   viewer: { title: 'مشاهد فقط', color: 'text-slate-700 dark:text-slate-300', bg: 'bg-slate-100 dark:bg-slate-800' },
 };
 
-export const UsersTab: React.FC<Props> = ({ users, onChange }) => {
+export const UsersTab: React.FC<Props> = ({ users, onChange, customRoles = [] }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<SystemUser | null>(null);
 
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
   const [formPhone, setFormPhone] = useState('');
-  const [formRole, setFormRole] = useState<UserRole>('accountant');
+  const [formRole, setFormRole] = useState<string>('accountant');
   const [formStatus, setFormStatus] = useState<'active' | 'inactive'>('active');
 
   const openAddModal = () => {
@@ -137,7 +138,7 @@ export const UsersTab: React.FC<Props> = ({ users, onChange }) => {
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
               {users.map((user) => {
-                const roleMeta = ROLE_LABELS[user.role] || ROLE_LABELS.viewer;
+                const roleMeta = ROLE_LABELS[user.role as UserRole] || { title: customRoles.find((r) => r.id === user.role)?.label || 'دور مخصص', color: 'text-indigo-700 dark:text-indigo-300', bg: 'bg-indigo-100 dark:bg-indigo-950/70' };
                 return (
                   <tr key={user.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors group">
                     <td className="py-2 px-3 sticky right-0 z-10 bg-white dark:bg-slate-900 group-hover:bg-slate-50/90 dark:group-hover:bg-slate-800/80 shadow-[-2px_0_4px_-1px_rgba(0,0,0,0.06)]">
@@ -276,13 +277,16 @@ export const UsersTab: React.FC<Props> = ({ users, onChange }) => {
                 </label>
                 <select
                   value={formRole}
-                  onChange={(e) => setFormRole(e.target.value as UserRole)}
+                  onChange={(e) => setFormRole(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white outline-hidden cursor-pointer"
                 >
                   <option value="admin">مدير النظام (كامل الصلاحيات)</option>
                   <option value="accountant">محاسب (الحسابات، السندات، القيود)</option>
                   <option value="sales">موظف مبيعات (فواتير، عملاء، مخزون)</option>
                   <option value="viewer">مشاهد فقط (اطلاع واستعراض فقط)</option>
+                  {customRoles.map((r) => (
+                    <option key={r.id} value={r.id}>{r.label} (دور مخصص)</option>
+                  ))}
                 </select>
               </div>
 

@@ -88,6 +88,7 @@ import {
   CalendarDays,
   Activity,
 } from 'lucide-react';
+import { useSubTabSync } from '../../utils/subMenuStore';
 
 interface Props {
   items: Item[];
@@ -199,6 +200,7 @@ export const UnifiedDashboard: React.FC<Props> = ({
 
   // Operations Tab state: 'today' | 'overdue' | 'visits' | 'commitments' | 'orders_ledger'
   const [activeOpsTab, setActiveOpsTab] = useState<'today' | 'overdue' | 'visits' | 'commitments' | 'orders_ledger'>('today');
+  useSubTabSync('dashboard', activeOpsTab, setActiveOpsTab as (next: string) => void);
   const [workOSTasksVersion, setWorkOSTasksVersion] = useState(0);
 
   useEffect(() => {

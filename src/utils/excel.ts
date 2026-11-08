@@ -1,5 +1,13 @@
 import * as XLSX from 'xlsx';
 import {
+  ImportReport,
+  cellText,
+  cellNumber,
+  autoKey,
+  IMPORT_FIDELITY_BANNER,
+} from './importFidelity';
+import { assertFileSize, readFirstSheetSafe, readFirstSheetAoaSafe } from './xlsxSafe';
+import {
   AppSettings,
   AuditLog,
   Commitment,
@@ -416,15 +424,9 @@ export async function parseExcelForImport(
   knownProducts: Product[],
   defaultYear: number = 2024
 ): Promise<ImportPreviewResult> {
+  assertFileSize(file);
   const buffer = await file.arrayBuffer();
-  const workbook = XLSX.read(buffer, { type: 'array' });
-  const firstSheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[firstSheetName];
-
-  const rawRows: any[][] = XLSX.utils.sheet_to_json(worksheet, {
-    header: 1,
-    defval: '',
-  });
+  const rawRows: any[][] = readFirstSheetAoaSafe(buffer, 'array').rows as any[][];
 
   if (!rawRows || rawRows.length < 2) {
     throw new Error('الملف فارغ أو لا يحتوي على صفوف بيانات صالحة.');
@@ -468,6 +470,7 @@ export async function parseExcelForImport(
 
   const existingSubIds = new Set(existingRecords.map((r) => r.subId));
   const parsedRecords: MovementRecord[] = [];
+  const report = new ImportReport();
   const warnings: string[] = [];
   let duplicateSubIdsCount = 0;
 
@@ -493,9 +496,8 @@ export async function parseExcelForImport(
       rawSubId.toUpperCase().startsWith('IN');
 
     const movementType = isInput ? 'توريد' : 'صرف';
-    const subId =
-      rawSubId ||
-      `${isInput ? 'IN' : 'OUT'}-${String(rowIndex + 1000).padStart(4, '0')}`;
+    const mainIdGenerated = autoKey('MAIN', rowIndex + 2);
+    const subId = rawSubId || autoKey(isInput ? 'IN' : 'OUT', rowIndex + 2);
 
     if (existingSubIds.has(subId)) {
       duplicateSubIdsCount += 1;
@@ -515,20 +517,31 @@ export async function parseExcelForImport(
 
     const normalizedD = normalizeDate(rawDate, defaultYear);
 
+    if (!rawSubId) report.generated(rowIndex + 2, 'المعرف الفرعي', subId);
+    if (!rawMainId) report.generated(rowIndex + 2, 'المعرف الرئيسي', mainIdGenerated);
+    if (!rawBeneficiary) report.blank(rowIndex + 2, 'الجهة المستفيدة');
+    if (!rawDesc) report.blank(rowIndex + 2, 'الوصف');
+    if (!rawStatus) report.blank(rowIndex + 2, 'الحالة');
+    if (!rawCategory) report.blank(rowIndex + 2, 'الفئة');
+    if (!normalizedD) report.blank(rowIndex + 2, 'التاريخ');
+
     parsedRecords.push({
       id: subId,
-      mainId: rawMainId || `Categ-${1000 + rowIndex}`,
+      mainId: rawMainId || mainIdGenerated,
       subId,
-      date: normalizedD || new Date().toISOString().split('T')[0],
-      beneficiary: rawBeneficiary || 'غير محدد',
-      description: rawDesc || `حركة مستوردة من Excel - ${subId}`,
+      // لا يُستبدل التاريخ بتاريخ اليوم: الخلية الفارغة تبقى فارغة (أمانة الاستيراد)
+      date: normalizedD,
+      beneficiary: rawBeneficiary,
+      description: rawDesc,
       movementType,
-      status: rawStatus || 'تم التنفيذ',
-      category: rawCategory || 'مبيعات',
+      status: rawStatus,
+      category: rawCategory,
       items,
       note: rawNote || undefined,
     });
   }
+
+  warnings.push(...report.summary());
 
   return {
     totalRows: rawRows.length - 1,
@@ -649,70 +662,96 @@ export async function parseCustomersExcelFile(
   warnings: string[];
 }> {
   const data = await file.arrayBuffer();
-  const workbook = XLSX.read(data, { type: 'array' });
-  const firstSheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[firstSheetName];
-  const rawRows: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+  const safeSheet = readFirstSheetSafe<any>(data, 'array');
+  const rawRows: any[] = safeSheet.rows;
 
   const customers: Customer[] = [];
-  const warnings: string[] = [];
+  const warnings: string[] = [IMPORT_FIDELITY_BANNER];
+  const report = new ImportReport();
 
   rawRows.forEach((row, idx) => {
-    const name =
-      row['اسم العميل / المنشأة'] ||
-      row['Name'] ||
-      row['اسم العميل'] ||
-      row['العميل'] ||
-      row['اسم المنشأة'] ||
-      row['name'];
+    const line = idx + 2; // رقم السطر الحقيقي في Excel (1 = الترويسة)
+    const name = cellText(row, [
+      'اسم العميل / المنشأة',
+      'Name',
+      'اسم العميل',
+      'العميل',
+      'اسم المنشأة',
+      'name',
+    ]);
 
-    if (!name || String(name).trim() === '') {
-      warnings.push(`السطر ${idx + 2}: تم تخطيه لعدم وجود اسم العميل`);
+    if (name === '') {
+      warnings.push(`السطر ${line}: تم تخطيه لعدم وجود اسم العميل`);
       return;
     }
 
-    const id = row['المعرف الرئيسي (Main_ID)'] || row['Main_ID'] || row['ID'] || `CUST-${1000 + idx + 1}`;
-    const subId = row['المعرف الفرعي (Sub_ID)'] || row['Sub_ID'] || row['الرمز'] || `C-${idx + 1}`;
-    const source = row['المصدر / العلامة'] || row['Source'] || row['المصدر'] || 'القيصر الذهبي';
-    const region = row['المنطقة الجغرافية'] || row['Region'] || row['المنطقة'] || 'صنعاء';
-    const route = row['مسار الزيارة (اليوم)'] || row['Route'] || row['المسار'] || 'السبت';
-    const significance = (row['مستوى الأهمية'] || row['Significance'] || row['الأهمية'] || 'B') as any;
-    const status = (row['حالة الزيارة'] || row['Status'] || row['الحالة'] || 'مخطط') as any;
-    const responsible = row['المندوب المسؤول'] || row['Responsible'] || row['المندوب'] || 'انور';
-    const taskDesc = row['وصف المهمة / الغرض'] || row['TaskDesc'] || row['المهمة'] || '';
-    const dateBegin = normalizeDate(row['تاريخ البدء'] || row['DateBegin'] || '') || new Date().toISOString().split('T')[0];
-    const dateEnd = normalizeDate(row['تاريخ الانتهاء'] || row['DateEnd'] || '') || '';
-    
-    const balanceYER = parseFloat(normalizeArabicDigits(String(row['الرصيد بالريال اليمني'] || row['Balance_YER'] || row['الرصيد'] || 0))) || 0;
-    const balanceSAR = parseFloat(normalizeArabicDigits(String(row['الرصيد بالريال السعودي'] || row['Balance_SAR'] || 0))) || 0;
-    const balanceUSD = parseFloat(normalizeArabicDigits(String(row['الرصيد بالدولار'] || row['Balance_USD'] || 0))) || 0;
-    
-    const phone = normalizeArabicDigits(String(row['رقم الهاتف'] || row['Phone'] || row['الهاتف'] || ''));
-    const address = String(row['العنوان / الموقع'] || row['Address'] || row['العنوان'] || '');
-    const notes = String(row['ملاحظات'] || row['Notes'] || '');
+    // المفاتيح: تُقرأ من الملف إن وُجدت، وإلا تُولَّد بوسم AUTO- وتُسجَّل (قاعدة البيانات تحتاج مفتاحاً)
+    const rawId = cellText(row, ['المعرف الرئيسي (Main_ID)', 'Main_ID', 'ID']);
+    const rawSubId = cellText(row, ['المعرف الفرعي (Sub_ID)', 'Sub_ID', 'الرمز']);
+    const id = rawId || autoKey('CUST', line);
+    const subId = rawSubId || autoKey('SUB', line);
+    if (!rawId) report.generated(line, 'المعرف الرئيسي', id);
+    if (!rawSubId) report.generated(line, 'المعرف الفرعي', subId);
+
+    // بيانات المحتوى: الفارغ يبقى فارغاً — لا قيمة افتراضية واحدة
+    const source = cellText(row, ['المصدر / العلامة', 'Source', 'المصدر']);
+    const region = cellText(row, ['المنطقة الجغرافية', 'Region', 'المنطقة']);
+    const route = cellText(row, ['مسار الزيارة (اليوم)', 'Route', 'المسار']);
+    const significance = cellText(row, ['مستوى الأهمية', 'Significance', 'الأهمية']);
+    const status = cellText(row, ['حالة الزيارة', 'Status', 'الحالة']);
+    const responsible = cellText(row, ['المندوب المسؤول', 'Responsible', 'المندوب']);
+    const taskDesc = cellText(row, ['وصف المهمة / الغرض', 'TaskDesc', 'المهمة']);
+
+    for (const [field, value] of [
+      ['المصدر', source],
+      ['المنطقة', region],
+      ['المسار', route],
+      ['الأهمية', significance],
+      ['حالة الزيارة', status],
+      ['المندوب', responsible],
+    ] as const) {
+      if (value === '') report.blank(line, field);
+    }
+
+    // التواريخ: لا تُستبدل بتاريخ اليوم — الفراغ يبقى فراغاً
+    const dateBegin = normalizeDate(cellText(row, ['تاريخ البدء', 'DateBegin']));
+    const dateEnd = normalizeDate(cellText(row, ['تاريخ الانتهاء', 'DateEnd']));
+    if (dateBegin === '') report.blank(line, 'تاريخ البدء');
+    if (dateEnd === '') report.blank(line, 'تاريخ الانتهاء');
+
+    // الأرصدة: الفراغ يُقرأ صفراً (ضرورة حسابية) ويُسجَّل صراحةً
+    const yer = cellNumber(row, ['الرصيد بالريال اليمني', 'Balance_YER', 'الرصيد'], normalizeArabicDigits);
+    const sar = cellNumber(row, ['الرصيد بالريال السعودي', 'Balance_SAR'], normalizeArabicDigits);
+    const usd = cellNumber(row, ['الرصيد بالدولار', 'Balance_USD'], normalizeArabicDigits);
+    if (yer.blank) report.zeroed(line, 'الرصيد YER');
+    if (sar.blank) report.zeroed(line, 'الرصيد SAR');
+    if (usd.blank) report.zeroed(line, 'الرصيد USD');
+
+    const phone = cellText(row, ['رقم الهاتف', 'Phone', 'الهاتف']);
+    const address = cellText(row, ['العنوان / الموقع', 'Address', 'العنوان']);
+    const notes = cellText(row, ['ملاحظات', 'Notes']);
     const isInternal =
-      row['حساب داخلي / خاص'] === 'نعم' ||
-      row['isInternalAccount'] === true ||
-      String(name).includes('حساب داخلي') ||
-      String(name).includes('عهدة') ||
-      String(name).includes('بضاعة تالفة');
+      cellText(row, ['حساب داخلي / خاص', 'isInternalAccount']) === 'نعم' ||
+      name.includes('حساب داخلي') ||
+      name.includes('عهدة') ||
+      name.includes('بضاعة تالفة');
 
     customers.push({
       id,
       subId,
-      name: String(name).trim(),
-      source,
+      name,
+      source: source as Customer['source'],
       region,
       route,
-      significance,
-      status,
+      significance: significance as Customer['significance'],
+      status: status as Customer['status'],
       responsible,
       taskDesc,
       dateBegin,
       dateEnd,
-      balanceYER,
-      balanceSAR,
-      balanceUSD,
+      balanceYER: yer.value,
+      balanceSAR: sar.value,
+      balanceUSD: usd.value,
       phone,
       address,
       notes,
@@ -721,6 +760,8 @@ export async function parseCustomersExcelFile(
       updatedAt: new Date().toISOString(),
     });
   });
+
+  warnings.push(...report.summary());
 
   return {
     totalRows: rawRows.length,
@@ -925,10 +966,8 @@ export async function parseFinancialExcelOrCSV(
     reader.onload = (e) => {
       try {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+        const safeSheet = readFirstSheetSafe<any>(data, 'array');
+        const rawJson: any[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({
@@ -945,6 +984,7 @@ export async function parseFinancialExcelOrCSV(
 
         const existingIds = new Set(existingTransactions.map((t) => t.id));
         const parsed: FinancialTransaction[] = [];
+        const report = new ImportReport();
         const warnings: string[] = [];
         let duplicateCount = 0;
         let runningId = 1000 + existingTransactions.length;
@@ -987,18 +1027,32 @@ export async function parseFinancialExcelOrCSV(
             return;
           }
 
-          let formattedDate = normalizeDate(rawDate);
-          if (!formattedDate) {
-            formattedDate = new Date().toISOString().split('T')[0];
-          }
+          // أمانة الاستيراد: لا تاريخ ولا يوم ولا قيمة افتراضية — الفارغ يبقى فارغاً
+          const line = index + 2;
+          const formattedDate = normalizeDate(rawDate);
+          if (!formattedDate) report.blank(line, 'التاريخ');
 
-          const day = rawDay || computeArabicDay(formattedDate);
+          const day = rawDay || (formattedDate ? computeArabicDay(formattedDate) : '');
+
           const amountYER = parseFloat(normalizeArabicDigits(rawAmountYER || '0')) || 0;
           const amountSAR = parseFloat(normalizeArabicDigits(rawAmountSAR || '0')) || 0;
           const amountUSD = parseFloat(normalizeArabicDigits(rawAmountUSD || '0')) || 0;
+          if (!rawAmountYER) report.zeroed(line, 'المبلغ YER');
+          if (!rawAmountSAR) report.zeroed(line, 'المبلغ SAR');
+          if (!rawAmountUSD) report.zeroed(line, 'المبلغ USD');
 
           runningId++;
-          const id = rawId || `ACC-${runningId}`;
+          const id = rawId || autoKey('ACC', line);
+
+          if (!rawId) report.generated(line, 'رقم القيد', id);
+          if (!rawImportance) report.blank(line, 'درجة الأهمية');
+          if (!rawMovement) report.blank(line, 'الحركة');
+          if (!rawRestriction) report.blank(line, 'نوع القيد');
+          if (!rawMovementType) report.blank(line, 'طريقة الدفع');
+          if (!rawCatAccount) report.blank(line, 'فئة الحساب');
+          if (!rawRestAccount) report.blank(line, 'حساب التقييد');
+          if (!rawAccountName) report.blank(line, 'اسم الحساب');
+          if (!rawNumber) report.blank(line, 'رقم السند');
 
           if (existingIds.has(id)) {
             duplicateCount++;
@@ -1008,15 +1062,15 @@ export async function parseFinancialExcelOrCSV(
             id,
             day,
             date: formattedDate,
-            importance: rawImportance || 'A',
-            movement: rawMovement || 'ايرادات',
-            restriction: rawRestriction || 'سند قبض',
-            movementType: rawMovementType || 'نقدا',
-            categoryAccount: rawCatAccount || 'تحصيل',
-            restrictionAccount: rawRestAccount || 'حساب الصندوق العام',
-            accountName: rawAccountName || 'حساب غير محدد',
+            importance: rawImportance,
+            movement: rawMovement,
+            restriction: rawRestriction,
+            movementType: rawMovementType,
+            categoryAccount: rawCatAccount,
+            restrictionAccount: rawRestAccount,
+            accountName: rawAccountName,
             description: rawDesc || undefined,
-            number: rawNumber || String(1000 + index),
+            number: rawNumber,
             amountYER,
             amountSAR,
             amountUSD,
@@ -1037,6 +1091,8 @@ export async function parseFinancialExcelOrCSV(
           });
           return;
         }
+
+        warnings.push(...report.summary());
 
         resolve({
           success: true,

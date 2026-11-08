@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ActiveModuleTab } from '../../types';
 import { Sidebar } from '../../components/Sidebar';
 import { Header } from '../../components/Header';
+import { SubMenuDrawer } from '../../components/SubMenuDrawer';
+import { hasSubMenu } from '../../constants/subMenus';
 
 export interface ModuleCounts {
   taskflowCount?: number;
@@ -37,10 +39,19 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState<boolean>(true);
+  const showSubMenu = hasSubMenu(activeTab) && isSubMenuOpen;
+  const contentMargin = showSubMenu
+    ? isSidebarCollapsed
+      ? 'lg:mr-[calc(5rem+14rem)]'
+      : 'lg:mr-[calc(18rem+14rem)] xl:mr-[calc(20rem+14rem)]'
+    : isSidebarCollapsed
+    ? 'lg:mr-20'
+    : 'lg:mr-72 xl:mr-80';
 
   return (
     <div
-      className="min-h-screen bg-canvas-pattern text-slate-900 dark:text-slate-100 antialiased selection:bg-teal-600 selection:text-white transition-colors duration-200"
+      className="app-canvas min-h-screen bg-canvas-pattern text-slate-900 dark:text-slate-100 antialiased selection:bg-teal-600 selection:text-white transition-colors duration-200"
       dir="rtl"
     >
       {/* 1. Global Right-Hand Navigation Drawer */}
@@ -67,10 +78,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
       {/* 2. Main Page Layout with Dynamic Right Margin for RTL Layout */}
       <div
-        className={`min-h-screen flex flex-col transition-all duration-300 ${
-          isSidebarCollapsed ? 'lg:mr-20' : 'lg:mr-72 xl:mr-80'
-        }`}
+        className={`min-h-screen flex flex-col transition-all duration-300 ${contentMargin}`}
       >
+        <SubMenuDrawer
+          activeTab={activeTab}
+          isSidebarCollapsed={isSidebarCollapsed}
+          open={isSubMenuOpen}
+          onToggle={setIsSubMenuOpen}
+        />
+
         {/* Top Header */}
         <Header
           activeTab={activeTab}

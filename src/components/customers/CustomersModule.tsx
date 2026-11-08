@@ -16,7 +16,7 @@ import { CustomerDetailsModal } from './CustomerDetailsModal';
 import { RecordVisitModal } from './RecordVisitModal';
 import { CustomerStatementModal } from './CustomerStatementModal';
 import { ImportCustomersModal } from './ImportCustomersModal';
-import { calculateCustomerStats } from '../../utils/customers';
+import { calculateCustomerStats, planCustomerDeletion } from '../../utils/customers';
 import { exportCustomersToExcel } from '../../utils/excel';
 import { logCustomerAudit } from '../../utils/storage';
 import {
@@ -88,14 +88,46 @@ export const CustomersModule: React.FC<Props> = ({
   };
 
   const handleDeleteCustomer = (id: string) => {
-    const target = customers.find((c) => c.id === id);
-    if (!target) return;
-    if (window.confirm(`هل أنت متأكد من حذف العميل "${target.name}" نهائياً من النظام؟`)) {
-      const updated = customers.filter((c) => c.id !== id);
-      onUpdateCustomers(updated);
-      logCustomerAudit('حذف', target.name, `تم حذف العميل ${target.name} (${target.id})`);
-      setIsDetailsModalOpen(false);
+    const plan = planCustomerDeletion(customers, visits, id);
+    const target = plan.customer;
+    if (!target || !plan.found) return;
+
+    /**
+     * التكامل المرجعي (إصلاح R14): كان حذف العميل يترك زياراته في التخزين بمعرّف
+     * غير موجود (بيانات يتيمة تُلوّث تقارير الزيارات والتحصيل).
+     * السياسة: منع الحذف الصامت — إما حذف متتابع بتأكيد مزدوج، أو إلغاء.
+     */
+    const relatedVisits = plan.relatedVisits;
+
+    if (relatedVisits.length === 0) {
+      if (window.confirm(`هل أنت متأكد من حذف العميل "${target.name}" نهائياً من النظام؟`)) {
+        onUpdateCustomers(customers.filter((c) => c.id !== id));
+        logCustomerAudit('حذف', target.name, `تم حذف العميل ${target.name} (${target.id})`);
+        setIsDetailsModalOpen(false);
+      }
+      return;
     }
+
+    const firstConfirm = window.confirm(
+      `العميل «${target.name}» مرتبط به ${relatedVisits.length} سجل زيارة.\n\n` +
+        `سيتم حذف العميل وكل زياراته نهائياً. هل تريد المتابعة؟`
+    );
+    if (!firstConfirm) return;
+
+    const secondConfirm = window.confirm(
+      `تأكيد نهائي: حذف ${relatedVisits.length} زيارة + العميل «${target.name}»؟\n` +
+        `لا يمكن التراجع إلا من نسخة احتياطية.`
+    );
+    if (!secondConfirm) return;
+
+    onUpdateVisits(visits.filter((v) => v.customerId !== id));
+    onUpdateCustomers(customers.filter((c) => c.id !== id));
+    logCustomerAudit(
+      'حذف',
+      target.name,
+      `تم حذف العميل ${target.name} (${target.id}) مع ${relatedVisits.length} سجل زيارة مرتبط`
+    );
+    setIsDetailsModalOpen(false);
   };
 
   const handleSaveVisit = (

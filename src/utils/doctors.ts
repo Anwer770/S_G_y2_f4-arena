@@ -6,6 +6,8 @@ import {
   DoctorVisitLog,
   DoctorVisitStatus,
 } from '../types';
+import { ImportReport, autoKey, IMPORT_FIDELITY_BANNER } from './importFidelity';
+import { assertFileSize, readFirstSheetSafe } from './xlsxSafe';
 
 export function getTodayArabicDay(): string {
   const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
@@ -82,9 +84,10 @@ export function calculateDoctorStats(
 
   const regionMap: Record<string, number> = {};
   const routeMap: Record<string, number> = {};
-  const sigMap: Record<DoctorSignificance, number> = { A: 0, B: 0, C: 0, '√': 0 };
+  const sigMap: Record<DoctorSignificance, number> = { '': 0, A: 0, B: 0, C: 0, '√': 0 };
   const specialtyMap: Record<string, number> = {};
   const statusMap: Record<DoctorVisitStatus, number> = {
+    '': 0,
     مخطط: 0,
     'قيد تنفيذ': 0,
     مكتمل: 0,
@@ -432,17 +435,18 @@ export async function parseDoctorsExcelOrCSV(
   doctors: DoctorRecord[];
   errors: string[];
   duplicateCount: number;
+  /** تقرير أمانة الاستيراد: ما بقي فارغاً وما وُلّد داخلياً (R18) */
+  warnings: string[];
 }> {
   return new Promise((resolve) => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
       try {
+        assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+        const safeSheet = readFirstSheetSafe<any>(data, 'array');
+        const rawJson: any[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({
@@ -450,11 +454,13 @@ export async function parseDoctorsExcelOrCSV(
             doctors: [],
             errors: ['الملف فارغ أو لا يحتوي على صفوف بيانات صالحة'],
             duplicateCount: 0,
+            warnings: [],
           });
           return;
         }
 
         const parsedDoctors: DoctorRecord[] = [];
+        const report = new ImportReport();
         const errors: string[] = [];
         let duplicateCount = 0;
         let runningId = 1000 + existingDoctors.length;
@@ -485,31 +491,46 @@ export async function parseDoctorsExcelOrCSV(
             return;
           }
 
-          const source = findVal('المصدر', 'source') || 'الأطباء';
-          const specialty = findVal('التخصص', 'specialty', 'القسم') || 'عام';
-          const clinicName = findVal('العيادة', 'المستشفى', 'clinic', 'اسم العيادة', 'المركز الطبي') || '';
-          const region = findVal('المنطقة', 'region', 'المحافظة', 'الموقع') || 'صنعاء';
-          const route = findVal('المسار', 'route', 'اليوم', 'مسار الزيارة') || 'السبت';
-          const significanceRaw = findVal('الأهمية', 'significance', 'الدرجة') || 'B';
-          const responsible = findVal('المسؤول', 'responsible', 'المندوب', 'المشرف') || 'انور';
-          const taskDesc = findVal('وصف المهمة', 'task description', 'الغرض', 'المهمة', 'task') || '';
-          const dateBegin = findVal('تاريخ بدء المهمة', 'date tasks began', 'start date', 'البدء', 'من تاريخ') || '2026-08-01';
-          const dateEnd = findVal('تاريخ انتهاء المهمة', 'date tasks end', 'end date', 'الانتهاء', 'إلى تاريخ') || '2026-08-07';
-          const statusRaw = findVal('حالة الزيارة', 'الحالة', 'status') || 'مخطط';
+          // أمانة الاستيراد (R18): لا قيمة افتراضية مخترعة — الخلية الفارغة تبقى فارغة
+          const line = index + 2;
+          const source = findVal('المصدر', 'source');
+          const specialty = findVal('التخصص', 'specialty', 'القسم');
+          const clinicName = findVal('العيادة', 'المستشفى', 'clinic', 'اسم العيادة', 'المركز الطبي');
+          const region = findVal('المنطقة', 'region', 'المحافظة', 'الموقع');
+          const route = findVal('المسار', 'route', 'اليوم', 'مسار الزيارة');
+          const significanceRaw = findVal('الأهمية', 'significance', 'الدرجة');
+          const responsible = findVal('المسؤول', 'responsible', 'المندوب', 'المشرف');
+          const taskDesc = findVal('وصف المهمة', 'task description', 'الغرض', 'المهمة', 'task');
+          const dateBegin = findVal('تاريخ بدء المهمة', 'date tasks began', 'start date', 'البدء', 'من تاريخ');
+          const dateEnd = findVal('تاريخ انتهاء المهمة', 'date tasks end', 'end date', 'الانتهاء', 'إلى تاريخ');
+          const statusRaw = findVal('حالة الزيارة', 'الحالة', 'status');
+          for (const [field, value] of [
+            ['المصدر', source],
+            ['التخصص', specialty],
+            ['المنطقة', region],
+            ['المسار', route],
+            ['الأهمية', significanceRaw],
+            ['المسؤول', responsible],
+            ['تاريخ البدء', dateBegin],
+            ['تاريخ الانتهاء', dateEnd],
+            ['حالة الزيارة', statusRaw],
+          ] as const) {
+            if (!value) report.blank(line, field);
+          }
           const phone = findVal('رقم الهاتف', 'الهاتف', 'phone', 'تلفون', 'واتساب', 'موبايل') || '';
           const address = findVal('العنوان', 'الموقع', 'address', 'location', 'مكان العمل') || '';
           const notes = findVal('ملاحظات', 'notes', 'ملاحظة', 'التفاصيل') || '';
           const visitResult = findVal('نتيجة الزيارة', 'النتيجة', 'visit result') || '';
           const samplesGiven = findVal('العينات المسلمة', 'العينات', 'samples') || '';
 
-          // Normalize significance
-          let significance: DoctorSignificance = 'B';
+          // Normalize significance (فارغ ⇒ '' لا 'B')
+          let significance: DoctorSignificance = '';
           if (significanceRaw.includes('A') || significanceRaw === 'أ') significance = 'A';
           else if (significanceRaw.includes('C') || significanceRaw === 'ج') significance = 'C';
           else if (significanceRaw.includes('√') || significanceRaw.includes('v') || significanceRaw.includes('صح')) significance = '√';
 
-          // Normalize status
-          let status: DoctorVisitStatus = 'مخطط';
+          // Normalize status (فارغ ⇒ '' لا 'مخطط')
+          let status: DoctorVisitStatus = '';
           if (statusRaw.includes('مكتمل') || statusRaw.includes('منجز') || statusRaw.includes('completed')) status = 'مكتمل';
           else if (statusRaw.includes('تنفيذ') || statusRaw.includes('progress')) status = 'قيد تنفيذ';
           else if (statusRaw.includes('متابعة') || statusRaw.includes('follow')) status = 'متابعة';
@@ -525,7 +546,9 @@ export async function parseDoctorsExcelOrCSV(
           }
 
           runningId++;
-          const id = findVal('المعرف', 'id', 'الكود') || `DOC-${runningId}`;
+          const rawIdValue = findVal('المعرف', 'id', 'الكود');
+          const id = rawIdValue || autoKey('DOC', line);
+          if (!rawIdValue) report.generated(line, 'المعرف', id);
 
           parsedDoctors.push({
             id,
@@ -555,6 +578,7 @@ export async function parseDoctorsExcelOrCSV(
           doctors: parsedDoctors,
           errors,
           duplicateCount,
+          warnings: [IMPORT_FIDELITY_BANNER, ...report.summary()],
         });
       } catch (err: any) {
         resolve({
@@ -562,6 +586,7 @@ export async function parseDoctorsExcelOrCSV(
           doctors: [],
           errors: [`فشل تحليل ملف Excel/CSV: ${err.message || err}`],
           duplicateCount: 0,
+          warnings: [],
         });
       }
     };
@@ -572,6 +597,7 @@ export async function parseDoctorsExcelOrCSV(
         doctors: [],
         errors: ['تعذر قراءة الملف من الجهاز'],
         duplicateCount: 0,
+        warnings: [],
       });
     };
 

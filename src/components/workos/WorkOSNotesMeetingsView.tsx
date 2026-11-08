@@ -140,18 +140,18 @@ export const WorkOSNotesMeetingsView: React.FC<WorkOSNotesMeetingsViewProps> = (
                 <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {note.tags.map((tag, i) => (
-                      <span key={i} className="text-[11px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                      <span key={i} className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
                         #{tag}
                       </span>
                     ))}
                     {note.linkedProjectId && (
-                      <span className="text-[11px] text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-1.5 py-0.5 rounded font-mono">
+                      <span className="text-xs text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-1.5 py-0.5 rounded font-mono">
                         {projects.find((p) => p.id === note.linkedProjectId)?.code || 'مشروع'}
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[11px]">{note.createdAt.split('T')[0]}</span>
+                    <span className="font-mono text-xs">{note.createdAt.split('T')[0]}</span>
                     {onSaveNote && (
                       <button
                         onClick={() => onSaveNote({ ...note, isPinned: !note.isPinned, updatedAt: new Date().toISOString() })}

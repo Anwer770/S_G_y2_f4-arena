@@ -14,6 +14,9 @@ export interface FinancialSummary {
   transactionCount: number;
   incomeCount: number;
   expenseCount: number;
+  /** إجمالي الحركات ذات التصنيف غير المعروف (لا تدخل المقبوضات ولا المدفوعات) — إصلاح R12 */
+  unclassifiedYER: number;
+  unclassifiedCount: number;
 
   // Breakdowns
   movementBreakdown: { movement: string; amountYER: number; amountSAR: number; amountUSD: number; count: number }[];
@@ -27,6 +30,35 @@ export interface FinancialSummary {
   accountBalances: { account: string; balance: number }[];
 }
 
+/**
+ * تصنيف حركة القيد المالي (مصدر الحقيقة الوحيد — إصلاح R12)
+ *
+ * سابقاً: أي حركة غير معروفة كانت تُحتسب «مقبوضاً» في `else`، فيتضخّم الوارد والصافي
+ * بصمت. الآن تُصنَّف في دلو ثالث صريح `unclassified` يظهر في التقارير بشارة تحذير.
+ */
+export const INCOME_MOVEMENTS = [
+  'ايرادات',
+  'الصندوق',
+  'حساب له',
+  'حساب دائن (له)',
+] as const;
+
+export const EXPENSE_MOVEMENTS = [
+  'منصرف',
+  'حساب عليه',
+  'سلفه',
+  'حساب مدين (ع)',
+] as const;
+
+export type MovementBucket = 'income' | 'expense' | 'unclassified';
+
+export function classifyFinancialMovement(movement: string | undefined | null): MovementBucket {
+  const m = (movement || '').trim();
+  if ((INCOME_MOVEMENTS as readonly string[]).includes(m)) return 'income';
+  if ((EXPENSE_MOVEMENTS as readonly string[]).includes(m)) return 'expense';
+  return 'unclassified';
+}
+
 export function calculateFinancialSummary(
   transactions: FinancialTransaction[]
 ): FinancialSummary {
@@ -36,6 +68,8 @@ export function calculateFinancialSummary(
   let totalUSD = 0;
   let incomeCount = 0;
   let expenseCount = 0;
+  let unclassifiedYER = 0;
+  let unclassifiedCount = 0;
 
   const movementMap: Record<string, { amountYER: number; amountSAR: number; amountUSD: number; count: number }> = {};
   const categoryMap: Record<string, { amountYER: number; count: number }> = {};
@@ -53,19 +87,17 @@ export function calculateFinancialSummary(
     totalSAR += sar;
     totalUSD += usd;
 
-    // Determine if movement is income-like or expense-like
-    const isIncome = txn.movement === 'ايرادات' || txn.movement === 'الصندوق' || txn.movement === 'حساب له' || txn.movement === 'حساب دائن (له)';
-    const isExpense = txn.movement === 'منصرف' || txn.movement === 'حساب عليه' || txn.movement === 'سلفه' || txn.movement === 'حساب مدين (ع)';
-
-    if (isIncome) {
+    // تصنيف صريح ثلاثي: مقبوض / مدفوع / غير مصنف (لا احتساب صامت كمقبوض)
+    const bucket = classifyFinancialMovement(txn.movement);
+    if (bucket === 'income') {
       totalIncomeYER += yer;
       incomeCount++;
-    } else if (isExpense) {
+    } else if (bucket === 'expense') {
       totalExpenseYER += yer;
       expenseCount++;
     } else {
-      // Default to general income or flow
-      totalIncomeYER += yer;
+      unclassifiedYER += yer;
+      unclassifiedCount++;
     }
 
     // Movement Map
@@ -129,6 +161,8 @@ export function calculateFinancialSummary(
     transactionCount: transactions.length,
     incomeCount,
     expenseCount,
+    unclassifiedYER,
+    unclassifiedCount,
     movementBreakdown,
     categoryBreakdown,
     accountBreakdown,

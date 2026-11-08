@@ -48,6 +48,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
   // Form State
   const [formName, setFormName] = useState('');
   const [formOpening, setFormOpening] = useState('0');
+  const [formReorderPoint, setFormReorderPoint] = useState('5');
   const [formUnit, setFormUnit] = useState('حبة');
   const [formDesc, setFormDesc] = useState('');
   const [formIsActive, setFormIsActive] = useState(true);
@@ -57,6 +58,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
     setEditingProduct(null);
     setFormName('');
     setFormOpening('0');
+    setFormReorderPoint('5');
     setFormUnit('حبة');
     setFormDesc('');
     setFormIsActive(true);
@@ -68,6 +70,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
     setEditingProduct(prod);
     setFormName(prod.name);
     setFormOpening(String(prod.openingStock || 0));
+    setFormReorderPoint(String(prod.reorderPoint ?? 5));
     setFormUnit(prod.unit || 'حبة');
     setFormDesc(prod.description || '');
     setFormIsActive(prod.isActive ?? true);
@@ -96,6 +99,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
     }
 
     const opening = parseFloat(formOpening) || 0;
+    const reorderPoint = Math.max(0, parseFloat(formReorderPoint) || 0);
 
     if (editingProduct) {
       // Edit existing product (with automatic cascade rename if name changed)
@@ -103,6 +107,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
         ...editingProduct,
         name: trimmedName,
         openingStock: opening,
+        reorderPoint,
         unit: formUnit.trim() || 'حبة',
         description: formDesc.trim() || undefined,
         isActive: formIsActive,
@@ -520,6 +525,19 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
                     onChange={(e) => setFormOpening(e.target.value)}
                     className="w-full p-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-600 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 font-mono"
                   />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-200 mb-1">حدّ الطلب (تنبيه المخزون)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formReorderPoint}
+                    onChange={(e) => setFormReorderPoint(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-600 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 font-mono"
+                  />
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">ينبّهك النظام عند بلوغ هذه الكمية.</p>
                 </div>
 
                 <div>

@@ -74,7 +74,7 @@ export const PWAInstallModal: React.FC<{ isOpen: boolean; onClose: () => void }>
                   <ShieldCheck className="w-4 h-4" />
                   <span>عمل كامل دون اتصال</span>
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   استمر في تسجيل السندات والمهام حتى مع انقطاع الشبكة
                 </p>
               </div>
@@ -84,7 +84,7 @@ export const PWAInstallModal: React.FC<{ isOpen: boolean; onClose: () => void }>
                   <Laptop className="w-4 h-4" />
                   <span>شاشة كاملة سريعة</span>
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   واجهة نظيفة وخالية من أشرطة المتصفح مثل البرامج المعتمدة
                 </p>
               </div>
@@ -97,17 +97,17 @@ export const PWAInstallModal: React.FC<{ isOpen: boolean; onClose: () => void }>
                   <Smartphone className="w-4 h-4" />
                   <span>طريقة التثبيت على أجهزة iPhone / iPad:</span>
                 </div>
-                <div className="space-y-2 leading-relaxed text-[11px] pr-2">
+                <div className="space-y-2 leading-relaxed text-xs pr-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-[10px]">1</span>
+                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">1</span>
                     <span>انقر على زر <strong>المشاركة (Share)</strong> في متصفح Safari.</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-[10px]">2</span>
+                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">2</span>
                     <span>اختر <strong>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</strong>.</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-[10px]">3</span>
+                    <span className="w-4 h-4 rounded-full bg-teal-200 dark:bg-teal-800 text-teal-900 dark:text-teal-100 flex items-center justify-center font-bold text-xs">3</span>
                     <span>انقر <strong>إضافة</strong> ليظهر التطبيق في شاشة جهازك.</span>
                   </div>
                 </div>

@@ -112,31 +112,69 @@ for (const label of navLabels) {
 report.steps.push({ step: 'tabs', visited: Object.keys(report.tabs).length });
 
 // CRUD exercise: add one financial record through the UI (no schema assumptions)
+// ملاحظة: التطبيق Keep-Alive (كل التبويبات في DOM) ويحتوي أزرار «حفظ» مخفية —
+// لذا يجب حصر التفاعل في العناصر الظاهرة وداخل نافذة الإدخال فقط.
+const isVisible = (el) => {
+  let n = el;
+  while (n && n.nodeType === 1) {
+    if (n.getAttribute && n.getAttribute('aria-hidden') === 'true') return false;
+    const st = (n.getAttribute && n.getAttribute('style')) || '';
+    if (/display:\s*none/i.test(st)) return false;
+    if (n.hasAttribute && n.hasAttribute('hidden')) return false;
+    n = n.parentElement;
+  }
+  return true;
+};
+const textOf = (el) => (el.textContent || '').replace(/\s+/g, ' ').trim();
+const setVal = (el, v) => {
+  try {
+    const proto = el.tagName === 'SELECT' ? w.HTMLSelectElement.prototype
+      : el.tagName === 'TEXTAREA' ? w.HTMLTextAreaElement.prototype
+      : w.HTMLInputElement.prototype;
+    const descriptor = Object.getOwnPropertyDescriptor(proto, 'value');
+    if (!descriptor || !descriptor.set) return false;
+    descriptor.set.call(el, v);
+    el.dispatchEvent(new w.Event('input', { bubbles: true }));
+    el.dispatchEvent(new w.Event('change', { bubbles: true }));
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const finNav = [...doc.querySelectorAll('aside button, aside a')].find((e) => /السجل اليومي|المالي/.test(e.textContent || ''));
 if (finNav) {
   click(finNav); await sleep(1200);
-  const addBtn = [...doc.querySelectorAll('button')].find((b) => /قيد جديد|إضافة|جديد/.test(b.textContent || ''));
+  const addBtn = [...doc.querySelectorAll('button')].filter(isVisible).find((b) => /قيد جديد/.test(textOf(b)));
   if (addBtn) {
     click(addBtn); await sleep(1200);
-    const inputs = [...doc.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]), textarea')].filter((i) => !i.value);
-    const setVal = (el, v) => {
-      const proto = el.tagName === 'SELECT' ? w.HTMLSelectElement.prototype
-        : el.tagName === 'TEXTAREA' ? w.HTMLTextAreaElement.prototype
-        : w.HTMLInputElement.prototype;
-      Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, v);
-      el.dispatchEvent(new w.Event('input', { bubbles: true }));
-      el.dispatchEvent(new w.Event('change', { bubbles: true }));
-    };
+
+    const overlays = [...doc.querySelectorAll('div[class*="z-50"]')]
+      .filter(isVisible)
+      .filter((o) => o.querySelectorAll('select').length >= 2);
+    const scope = overlays.length ? overlays[overlays.length - 1] : doc;
+
+    const inputs = [...scope.querySelectorAll(
+      'input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=file]):not([type=submit]):not([type=button]), textarea'
+    )].filter((i) => !i.value);
+
     let filled = 0;
-    for (const inp of inputs.slice(0, 6)) {
+    for (const inp of inputs) {
       const t = (inp.type || 'text').toLowerCase();
-      setVal(inp, t === 'date' ? '2026-01-15' : t === 'number' ? '100' : t === 'time' ? '09:00' : 'اختبار انحدار');
-      filled++;
+      const ok = setVal(inp, t === 'date' ? '2026-01-15' : t === 'number' ? '100' : t === 'time' ? '09:00' : 'اختبار انحدار');
+      if (ok) filled++;
     }
-    for (const s of doc.querySelectorAll('select')) if (s.options.length > 1) setVal(s, s.options[1].value);
-    const save = [...doc.querySelectorAll('button')].find((b) => /^حفظ|حفظ ال|إضافة السجل|تأكيد/.test((b.textContent || '').trim()));
-    if (save) { click(save); await sleep(1500); }
-    report.steps.push({ step: 'crud-create', filledInputs: filled, saved: !!save });
+    for (const sel of scope.querySelectorAll('select')) {
+      const real = [...sel.options].find((o) => o.value && o.value.trim() !== '');
+      if (real) setVal(sel, real.value);
+    }
+
+    const save = [...scope.querySelectorAll('button')]
+      .filter(isVisible)
+      .find((b) => /^(حفظ|حفظ فوري|حفظ القيد|حفظ التعديلات|تسجيل القيد في السجل|تأكيد|إضافة السجل)$/.test(textOf(b)));
+    const saved = Boolean(save) && !save.disabled;
+    if (saved) { click(save); await sleep(1500); }
+    report.steps.push({ step: 'crud-create', filledInputs: filled, saved });
   }
 }
 

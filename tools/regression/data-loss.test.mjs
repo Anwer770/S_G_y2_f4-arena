@@ -172,27 +172,78 @@ let saved = false;
 if (finNav) {
   click(finNav);
   await sleep(1500);
-  const addBtn = [...doc.querySelectorAll('button')].find((b) => /قيد جديد|إضافة|جديد/.test(b.textContent || ''));
+  // التطبيق يستخدم Keep-Alive (كل التبويبات في DOM) — يجب حصر كل تفاعل في العناصر الظاهرة
+  const isVisible = (el) => {
+    let n = el;
+    while (n && n.nodeType === 1) {
+      if (n.getAttribute && n.getAttribute('aria-hidden') === 'true') return false;
+      const st = (n.getAttribute && n.getAttribute('style')) || '';
+      if (/display:\s*none/i.test(st)) return false;
+      if (n.hasAttribute && n.hasAttribute('hidden')) return false;
+      n = n.parentElement;
+    }
+    return true;
+  };
+  const textOf = (el) => (el.textContent || '').replace(/\s+/g, ' ').trim();
+
+  const addBtn = [...doc.querySelectorAll('button')]
+    .filter(isVisible)
+    .find((b) => /قيد جديد/.test(textOf(b)));
+
   if (addBtn) {
     click(addBtn);
     await sleep(1500);
+
+    // نافذة القيد = الطبقة العليا (z-50) التي تحتوي قوائم منسدلة
+    const overlays = [...doc.querySelectorAll('div[class*="z-50"]')]
+      .filter(isVisible)
+      .filter((o) => o.querySelectorAll('select').length >= 2);
+    const scope = overlays.length ? overlays[overlays.length - 1] : doc;
+
     const setVal = (el, v) => {
-      const proto = el.tagName === 'SELECT' ? w.HTMLSelectElement.prototype
-        : el.tagName === 'TEXTAREA' ? w.HTMLTextAreaElement.prototype
-        : w.HTMLInputElement.prototype;
-      Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, v);
-      el.dispatchEvent(new w.Event('input', { bubbles: true }));
-      el.dispatchEvent(new w.Event('change', { bubbles: true }));
+      try {
+        const proto = el.tagName === 'SELECT' ? w.HTMLSelectElement.prototype
+          : el.tagName === 'TEXTAREA' ? w.HTMLTextAreaElement.prototype
+          : w.HTMLInputElement.prototype;
+        const descriptor = Object.getOwnPropertyDescriptor(proto, 'value');
+        if (!descriptor || !descriptor.set) return false;
+        descriptor.set.call(el, v);
+        el.dispatchEvent(new w.Event('input', { bubbles: true }));
+        el.dispatchEvent(new w.Event('change', { bubbles: true }));
+        return true;
+      } catch {
+        return false; // حقول لا تقبل التعيين برمجياً (ملف/لون/…)
+      }
     };
-    for (const inp of [...doc.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]), textarea')].filter((i) => !i.value).slice(0, 6)) {
+
+    const formInputs = [...scope.querySelectorAll(
+      'input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=file]):not([type=submit]):not([type=button]), textarea'
+    )].filter((i) => !i.value);
+
+    for (const inp of formInputs) {
       const t = (inp.type || 'text').toLowerCase();
       setVal(inp, t === 'date' ? '2026-02-01' : t === 'number' ? '500' : t === 'time' ? '10:00' : 'سجل اختبار سلامة البيانات');
     }
-    for (const s of doc.querySelectorAll('select')) if (s.options.length > 1) setVal(s, s.options[1].value);
-    const saveBtn = [...doc.querySelectorAll('button')].find((b) => /^حفظ|حفظ ال|إضافة السجل|تأكيد/.test((b.textContent || '').trim()));
-    if (saveBtn) { click(saveBtn); await sleep(2500); saved = true; }
+
+    for (const sel of scope.querySelectorAll('select')) {
+      const real = [...sel.options].find((o) => o.value && o.value.trim() !== '');
+      if (real) setVal(sel, real.value);
+    }
+
+    const saveBtn = [...scope.querySelectorAll('button')]
+      .filter(isVisible)
+      .find((b) => /^(حفظ|حفظ فوري|حفظ القيد|حفظ التعديلات|تسجيل القيد في السجل|تأكيد|إضافة السجل)$/.test(textOf(b)));
+
+    if (saveBtn && !saveBtn.disabled) {
+      click(saveBtn);
+      await sleep(2500);
+      saved = true;
+    } else {
+      console.log(`↷ لم يُعثر على زر حفظ صالح (scope=${scope === doc ? 'doc' : 'modal'}, زر=${!!saveBtn})`);
+    }
   }
 }
+
 check('نُفّذ حفظ حقيقي من الواجهة', saved);
 
 const db = await openDb();

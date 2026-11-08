@@ -1,7 +1,7 @@
 {
   "name": "caesar-erp-unified",
   "private": true,
-  "version": "0.0.0",
+  "version": "3.10.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -21,20 +21,23 @@
     "typography": "node --max-old-space-size=2048 tools/regression/typography.test.mjs",
     "typography:measure": "python3 tools/audit/typography_audit.py --json",
     "tables": "node --max-old-space-size=2048 tools/regression/responsive.test.mjs",
+    "identity": "node tools/regression/identity.test.mjs",
+    "snapshots": "node --max-old-space-size=2048 tools/regression/snapshots.test.mjs",
+    "imports": "node tools/regression/imports.test.mjs",
+    "security": "node tools/regression/security.test.mjs",
+    "settings": "node --max-old-space-size=2048 tools/regression/settings.test.mjs",
+    "hygiene": "node tools/regression/hygiene.test.mjs",
     "tables:assert": "python3 tools/audit/tables_audit.py --assert",
     "tables:measure": "python3 tools/audit/tables_audit.py --json",
-    "verify": "npx tsc --noEmit && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/run.mjs"
+    "verify": "npx tsc --noEmit && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/security.test.mjs && node --max-old-space-size=2048 tools/regression/settings.test.mjs && node tools/regression/hygiene.test.mjs && node tools/regression/run.mjs",
+    "integrity": "node tools/regression/integrity.test.mjs"
   },
   "dependencies": {
-    "@google/genai": "^2.4.0",
     "@tailwindcss/vite": "^4.1.14",
     "@types/qrcode": "^1.5.6",
     "@vitejs/plugin-react": "^5.0.4",
     "canvas-confetti": "^1.9.4",
-    "dotenv": "^17.2.3",
-    "express": "^4.21.2",
     "lucide-react": "^0.546.0",
-    "motion": "^12.23.24",
     "qrcode": "^1.5.4",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
@@ -44,7 +47,6 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
-    "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",

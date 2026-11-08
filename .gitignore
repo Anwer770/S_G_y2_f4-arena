@@ -17,3 +17,15 @@ __pycache__/
 docs/تدقيق/.typo-bundle.js
 docs/تدقيق/.resp-bundle.js
 docs/تدقيق/.workos-bundle.js
+
+# مخرجات تجزيء اختبارات الانحدار (مولّدة)
+docs/تدقيق/.integrity-entry.ts
+docs/تدقيق/.integrity-bundle.mjs
+docs/تدقيق/.data-loss-bundle.js
+docs/تدقيق/.snapshot-crypto.mjs
+docs/تدقيق/.imports-bundle.mjs
+docs/تدقيق/.security-bundle.mjs
+docs/تدقيق/.lookups-bundle.mjs
+docs/تدقيق/.alerts-bundle.mjs
+docs/تدقيق/.roles-bundle.mjs
+docs/تدقيق/.autoexport-bundle.mjs
