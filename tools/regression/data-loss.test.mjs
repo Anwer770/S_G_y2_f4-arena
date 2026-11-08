@@ -20,7 +20,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { loginWithPin } from './_login.mjs';
+import { loginWithPin, ensureWebCrypto } from './_login.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
@@ -138,6 +138,7 @@ Object.defineProperty(w.navigator, 'serviceWorker', { value: { register: async (
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const click = (el) => el.dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true, view: w }));
 
+ensureWebCrypto(w);
 w.eval(code);
 await sleep(3000);
 

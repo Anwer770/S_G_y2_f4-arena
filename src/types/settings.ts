@@ -104,7 +104,15 @@ export interface SystemUser {
   role: RoleId;
   status: 'active' | 'inactive';
   avatarInitial?: string;
+  /** ملخّص PBKDF2-SHA256 لرمز المرور (base64) — لا يُخزَّن الرمز نصاً صريحاً (P2) */
+  pinHash?: string;
+  /** ملح الاشتقاق العشوائي (base64) */
+  pinSalt?: string;
+  /** عدد دورات PBKDF2 المستخدمة في هذا الملخّص */
+  pinIterations?: number;
+  /** سرّ نصي قديم — يُقبل مرة واحدة ثم يُرقّى إلى ملخّص ويُحذف */
   pin?: string;
+  /** كلمة مرور قديمة نصية — تُرقّى مثل `pin` ثم تُحذف */
   password?: string;
   lastLogin?: string;
   createdAt: string;

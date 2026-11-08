@@ -13,8 +13,61 @@
  *   await loginWithPin(w, doc, { expectSetup: true });                 // يتحقق من مسار التعيين
  */
 
+import { webcrypto } from 'node:crypto';
+
 /** رمز اختباري مقبول (4–6 أرقام، غير شائع) */
 export const TEST_PIN = '482615';
+
+/** مفتاح جلسة الدخول (مسجّل في src/utils/storage/keys.ts) */
+export const SESSION_KEY = 'suite_active_auth_session_v1';
+
+/**
+ * jsdom لا يوفّر `crypto.subtle`، والتطبيق يجزّئ رمز المرور بـ PBKDF2 (P2).
+ * نزرع Web Crypto الحقيقي من Node داخل نافذة jsdom قبل تقييم الحزمة.
+ */
+export function ensureWebCrypto(w) {
+  try {
+    if (!w.crypto) return;
+    if (!w.crypto.subtle) {
+      Object.defineProperty(w.crypto, 'subtle', { value: webcrypto.subtle, configurable: true });
+    }
+    if (!w.crypto.getRandomValues) {
+      Object.defineProperty(w.crypto, 'getRandomValues', {
+        value: (arr) => webcrypto.getRandomValues(arr),
+        configurable: true,
+      });
+    }
+    // jsdom لا يوفّر TextEncoder/TextDecoder — والتطبيق يستخدمهما في اشتقاق المفتاح
+    if (!w.TextEncoder) w.TextEncoder = globalThis.TextEncoder;
+    if (!w.TextDecoder) w.TextDecoder = globalThis.TextDecoder;
+  } catch {
+    /* تجاهل: بعض بيئات jsdom تمنع التعديل */
+  }
+}
+
+/** يزرع جلسة دخول في التخزين قبل الإقلاع (للتحقق من الانتهاء/الاستعادة) */
+export function seedSession(w, { userId = 'usr-1', expiresInMs = 60 * 60 * 1000, remember = true } = {}) {
+  const session = {
+    userId,
+    loginTime: new Date().toISOString(),
+    expiresAt: Date.now() + expiresInMs,
+    remember,
+  };
+  w.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  return session;
+}
+
+/** يقرأ مستخدمي الإعدادات المخزّنة (للتحقق من التجزئة وعدم تخزين النص) */
+export function storedUsers(w, settingsKey = 'qeema_accounting_system_settings_v1') {
+  try {
+    const raw = w.localStorage.getItem(settingsKey);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed.users) ? parsed.users : [];
+  } catch {
+    return [];
+  }
+}
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

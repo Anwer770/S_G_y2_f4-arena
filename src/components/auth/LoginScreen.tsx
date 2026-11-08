@@ -26,7 +26,11 @@ export const LoginScreen: React.FC = () => {
     (availableUsers.find((u) => u.status === 'active') || availableUsers[0])?.id || ''
   );
   const selectedUser = availableUsers.find((u) => u.id === selectedUserId) || null;
-  const hasStoredSecret = !!selectedUser && (!!(selectedUser.pin || '').trim() || !!(selectedUser.password || '').trim());
+  const hasStoredSecret =
+    !!selectedUser &&
+    (!!selectedUser.pinHash ||
+      !!(selectedUser.pin || '').trim() ||
+      !!(selectedUser.password || '').trim());
   // R2: حساب بلا رمز ⇒ مسار «تعيين الرمز أول مرة» بدل أي دخول بضغطة
   const needsPinSetup = !!selectedUser && !hasStoredSecret;
 
@@ -36,6 +40,8 @@ export const LoginScreen: React.FC = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  // إقفال مؤقت بعد محاولات فاشلة (P2) — يُعطّل الزر حتى انتهاء المدة
+  const [lockedUntil, setLockedUntil] = useState<number>(0);
   const pinInputRef = useRef<HTMLInputElement | null>(null);
 
   const selectUser = (user: SystemUser) => {
@@ -108,12 +114,16 @@ export const LoginScreen: React.FC = () => {
         }
       }
 
-      const res = await login(selectedUser.id, credential);
+      const res = await login(selectedUser.id, credential, { remember: rememberMe });
       if (!res.success) {
         setErrorMessage(res.error || 'فشل تسجيل الدخول، تحقق من البيانات');
         if (res.needsPinSetup) {
           setPin('');
           setConfirmPin('');
+        }
+        if (res.lockedUntil && res.lockedUntil > Date.now()) {
+          setLockedUntil(res.lockedUntil);
+          window.setTimeout(() => setLockedUntil(0), res.lockedUntil - Date.now());
         }
       }
     } catch {
@@ -126,7 +136,7 @@ export const LoginScreen: React.FC = () => {
   /** زر «دخول» في بطاقة الحساب: يختار الحساب ويطلب الرمز — لا دخول بضغطة واحدة (R2) */
   const handlePickAccount = (user: SystemUser) => {
     selectUser(user);
-    const needsSetupForUser = !(user.pin || '').trim() && !(user.password || '').trim();
+    const needsSetupForUser = !user.pinHash && !(user.pin || '').trim() && !(user.password || '').trim();
     setErrorMessage(
       needsSetupForUser
         ? 'هذا الحساب بلا رمز مرور بعد — عيّن رمزاً من 4 إلى 6 أرقام ثم اضغط «تعيين الرمز والدخول»'
@@ -336,6 +346,13 @@ export const LoginScreen: React.FC = () => {
               </div>
             )}
 
+            {lockedUntil > Date.now() && (
+              <p className="text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5" />
+                <span>الحساب مقفل مؤقتاً — أعد المحاولة بعد انتهاء المدة المذكورة أعلاه</span>
+              </p>
+            )}
+
             {/* Remember me & auto-login options */}
             <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
               <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -345,7 +362,7 @@ export const LoginScreen: React.FC = () => {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="rounded text-teal-600 dark:text-teal-400 focus:ring-teal-500 w-4 h-4 cursor-pointer"
                 />
-                <span>تذكر تسجيل الدخول وحفظ الجلسة</span>
+                <span>تذكر تسجيل الدخول (8 ساعات كحد أقصى)</span>
               </label>
 
               <div className="flex items-center gap-1 text-xs text-teal-600 dark:text-teal-400 font-medium">
@@ -357,7 +374,7 @@ export const LoginScreen: React.FC = () => {
             {/* Action Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || lockedUntil > Date.now()}
               className="w-full py-3 px-4 bg-[#0D9488] hover:bg-[#059669] text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isSubmitting ? (

@@ -16,7 +16,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { TEST_PIN, findPinField, setNativeValue, loginWithPin } from './_login.mjs';
+import { TEST_PIN, findPinField, setNativeValue, loginWithPin, ensureWebCrypto, storedUsers, seedSession, SESSION_KEY } from './_login.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
@@ -63,7 +63,7 @@ function seedSettings(users) {
 }
 
 /** يُقلع التطبيق في DOM جديد مع بيانات إعدادات مزروعة */
-async function boot(settingsJson, tag) {
+async function boot(settingsJson, tag, prepare) {
   const errors = [];
   const vc = new VirtualConsole();
   vc.on('error', (...a) => errors.push(a.map(String).join(' ').slice(0, 200)));
@@ -87,7 +87,9 @@ async function boot(settingsJson, tag) {
   w.Notification = class { static permission = 'denied'; static requestPermission = async () => 'denied'; };
   Object.defineProperty(w.navigator, 'serviceWorker', { value: { register: async () => ({}), ready: Promise.resolve({ active: {} }), addEventListener() {}, controller: null }, configurable: true });
 
-  w.eval(code);
+  if (prepare) prepare(w, doc);
+  ensureWebCrypto(w);
+w.eval(code);
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(2500);
 
@@ -171,13 +173,14 @@ async function submitCredentials(w, doc, pin, confirm) {
   const entered = await waitFor(() => isLoggedIn(doc), 12000);
   check('A6 · رمز مقبول (4–6 أرقام) يُحفظ ويُدخل الحساب', entered);
 
-  let savedPin = null;
-  try {
-    const stored = JSON.parse(w.localStorage.getItem(SETTINGS_KEY) || '{}');
-    savedPin = (stored.users || []).find((u) => u.id === 'usr-1')?.pin || null;
-  } catch { /* ignore */ }
-  check('A7 · الرمز حُفظ في إعدادات المستخدم (لا رمز افتراضي في الكود)', savedPin === TEST_PIN,
-    savedPin ? `pin=${savedPin}` : 'لم يُحفظ');
+  const savedUser = storedUsers(w).find((u) => u.id === 'usr-1') || {};
+  const hashedOk =
+    !!savedUser.pinHash && !!savedUser.pinSalt && Number(savedUser.pinIterations) >= 20000 &&
+    !savedUser.pin && !savedUser.password;
+  check('A7 · الرمز حُفظ كملخّص PBKDF2 فقط — لا نص صريح في التخزين', hashedOk,
+    hashedOk
+      ? `PBKDF2 · ${savedUser.pinIterations} دورة · الحجم ${savedUser.pinHash.length} حرفاً`
+      : `pin=${savedUser.pin ?? '—'} · hash=${savedUser.pinHash ? 'موجود' : 'مفقود'}`);
 
   check('A8 · لا أخطاء JS', errors.length === 0, errors[0] || '');
 }
@@ -218,6 +221,62 @@ async function submitCredentials(w, doc, pin, confirm) {
   const done = await loginWithPin(w, doc);
   check('C1 · loginWithPin يدخل حساباً له رمز معيَّن', done && isLoggedIn(doc));
   check('C2 · لا أخطاء JS', errors.length === 0, errors[0] || '');
+}
+
+// ================================================================ D) الإقفال المؤقت بعد المحاولات الفاشلة (P2)
+{
+  const users = baseUsers.map((u) => (u.id === 'usr-1' ? { ...u, pin: CUSTOM_PIN } : u));
+  const { w, doc, errors } = await boot(seedSettings(users), 'lockout');
+  await waitFor(() => !!findPinField(doc));
+
+  for (let i = 0; i < 5; i++) {
+    await submitCredentials(w, doc, '135790');
+  }
+  const lockedText = bodyText(doc);
+  check('D1 · بعد 5 محاولات فاشلة يُقفل الحساب مؤقتاً برسالة عربية صريحة',
+    !isLoggedIn(doc) && /مقفل|قفل/i.test(lockedText), lockedText.match(/[^.]*مقفل[^.]*/)?.[0]?.slice(0, 90) || '');
+
+  await submitCredentials(w, doc, CUSTOM_PIN);
+  check('D2 · الرمز الصحيح مرفوض أيضاً أثناء الإقفال (لا تجاوز بالانتظار)', !isLoggedIn(doc) && /مقفل|قفل/i.test(bodyText(doc)),
+    'الإقفال يعيش في التخزين ولا يُصفَّر بإعادة المحاولة');
+
+  const guardRaw = w.localStorage.getItem('suite_auth_guard_v1');
+  check('D3 · حالة الإقفال محفوظة في التخزين (لا تُصفَّر بإعادة التحميل)', !!guardRaw && /lockedUntil/.test(guardRaw),
+    guardRaw ? `guard=${guardRaw.slice(0, 60)}…` : 'لا يوجد سجل حماية');
+  check('D4 · لا أخطاء JS', errors.length === 0, errors[0] || '');
+}
+
+// ================================================================ E) انتهاء الجلسة (P2)
+{
+  const users = baseUsers.map((u) => ({ ...u, pin: TEST_PIN }));
+  const { w, doc, errors } = await boot(seedSettings(users), 'expired', (win) =>
+    seedSession(win, { expiresInMs: -1000 })
+  );
+  await waitFor(() => !!findPinField(doc) || isLoggedIn(doc));
+  check('E1 · جلسة منتهية لا تُدخل التطبيق — يُطلب الرمز من جديد', !!findPinField(doc) && !isLoggedIn(doc),
+    'الانتهاء بعد 8 ساعات يمنع الاستعادة الصامتة');
+  check('E2 · الجلسة المنتهية مُسحت من التخزين', !w.localStorage.getItem(SESSION_KEY));
+  check('E3 · لا أخطاء JS', errors.length === 0, errors[0] || '');
+}
+
+// ================================================================ F) استعادة جلسة سارية (P2)
+{
+  const users = baseUsers.map((u) => ({ ...u, pin: TEST_PIN }));
+  const { w, doc, errors } = await boot(seedSettings(users), 'valid', (win) => seedSession(win, { expiresInMs: 60 * 60 * 1000 }));
+  const restored = await waitFor(() => isLoggedIn(doc));
+  check('F1 · جلسة سارية (أقل من 8 ساعات و«تذكّر») تُستعاد بلا طلب الرمز', restored && !findPinField(doc));
+  check('F2 · لا أخطاء JS', errors.length === 0, errors[0] || '');
+}
+
+// ================================================================ G) جلسة بصيغة قديمة (بلا انتهاء) — تُرفض
+{
+  const users = baseUsers.map((u) => ({ ...u, pin: TEST_PIN }));
+  const { w, doc } = await boot(seedSettings(users), 'legacy', (win) =>
+    win.localStorage.setItem(SESSION_KEY, JSON.stringify({ userId: 'usr-1', loginTime: new Date().toISOString() }))
+  );
+  await waitFor(() => !!findPinField(doc) || isLoggedIn(doc));
+  check('G1 · جلسة قديمة بلا `expiresAt` تُعدّ منتهية ولا تفتح التطبيق', !!findPinField(doc) && !isLoggedIn(doc),
+    'لا استعادة صامتة لجلسات بلا سقف زمني');
 }
 
 fs.rmSync(bundlePath, { force: true });
