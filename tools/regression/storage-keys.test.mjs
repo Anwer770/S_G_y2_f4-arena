@@ -51,8 +51,9 @@ check('K1 · لا مفتاح تخزين تغيّر أو حُذف بعد التف
   EXPECTED_KEYS.filter((k) => !actual.includes(k)).join(' · '));
 check('K2 · لا مفاتيح مكرّرة في السجل', new Set(actual).size === actual.length);
 check('K3 · كل مفتاح معرّف ومستخدم عبر STORAGE_KEYS', (() => {
-  const files = ['src/utils/storage.ts', 'src/utils/storage/stock.ts', 'src/utils/storage/financial.ts',
-    'src/utils/storage/debts.ts', 'src/utils/storage/settings.ts'];
+  const files = ['src/utils/storage.ts', ...fs.readdirSync(path.join(ROOT, 'src/utils/storage'))
+    .filter((f) => f.endsWith('.ts') && f !== 'keys.ts')
+    .map((f) => `src/utils/storage/${f}`)];
   const body = files.map(read).join('\n');
   const consts = [...keysSrc.matchAll(/^ {2}([A-Z_]+):/gm)].map((m) => m[1]);
   const unused = consts.filter((c) => !new RegExp(`STORAGE_KEYS\\.${c}\\b`).test(body));
@@ -64,15 +65,19 @@ check('K4 · لا تكرار لمفتاح خام ' + 'suite_stock_products_v2' +
     'src/utils/storage/debts.ts', 'src/utils/storage/settings.ts'];
   return files.every((f) => !files.some((g) => g !== 'src/utils/storage/keys.ts' && read(g).includes("'suite_stock_products_v2'")));
 })());
-check('K5 · وحدات التفكيك موجودة ومستوردة من الواجهة القديمة', ['stock', 'financial', 'debts', 'settings', 'keys']
+check('K5 · وحدات التفكيك موجودة ومستوردة من الواجهة القديمة', ['stock', 'financial', 'debts', 'settings', 'keys', 'tasks', 'customers', 'doctors', 'knowledge', 'routines', 'custody', 'links', 'system']
   .every((m) => fs.existsSync(path.join(ROOT, `src/utils/storage/${m}.ts`))) &&
   /export \* from '\.\/storage\/stock'/.test(read('src/utils/storage.ts')) &&
   /export \* from '\.\/storage\/financial'/.test(read('src/utils/storage.ts')));
 check('K6 · storage.ts لم يعد يحوي تعريفات مفاتيح أو دوال مخزون مكرّرة', (() => {
   const s = read('src/utils/storage.ts');
-  return !/const STORAGE_KEYS = \{/.test(s) && !/export function loadProducts\(/.test(s) && !/export function loadFinancialTransactions\(/.test(s) && !/export function loadDebts\(/.test(s);
+  return !/const STORAGE_KEYS = \{/.test(s) && !/export function loadProducts\(/.test(s) &&
+    !/export function loadFinancialTransactions\(/.test(s) && !/export function loadDebts\(/.test(s) &&
+    !/export function loadCustomers\(/.test(s) && !/export function loadTasks\(/.test(s) &&
+    !/export function loadNotes\(/.test(s) && !/export function loadRoutines\(/.test(s) &&
+    !/export function loadCustodyIssues\(/.test(s) && !/export function loadLinksRecords\(/.test(s);
 })());
-check('K7 · حجم storage.ts انخفض بعد التفكيك', fs.statSync(path.join(ROOT, 'src/utils/storage.ts')).size < 68000,
+check('K7 · حجم storage.ts انخفض بعد التفكيك الكامل', fs.statSync(path.join(ROOT, 'src/utils/storage.ts')).size < 30000,
   `${Math.round(fs.statSync(path.join(ROOT, 'src/utils/storage.ts')).size / 1024)}KB`);
 
 const passed = results.filter((r) => r.ok).length;

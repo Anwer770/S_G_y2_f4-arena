@@ -2,6 +2,7 @@ import {
   Workspace,
   WorkProject,
   WorkTask,
+  TaskStatus,
   WorkOrder,
   InboxItem,
   DailyRoutineBlock,
@@ -1406,10 +1407,10 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
           // Match assignee
           const matchedMember = team.find((m) => m.name.includes(memberName) || memberName.includes(m.name));
 
-          let status: any = 'planned';
+          let status: TaskStatus = 'planned';
           if (['completed', 'مكتملة', 'تم', 'منجز'].includes(rawStatus.toLowerCase())) status = 'completed';
           else if (['in_progress', 'قيد التنفيذ', 'جاري'].includes(rawStatus.toLowerCase())) status = 'in_progress';
-          else if (['in_review', 'مراجعة'].includes(rawStatus.toLowerCase())) status = 'in_review';
+          else if (['in_review', 'مراجعة'].includes(rawStatus.toLowerCase())) status = 'review';
           else if (['blocked', 'معلقة', 'متوقفة'].includes(rawStatus.toLowerCase())) status = 'blocked';
 
           let priority: 'urgent' | 'high' | 'medium' | 'low' = 'medium';

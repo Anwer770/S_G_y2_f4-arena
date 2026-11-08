@@ -91,6 +91,20 @@ const anyCount = srcFiles.reduce(
 );
 check(`H7 · ميزانية any (${anyCount}/${ANY_BUDGET})`, anyCount <= ANY_BUDGET, anyCount > ANY_BUDGET ? 'تجاوز السقف' : '');
 
+
+/* H8 — قيم حالات المهام داخل الاتحاد المعرّف فقط */
+const VALID_TASK_STATUS = ['new', 'planned', 'ready', 'in_progress', 'blocked', 'review', 'completed', 'cancelled', 'archived', 'delayed'];
+const badStatus = [];
+for (const f of srcFiles) {
+  const text = fs.readFileSync(f, 'utf8');
+  for (const m of text.matchAll(/status\s*=\s*'([a-z_]+)'/g)) {
+    if (m[1].includes('_') && !VALID_TASK_STATUS.includes(m[1]) && !['active', 'inactive', 'anon'].includes(m[1])) {
+      badStatus.push(`${rel(f)}: ${m[1]}`);
+    }
+  }
+}
+check('H8 · لا حالة مهمة خارج الاتحاد (in_review سابقاً)', badStatus.length === 0, badStatus.join(' · '));
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
