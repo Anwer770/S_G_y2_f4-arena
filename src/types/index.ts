@@ -628,6 +628,15 @@ export interface AppSettings {
   confirmDelete?: boolean;
 }
 
+/** أنواع الخيارات المالية القابلة للإضافة من أي شاشة (R28) */
+export type FinancialOptionType =
+  | 'category'
+  | 'account'
+  | 'restriction'
+  | 'movementType'
+  | 'restrictionAccount'
+  | 'accountName';
+
 export interface AuditLog {
   id: string;
   timestamp: string;

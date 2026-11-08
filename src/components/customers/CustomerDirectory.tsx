@@ -234,7 +234,7 @@ export const CustomerDirectory: React.FC<Props> = ({
             <select
               value={filters.source}
               onChange={(e) => {
-                setFilters({ ...filters, source: e.target.value as any });
+                setFilters({ ...filters, source: e.target.value });
                 setCurrentPage(1);
               }}
               className="w-full px-2 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-bold text-slate-800 dark:text-slate-200"
@@ -294,7 +294,7 @@ export const CustomerDirectory: React.FC<Props> = ({
             <select
               value={filters.significance}
               onChange={(e) => {
-                setFilters({ ...filters, significance: e.target.value as any });
+                setFilters({ ...filters, significance: e.target.value });
                 setCurrentPage(1);
               }}
               className="w-full px-2 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-bold text-slate-800 dark:text-slate-200"
@@ -334,7 +334,7 @@ export const CustomerDirectory: React.FC<Props> = ({
             <select
               value={filters.status}
               onChange={(e) => {
-                setFilters({ ...filters, status: e.target.value as any });
+                setFilters({ ...filters, status: e.target.value });
                 setCurrentPage(1);
               }}
               className="w-full px-2 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 font-bold text-slate-800 dark:text-slate-200"

@@ -162,8 +162,8 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
       const stA = stockMap[a.name] || { currentStock: a.openingStock, totalIn: 0, totalOut: 0, openingStock: a.openingStock };
       const stB = stockMap[b.name] || { currentStock: b.openingStock, totalIn: 0, totalOut: 0, openingStock: b.openingStock };
 
-      let valA: any = a.name;
-      let valB: any = b.name;
+      let valA: string | number = a.name;
+      let valB: string | number = b.name;
 
       if (sortColumn === 'currentStock') {
         valA = stA.currentStock;
@@ -179,8 +179,10 @@ export const InventoryView: React.FC<InventoryViewProps> = ({
         valB = b.openingStock || 0;
       }
 
-      if (typeof valA === 'string') {
-        return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      if (typeof valA === 'string' || typeof valB === 'string') {
+        const sa = String(valA);
+        const sb = String(valB);
+        return sortOrder === 'asc' ? sa.localeCompare(sb) : sb.localeCompare(sa);
       }
       return sortOrder === 'asc' ? valA - valB : valB - valA;
     });

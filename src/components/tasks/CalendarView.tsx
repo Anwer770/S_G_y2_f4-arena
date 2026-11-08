@@ -467,7 +467,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             {/* Priority Filter */}
             <select
               value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value as any)}
+              onChange={(e) => setPriorityFilter(e.target.value as 'all' | 'A' | 'B' | 'C')}
               className="bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500 cursor-pointer"
             >
               <option value="all">كافة الأولويات</option>

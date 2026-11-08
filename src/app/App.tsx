@@ -7,6 +7,8 @@ import { DueAlertsToast } from '../components/notifications/DueAlertsToast';
 import { DueAlertsModal } from '../components/notifications/DueAlertsModal';
 import {
   ActiveModuleTab,
+  AuditLog,
+  FinancialOptionType,
   AppSettings,
   Commitment,
   Customer,
@@ -108,7 +110,7 @@ export const MainApp: React.FC = () => {
   const [statuses, setStatuses] = useState<string[]>(() => loadStatuses());
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings());
   const [seq, setSeq] = useState<{ IN: number; OUT: number }>(() => loadSeq());
-  const [stockAuditLogs, setStockAuditLogs] = useState<any[]>(() => loadAuditLogs());
+  const [stockAuditLogs, setStockAuditLogs] = useState<AuditLog[]>(() => loadAuditLogs());
 
   // Financial Ledger State
   const [financialTransactions, setFinancialTransactions] = useState<FinancialTransaction[]>(() =>
@@ -376,7 +378,7 @@ export const MainApp: React.FC = () => {
   };
 
   const handleAddFinancialOption = (
-    type: 'category' | 'account' | 'restriction' | 'movementType' | 'restrictionAccount' | 'accountName',
+    type: FinancialOptionType,
     value: string
   ) => {
     if (type === 'restrictionAccount') {
@@ -490,7 +492,9 @@ export const MainApp: React.FC = () => {
   const logDoctorAudit = (action: string, entity: string, name: string, details?: string) => {
     const logs = loadDoctorAuditLogs();
     const validActions: DoctorAuditLog['action'][] = ['إضافة', 'تعديل', 'حذف', 'زيارة', 'استيراد', 'تصدير', 'تحديث حالة', 'نظام'];
-    const safeAction = validActions.includes(action as any) ? (action as DoctorAuditLog['action']) : 'نظام';
+    const safeAction: DoctorAuditLog['action'] = (validActions as string[]).includes(action)
+      ? (action as DoctorAuditLog['action'])
+      : 'نظام';
     const newLog: DoctorAuditLog = {
       id: `doc_aud_${Date.now()}`,
       time: new Date().toISOString(),

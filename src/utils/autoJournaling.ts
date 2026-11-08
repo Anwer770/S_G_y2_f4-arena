@@ -26,7 +26,8 @@ export function generateJournalEntryFromMovement(
   for (const [itemName, qty] of Object.entries(movement.items || {})) {
     const matchedProduct = products.find((p) => p.name === itemName);
     // Estimated unit price from product or default placeholder
-    const unitPrice = (matchedProduct as any)?.priceYER || (matchedProduct as any)?.costPrice || 0;
+    const priced = matchedProduct as (Item & { priceYER?: number; costPrice?: number }) | undefined;
+    const unitPrice = priced?.priceYER || priced?.costPrice || 0;
     totalValuationYER += (Number(qty) || 0) * (Number(unitPrice) || 0);
     itemsBreakdown.push(`${itemName} (${qty})`);
   }

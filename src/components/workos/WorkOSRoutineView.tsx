@@ -16,7 +16,7 @@ import {
 interface WorkOSRoutineViewProps {
   routine: DailyRoutineBlock[];
   reviews: DailyReviewRecord[];
-  onUpdateRoutineBlockStatus: (id: string, status: any) => void;
+  onUpdateRoutineBlockStatus: (id: string, status: DailyRoutineBlock['status']) => void;
   onAddRoutineBlock: (block: Omit<DailyRoutineBlock, 'id'>) => void;
   onSaveDailyReview: (review: DailyReviewRecord) => void;
 }
@@ -24,9 +24,9 @@ interface WorkOSRoutineViewProps {
 export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
   routine = [],
   reviews = [],
-  onUpdateRoutineBlockStatus = (..._args: any[]) => {},
-  onAddRoutineBlock = (..._args: any[]) => {},
-  onSaveDailyReview = (..._args: any[]) => {},
+  onUpdateRoutineBlockStatus = (..._args: unknown[]) => {},
+  onAddRoutineBlock = (..._args: unknown[]) => {},
+  onSaveDailyReview = (..._args: unknown[]) => {},
 }) => {
   const [activeTab, setActiveTab] = useState<'routine' | 'review'>('routine');
 
@@ -144,7 +144,7 @@ export const WorkOSRoutineView: React.FC<WorkOSRoutineViewProps> = ({
                 />
                 <select
                   value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value as any)}
+                  onChange={(e) => setNewCategory(e.target.value as DailyRoutineBlock['category'])}
                   className="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-xs"
                 >
                   <option value="work">عمل تشغيلي</option>

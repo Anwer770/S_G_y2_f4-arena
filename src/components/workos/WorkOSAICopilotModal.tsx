@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { WorkTask, WorkProject, AppointmentItem, DailyRoutineBlock } from '../../types/workos';
+import type { ParsedTaskResult } from '../../utils/workosStorage';
 import {
   Sparkles,
   X,
@@ -20,7 +21,7 @@ interface WorkOSAICopilotModalProps {
   projects: WorkProject[];
   appointments: AppointmentItem[];
   routine: DailyRoutineBlock[];
-  onAddTaskFromAI: (parsed: any) => void;
+  onAddTaskFromAI: (parsed: ParsedTaskResult) => void;
 }
 
 export const WorkOSAICopilotModal: React.FC<WorkOSAICopilotModalProps> = ({

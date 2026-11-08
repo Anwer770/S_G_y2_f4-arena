@@ -90,7 +90,7 @@
 [ ] npm run build ناجح
 [ ] npm run integrity = 33/33 (أو أكثر)
 [ ] npm run regression = لا انحدار + 0 أخطاء JS
-[ ] كل البوابات خضراء: workos 17/17 · typography 7/7 · tables:assert 38/38 · integrity 33/33 · identity 16/16 · snapshots 13/13 · imports 15/15 · security 9/9 · settings 15/15
+[ ] كل البوابات خضراء: workos 17/17 · typography 7/7 · tables:assert 38/38 · integrity 33/33 · identity 16/16 · snapshots 13/13 · imports 15/15 · security 9/9 · settings 39/39 · hygiene 10/10 · storage-keys 7/7
 [ ] الإصدار موحّد: `src/constants/appMeta.ts` = `package.json` = `metadata.json` = سطر «الإصدار» في `PRD.md`
 [ ] تنقّل يدوي: التبويبات المتأثرة + dashboard
 [ ] إضافة/تعديل/حذف سجل في الوحدة المتأثرة + reload
@@ -130,3 +130,6 @@
 3. أضفه إلى `verify` **قبل** `run.mjs`.
 4. أضف صفاً في الجدول أعلاه + في `PRD.md §2.11`.
 5. إن فشل عند إضافته: أصلح الكود لا الاختبار — إلا إذا كان الفشل عيباً في الأداة (وثّقه في §6).
+
+17. **`any` ممنوع نهائياً (R28):** `npm run hygiene` يفحص كل مواضع النوع (`: any` · `as any` · `<any>` · `any[]` · `any |` · `, any>` · `[any]`) بسقف **0**، و`H10` تمنع `@ts-ignore/@ts-expect-error/@ts-nocheck`. عند الحاجة لنوع مفتوح استخدم `unknown` + تضييق، أو عرّف مسودة موضعية (`NewTaskDraft`…) أو نوعاً مشتركاً في `src/types`. **لا تُعِد `any`** ولو مؤقتاً — أصلح النوع أو المُستدعي.
+18. **سقف حجم الوحدات (`H9`):** `FinancialModule.tsx` ≤ 900 سطر و`storage.ts` ≤ 900 سطر. أي إضافة كبيرة تُخرجهما من السقف تُرفض؛ فكّك إلى مكوّن/وحدة جديدة قبل الإضافة.

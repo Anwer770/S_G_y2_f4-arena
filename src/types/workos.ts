@@ -3,6 +3,18 @@
 // Professional Task, Project, Routine, Habit, Meeting, & Team System
 // ============================================================================
 
+/** الأنواع التي يفتحها زر «إضافة سريعة» (R28) */
+export type QuickAddType =
+  | 'task'
+  | 'project'
+  | 'order'
+  | 'commitment'
+  | 'appointment'
+  | 'note'
+  | 'goal'
+  | 'habit'
+  | 'meeting';
+
 export type WorkOSView =
   | 'dashboard'
   | 'inbox'
@@ -42,6 +54,20 @@ export type WorkOSViewMode =
   | 'team'
   | 'automation'
   | 'reports';
+
+/** مسودات الإضافة السريعة: ما يبنيه النموذج فعلياً قبل منح المعرّف (R28) */
+export type NewTaskDraft = Partial<Omit<WorkTask, 'id' | 'taskNumber'>> & { title: string };
+export type NewProjectDraft = Omit<WorkProject, 'id' | 'code' | 'status' | 'progress'>;
+export type NewNoteDraft = Pick<WorkNote, 'title' | 'content'> &
+  Partial<Omit<WorkNote, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'content'>>;
+export type NewAppointmentDraft = Omit<AppointmentItem, 'id' | 'attendees'> & { attendees?: string[] };
+export type NewCommitmentDraft = Partial<Omit<WorkCommitment, 'id'>>;
+export type NewHabitDraft = Pick<HabitItem, 'name' | 'category' | 'frequency' | 'targetDaysPerWeek'> &
+  Partial<Omit<HabitItem, 'id' | 'name' | 'category' | 'frequency' | 'targetDaysPerWeek'>>;
+export type NewGoalDraft = Omit<GoalItem, 'id'>;
+
+/** وجهات التنقّل من لوحة الأوامر: تبويب رئيسي أو عرض ثانوي (R28) */
+export type WorkOSNavigateTarget = WorkOSViewMode | 'planner';
 
 export type TaskStatus =
   | 'new'
@@ -140,7 +166,7 @@ export interface WorkTask {
   linkedOrderId?: string;
   linkedCommitmentId?: string;
   workspaceId?: string;
-  activityLog?: any[];
+  activityLog?: WorkActivityLog[];
   createdAt: string;
   updatedAt: string;
   completedAt?: string;

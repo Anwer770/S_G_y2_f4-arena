@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { WorkTask, WorkProject, WorkOSViewMode } from '../../types/workos';
+import { WorkTask, WorkProject, WorkOSViewMode, WorkOSNavigateTarget } from '../../types/workos';
 import {
   Search,
   CheckSquare,
@@ -20,7 +20,7 @@ export interface WorkOSCommandPaletteModalProps {
   projects?: WorkProject[];
   onSelectTask?: (task: WorkTask) => void;
   onSelectView?: (view: WorkOSViewMode) => void;
-  onNavigate?: (view: any) => void;
+  onNavigate?: (view: WorkOSNavigateTarget) => void;
   onSelectProject?: (project: WorkProject) => void;
   onOpenQuickAdd?: (type?: string) => void;
   onOpenAI?: () => void;
@@ -71,7 +71,7 @@ export const WorkOSCommandPaletteModal: React.FC<WorkOSCommandPaletteModalProps>
     onClose();
   };
 
-  const handleNavigate = (view: any) => {
+  const handleNavigate = (view: WorkOSNavigateTarget) => {
     if (typeof onSelectView === 'function') {
       onSelectView(view);
     }

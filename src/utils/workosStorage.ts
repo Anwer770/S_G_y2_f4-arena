@@ -3,6 +3,7 @@ import {
   WorkProject,
   WorkTask,
   TaskStatus,
+  TaskPriority,
   WorkOrder,
   InboxItem,
   DailyRoutineBlock,
@@ -1372,8 +1373,8 @@ export function importWorkOSTasksFromExcel(file: File): Promise<{ success: boole
       try {
         assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const safeSheet = readFirstSheetSafe<any>(data, 'array');
-        const rawJson: any[] = safeSheet.rows;
+        const safeSheet = readFirstSheetSafe<Record<string, unknown>>(data, 'array');
+        const rawJson: Record<string, unknown>[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({ success: false, message: 'الملف فارغ أو لا يحتوي على أسطر صالحة.' });
@@ -1477,7 +1478,7 @@ export interface TripleOrderInput {
   orderType: string;
   regionBranch: string;
   totalAmount: number;
-  priority: any;
+  priority: TaskPriority;
   startDate: string;
   deliveryDate: string;
   assignedRep: string;
@@ -1831,8 +1832,8 @@ export function importUnifiedWorkOSFromExcel(
       try {
         assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const safeSheet = readFirstSheetSafe<any>(data, 'array');
-        const rawJson: any[] = safeSheet.rows;
+        const safeSheet = readFirstSheetSafe<Record<string, unknown>>(data, 'array');
+        const rawJson: Record<string, unknown>[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({ success: false, message: 'الملف فارغ أو لا يحتوي على أسطر صالحة.' });

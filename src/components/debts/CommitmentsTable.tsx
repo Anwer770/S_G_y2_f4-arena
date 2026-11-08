@@ -266,7 +266,7 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
           <span className="font-bold text-slate-500 dark:text-slate-400">الأهمية:</span>
           <select
             value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value as any)}
+            onChange={(e) => setPriorityFilter(e.target.value as 'all' | 'A' | 'B' | 'C')}
             className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl font-bold focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
           >
             <option value="all">كل الدرجات</option>

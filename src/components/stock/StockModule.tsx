@@ -78,7 +78,7 @@ export const StockModule: React.FC<Props> = ({
     }
 
     result.movements.forEach((mov) => {
-      onSaveMovement(mov as any);
+      onSaveMovement(mov);
     });
 
     return {
@@ -288,7 +288,7 @@ export const StockModule: React.FC<Props> = ({
         supportedColumnsText="نوع الحركة (IN/OUT)، التاريخ، كود الصنف، اسم الصنف، المستودع، الكمية، السعر الفردي، الجهة / المورد، رقم السند"
         onDownloadTemplate={downloadStockExcelTemplate}
         onImportFile={handleImportFile}
-        onExportExcel={() => exportRecordsToExcel(records, products as any)}
+        onExportExcel={() => exportRecordsToExcel(records, products)}
         excelSubtitle="جدول حركات المخزون مع تفقيط وحسابات الأصناف"
         onExportJSON={handleExportJSON}
         jsonSubtitle="نسخة احتياطية كاملة لكافة حركات المخزون والأصناف"

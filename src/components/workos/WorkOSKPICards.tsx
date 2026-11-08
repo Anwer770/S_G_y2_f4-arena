@@ -23,8 +23,8 @@ export interface WorkOSKPICardsProps {
   completionRate?: number;
   overallCompletionRate?: number;
   activeFilterType?: string | null;
-  onFilterClick?: (type: any) => void;
-  onCardClick?: (type: any) => void;
+  onFilterClick?: (type: string) => void;
+  onCardClick?: (type: string) => void;
 }
 
 export const WorkOSKPICards: React.FC<WorkOSKPICardsProps> = ({

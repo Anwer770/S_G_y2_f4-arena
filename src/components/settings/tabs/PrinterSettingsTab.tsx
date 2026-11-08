@@ -45,7 +45,7 @@ export const PrinterSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
                 <button
                   key={p.id}
                   type="button"
-                  onClick={() => onChange({ ...settings, paperSize: p.id as any })}
+                  onClick={() => onChange({ ...settings, paperSize: p.id as PrinterSettings['paperSize'] })}
                   className={`p-3 rounded-xl border text-right transition-all cursor-pointer ${
                     settings.paperSize === p.id
                       ? 'border-blue-500 bg-blue-50/60 dark:bg-blue-950/40 text-blue-900 dark:text-blue-200 font-bold ring-2 ring-blue-500/20'
@@ -205,7 +205,7 @@ export const PrinterSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={(settings as any)[item.key]}
+                    checked={Boolean((settings as unknown as Record<string, unknown>)[item.key])}
                     onChange={(e) => onChange({ ...settings, [item.key]: e.target.checked })}
                     className="sr-only peer"
                   />
@@ -285,7 +285,7 @@ export const PrinterSettingsTab: React.FC<Props> = ({ settings, onChange }) => {
                   <button
                     key={s.id}
                     type="button"
-                    onClick={() => onChange({ ...settings, fontSize: s.id as any })}
+                    onClick={() => onChange({ ...settings, fontSize: s.id as PrinterSettings['fontSize'] })}
                     className={`py-2 px-2 text-center rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                       settings.fontSize === s.id
                         ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400'

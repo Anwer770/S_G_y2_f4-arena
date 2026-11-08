@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { WorkProject, TeamMember, TaskPriority, WorkOrder, WorkSubtask } from '../../types/workos';
+import {
+  WorkProject,
+  TeamMember,
+  TaskPriority,
+  WorkOrder,
+  WorkSubtask,
+  NewTaskDraft,
+  NewProjectDraft,
+  NewNoteDraft,
+  NewAppointmentDraft,
+  NewCommitmentDraft,
+  NewHabitDraft,
+  NewGoalDraft,
+} from '../../types/workos';
 import { createTripleLinkOrder } from '../../utils/workosStorage';
 import {
   X,
@@ -32,14 +45,14 @@ interface WorkOSQuickAddModalProps {
   initialPriority?: TaskPriority;
   projects: WorkProject[];
   team: TeamMember[];
-  onAddTask: (task: any) => void;
+  onAddTask: (task: NewTaskDraft) => void;
   onAddOrder?: (order: WorkOrder) => void;
-  onAddProject: (project: any) => void;
-  onAddNote: (note: any) => void;
-  onAddAppointment: (appointment: any) => void;
-  onAddCommitment: (commitment: any) => void;
-  onAddHabit: (habit: any) => void;
-  onAddGoal: (goal: any) => void;
+  onAddProject: (project: NewProjectDraft) => void;
+  onAddNote: (note: NewNoteDraft) => void;
+  onAddAppointment: (appointment: NewAppointmentDraft) => void;
+  onAddCommitment: (commitment: NewCommitmentDraft) => void;
+  onAddHabit: (habit: NewHabitDraft) => void;
+  onAddGoal: (goal: NewGoalDraft) => void;
 }
 
 export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({

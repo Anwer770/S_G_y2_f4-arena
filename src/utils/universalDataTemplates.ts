@@ -14,7 +14,7 @@ import { CustodyIssueRecord } from '../types/custodyIssues';
 import { LinkRecord } from '../types/linksLibrary';
 
 // Helper to save Excel file with right-to-left layout
-export const saveRTLWorkbook = (rows: any[], sheetName: string, fileName: string) => {
+export const saveRTLWorkbook = (rows: unknown[], sheetName: string, fileName: string) => {
   const ws = XLSX.utils.json_to_sheet(rows);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, sheetName);

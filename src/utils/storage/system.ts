@@ -59,7 +59,7 @@ export function logSystemAudit(
   saveSystemAuditLogs([newLog, ...current]);
 }
 
-export function logAudit(action: any, details: string, recordId?: string): void {
+export function logAudit(action: string, details: string, recordId?: string): void {
   logSystemAudit('مخزون', action, details, recordId);
 }
 

@@ -11,7 +11,7 @@ interface Props {
   selectedIds: Set<string>;
   activeRowId: string | null;
   onToggleSelectAll: () => void;
-  onToggleRowSelection: (id: string, e: React.MouseEvent) => void;
+  onToggleRowSelection: (id: string, e: React.SyntheticEvent) => void;
   onActivateRow: (id: string | null) => void;
   onView: (txn: FinancialTransaction) => void;
   onEdit: (txn: FinancialTransaction) => void;
@@ -127,7 +127,7 @@ export const FinancialJournalTable: React.FC<Props> = ({
                               <input
                                 type="checkbox"
                                 checked={isSelected}
-                                onChange={(e) => handleToggleRowSelection(txn.id, e as any)}
+                                onChange={(e) => handleToggleRowSelection(txn.id, e)}
                                 onClick={(e) => e.stopPropagation()}
                                 className="rounded text-teal-600 dark:text-teal-400 focus:ring-teal-500 w-3.5 h-3.5 cursor-pointer"
                               />

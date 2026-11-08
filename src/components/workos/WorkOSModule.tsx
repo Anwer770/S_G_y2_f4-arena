@@ -259,7 +259,7 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
 
   // Timer Tick
   useEffect(() => {
-    let interval: any = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
     if (isTimerRunning) {
       interval = setInterval(() => {
         setTimerSeconds((prev) => prev + 1);
@@ -1706,8 +1706,9 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
         }}
         onAddAppointment={(a) => {
           const newA: AppointmentItem = {
-            id: `apt_${Date.now()}`,
             ...a,
+            id: `apt_${Date.now()}`,
+            attendees: a.attendees ?? [],
           };
           setData((prev) => ({ ...prev, appointments: [...prev.appointments, newA] }));
         }}
@@ -1774,7 +1775,7 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
         tasks={data.tasks}
         projects={data.projects}
         onOpenQuickAdd={(type) => {
-          setQuickAddInitialType((type as any) || 'task');
+          setQuickAddInitialType(type || 'task');
           setIsQuickAddOpen(true);
         }}
         onOpenAI={() => setIsAICopilotOpen(true)}
@@ -1791,7 +1792,7 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
         }}
         onSelectView={(view) => {
           if (['overview', 'projects', 'tasks', 'kanban', 'timeline', 'priorities', 'workload'].includes(view)) {
-            setCurrentTab(view as any);
+            setCurrentTab(view);
             setSecondaryView(null);
           } else {
             setSecondaryView(view);
@@ -1800,7 +1801,7 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
         }}
         onNavigate={(view) => {
           if (['overview', 'projects', 'tasks', 'kanban', 'timeline', 'priorities', 'workload'].includes(view)) {
-            setCurrentTab(view as any);
+            setCurrentTab(view);
             setSecondaryView(null);
           } else {
             setSecondaryView(view);

@@ -260,7 +260,7 @@ export const DatabasesTab: React.FC<Props> = ({
     e.target.value = '';
   };
 
-  const triggerDownload = (data: any, filename: string) => {
+  const triggerDownload = (data: unknown, filename: string) => {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

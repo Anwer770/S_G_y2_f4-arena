@@ -9,8 +9,10 @@ import {
   DoctorRecord,
   DoctorVisitLog,
   FinancialTransaction,
+  FinancialOptionType,
   Item,
   Movement,
+  NoteRecord,
   Task,
   VisitStatus,
 } from '../../types';
@@ -122,7 +124,7 @@ interface Props {
   categoryAccounts?: string[];
   restrictionAccounts?: string[];
   accountNames?: string[];
-  onAddFinancialOption?: (type: any, val: string) => void;
+  onAddFinancialOption?: (type: FinancialOptionType, val: string) => void;
   taskCategories?: string[];
   taskOperations?: string[];
   taskAssignees?: string[];
@@ -1674,16 +1676,26 @@ export const UnifiedDashboard: React.FC<Props> = ({
           noteToEdit={null}
           onSave={(newNoteData) => {
             const allNotes = loadNotes();
-            const newNote = {
+            const newNote: NoteRecord = {
               id: `note_${Date.now()}`,
+              ...newNoteData,
               title: newNoteData.title || 'ملاحظة جديدة',
               content: newNoteData.content || '',
-              ...newNoteData,
+              type: newNoteData.type ?? 'عامة',
+              category: newNoteData.category ?? 'عام',
+              priority: newNoteData.priority ?? 'متوسطة',
+              status: newNoteData.status ?? 'جديدة',
+              tags: newNoteData.tags ?? [],
+              folderId: newNoteData.folderId ?? '',
+              isPinned: newNoteData.isPinned ?? false,
+              isFavorite: newNoteData.isFavorite ?? false,
+              isLocked: newNoteData.isLocked ?? false,
+              isQuickNote: false,
               date: todayStr,
               time: new Date().toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' }),
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
-            } as any;
+            };
             saveNotes([newNote, ...allNotes]);
             setIsNoteModalOpen(false);
           }}

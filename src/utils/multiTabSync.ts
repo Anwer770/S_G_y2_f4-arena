@@ -21,7 +21,7 @@ export interface MultiTabMessage {
   type: MultiTabSyncType;
   timestamp: number;
   originId: string;
-  payload?: any;
+  payload?: unknown;
 }
 
 const CHANNEL_NAME = 'primo_erp_multitab_sync_v1';
@@ -39,7 +39,7 @@ if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
 /**
  * Broadcast an update event to all other open tabs
  */
-export function broadcastDataChange(type: MultiTabSyncType, payload?: any): void {
+export function broadcastDataChange(type: MultiTabSyncType, payload?: unknown): void {
   const message: MultiTabMessage = {
     type,
     timestamp: Date.now(),
@@ -71,7 +71,7 @@ export function broadcastDataChange(type: MultiTabSyncType, payload?: any): void
  */
 export function useMultiTabSync(
   types: MultiTabSyncType | MultiTabSyncType[],
-  onUpdate: (type: MultiTabSyncType, payload?: any) => void
+  onUpdate: (type: MultiTabSyncType, payload?: unknown) => void
 ): void {
   useEffect(() => {
     if (typeof window === 'undefined') return;

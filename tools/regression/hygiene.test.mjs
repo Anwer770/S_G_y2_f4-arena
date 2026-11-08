@@ -83,13 +83,20 @@ const big = srcFiles
 check('H6 · لا ملف يتجاوز 100KB', big.length === 0, big.map((x) => `${x.f} ${x.kb}KB`).join(' · '));
 
 
-/* H7 — ميزانية any: لا تتجاوز السقف (تُخفَّض تدريجياً) */
-const ANY_BUDGET = 110;
-const anyCount = srcFiles.reduce(
-  (sum, f) => sum + (fs.readFileSync(f, 'utf8').match(/:\s*any\b|as any\b/g) || []).length,
-  0
-);
-check(`H7 · ميزانية any (${anyCount}/${ANY_BUDGET})`, anyCount <= ANY_BUDGET, anyCount > ANY_BUDGET ? 'تجاوز السقف' : '');
+/* H7 — ميزانية any: نوع صريح بدل any في كل المواضع النوعية (ratchet = 0) */
+const ANY_BUDGET = 0;
+/* النمط يغطي كل مواضع النوع: `: any` · `as any` · `<any>` · `any[]` · `any |`
+   · `, any>` · `[any]` — ولا يطابق نصوصاً مثل step="any" ولا كلمة company. */
+const ANY_PATTERN =
+  /:\s*any\b|\bas\s+any\b|<\s*any\s*>|<\s*any\s*\[\s*\]\s*>|\bany\s*\[\s*\]|\bany\s*\||\|\s*any\b|,\s*any\s*[>,)\]]|\[\s*any\s*\]/g;
+const anyHits = [];
+for (const f of srcFiles) {
+  const text = fs.readFileSync(f, 'utf8');
+  const n = (text.match(ANY_PATTERN) || []).length;
+  if (n > 0) anyHits.push(`${rel(f)}×${n}`);
+}
+const anyCount = anyHits.reduce((sum, x) => sum + Number(x.split('×')[1]), 0);
+check(`H7 · لا any في الأنواع (${anyCount}/${ANY_BUDGET})`, anyCount <= ANY_BUDGET, anyHits.join(' · '));
 
 
 /* H8 — قيم حالات المهام داخل الاتحاد المعرّف فقط */
@@ -104,6 +111,26 @@ for (const f of srcFiles) {
   }
 }
 check('H8 · لا حالة مهمة خارج الاتحاد (in_review سابقاً)', badStatus.length === 0, badStatus.join(' · '));
+
+/* H10 — لا تعطيل لمفحص الأنواع (لا @ts-ignore / @ts-expect-error / @ts-nocheck) */
+const suppressorFiles = srcFiles.filter((f) =>
+  /@ts-(ignore|expect-error|nocheck)/.test(fs.readFileSync(f, 'utf8'))
+);
+check('H10 · لا تعطيل لمفحص الأنواع', suppressorFiles.length === 0, suppressorFiles.map(rel).join(' · '));
+
+/* H9 — سقوف حجم الوحدات المفكَّكة (ratchet): لا تعود الملفات الكبيرة بعد التفكيك */
+const MODULE_LINE_BUDGETS = [
+  { file: 'src/components/financial/FinancialModule.tsx', max: 900 },
+  { file: 'src/utils/storage.ts', max: 900 },
+];
+const overBudget = [];
+for (const { file, max } of MODULE_LINE_BUDGETS) {
+  const full = path.join(ROOT, file);
+  if (!fs.existsSync(full)) continue;
+  const n = fs.readFileSync(full, 'utf8').split('\n').length;
+  if (n > max) overBudget.push(`${file} ${n}>${max}`);
+}
+check('H9 · سقف حجم الوحدات المفكَّكة', overBudget.length === 0, overBudget.join(' · '));
 
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);

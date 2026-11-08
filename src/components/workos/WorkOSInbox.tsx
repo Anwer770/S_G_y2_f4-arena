@@ -29,12 +29,12 @@ interface WorkOSInboxProps {
 
 export const WorkOSInbox: React.FC<WorkOSInboxProps> = ({
   inbox = [],
-  onAddInboxItem = (..._args: any[]) => {},
-  onConvertToTask = (..._args: any[]) => {},
-  onConvertToNote = (..._args: any[]) => {},
-  onConvertToAppointment = (..._args: any[]) => {},
-  onConvertToProject = (..._args: any[]) => {},
-  onDeleteInboxItem = (..._args: any[]) => {},
+  onAddInboxItem = (..._args: unknown[]) => {},
+  onConvertToTask = (..._args: unknown[]) => {},
+  onConvertToNote = (..._args: unknown[]) => {},
+  onConvertToAppointment = (..._args: unknown[]) => {},
+  onConvertToProject = (..._args: unknown[]) => {},
+  onDeleteInboxItem = (..._args: unknown[]) => {},
 }) => {
   const [quickInput, setQuickInput] = useState('');
 

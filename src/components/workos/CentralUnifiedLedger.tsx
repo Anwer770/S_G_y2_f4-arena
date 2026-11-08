@@ -10,6 +10,7 @@ import {
   saveCommitments,
   triggerConfetti,
 } from '../../utils/workosStorage';
+import type { AutomationCheckResult } from '../../utils/workosStorage';
 import { formatCurrency } from '../../utils/formatters';
 import {
   Layers,
@@ -68,7 +69,7 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
   const [regionFilter, setRegionFilter] = useState<string>('all');
 
   // Automation Engine State
-  const [automationAlerts, setAutomationAlerts] = useState<any[]>([]);
+  const [automationAlerts, setAutomationAlerts] = useState<AutomationCheckResult['triggeredAlerts']>([]);
   const [isAutomationChecked, setIsAutomationChecked] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [importNotification, setImportNotification] = useState<string | null>(null);
@@ -126,9 +127,10 @@ export const CentralUnifiedLedger: React.FC<CentralUnifiedLedgerProps> = ({
   const handleSettleCommitment = (commitmentId: string) => {
     const updatedCommitments = commitments.map((c) => {
       if (c.id === commitmentId) {
+        const nextStatus: WorkCommitment['status'] = c.status === 'fulfilled' ? 'pending' : 'fulfilled';
         return {
           ...c,
-          status: (c.status === 'fulfilled' ? 'pending' : 'fulfilled') as any,
+          ...{ status: nextStatus },
         };
       }
       return c;

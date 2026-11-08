@@ -445,8 +445,8 @@ export async function parseDoctorsExcelOrCSV(
       try {
         assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const safeSheet = readFirstSheetSafe<any>(data, 'array');
-        const rawJson: any[] = safeSheet.rows;
+        const safeSheet = readFirstSheetSafe<Record<string, unknown>>(data, 'array');
+        const rawJson: Record<string, unknown>[] = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {
           resolve({

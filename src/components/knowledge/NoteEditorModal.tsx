@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
+  NoteAttachment,
   NoteFolder,
   NoteLinkItem,
   NotePriority,
@@ -46,6 +47,34 @@ import {
   FileText,
 } from 'lucide-react';
 import { smartAnalyzeNoteText } from '../../utils/notes';
+
+/** واجهة أدنى لواجهة التعرف على الصوت (Web Speech API) — بلا any (R28) */
+interface SpeechAlternativeLike {
+  transcript: string;
+}
+interface SpeechResultLike {
+  [index: number]: SpeechAlternativeLike;
+}
+interface SpeechResultListLike {
+  length: number;
+  [index: number]: SpeechResultLike;
+}
+interface SpeechResultEventLike {
+  resultIndex: number;
+  results: SpeechResultListLike;
+}
+interface SpeechRecognitionLike {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onstart: (() => void) | null;
+  onresult: ((event: SpeechResultEventLike) => void) | null;
+  onerror: (() => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
 
 interface NoteEditorModalProps {
   isOpen: boolean;
@@ -111,7 +140,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
   const [newTaskPriority, setNewTaskPriority] = useState<NotePriority>('متوسطة');
 
   // Attachments
-  const [attachments, setAttachments] = useState<any[]>([]);
+  const [attachments, setAttachments] = useState<NoteAttachment[]>([]);
 
   // Reminders
   const [reminders, setReminders] = useState<NoteReminderItem[]>([]);
@@ -122,7 +151,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
   // Voice recording simulation / Speech to text
   const [isRecording, setIsRecording] = useState(false);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
   // AI Assistant drawer/state
   const [showAiToolkit, setShowAiToolkit] = useState(false);
@@ -205,8 +234,11 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
       }
       setIsRecording(false);
     } else {
-      const SpeechRecognition =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const speechWindow = window as unknown as {
+        SpeechRecognition?: SpeechRecognitionCtor;
+        webkitSpeechRecognition?: SpeechRecognitionCtor;
+      };
+      const SpeechRecognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
 
       if (!SpeechRecognition) {
         alert('ميزة التعرف على الصوت غير مدعومة في هذا المتصفح. يمكنك الكتابة مباشرة.');
@@ -223,7 +255,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
           setIsRecording(true);
         };
 
-        recognition.onresult = (event: any) => {
+        recognition.onresult = (event: SpeechResultEventLike) => {
           let transcript = '';
           for (let i = event.resultIndex; i < event.results.length; i++) {
             transcript += event.results[i][0].transcript;

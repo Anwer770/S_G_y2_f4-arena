@@ -76,7 +76,7 @@ export function exportRecordsToExcel(
   const headers = [...BASE_EXCEL_HEADERS, ...productNames];
 
   const dataRows = records.map((r) => {
-    const row: Record<string, any> = {
+    const row: Record<string, string | number> = {
       Main_ID: r.mainId || '',
       Sub_ID: r.subId || '',
       date: r.date || '',
@@ -662,7 +662,7 @@ export async function parseCustomersExcelFile(
   warnings: string[];
 }> {
   const data = await file.arrayBuffer();
-  const safeSheet = readFirstSheetSafe<any>(data, 'array');
+  const safeSheet = readFirstSheetSafe<Record<string, unknown>>(data, 'array');
   const rawRows = safeSheet.rows;
 
   const customers: Customer[] = [];
@@ -890,7 +890,7 @@ export function downloadStockRecordsExcelTemplate(productsList: Product[] = []) 
       ? productsList.slice(0, 15).map((p) => p.name)
       : DEFAULT_62_PRODUCT_NAMES.slice(0, 15);
 
-  const row1: Record<string, any> = {
+  const row1: Record<string, string | number> = {
     'Main_ID': 'Categ-1001',
     'Sub_ID': 'IN-1001',
     'date': new Date().toISOString().split('T')[0],
@@ -906,7 +906,7 @@ export function downloadStockRecordsExcelTemplate(productsList: Product[] = []) 
     row1[pName] = (idx + 1) * 10;
   });
 
-  const row2: Record<string, any> = {
+  const row2: Record<string, string | number> = {
     'Main_ID': 'Categ-1002',
     'Sub_ID': 'OUT-1001',
     'date': new Date().toISOString().split('T')[0],
@@ -966,7 +966,7 @@ export async function parseFinancialExcelOrCSV(
     reader.onload = (e) => {
       try {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const safeSheet = readFirstSheetSafe<any>(data, 'array');
+        const safeSheet = readFirstSheetSafe<Record<string, unknown>>(data, 'array');
         const rawJson = safeSheet.rows;
 
         if (!rawJson || rawJson.length === 0) {

@@ -462,7 +462,7 @@ export const CustodyIssuesModule: React.FC = () => {
           <div>
             <select
               value={filterState.section}
-              onChange={(e) => setFilterState((prev) => ({ ...prev, section: e.target.value as any }))}
+              onChange={(e) => setFilterState((prev) => ({ ...prev, section: e.target.value as CustodyFilterState['section'] }))}
               className="w-full px-3 py-2 text-xs font-bold border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
             >
               <option value="all">جميع الأقسام ({records.length})</option>
