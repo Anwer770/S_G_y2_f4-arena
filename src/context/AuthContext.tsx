@@ -2,25 +2,38 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SystemUser, UserRole, CompleteSystemSettings } from '../types/settings';
 import { ActiveModuleTab } from '../types';
 import { loadCompleteSystemSettings, saveCompleteSystemSettings, SETTINGS_UPDATED_EVENT } from '../utils/settingsStorage';
-import { dbStorage } from '../database/dbStorage';
 import { modulesForRole, permissionsForRole } from '../utils/roles';
+import { PinDigest, hashPin, verifyPin, hasPinDigest, isAcceptablePin, isWebCryptoAvailable } from '../utils/pinCrypto';
+import {
+  MAX_FAILED_ATTEMPTS,
+  lockRemainingMs,
+  attemptsRemaining,
+  registerFailedAttempt,
+  clearFailedAttempts,
+  saveSession,
+  readValidSession,
+  endSession,
+} from '../utils/authGuard';
 
-const AUTH_SESSION_KEY = 'suite_active_auth_session_v1';
+/** إعادة تصدير لقاعدة الرمز المقبول حتى تبقى الواجهة على مسار استيراد واحد */
+export { isAcceptablePin };
 
-/** نتيجة محاولة الدخول — تُخبر الواجهة إن كان الحساب بلا رمز ويحتاج تعيينه */
+/** نتيجة محاولة الدخول — تُخبر الواجهة إن كان الحساب بلا رمز ويحتاج تعيينه، أو مقفلاً مؤقتاً */
 export interface LoginResult {
   success: boolean;
   error?: string;
   /** الحساب لا يملك رمزاً بعد ⇒ يجب تعيين رمز أول مرة قبل الدخول (R2) */
   needsPinSetup?: boolean;
+  /** المحاولات المتبقية قبل الإقفال المؤقت */
+  attemptsRemaining?: number;
+  /** طابع زمني (ms) لنهاية الإقفال إن كان الحساب مقفلاً */
+  lockedUntil?: number;
 }
 
-/** رمز المرور المقبول: 4–6 أرقام، وليس رمزاً شائعاً */
-export const isAcceptablePin = (pin: string): boolean => {
-  const clean = pin.trim();
-  if (!/^[0-9]{4,6}$/.test(clean)) return false;
-  return !['1234', '0000', '1111', '2222', '3333', '4444', '5555', '6666', '7777', '8888', '9999', '123456', '654321'].includes(clean);
-};
+export interface LoginOptions {
+  /** حفظ الجلسة 8 ساعات (يُلغى إن لم يُطلب) — P2 */
+  remember?: boolean;
+}
 
 export interface AuthContextType {
   currentUser: SystemUser | null;
@@ -28,10 +41,9 @@ export interface AuthContextType {
   isLoading: boolean;
   availableUsers: SystemUser[];
   rolePermissions: Record<UserRole, string[]>;
-  login: (identifier: string, pinOrPassword?: string) => Promise<LoginResult>;
+  login: (identifier: string, pinOrPassword?: string, options?: LoginOptions) => Promise<LoginResult>;
   setUserPin: (userId: string, pin: string) => Promise<LoginResult>;
   logout: () => void;
-  quickSwitchUser: (userId: string) => void;
   hasPermission: (permissionId: string) => boolean;
   canAccessModule: (tab: ActiveModuleTab) => boolean;
   getAllowedTabs: () => ActiveModuleTab[];
@@ -40,7 +52,24 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Define allowed module tabs for each role
+/** يضع ملخّص الرمز ويحذف أي أثر نصي صريح للرمز (ترقية/تعيين) */
+const withPinDigest = (user: SystemUser, digest: PinDigest): SystemUser => {
+  const next: SystemUser = {
+    ...user,
+    pinHash: digest.pinHash,
+    pinSalt: digest.pinSalt,
+    pinIterations: digest.pinIterations,
+  };
+  delete next.pin;
+  delete next.password;
+  return next;
+};
+
+/** أسرار نصية قديمة (قبل التجزئة) — تُقبل مرة واحدة ثم تُرقّى تلقائياً */
+const legacySecrets = (user: SystemUser): string[] =>
+  [user.pin, user.password].filter((s): s is string => !!s && !!s.trim());
+
+const minutes = (ms: number): number => Math.max(1, Math.ceil(ms / 60000));
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<SystemUser | null>(null);
@@ -58,22 +87,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const handleSettingsUpdate = () => {
       refreshUsers();
     };
+
     window.addEventListener(SETTINGS_UPDATED_EVENT, handleSettingsUpdate);
     return () => window.removeEventListener(SETTINGS_UPDATED_EVENT, handleSettingsUpdate);
   }, []);
 
-  // Restore saved session on mount
+  // استعادة الجلسة — بحدّ صريح (8 ساعات) وللجلسات التي طلبت «تذكّر الدخول» فقط (P2)
   useEffect(() => {
     try {
-      const savedSessionRaw = dbStorage.getItem(AUTH_SESSION_KEY);
-      if (savedSessionRaw) {
-        const savedSession = JSON.parse(savedSessionRaw);
-        if (savedSession && savedSession.userId) {
-          const user = settings.users.find((u) => u.id === savedSession.userId);
-          if (user && user.status === 'active') {
-            setCurrentUser(user);
-            setIsAuthenticated(true);
-          }
+      const session = readValidSession();
+      if (session) {
+        const user = settings.users.find((u) => u.id === session.userId);
+        if (user && user.status === 'active') {
+          setCurrentUser(user);
+          setIsAuthenticated(true);
+        } else {
+          endSession();
         }
       }
     } catch (e) {
@@ -84,7 +113,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [settings.users]);
 
   // Login handler
-  const login = async (identifier: string, pinOrPassword?: string): Promise<LoginResult> => {
+  const login = async (
+    identifier: string,
+    pinOrPassword?: string,
+    options?: LoginOptions
+  ): Promise<LoginResult> => {
+    const remember = options?.remember !== false;
     // نقرأ الإعدادات من المصدر مباشرة لا من حالة الإغلاق (closure): الرمز قد يكون
     // عُيِّن للتوّ عبر setUserPin في نفس الدورة، وحالة React لم تكن لتظهر بعد.
     const freshSettings = loadCompleteSystemSettings();
@@ -104,12 +138,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: 'هذا الحساب معطل، يرجى مراجعة مسؤول النظام' };
     }
 
-    // التحقق من الرمز (إصلاح R2): لا رموز افتراضية إطلاقاً، ولا دخول بلا رمز.
-    // سابقاً: ``pin || '1234'`` ⇒ أي حساب بلا رمز يُفتح بـ 1234، ورمز فارغ كان يمرّ
-    // من البوابة كأنه صحيح. الآن: الحساب بلا رمز يُوجَّه لتعيينه، والرمز الفارغ يُرفض.
-    const secrets = [user.pin, user.password].filter((s): s is string => !!s && !!s.trim());
+    // (1) إقفال مؤقت بعد محاولات فاشلة متكرّرة
+    const lockedFor = lockRemainingMs(user.id);
+    if (lockedFor > 0) {
+      return {
+        success: false,
+        lockedUntil: Date.now() + lockedFor,
+        attemptsRemaining: 0,
+        error: `الحساب مقفل مؤقتاً بعد ${MAX_FAILED_ATTEMPTS} محاولات فاشلة — أعد المحاولة بعد ${minutes(lockedFor)} دقيقة`,
+      };
+    }
 
-    if (secrets.length === 0) {
+    // (2) لا رموز افتراضية: حساب بلا ملخّص ولا سرّ نصي ⇒ تعيين أول مرة
+    const legacy = legacySecrets(user);
+    const hasDigest = hasPinDigest(user);
+    if (!hasDigest && legacy.length === 0) {
       return {
         success: false,
         needsPinSetup: true,
@@ -121,22 +164,71 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!credential) {
       return { success: false, error: 'أدخل رمز المرور (PIN) للمتابعة' };
     }
-    if (!secrets.includes(credential)) {
-      return { success: false, error: 'رمز المرور أو PIN غير صحيح' };
+
+    // (3) التحقق: ملخّص PBKDF2 أولاً، وإلا سرّ قديم يُرقّى عند النجاح
+    let accepted = false;
+    let upgraded: PinDigest | null = null;
+
+    if (hasDigest) {
+      if (!isWebCryptoAvailable()) {
+        return {
+          success: false,
+          error: 'تعذّر التحقق من الرمز: Web Crypto غير متاح في هذا المتصفح — افتح التطبيق عبر HTTPS أو localhost',
+        };
+      }
+      try {
+        accepted = await verifyPin(credential, {
+          pinHash: user.pinHash as string,
+          pinSalt: user.pinSalt as string,
+          pinIterations: Number(user.pinIterations),
+        });
+      } catch {
+        return { success: false, error: 'تعذّر التحقق من الرمز في هذه البيئة (Web Crypto)' };
+      }
+    } else {
+      accepted = legacy.includes(credential);
+      if (accepted && isWebCryptoAvailable()) {
+        try {
+          upgraded = await hashPin(credential);
+        } catch {
+          upgraded = null;
+        }
+      }
     }
 
-    // Success: update lastLogin
-    const updatedUsers = freshSettings.users.map((u) =>
-      u.id === user.id
-        ? {
-            ...u,
-            lastLogin: `اليوم، ${new Date().toLocaleTimeString('ar-YE', {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}`,
-          }
-        : u
-    );
+    // (4) محاولة فاشلة ⇒ عدّاد وإقفال عند الحد
+    if (!accepted) {
+      const outcome = registerFailedAttempt(user.id);
+      if (outcome.lockedUntil > Date.now()) {
+        return {
+          success: false,
+          lockedUntil: outcome.lockedUntil,
+          attemptsRemaining: 0,
+          error: `رمز غير صحيح — أُقفل الحساب ${minutes(outcome.lockedUntil - Date.now())} دقيقة بعد ${MAX_FAILED_ATTEMPTS} محاولات فاشلة`,
+        };
+      }
+      const remaining = attemptsRemaining(user.id);
+      return {
+        success: false,
+        attemptsRemaining: remaining,
+        error: `رمز المرور أو PIN غير صحيح — تبقّى ${remaining} محاولة قبل الإقفال المؤقت`,
+      };
+    }
+
+    clearFailedAttempts(user.id);
+
+    // Success: update lastLogin (+ ترقية الملخّص إن كان الرمز نصياً قديماً)
+    const updatedUsers = freshSettings.users.map((u) => {
+      if (u.id !== user.id) return u;
+      const base: SystemUser = {
+        ...u,
+        lastLogin: `اليوم، ${new Date().toLocaleTimeString('ar-YE', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })}`,
+      };
+      return upgraded ? withPinDigest(base, upgraded) : base;
+    });
 
     const updatedSettings = {
       ...freshSettings,
@@ -162,35 +254,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(activeUser);
     setIsAuthenticated(true);
 
-    // Persist session
-    dbStorage.setItem(
-      AUTH_SESSION_KEY,
-      JSON.stringify({
-        userId: user.id,
-        loginTime: new Date().toISOString(),
-      })
-    );
+    // جلسة بانتهاء صريح (8 ساعات) — أو بلا جلسة إن لم يُطلب التذكّر
+    saveSession(user.id, remember);
 
     return { success: true };
   };
 
   /**
    * تعيين رمز المرور لأول مرة (أو تغييره من شاشة الدخول) — R2.
-   * يُحفظ داخل سجل المستخدم في الإعدادات المركزية، ثم يُستكمل الدخول بالرمز نفسه.
+   * يُخزَّن **ملخّص PBKDF2 فقط** (لا نص صريح)، ثم يُستكمل الدخول بالرمز نفسه.
    */
   const setUserPin = async (userId: string, pin: string): Promise<LoginResult> => {
     const clean = pin.trim();
     if (!isAcceptablePin(clean)) {
       return { success: false, error: 'الرمز يجب أن يكون من 4 إلى 6 أرقام وغير شائع (لا 1234 ولا أرقام مكرّرة)' };
     }
+    if (!isWebCryptoAvailable()) {
+      return {
+        success: false,
+        error: 'تعذّر تأمين الرمز: Web Crypto غير متاح في هذا المتصفح — افتح التطبيق عبر HTTPS أو localhost',
+      };
+    }
     const fresh = loadCompleteSystemSettings();
     const target = fresh.users.find((u) => u.id === userId);
     if (!target) {
       return { success: false, error: 'المستخدم غير موجود بالنظام' };
     }
-    const updatedUsers = fresh.users.map((u) => (u.id === userId ? { ...u, pin: clean } : u));
+
+    const digest = await hashPin(clean);
+    const updatedUsers = fresh.users.map((u) => (u.id === userId ? withPinDigest(u, digest) : u));
     saveCompleteSystemSettings({ ...fresh, users: updatedUsers });
     setSettings({ ...fresh, users: updatedUsers });
+    clearFailedAttempts(userId);
     return { success: true };
   };
 
@@ -198,16 +293,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setCurrentUser(null);
     setIsAuthenticated(false);
-    dbStorage.removeItem(AUTH_SESSION_KEY);
-  };
-
-  // Quick user switch
-  const quickSwitchUser = (userId: string) => {
-    const user = settings.users.find((u) => u.id === userId);
-    if (user && user.status === 'active' && user.pin) {
-      // يمر عبر نفس بوابة التحقق (رمز الحساب نفسه) — ولا تبديل لحساب بلا رمز (R2)
-      void login(user.id, user.pin);
-    }
+    endSession();
   };
 
   // Check specific permission
@@ -244,7 +330,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     setUserPin,
     logout,
-    quickSwitchUser,
     hasPermission,
     canAccessModule,
     getAllowedTabs,

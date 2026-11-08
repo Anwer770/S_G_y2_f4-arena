@@ -11,7 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { loginWithPin, findPinField } from './_login.mjs';
+import { loginWithPin, findPinField, ensureWebCrypto } from './_login.mjs';
 
 const HERE = path.dirname(url.fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
@@ -86,6 +86,7 @@ function storageSnapshot() {
 // ---------------------------------------------------------------- 3) run
 const report = { startedAt: new Date().toISOString(), steps: [], tabs: {}, storage: {}, errors: [], warnings: [] };
 
+ensureWebCrypto(w);
 w.eval(code);
 await sleep(2000);
 report.steps.push({ step: 'boot', rootLen: doc.getElementById('root').innerHTML.length, loggedOut: /تسجيل الدخول/.test(doc.body.textContent) });

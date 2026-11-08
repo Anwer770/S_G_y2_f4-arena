@@ -86,6 +86,10 @@ export const STORAGE_KEYS = {
   LINKS_TYPES: 'suite_links_types_v1',
   LINKS_IMPORTANCES: 'suite_links_importances_v1',
 
+  // المصادقة (لا تُعاد تسمية هذين المفتاحين: تغييرهما يُسقط الجلسات وحمايات المحاولات)
+  AUTH_SESSION: 'suite_active_auth_session_v1',
+  AUTH_GUARD: 'suite_auth_guard_v1',
+
   // System Unified
   SETTINGS: 'suite_unified_settings_v2',
   SYSTEM_AUDIT: 'suite_unified_audit_v2',

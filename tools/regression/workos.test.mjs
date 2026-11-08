@@ -21,7 +21,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { TEST_PIN, withTestPin, loginWithPin, findPinField } from './_login.mjs';
+import { TEST_PIN, withTestPin, loginWithPin, findPinField, ensureWebCrypto } from './_login.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
@@ -142,7 +142,8 @@ async function boot() {
   w.Notification = class { static permission = 'denied'; static requestPermission = async () => 'denied'; };
   Object.defineProperty(w.navigator, 'serviceWorker', { value: { register: async () => ({}), ready: Promise.resolve({ active: {} }), addEventListener() {}, controller: null }, configurable: true });
 
-  w.eval(code);
+  ensureWebCrypto(w);
+w.eval(code);
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(2500);
   return { w, doc, sleep, errors };
