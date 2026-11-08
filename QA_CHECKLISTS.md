@@ -29,6 +29,7 @@
 | 13 | `npm run snapshots` | تشفير نقاط الاستعادة فعلياً + لا ادعاء سحابي/Drive | ✅ 13/13 (R17) | ~1s |
 | 14 | `npm run imports` | أمانة الاستيراد: الخلية الفارغة تبقى فارغة في كل مُحلّل | ✅ 15/15 (R18) | ~1s |
 | 15 | `npm run security` | حارس قراءة Excel (حجم/صفوف/تنظيف prototype) | ✅ 9/9 (R3) | ~2s |
+| 16 | `npm run settings` | القوائم المركزية + محرك التنبيهات | ✅ 15/15 (R19) | ~2s |
 | — | `npm run verify` | كل ما سبق متسلسلاً | ✅ **أخضر بالكامل** (2026-11-08) | ~7min |
 
 > **ملاحظة أمانة:** البوابة `verify` **خضراء** الآن بعد إغلاق R15/R16. قبل إغلاقهما كان الفشل موثّقاً كفشل سابق على خط الأساس `HEAD`، وقد أُصلح في التطبيق (لا في التأكيدات): شارة العدّاد، وحاويات الأعمدة/الزيارات، وسلّم النصوص. تفاصيل ما تغيّر بالضبط في القسم 6 أدناه.
@@ -87,7 +88,7 @@
 [ ] npm run build ناجح
 [ ] npm run integrity = 33/33 (أو أكثر)
 [ ] npm run regression = لا انحدار + 0 أخطاء JS
-[ ] كل البوابات خضراء: workos 17/17 · typography 7/7 · tables:assert 38/38 · integrity 33/33 · identity 16/16 · snapshots 13/13 · imports 15/15 · security 9/9
+[ ] كل البوابات خضراء: workos 17/17 · typography 7/7 · tables:assert 38/38 · integrity 33/33 · identity 16/16 · snapshots 13/13 · imports 15/15 · security 9/9 · settings 15/15
 [ ] الإصدار موحّد: `src/constants/appMeta.ts` = `package.json` = `metadata.json` = سطر «الإصدار» في `PRD.md`
 [ ] تنقّل يدوي: التبويبات المتأثرة + dashboard
 [ ] إضافة/تعديل/حذف سجل في الوحدة المتأثرة + reload

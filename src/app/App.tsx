@@ -26,6 +26,7 @@ import {
 
 // Services & Repositories
 import { inventoryService } from '../services/inventory/InventoryService';
+import { computeSystemAlerts } from '../services/alerts/alertsEngine';
 import { financialService } from '../services/financial/FinancialService';
 import { customerService } from '../services/crm/CustomerService';
 import { doctorService } from '../services/crm/DoctorService';
@@ -199,6 +200,20 @@ export const MainApp: React.FC = () => {
   const dueAlertsSummary: DueAlertsSummary = useMemo(() => {
     return getDueAlerts(tasks, commitments, 3);
   }, [tasks, commitments]);
+
+  // محرك التنبيهات الاستباقية: حد الطلب + استحقاق الديون (3 أيام)
+  const systemAlerts = useMemo(
+    () =>
+      computeSystemAlerts({
+        products,
+        movements: records,
+        commitments,
+        today: new Date().toISOString().split('T')[0],
+        defaultReorderPoint: settings.inventory?.reorderPointDefault ?? 5,
+        leadDays: 3,
+      }),
+    [products, records, commitments, settings.inventory?.reorderPointDefault, activeTab]
+  );
 
   // Derived Stocks
   const stocks: ProductStock[] = useMemo(() => {
@@ -542,7 +557,7 @@ export const MainApp: React.FC = () => {
           doctorsCount: doctors.length,
           custodyCount,
         }}
-        alertsCount={dueAlertsSummary.total}
+        alertsCount={dueAlertsSummary.total + systemAlerts.length}
         onOpenAlertsModal={() => setIsAlertsModalOpen(true)}
       >
         <AppRouter

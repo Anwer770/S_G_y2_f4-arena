@@ -25,3 +25,5 @@ docs/تدقيق/.data-loss-bundle.js
 docs/تدقيق/.snapshot-crypto.mjs
 docs/تدقيق/.imports-bundle.mjs
 docs/تدقيق/.security-bundle.mjs
+docs/تدقيق/.lookups-bundle.mjs
+docs/تدقيق/.alerts-bundle.mjs

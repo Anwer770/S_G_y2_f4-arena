@@ -113,6 +113,7 @@ import {
   DEFAULT_CUSTODY_RESPONSIBLES,
   DEFAULT_CUSTODY_STATUSES,
 } from '../data/defaultCustodyIssues';
+import { getLookups as loadLookupsForBackup, setLookups as setLookupsFromBackup } from './lookupsStore';
 
 const STORAGE_KEYS = {
   // Stock
@@ -2149,6 +2150,7 @@ export function getUnifiedBackupState(): UnifiedBackupState {
         settings: loadRoutineSettings(),
       },
       workos: loadWorkOSData(),
+      lookups: loadLookupsForBackup(),
       settings: loadSettings(),
       systemLogs: loadSystemAuditLogs(),
     },
@@ -2156,6 +2158,13 @@ export function getUnifiedBackupState(): UnifiedBackupState {
 }
 
 export function restoreUnifiedBackupState(backup: UnifiedBackupState): void {
+  try {
+    const lookups = (backup.modules as { lookups?: unknown }).lookups;
+    if (lookups) setLookupsFromBackup(lookups);
+  } catch (err) {
+    console.warn('restore lookups failed', err);
+  }
+
   if (backup.modules.stock) {
     if (backup.modules.stock.products) saveProducts(backup.modules.stock.products);
     if (backup.modules.stock.records) saveStockRecords(backup.modules.stock.records);

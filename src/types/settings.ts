@@ -37,6 +37,8 @@ export interface InventorySettings {
   warehouses: WarehouseItem[];
   productCategories: string[];
   units: string[];
+  /** حدّ الطلب الافتراضي لكل صنف لا يحدّد حدّاً خاصاً (محرك التنبيهات) */
+  reorderPointDefault: number;
 }
 
 export interface FiscalYearSettings {

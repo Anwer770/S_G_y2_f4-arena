@@ -14,6 +14,8 @@ export interface Product {
   id: string;
   name: string;
   openingStock: number;
+  /** حدّ الطلب الخاص بالصنف (اختياري — يستخدم الافتراضي من الإعدادات) */
+  reorderPoint?: number;
   unit: string;
   isActive: boolean;
   description?: string;
@@ -717,6 +719,8 @@ export interface UnifiedBackupState {
     };
     workos?: any;
     settings: AppSettings;
+    /** القوائم والثوابت المركزية (Master Lookups) — R19 */
+    lookups?: any;
     systemLogs: AuditLog[];
   };
 }

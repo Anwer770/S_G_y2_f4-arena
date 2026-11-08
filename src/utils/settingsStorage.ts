@@ -44,6 +44,7 @@ export const DEFAULT_SYSTEM_SETTINGS: CompleteSystemSettings = {
       'أخرى',
     ],
     units: ['قطعة', 'كرتونة', 'دستة', 'باكت', 'كجم', 'جم', 'متر', 'لتر', 'ساعة', 'طرد'],
+    reorderPointDefault: 5,
   },
   fiscalYear: {
     currentYear: 2026,
@@ -207,6 +208,10 @@ export function loadCompleteSystemSettings(): CompleteSystemSettings {
           warehouses: parsed.inventory?.warehouses || DEFAULT_SYSTEM_SETTINGS.inventory.warehouses,
           productCategories: parsed.inventory?.productCategories || DEFAULT_SYSTEM_SETTINGS.inventory.productCategories,
           units: parsed.inventory?.units || DEFAULT_SYSTEM_SETTINGS.inventory.units,
+          reorderPointDefault:
+            typeof parsed.inventory?.reorderPointDefault === 'number'
+              ? parsed.inventory.reorderPointDefault
+              : DEFAULT_SYSTEM_SETTINGS.inventory.reorderPointDefault,
         },
         fiscalYear: { ...DEFAULT_SYSTEM_SETTINGS.fiscalYear, ...(parsed.fiscalYear || {}) },
         notifications: { ...DEFAULT_SYSTEM_SETTINGS.notifications, ...(parsed.notifications || {}) },
