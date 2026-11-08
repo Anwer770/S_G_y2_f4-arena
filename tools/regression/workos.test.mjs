@@ -21,6 +21,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { TEST_PIN, withTestPin, loginWithPin, findPinField } from './_login.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
@@ -122,7 +123,7 @@ async function boot() {
     { url: 'https://workos.local/', runScripts: 'outside-only', pretendToBeVisual: true, virtualConsole: vc });
   const w = dom.window, doc = w.document;
 
-  w.localStorage.setItem(SETTINGS_KEY, settingsJson);
+  w.localStorage.setItem(SETTINGS_KEY, withTestPin(settingsJson));
   w.localStorage.setItem(WORKOS_TASKS_KEY, JSON.stringify(workosSeed));
   w.localStorage.setItem('workos_v1_projects', JSON.stringify(projectsSeed));
   w.localStorage.setItem('workos_v1_appointments', JSON.stringify(appointmentsSeed));
@@ -156,7 +157,7 @@ async function waitFor(fn, timeoutMs = 15000, stepMs = 150) {
   }
   return false;
 }
-const quickBtn = (doc) => [...doc.querySelectorAll('button')].find((b) => /دخول سريع/.test(b.textContent || ''));
+
 const asideButtons = (doc) => [...doc.querySelectorAll('aside button')];
 const textOf = (el) => (el?.textContent || '').replace(/\s+/g, ' ').trim();
 /** عدّاد الشارة = آخر رقم في نص مدخل القائمة */
@@ -177,9 +178,8 @@ const report = { tag: TAG, appRoot: APP_ROOT };
 
 // ================================================================ الإقلاع
 const { w, doc, sleep, errors } = await boot();
-await waitFor(() => !!quickBtn(doc));
-const qb = quickBtn(doc);
-if (qb) click(w, qb);
+await waitFor(() => !!findPinField(doc));
+await loginWithPin(w, doc);
 const loggedIn = await waitFor(() => asideButtons(doc).length > 0);
 check('W1 · التطبيق أقلع وسُجّل الدخول', loggedIn);
 

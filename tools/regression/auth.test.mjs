@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
- * اختبار انحدار: تشديد المصادقة (R3)
+ * اختبار انحدار: تشديد المصادقة (R3 + R2)
  *
- * يقيس السلوك الفعلي للتطبيق في ثلاث حالات:
- *   A) حساب برمز افتراضي (بلا PIN مخصص) ⇒ «الدخول السريع» يعمل كما كان  ← لا انحدار
- *   B) حساب برمز مخصص '9876' ⇒ لا يُقبل '1234' (كان يُقبل قبل الإصلاح = تجاوز)
- *   C) الحساب نفسه بالرمز الصحيح '9876' ⇒ يدخل بنجاح                        ← لا تعطيل
+ * يقيس السلوك الفعلي للتطبيق في حالتين:
+ *   A) حساب بلا رمز (الحالة الافتراضية بعد R2) ⇒ لا يدخل إطلاقاً، ويُوجَّه إلى
+ *      «تعيين الرمز أول مرة»: '1234' مرفوض، وتأكيد غير مطابق مرفوض، ثم رمز مقبول
+ *      يُحفظ ويُدخل الحساب. (كان قبل R2 يدخل بضغطة واحدة برمز 1234 الضمني = ثغرة.)
+ *   B) حساب برمز مخصص '9876' ⇒ لا يُقبل '1234'، ويُقبل '9876' فقط.
  *
  * التشغيل: node tools/regression/auth.test.mjs
  *          APP_ROOT=/path/to/old-commit node tools/regression/auth.test.mjs   (يثبت كشف العطل)
@@ -15,6 +16,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { TEST_PIN, findPinField, setNativeValue, loginWithPin } from './_login.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
@@ -103,60 +105,119 @@ async function waitFor(fn, timeoutMs = 12000, stepMs = 150) {
   }
   return false;
 }
-const pinInput = (doc) => [...doc.querySelectorAll('input[type="password"], input[type="text"]')]
-  .find((i) => /PIN|رمز/i.test(i.placeholder || ''));
-const setInput = (w, el, v) => {
-  Object.getOwnPropertyDescriptor(w.HTMLInputElement.prototype, 'value').set.call(el, v);
-  el.dispatchEvent(new w.Event('input', { bubbles: true }));
-  el.dispatchEvent(new w.Event('change', { bubbles: true }));
-};
+const bodyText = (doc) => (doc.body.textContent || '').replace(/\s+/g, ' ');
+const pickBtn = (doc) => [...doc.querySelectorAll('button')].find((b) => /^دخول ←$/.test((b.textContent || '').trim()));
+const confirmField = (doc) => doc.querySelector('#login-pin-confirm');
+const submitBtn = (doc) => doc.querySelector('form button[type="submit"]');
 const click = (w, el) => el.dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true, view: w }));
-const submitBtn = (doc) => [...doc.querySelectorAll('button')].find((b) => /تسجيل الدخول كـ/.test(b.textContent || ''));
-const quickBtn = (doc) => [...doc.querySelectorAll('button')].find((b) => /دخول سريع/.test(b.textContent || ''));
 
-// ================================================================ A) حساب افتراضي — لا انحدار
+/** يملأ رمزاً (وتأكيداً عند الحاجة) ويضغط زر الإرسال دون انتظار النجاح */
+async function submitCredentials(w, doc, pin, confirm) {
+  const field = findPinField(doc);
+  if (!field) return false;
+  setNativeValue(w, field, pin);
+  const conf = confirmField(doc);
+  if (conf && confirm !== undefined) setNativeValue(w, conf, confirm);
+  await new Promise((r) => setTimeout(r, 120));
+  const btn = submitBtn(doc);
+  if (!btn) return false;
+  click(w, btn);
+  await new Promise((r) => setTimeout(r, 1200));
+  return true;
+}
+
+// ================================================================ A) حساب بلا رمز — R2
 {
-  const { w, doc, errors } = await boot(seedSettings(baseUsers), 'default');
-  const loginReady = await waitFor(() => !!quickBtn(doc) && /اختر حسابك للمتابعة/.test(doc.body.textContent));
-  check('A1 · شاشة الدخول اكتمل رسمها وفيها زر «الدخول السريع»', loginReady);
-  const qb = quickBtn(doc);
-  if (qb) { click(w, qb); await new Promise((r) => setTimeout(r, 2200)); }
-  check('A2 · الحساب الافتراضي (بلا PIN مخصص) يدخل بضغطة واحدة — بلا انحدار', isLoggedIn(doc));
-  check('A3 · لا أخطاء JS', errors.length === 0, errors[0] || '');
+  const { w, doc, errors } = await boot(seedSettings(baseUsers), 'nopin');
+  const loginReady = await waitFor(() => !!findPinField(doc) && /اختر حسابك للمتابعة/.test(bodyText(doc)));
+  check('A1 · شاشة الدخول اكتملت وفيها حقل رمز إلزامي', loginReady);
+
+  check('A2 · حساب بلا رمز يُوجَّه إلى مسار «تعيين الرمز أول مرة» (لا دخول بضغطة)',
+    /تعيين رمز المرور لأول مرة/.test(bodyText(doc)) && !!confirmField(doc) && !isLoggedIn(doc),
+    'حقلان: رمز + تأكيد، ولا فتح للحساب قبل التعيين');
+
+  // زر «دخول» في بطاقة الحساب لم يعد يدخل بضغطة — يطلب التعيين فقط
+  const pb = pickBtn(doc);
+  if (pb) { click(w, pb); await new Promise((r) => setTimeout(r, 900)); }
+  check('A3 · زر «دخول» لا يفتح الحساب بضغطة بل يطلب التعيين', !!pb && !isLoggedIn(doc),
+    pb ? 'ظهر تنبيه طلب التعيين' : 'لم يُوجد زر «دخول»');
+
+  // الرمز الشائع 1234 مرفوض عند التعيين (ومنه كان يُفتح الحساب قبل الإصلاح)
+  await submitCredentials(w, doc, '1234', '1234');
+  const commonRejected = !isLoggedIn(doc) && /رمز غير مقبول|غير شائع/.test(bodyText(doc));
+  check('A4 · رمز شائع (1234) مرفوض عند التعيين ولا يفتح الحساب', commonRejected,
+    commonRejected ? 'ظهر رفض صريح' : 'قُبل رمز شائع أو لم تظهر رسالة');
+
+  // تأكيد غير مطابق مرفوض
+  const accept = findPinField(doc);
+  if (accept) setNativeValue(w, accept, TEST_PIN);
+  const confMismatch = confirmField(doc);
+  if (confMismatch) setNativeValue(w, confMismatch, '777111');
+  await new Promise((r) => setTimeout(r, 120));
+  const sb = submitBtn(doc);
+  if (sb) click(w, sb);
+  await new Promise((r) => setTimeout(r, 1200));
+  const mismatchRejected = !isLoggedIn(doc) && /التأكيد|تأكيد الرمز/.test(bodyText(doc));
+  check('A5 · تأكيد غير مطابق يُرفض ولا يُنشئ الرمز', mismatchRejected);
+
+  // التعيين الصحيح يدخل
+  const okField = findPinField(doc);
+  if (okField) setNativeValue(w, okField, TEST_PIN);
+  const okConf = confirmField(doc);
+  if (okConf) setNativeValue(w, okConf, TEST_PIN);
+  await new Promise((r) => setTimeout(r, 120));
+  const okBtn = submitBtn(doc);
+  if (okBtn) click(w, okBtn);
+  const entered = await waitFor(() => isLoggedIn(doc), 12000);
+  check('A6 · رمز مقبول (4–6 أرقام) يُحفظ ويُدخل الحساب', entered);
+
+  let savedPin = null;
+  try {
+    const stored = JSON.parse(w.localStorage.getItem(SETTINGS_KEY) || '{}');
+    savedPin = (stored.users || []).find((u) => u.id === 'usr-1')?.pin || null;
+  } catch { /* ignore */ }
+  check('A7 · الرمز حُفظ في إعدادات المستخدم (لا رمز افتراضي في الكود)', savedPin === TEST_PIN,
+    savedPin ? `pin=${savedPin}` : 'لم يُحفظ');
+
+  check('A8 · لا أخطاء JS', errors.length === 0, errors[0] || '');
 }
 
 // ================================================================ B) رمز مخصص — لا تجاوز
 {
   const users = baseUsers.map((u) => (u.id === 'usr-1' ? { ...u, pin: CUSTOM_PIN } : u));
   const { w, doc, errors } = await boot(seedSettings(users), 'custom');
-  const loginReady = await waitFor(() => !!quickBtn(doc) && /اختر حسابك للمتابعة/.test(doc.body.textContent));
-  check('B1 · شاشة الدخول اكتمل رسمها والحساب المخصص ظاهر', loginReady && /مدير النظام/.test(doc.body.textContent));
+  const loginReady = await waitFor(() => !!findPinField(doc) && /مدير النظام/.test(bodyText(doc)));
+  check('B1 · شاشة الدخول اكتملت ولا مسار تعيين (الحساب يملك رمزاً)', loginReady && !confirmField(doc));
 
-  const qb = quickBtn(doc);
-  if (qb) { click(w, qb); await new Promise((r) => setTimeout(r, 1500)); }
-  const refusedSilently = !isLoggedIn(doc);
-  const askedForPin = /محمي برمز خاص/.test(doc.body.textContent || '');
-  check('B2 · «الدخول السريع» لا يفتح حساباً محمياً برمز خاص ويطلب الرمز', refusedSilently && askedForPin,
+  const pb = pickBtn(doc);
+  if (pb) { click(w, pb); await new Promise((r) => setTimeout(r, 900)); }
+  const askedForPin = /محمي برمز مرور|رمز مرور/.test(bodyText(doc));
+  check('B2 · زر «دخول» لا يفتح الحساب المحمي بضغطة بل يطلب الرمز', !isLoggedIn(doc) && askedForPin,
     askedForPin ? 'ظهرت رسالة طلب الرمز' : 'لم تظهر رسالة طلب الرمز');
 
-  const pin = pinInput(doc);
-  check('B3 · حقل الرمز متاح', !!pin);
-  if (pin) {
-    setInput(w, pin, '1234');
-    const sb = submitBtn(doc);
-    if (sb) { click(w, sb); await waitFor(() => /رمز المرور أو PIN غير صحيح/.test(doc.body.textContent || ''), 6000); }
-  }
+  // إرسال بلا رمز مرفوض برسالة صريحة
+  const sb0 = submitBtn(doc);
+  if (sb0) { click(w, sb0); await new Promise((r) => setTimeout(r, 900)); }
+  check('B3 · الإرسال برمز فارغ مرفوض برسالة صريحة', !isLoggedIn(doc) && /أدخل رمز المرور/.test(bodyText(doc)),
+    'الحقل الفارغ لم يعد يمرّ كأنه صحيح');
+
+  await submitCredentials(w, doc, '1234');
   check('B4 · الرمز العام 1234 لم يعد يفتح حساباً له رمز مخصص', !isLoggedIn(doc),
     'هذا هو التجاوز الذي أُغلق (كان يدخل قبل الإصلاح)');
 
-  const pin2 = pinInput(doc);
-  if (pin2) {
-    setInput(w, pin2, CUSTOM_PIN);
-    const sb = submitBtn(doc);
-    if (sb) { click(w, sb); await waitFor(() => isLoggedIn(doc), 10000); }
-  }
-  check('B5 · الرمز الصحيح للحساب يفتح بنجاح — لا تعطيل للمستخدم', isLoggedIn(doc));
+  await submitCredentials(w, doc, CUSTOM_PIN);
+  const entered = await waitFor(() => isLoggedIn(doc), 12000);
+  check('B5 · الرمز الصحيح للحساب يفتح بنجاح — لا تعطيل للمستخدم', entered);
   check('B6 · لا أخطاء JS', errors.length === 0, errors[0] || '');
+}
+
+// ================================================================ C) مساعد الدخول الموحّد (يستخدمه بقية الاختبارات)
+{
+  const users = baseUsers.map((u) => ({ ...u, pin: TEST_PIN }));
+  const { w, doc, errors } = await boot(seedSettings(users), 'helper');
+  const done = await loginWithPin(w, doc);
+  check('C1 · loginWithPin يدخل حساباً له رمز معيَّن', done && isLoggedIn(doc));
+  check('C2 · لا أخطاء JS', errors.length === 0, errors[0] || '');
 }
 
 fs.rmSync(bundlePath, { force: true });

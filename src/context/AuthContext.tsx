@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SystemUser, UserRole, CompleteSystemSettings } from '../types/settings';
 import { ActiveModuleTab } from '../types';
 import { loadCompleteSystemSettings, saveCompleteSystemSettings, SETTINGS_UPDATED_EVENT } from '../utils/settingsStorage';
@@ -7,13 +7,29 @@ import { modulesForRole, permissionsForRole } from '../utils/roles';
 
 const AUTH_SESSION_KEY = 'suite_active_auth_session_v1';
 
+/** نتيجة محاولة الدخول — تُخبر الواجهة إن كان الحساب بلا رمز ويحتاج تعيينه */
+export interface LoginResult {
+  success: boolean;
+  error?: string;
+  /** الحساب لا يملك رمزاً بعد ⇒ يجب تعيين رمز أول مرة قبل الدخول (R2) */
+  needsPinSetup?: boolean;
+}
+
+/** رمز المرور المقبول: 4–6 أرقام، وليس رمزاً شائعاً */
+export const isAcceptablePin = (pin: string): boolean => {
+  const clean = pin.trim();
+  if (!/^[0-9]{4,6}$/.test(clean)) return false;
+  return !['1234', '0000', '1111', '2222', '3333', '4444', '5555', '6666', '7777', '8888', '9999', '123456', '654321'].includes(clean);
+};
+
 export interface AuthContextType {
   currentUser: SystemUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   availableUsers: SystemUser[];
   rolePermissions: Record<UserRole, string[]>;
-  login: (identifier: string, pinOrPassword?: string) => Promise<{ success: boolean; error?: string }>;
+  login: (identifier: string, pinOrPassword?: string) => Promise<LoginResult>;
+  setUserPin: (userId: string, pin: string) => Promise<LoginResult>;
   logout: () => void;
   quickSwitchUser: (userId: string) => void;
   hasPermission: (permissionId: string) => boolean;
@@ -68,9 +84,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [settings.users]);
 
   // Login handler
-  const login = async (identifier: string, pinOrPassword?: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (identifier: string, pinOrPassword?: string): Promise<LoginResult> => {
+    // نقرأ الإعدادات من المصدر مباشرة لا من حالة الإغلاق (closure): الرمز قد يكون
+    // عُيِّن للتوّ عبر setUserPin في نفس الدورة، وحالة React لم تكن لتظهر بعد.
+    const freshSettings = loadCompleteSystemSettings();
     const cleanId = identifier.trim().toLowerCase();
-    const user = settings.users.find(
+    const user = freshSettings.users.find(
       (u) =>
         u.id.toLowerCase() === cleanId ||
         u.email.toLowerCase() === cleanId ||
@@ -85,21 +104,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: 'هذا الحساب معطل، يرجى مراجعة مسؤول النظام' };
     }
 
-    // Check PIN/password.
-    // الافتراضيان '1234' و 'admin123' يُستخدمان فقط حين لا يملك الحساب رمزاً/كلمة مرور خاصة به.
-    // (سابقاً كان '1234' مقبولاً لكل حساب دائماً حتى مع وجود رمز خاص => تجاوز للمصادقة)
-    if (pinOrPassword && pinOrPassword.trim()) {
-      const input = pinOrPassword.trim();
-      const validPin = user.pin || '1234';
-      const validPassword = user.password || 'admin123';
+    // التحقق من الرمز (إصلاح R2): لا رموز افتراضية إطلاقاً، ولا دخول بلا رمز.
+    // سابقاً: ``pin || '1234'`` ⇒ أي حساب بلا رمز يُفتح بـ 1234، ورمز فارغ كان يمرّ
+    // من البوابة كأنه صحيح. الآن: الحساب بلا رمز يُوجَّه لتعيينه، والرمز الفارغ يُرفض.
+    const secrets = [user.pin, user.password].filter((s): s is string => !!s && !!s.trim());
 
-      if (input !== validPin && input !== validPassword) {
-        return { success: false, error: 'رمز المرور أو PIN غير صحيح' };
-      }
+    if (secrets.length === 0) {
+      return {
+        success: false,
+        needsPinSetup: true,
+        error: 'هذا الحساب بلا رمز مرور بعد — عيّن رمزاً من 4 إلى 6 أرقام للمتابعة',
+      };
+    }
+
+    const credential = (pinOrPassword || '').trim();
+    if (!credential) {
+      return { success: false, error: 'أدخل رمز المرور (PIN) للمتابعة' };
+    }
+    if (!secrets.includes(credential)) {
+      return { success: false, error: 'رمز المرور أو PIN غير صحيح' };
     }
 
     // Success: update lastLogin
-    const updatedUsers = settings.users.map((u) =>
+    const updatedUsers = freshSettings.users.map((u) =>
       u.id === user.id
         ? {
             ...u,
@@ -112,10 +139,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 
     const updatedSettings = {
-      ...settings,
+      ...freshSettings,
       users: updatedUsers,
       general: {
-        ...settings.general,
+        ...freshSettings.general,
         currentUserName: user.name,
         currentUserTitle:
           user.role === 'admin'
@@ -147,6 +174,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
+  /**
+   * تعيين رمز المرور لأول مرة (أو تغييره من شاشة الدخول) — R2.
+   * يُحفظ داخل سجل المستخدم في الإعدادات المركزية، ثم يُستكمل الدخول بالرمز نفسه.
+   */
+  const setUserPin = async (userId: string, pin: string): Promise<LoginResult> => {
+    const clean = pin.trim();
+    if (!isAcceptablePin(clean)) {
+      return { success: false, error: 'الرمز يجب أن يكون من 4 إلى 6 أرقام وغير شائع (لا 1234 ولا أرقام مكرّرة)' };
+    }
+    const fresh = loadCompleteSystemSettings();
+    const target = fresh.users.find((u) => u.id === userId);
+    if (!target) {
+      return { success: false, error: 'المستخدم غير موجود بالنظام' };
+    }
+    const updatedUsers = fresh.users.map((u) => (u.id === userId ? { ...u, pin: clean } : u));
+    saveCompleteSystemSettings({ ...fresh, users: updatedUsers });
+    setSettings({ ...fresh, users: updatedUsers });
+    return { success: true };
+  };
+
   // Logout handler
   const logout = () => {
     setCurrentUser(null);
@@ -157,9 +204,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Quick user switch
   const quickSwitchUser = (userId: string) => {
     const user = settings.users.find((u) => u.id === userId);
-    if (user && user.status === 'active') {
-      // يمر عبر نفس بوابة التحقق (رمز الحساب نفسه) بدل مسار بلا تحقق
-      login(user.id, user.pin || '1234');
+    if (user && user.status === 'active' && user.pin) {
+      // يمر عبر نفس بوابة التحقق (رمز الحساب نفسه) — ولا تبديل لحساب بلا رمز (R2)
+      void login(user.id, user.pin);
     }
   };
 
@@ -195,6 +242,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     availableUsers: settings.users,
     rolePermissions: settings.rolePermissions,
     login,
+    setUserPin,
     logout,
     quickSwitchUser,
     hasPermission,

@@ -1,36 +1,51 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import React, { useRef, useState } from 'react';
+import { useAuth, isAcceptablePin } from '../../context/AuthContext';
 import { APP_NAME, APP_TAGLINE, APP_VERSION_LABEL } from '../../constants/appMeta';
-import { SystemUser, UserRole } from '../../types/settings';
+import { SystemUser } from '../../types/settings';
 import {
   ShieldCheck,
   Lock,
   UserCheck,
   KeyRound,
-  ArrowLeft,
   Eye,
   EyeOff,
   Building2,
   Database,
-  CheckCircle2,
   AlertCircle,
-  Sparkles,
   Smartphone,
   Users,
-  Briefcase,
   HelpCircle,
 } from 'lucide-react';
 
+const PIN_RULE_HINT = 'الرمز من 4 إلى 6 أرقام، ولا يُقبل الرمز الشائع (مثل 1234 أو الأرقام المكرّرة)';
+
 export const LoginScreen: React.FC = () => {
-  const { availableUsers, login, isLoading } = useAuth();
-  const [selectedUser, setSelectedUser] = useState<SystemUser>(
-    availableUsers.find((u) => u.status === 'active') || availableUsers[0]
+  const { availableUsers, login, setUserPin, isLoading } = useAuth();
+  // الاختيار يُخزَّن بالمعرّف لا بالكائن: بعد تعيين الرمز تتغيّر نسخة المستخدم ويجب أن نقرأ الأحدث
+  const [selectedUserId, setSelectedUserId] = useState<string>(
+    (availableUsers.find((u) => u.status === 'active') || availableUsers[0])?.id || ''
   );
+  const selectedUser = availableUsers.find((u) => u.id === selectedUserId) || null;
+  const hasStoredSecret = !!selectedUser && (!!(selectedUser.pin || '').trim() || !!(selectedUser.password || '').trim());
+  // R2: حساب بلا رمز ⇒ مسار «تعيين الرمز أول مرة» بدل أي دخول بضغطة
+  const needsPinSetup = !!selectedUser && !hasStoredSecret;
+
   const [pin, setPin] = useState<string>('');
+  const [confirmPin, setConfirmPin] = useState<string>('');
   const [showPin, setShowPin] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const pinInputRef = useRef<HTMLInputElement | null>(null);
+
+  const selectUser = (user: SystemUser) => {
+    if (user.id !== selectedUserId) {
+      setPin('');
+      setConfirmPin('');
+    }
+    setSelectedUserId(user.id);
+    setErrorMessage(null);
+  };
 
   const getRoleBadge = (role: string) => {
     switch (role) {
@@ -65,13 +80,41 @@ export const LoginScreen: React.FC = () => {
       return;
     }
 
+    const credential = pin.trim();
+    // R2: لا رمز افتراضي — الرمز مطلوب دائماً، وحساب بلا رمز يمرّ بخطوة التعيين
+    if (!credential) {
+      setErrorMessage(needsPinSetup ? 'عيّن رمز مرور جديداً (4 إلى 6 أرقام) للمتابعة' : 'أدخل رمز المرور (PIN) للمتابعة');
+      pinInputRef.current?.focus();
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMessage(null);
 
     try {
-      const res = await login(selectedUser.id, pin.trim() || '1234');
+      if (needsPinSetup) {
+        if (!isAcceptablePin(credential)) {
+          setErrorMessage(`رمز غير مقبول — ${PIN_RULE_HINT}`);
+          return;
+        }
+        if (credential !== confirmPin.trim()) {
+          setErrorMessage('تأكيد الرمز لا يطابق الرمز المدخل');
+          return;
+        }
+        const saved = await setUserPin(selectedUser.id, credential);
+        if (!saved.success) {
+          setErrorMessage(saved.error || 'تعذّر حفظ الرمز، حاول مرة أخرى');
+          return;
+        }
+      }
+
+      const res = await login(selectedUser.id, credential);
       if (!res.success) {
         setErrorMessage(res.error || 'فشل تسجيل الدخول، تحقق من البيانات');
+        if (res.needsPinSetup) {
+          setPin('');
+          setConfirmPin('');
+        }
       }
     } catch {
       setErrorMessage('حدث خطأ أثناء محاولة تسجيل الدخول');
@@ -80,26 +123,16 @@ export const LoginScreen: React.FC = () => {
     }
   };
 
-  const handleQuickLogin = async (user: SystemUser) => {
-    // حساب محمي برمز خاص: لا دخول بضغطة واحدة — يُطلب الرمز أولاً
-    const hasCustomPin = !!user.pin && user.pin !== '1234';
-    if (hasCustomPin) {
-      setSelectedUser(user);
-      setErrorMessage('هذا الحساب محمي برمز خاص — أدخل PIN ثم اضغط تسجيل الدخول');
-      return;
-    }
-
-    setSelectedUser(user);
-    setIsSubmitting(true);
-    setErrorMessage(null);
-    try {
-      const res = await login(user.id, user.pin || '1234');
-      if (!res.success) {
-        setErrorMessage(res.error || 'تعذر تسجيل الدخول');
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
+  /** زر «دخول» في بطاقة الحساب: يختار الحساب ويطلب الرمز — لا دخول بضغطة واحدة (R2) */
+  const handlePickAccount = (user: SystemUser) => {
+    selectUser(user);
+    const needsSetupForUser = !(user.pin || '').trim() && !(user.password || '').trim();
+    setErrorMessage(
+      needsSetupForUser
+        ? 'هذا الحساب بلا رمز مرور بعد — عيّن رمزاً من 4 إلى 6 أرقام ثم اضغط «تعيين الرمز والدخول»'
+        : 'هذا الحساب محمي برمز مرور — أدخل الرمز ثم اضغط تسجيل الدخول'
+    );
+    pinInputRef.current?.focus();
   };
 
   if (isLoading) {
@@ -181,10 +214,7 @@ export const LoginScreen: React.FC = () => {
                 return (
                   <div
                     key={user.id}
-                    onClick={() => {
-                      setSelectedUser(user);
-                      setErrorMessage(null);
-                    }}
+                    onClick={() => selectUser(user)}
                     className={`p-3 rounded-xl border transition-all cursor-pointer relative text-right flex flex-col justify-between ${
                       isSelected
                         ? 'border-teal-600 bg-teal-50/50 dark:bg-teal-950/30 ring-2 ring-teal-500/20 shadow-sm'
@@ -228,12 +258,12 @@ export const LoginScreen: React.FC = () => {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleQuickLogin(user);
+                          handlePickAccount(user);
                         }}
                         className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline cursor-pointer"
-                        title="دخول مباشر"
+                        title="اختيار الحساب وإدخال الرمز"
                       >
-                        دخول سريع ←
+                        دخول ←
                       </button>
                     </div>
                   </div>
@@ -244,21 +274,37 @@ export const LoginScreen: React.FC = () => {
 
           {/* Form Credentials */}
           <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+            {needsPinSetup && (
+              <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 rounded-xl flex items-start gap-2.5 text-amber-800 dark:text-amber-300 text-xs font-bold">
+                <KeyRound className="w-4 h-4 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <p>تعيين رمز المرور لأول مرة — هذا الحساب لا يملك رمزاً بعد.</p>
+                  <p className="font-medium">{PIN_RULE_HINT}.</p>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                   <KeyRound className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
-                  <span>رمز المرور السريع أو PIN (اختياري، الافتراضي: 1234):</span>
+                  <span>{needsPinSetup ? 'رمز المرور الجديد (PIN):' : 'رمز المرور (PIN):'}</span>
                 </label>
-                <span className="text-xs text-slate-400 dark:text-slate-500">PIN: 1234</span>
+                <span className="text-xs text-slate-400 dark:text-slate-500">
+                  {needsPinSetup ? '4 إلى 6 أرقام' : 'مطلوب'}
+                </span>
               </div>
 
               <div className="relative">
                 <input
+                  ref={pinInputRef}
+                  id="login-pin"
+                  name="login-pin"
                   type={showPin ? 'text' : 'password'}
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
-                  placeholder="أدخل رمز PIN (أو اضغط تسجيل الدخول مباشرة)"
+                  placeholder={needsPinSetup ? 'عيّن رمز PIN جديد (4 إلى 6 أرقام)' : 'أدخل رمز PIN للمتابعة'}
+                  autoComplete="current-password"
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-slate-400 tracking-wider"
                 />
                 <button
@@ -270,6 +316,25 @@ export const LoginScreen: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {needsPinSetup && (
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
+                  <span>تأكيد رمز المرور:</span>
+                </label>
+                <input
+                  id="login-pin-confirm"
+                  name="login-pin-confirm"
+                  type={showPin ? 'text' : 'password'}
+                  value={confirmPin}
+                  onChange={(e) => setConfirmPin(e.target.value)}
+                  placeholder="أعد إدخال رمز PIN نفسه"
+                  autoComplete="new-password"
+                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-slate-400 tracking-wider"
+                />
+              </div>
+            )}
 
             {/* Remember me & auto-login options */}
             <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
@@ -303,7 +368,11 @@ export const LoginScreen: React.FC = () => {
               ) : (
                 <>
                   <UserCheck className="w-4 h-4" />
-                  <span>تسجيل الدخول كـ {selectedUser?.name || 'مستخدم'}</span>
+                  <span>
+                    {needsPinSetup
+                      ? `تعيين الرمز والدخول كـ ${selectedUser?.name || 'مستخدم'}`
+                      : `تسجيل الدخول كـ ${selectedUser?.name || 'مستخدم'}`}
+                  </span>
                 </>
               )}
             </button>

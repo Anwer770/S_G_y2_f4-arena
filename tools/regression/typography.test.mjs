@@ -16,6 +16,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { TEST_PIN, withTestPin, loginWithPin, findPinField } from './_login.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
@@ -121,7 +122,7 @@ async function boot() {
   const dom = new JSDOM(`<!doctype html><html lang="ar" dir="rtl"><body><div id="root"></div></body></html>`,
     { url: 'https://typo.local/', runScripts: 'outside-only', pretendToBeVisual: true, virtualConsole: vc });
   const w = dom.window, doc = w.document;
-  w.localStorage.setItem(SETTINGS_KEY, settingsJson);
+  w.localStorage.setItem(SETTINGS_KEY, withTestPin(settingsJson));
   w.matchMedia = (q) => ({ matches: false, media: q, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent: () => false });
   w.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
   w.IntersectionObserver = class { observe() {} unobserve() {} disconnect() {} takeRecords() { return []; } };
@@ -146,10 +147,8 @@ const waitFor = async (fn, timeoutMs = 15000) => {
 };
 
 const { w, doc, errors, sleep } = await boot();
-const quickBtn = () => [...doc.querySelectorAll('button')].find((b) => /دخول سريع/.test(b.textContent || ''));
-await waitFor(() => !!quickBtn());
-const qb = quickBtn();
-if (qb) click(w, qb);
+await waitFor(() => !!findPinField(doc));
+await loginWithPin(w, doc);
 const loggedIn = await waitFor(() => /اللوحة التحكم|لوحة التحكم/.test(doc.body.textContent || ''));
 check('T1 · التطبيق أقلع وسُجّل الدخول', loggedIn);
 

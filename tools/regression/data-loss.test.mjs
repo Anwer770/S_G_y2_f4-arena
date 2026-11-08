@@ -20,6 +20,7 @@ import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { loginWithPin } from './_login.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
@@ -141,8 +142,10 @@ w.eval(code);
 await sleep(3000);
 
 // ---------------------------------------------------------------- 3) assert state built from real data
-const loginBtn = [...doc.querySelectorAll('button')].find((b) => /تسجيل الدخول كـ|دخول سريع/.test(b.textContent || ''));
-if (loginBtn) { click(loginBtn); await sleep(2500); }
+// R2: الحساب الافتراضي بلا رمز ⇒ يمرّ بخطوة «تعيين الرمز أول مرة» ثم يدخل
+const loggedIn = await loginWithPin(w, doc, { expectSetup: true });
+if (!loggedIn) console.log('⚠ تعذّر إتمام الدخول من شاشة R2 (تعيين الرمز)');
+await sleep(1800);
 
 const sidebarText = (doc.querySelector('aside') || doc.body).textContent.replace(/\s+/g, ' ');
 const finBadge = (() => {
