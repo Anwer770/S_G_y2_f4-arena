@@ -133,6 +133,31 @@ for (const { file, max } of MODULE_LINE_BUDGETS) {
 }
 check('H9 · سقف حجم الوحدات المفكَّكة', overBudget.length === 0, overBudget.join(' · '));
 
+/* H11 — حائط الحماية الآلي (CI) يشغّل كل البوابات: لا انضباط «يدوي» فقط */
+const CI_DIR = path.join(ROOT, '.github', 'workflows');
+const CI_GATES = [
+  'npm run hygiene', 'npm run identity', 'npm run integrity', 'npm run imports',
+  'npm run security', 'npm run storage-keys', 'npm run settings', 'npm run snapshots',
+  'npm run auth', 'npm run data-loss', 'npm run workos', 'npm run outbox',
+  'npm run typography', 'npm run darkmode', 'npm run tables', 'npm run tables:assert',
+  'npm run regression',
+];
+const ciText = fs.existsSync(CI_DIR)
+  ? fs.readdirSync(CI_DIR).filter((f) => /\.ya?ml$/.test(f))
+      .map((f) => fs.readFileSync(path.join(CI_DIR, f), 'utf8')).join('\n')
+  : '';
+const missingCiGates = CI_GATES.filter((g) => !ciText.includes(g));
+check(
+  'H11 · CI (GitHub Actions) يشغّل كل بوابات الانحدار',
+  ciText.length > 0 && missingCiGates.length === 0,
+  ciText.length === 0 ? 'لا يوجد .github/workflows/*.yml' : missingCiGates.join(' · ')
+);
+
+/* H12 — CI يفحص الأنواع ويبني قبل البوابات (لا بوابة تصميم بلا بناء) */
+const CI_MUST = ['npm ci', 'npm run lint', 'npm run build'];
+const missingCiSteps = CI_MUST.filter((c) => !ciText.includes(c));
+check('H12 · CI يثبّت من lockfile ويفحص الأنواع ويبني الإنتاج', missingCiSteps.length === 0, missingCiSteps.join(' · '));
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);

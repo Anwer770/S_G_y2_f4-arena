@@ -1,0 +1,156 @@
+# حائط الحماية الآلي (CI) — كل بوابة انحدار تعمل عند كل دفع وكل طلب سحب.
+# ‏الغرض: تحويل «انضباط المطوّر» إلى بوابة آلية لا يمكن تجاوزها.
+name: Verify
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+# إلغاء التشغيلات المتقادمة على نفس المرجع (توفير وقت ودقّة)
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+  CI: '1'
+  # مساحة الذاكرة لبوابات jsdom الثقيلة (نفس ما في سكربتات package.json)
+  NODE_OPTIONS: '--max-old-space-size=2048'
+
+jobs:
+  # ---------------------------------------------------------------- 1) الأنواع + البناء
+  types-and-build:
+    name: Types + production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install (lockfile-exact)
+        run: npm ci --no-audit --no-fund
+
+      - name: Type check — strict, 0 errors
+        run: npm run lint
+
+      - name: Production build (Vite + PWA)
+        run: npm run build
+
+      - name: Assert PWA output exists (service worker + precache)
+        run: |
+          set -e
+          test -f dist/index.html
+          test -f dist/sw.js
+          node -e "const fs=require('fs');const sw=fs.readFileSync('dist/sw.js','utf8');if(!/precache|workbox/i.test(sw))throw new Error('sw.js بدون بيان precache');console.log('sw.js OK ·',(sw.length/1024).toFixed(1)+'KB');"
+          node -e "const fs=require('fs');const files=fs.readdirSync('dist').filter(f=>f.endsWith('.js'));const total=files.reduce((s,f)=>s+fs.statSync('dist/'+f).size,0);if(total===0)throw new Error('حزمة JS فارغة');console.log('bundles:',files.length,'·',(total/1024/1024).toFixed(2)+'MB');"
+
+  # ---------------------------------------------------------------- 2) البوابات الساكنة (تحليل الكود)
+  static-gates:
+    name: Static gates (hygiene · identity · integrity · imports · security)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+
+      - name: H · hygiene (H1–H12)
+        run: npm run hygiene
+      - name: Identity · version + entry point
+        run: npm run identity
+      - name: Integrity · data integrity checks
+        run: npm run integrity
+      - name: Imports · import fidelity
+        run: npm run imports
+      - name: Security · no dangerous patterns
+        run: npm run security
+      - name: Storage keys · no key drift
+        run: npm run storage-keys
+
+  # ---------------------------------------------------------------- 3) بوابات jsdom (تشغيل التطبيق فعلياً)
+  runtime-gates:
+    name: Runtime gates (auth · data-loss · workos · outbox · settings · snapshots)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+
+      - name: Auth · R2/R3 (no default PIN)
+        run: npm run auth
+      - name: Data loss · cold boot (R1)
+        run: npm run data-loss
+      - name: WorkOS · 17 checks
+        run: npm run workos
+      - name: Sync outbox
+        run: npm run outbox
+      - name: Central settings
+        run: npm run settings
+      - name: Encrypted snapshots
+        run: npm run snapshots
+
+  # ---------------------------------------------------------------- 4) البوابات البصرية والطباعة
+  visual-gates:
+    name: Visual gates (tables · typography · dark mode)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: npm ci --no-audit --no-fund
+
+      - name: Tables · print-safe scroll containers
+        run: npm run tables:assert
+      - name: Typography · 12px floor
+        run: npm run typography
+      - name: Dark mode · full coverage
+        run: npm run darkmode
+      - name: Responsive · rendered tables
+        run: npm run tables
+
+  # ---------------------------------------------------------------- 5) الانحدار الشامل
+  regression:
+    name: Regression · every tab, zero JS errors
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+
+      - name: Full regression sweep (25 tabs · storage diff vs baseline)
+        run: npm run regression
+
+      - name: Upload regression report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: regression-report
+          path: docs/تدقيق/last-run.json
+          retention-days: 7
+          if-no-files-found: ignore
