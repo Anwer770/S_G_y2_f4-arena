@@ -4,8 +4,8 @@
  "themeApplied": true,
  "views": {
   "اللوحة التحكم": {
-   "dark": 3253,
-   "dom": 963421,
+   "dark": 4364,
+   "dom": 1394851,
    "newErrors": 0,
    "modal": {
     "opened": true,
@@ -228,7 +228,7 @@
    "newErrors": 0
   }
  },
- "totalDark": 55483,
+ "totalDark": 56594,
  "viewsWithDark": [
   "اللوحة التحكم",
   "ادارة السجل اليومي5",

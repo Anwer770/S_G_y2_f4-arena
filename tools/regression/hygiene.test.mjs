@@ -59,9 +59,18 @@ check('H3 · لا علامات TODO/FIXME متروكة', todoFiles.length === 0,
 /* H4 — لا مخرجات بناء أو حزم اختبار محفوظة */
 const tracked = execFileSync('git', ['ls-files'], { cwd: ROOT, encoding: 'utf8' }).split('\n').filter(Boolean);
 const trackedArtifacts = tracked.filter(
-  (f) => /^(dist|dev-dist)\//.test(f) || /^server\.js$/.test(f) || /^standalone_app\.html$/.test(f) || /bundle\.mjs$/.test(f) || /\.map$/.test(f)
+  (f) =>
+    /^(dist|dev-dist)\//.test(f) ||
+    /^server\.js$/.test(f) ||
+    /^standalone_app\.html$/.test(f) ||
+    /bundle\.mjs$/.test(f) ||
+    /\.map$/.test(f)
 );
-check('H4 · لا مخرجات بناء أو حزم اختبار محفوظة في git', trackedArtifacts.length === 0, trackedArtifacts.slice(0, 6).join(' · '));
+check(
+  'H4 · لا مخرجات بناء أو حزم اختبار محفوظة في git',
+  trackedArtifacts.length === 0,
+  trackedArtifacts.slice(0, 6).join(' · ')
+);
 
 /* H5 — كل التبعيات مستخدمة فعلاً */
 const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
@@ -72,7 +81,10 @@ const haystack = [
   fs.existsSync(path.join(ROOT, 'index.html')) ? fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8') : '',
   JSON.stringify(pkg.scripts || {}),
 ].join('\n');
-const unusedDeps = depNames.filter((d) => !new RegExp(`(from\\s*['"]|require\\(['"]|import\\s*['"])${d.replace(/[/@.]/g, (c) => '\\' + c)}`).test(haystack));
+const unusedDeps = depNames.filter(
+  (d) =>
+    !new RegExp(`(from\\s*['"]|require\\(['"]|import\\s*['"])${d.replace(/[/@.]/g, (c) => '\\' + c)}`).test(haystack)
+);
 check('H5 · لا تبعيات غير مستخدمة في dependencies', unusedDeps.length === 0, unusedDeps.join(' · '));
 
 /* H6 — لا ملف مصدري يتجاوز 100KB (حد الصيانة) */
@@ -81,7 +93,6 @@ const big = srcFiles
   .filter((x) => x.kb > 100)
   .sort((a, b) => b.kb - a.kb);
 check('H6 · لا ملف يتجاوز 100KB', big.length === 0, big.map((x) => `${x.f} ${x.kb}KB`).join(' · '));
-
 
 /* H7 — ميزانية any: نوع صريح بدل any في كل المواضع النوعية (ratchet = 0) */
 const ANY_BUDGET = 0;
@@ -98,9 +109,19 @@ for (const f of srcFiles) {
 const anyCount = anyHits.reduce((sum, x) => sum + Number(x.split('×')[1]), 0);
 check(`H7 · لا any في الأنواع (${anyCount}/${ANY_BUDGET})`, anyCount <= ANY_BUDGET, anyHits.join(' · '));
 
-
 /* H8 — قيم حالات المهام داخل الاتحاد المعرّف فقط */
-const VALID_TASK_STATUS = ['new', 'planned', 'ready', 'in_progress', 'blocked', 'review', 'completed', 'cancelled', 'archived', 'delayed'];
+const VALID_TASK_STATUS = [
+  'new',
+  'planned',
+  'ready',
+  'in_progress',
+  'blocked',
+  'review',
+  'completed',
+  'cancelled',
+  'archived',
+  'delayed',
+];
 const badStatus = [];
 for (const f of srcFiles) {
   const text = fs.readFileSync(f, 'utf8');
@@ -113,9 +134,7 @@ for (const f of srcFiles) {
 check('H8 · لا حالة مهمة خارج الاتحاد (in_review سابقاً)', badStatus.length === 0, badStatus.join(' · '));
 
 /* H10 — لا تعطيل لمفحص الأنواع (لا @ts-ignore / @ts-expect-error / @ts-nocheck) */
-const suppressorFiles = srcFiles.filter((f) =>
-  /@ts-(ignore|expect-error|nocheck)/.test(fs.readFileSync(f, 'utf8'))
-);
+const suppressorFiles = srcFiles.filter((f) => /@ts-(ignore|expect-error|nocheck)/.test(fs.readFileSync(f, 'utf8')));
 check('H10 · لا تعطيل لمفحص الأنواع', suppressorFiles.length === 0, suppressorFiles.map(rel).join(' · '));
 
 /* H9 — سقوف حجم الوحدات المفكَّكة (ratchet): لا تعود الملفات الكبيرة بعد التفكيك */
@@ -123,9 +142,31 @@ const MODULE_LINE_BUDGETS = [
   { file: 'src/components/financial/FinancialModule.tsx', max: 900 },
   { file: 'src/utils/storage.ts', max: 900 },
   { file: 'src/components/workos/WorkOSModule.tsx', max: 900 },
+  // R30: تفكيك workosStorage.ts (1925 ⇒ برميل re-export) ووحداته الفرعية
+  { file: 'src/utils/workosStorage.ts', max: 900 },
+  { file: 'src/utils/workos/workosKeys.ts', max: 900 },
+  { file: 'src/utils/workos/workosSeeds.ts', max: 900 },
+  { file: 'src/utils/workos/workosLoaders.ts', max: 900 },
+  { file: 'src/utils/workos/workosExporters.ts', max: 900 },
+  { file: 'src/utils/workos/workosAutomation.ts', max: 900 },
 ];
+
+/* ratchet: الملفات الضخمة المتبقية مجمَّدة على حجمها الحالي — تنقص ولا تزيد */
+const FROZEN_LARGE_FILES = [
+  { file: 'src/components/dashboard/UnifiedDashboard.tsx', max: 1897 },
+  { file: 'src/utils/debts.ts', max: 1505 },
+  { file: 'src/components/tasks/CalendarView.tsx', max: 1256 },
+  { file: 'src/components/knowledge/NoteEditorModal.tsx', max: 1201 },
+  { file: 'src/utils/excel.ts', max: 1107 },
+  { file: 'src/components/routines/RoutinesModule.tsx', max: 1013 },
+  { file: 'src/components/RecordsView.tsx', max: 990 },
+  { file: 'src/components/routines/RoutineWizardModal.tsx', max: 977 },
+  { file: 'src/components/knowledge/KnowledgeModule.tsx', max: 953 },
+  { file: 'src/components/workos/WorkOSQuickAddModal.tsx', max: 952 },
+];
+
 const overBudget = [];
-for (const { file, max } of MODULE_LINE_BUDGETS) {
+for (const { file, max } of [...MODULE_LINE_BUDGETS, ...FROZEN_LARGE_FILES]) {
   const full = path.join(ROOT, file);
   if (!fs.existsSync(full)) continue;
   const n = fs.readFileSync(full, 'utf8').split('\n').length;
@@ -136,15 +177,33 @@ check('H9 · سقف حجم الوحدات المفكَّكة', overBudget.length
 /* H11 — حائط الحماية الآلي (CI) يشغّل كل البوابات: لا انضباط «يدوي» فقط */
 const CI_DIR = path.join(ROOT, '.github', 'workflows');
 const CI_GATES = [
-  'npm run hygiene', 'npm run identity', 'npm run integrity', 'npm run imports',
-  'npm run security', 'npm run storage-keys', 'npm run settings', 'npm run snapshots',
-  'npm run auth', 'npm run data-loss', 'npm run workos', 'npm run outbox',
-  'npm run typography', 'npm run darkmode', 'npm run tables', 'npm run tables:assert',
-  'npm run regression', 'npm run lint:eslint', 'npm run format:check', 'npm run test:unit:coverage',
+  'npm run hygiene',
+  'npm run identity',
+  'npm run integrity',
+  'npm run imports',
+  'npm run security',
+  'npm run storage-keys',
+  'npm run settings',
+  'npm run snapshots',
+  'npm run auth',
+  'npm run data-loss',
+  'npm run workos',
+  'npm run outbox',
+  'npm run typography',
+  'npm run darkmode',
+  'npm run tables',
+  'npm run tables:assert',
+  'npm run regression',
+  'npm run lint:eslint',
+  'npm run format:check',
+  'npm run test:unit:coverage',
 ];
 const ciText = fs.existsSync(CI_DIR)
-  ? fs.readdirSync(CI_DIR).filter((f) => /\.ya?ml$/.test(f))
-      .map((f) => fs.readFileSync(path.join(CI_DIR, f), 'utf8')).join('\n')
+  ? fs
+      .readdirSync(CI_DIR)
+      .filter((f) => /\.ya?ml$/.test(f))
+      .map((f) => fs.readFileSync(path.join(CI_DIR, f), 'utf8'))
+      .join('\n')
   : '';
 const missingCiGates = CI_GATES.filter((g) => !ciText.includes(g));
 check(
@@ -156,7 +215,11 @@ check(
 /* H12 — CI يفحص الأنواع ويبني قبل البوابات (لا بوابة تصميم بلا بناء) */
 const CI_MUST = ['npm ci', 'npm run lint', 'npm run build'];
 const missingCiSteps = CI_MUST.filter((c) => !ciText.includes(c));
-check('H12 · CI يثبّت من lockfile ويفحص الأنواع ويبني الإنتاج', missingCiSteps.length === 0, missingCiSteps.join(' · '));
+check(
+  'H12 · CI يثبّت من lockfile ويفحص الأنواع ويبني الإنتاج',
+  missingCiSteps.length === 0,
+  missingCiSteps.join(' · ')
+);
 
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);

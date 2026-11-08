@@ -17,6 +17,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { readFamily } from './_source.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
@@ -95,9 +96,7 @@ XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 const normal = safe.readFirstSheetSafe(XLSX.write(wb, { bookType: 'xlsx', type: 'array' }), 'array');
 check(
   'S4 · القراءة العادية سليمة والخلية الفارغة تبقى فارغة',
-  normal.rows.length === 1 &&
-    normal.rows[0]['اسم العميل'] === 'صيدلية الشفاء' &&
-    normal.rows[0]['المنطقة'] === '',
+  normal.rows.length === 1 && normal.rows[0]['اسم العميل'] === 'صيدلية الشفاء' && normal.rows[0]['المنطقة'] === '',
   JSON.stringify(normal.rows[0])
 );
 
@@ -130,12 +129,18 @@ const walk = (dir) => {
   }
 };
 walk(path.join(ROOT, 'src'));
-check('S6 · كل القراءة تمرّ من `xlsxSafe.ts` (لا XLSX.read خارج الحارس)', offenders.length === 0,
-  offenders.length ? offenders.join(' · ') : '0 تجاوز');
-
-const guarded = ['src/utils/excel.ts', 'src/utils/doctors.ts', 'src/utils/workosStorage.ts', 'src/utils/universalImporters.ts'].filter(
-  (f) => /assertFileSize\(/.test(read(f))
+check(
+  'S6 · كل القراءة تمرّ من `xlsxSafe.ts` (لا XLSX.read خارج الحارس)',
+  offenders.length === 0,
+  offenders.length ? offenders.join(' · ') : '0 تجاوز'
 );
+
+const guarded = [
+  'src/utils/excel.ts',
+  'src/utils/doctors.ts',
+  'src/utils/workosStorage.ts',
+  'src/utils/universalImporters.ts',
+].filter((f) => /assertFileSize\(/.test(readFamily(f)));
 check('S7 · كل مُحلّل استيراد يفحص حجم الملف قبل القراءة', guarded.length === 4, guarded.join(' · '));
 
 const xlsxSafeSrc = read('src/utils/xlsxSafe.ts');
