@@ -11,6 +11,7 @@ import {
   HardDrive,
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { PWAInstallButton } from './pwa/PWAInstallButton';
 import { getExportReminderState } from '../utils/storagePersistence';
 
 interface HeaderProps {
@@ -212,6 +213,11 @@ export const Header: React.FC<HeaderProps> = ({
                 {alertsCount > 99 ? '99+' : alertsCount}
               </span>
             )}
+          </div>
+
+          {/* تثبيت التطبيق كـ PWA (يعمل بلا إنترنت) — مكوّن كان غير موصول */}
+          <div className="hidden sm:block">
+            <PWAInstallButton compact />
           </div>
 
           {/* Theme Toggle Button (Light/Dark) */}
