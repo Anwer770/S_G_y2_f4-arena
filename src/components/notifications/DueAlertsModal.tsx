@@ -36,6 +36,8 @@ interface DueAlertsModalProps {
   onNavigateToTasks: () => void;
   onToggleCompleteTask: (taskId: string) => void;
   onToggleCompleteCommitment: (commId: string) => void;
+  /** تنبيهات محرك الأتمتة: حدّ الطلب + استحقاق الالتزامات */
+  systemAlerts?: import('../../services/alerts/alertsEngine').SystemAlert[];
 }
 
 type FilterType = 'all' | 'overdue' | 'today' | 'soon' | 'task' | 'commitment';
@@ -47,6 +49,7 @@ export const DueAlertsModal: React.FC<DueAlertsModalProps> = ({
   onNavigateToTasks,
   onToggleCompleteTask,
   onToggleCompleteCommitment,
+  systemAlerts = [],
 }) => {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -130,6 +133,29 @@ export const DueAlertsModal: React.FC<DueAlertsModalProps> = ({
             <div className="text-lg font-black text-teal-700 dark:text-teal-300 mt-0.5">{summary.soonCount}</div>
           </div>
         </div>
+
+        {/* محرك التنبيهات الاستباقية: حدّ الطلب + استحقاق الالتزامات */}
+        {systemAlerts.length > 0 && (
+          <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-amber-50/50 dark:bg-amber-950/20" data-system-alerts>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xs font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> تنبيهات تلقائية ({systemAlerts.length})
+              </h3>
+              <span className="text-xs text-slate-500 dark:text-slate-400">حدّ الطلب · استحقاق خلال 3 أيام</span>
+            </div>
+            <ul className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-thin">
+              {systemAlerts.slice(0, 8).map((a) => (
+                <li key={a.id} className="flex items-start gap-2 p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                  <span className={`mt-1 w-2 h-2 rounded-full shrink-0 ${a.severity === 'critical' ? 'bg-rose-500' : 'bg-amber-500'}`} />
+                  <div className="min-w-0">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">{a.title}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">{a.detail}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Filters and Search */}
         <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">

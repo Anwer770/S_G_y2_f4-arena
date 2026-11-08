@@ -27,6 +27,8 @@ import {
   Sparkles,
   Layers,
 } from 'lucide-react';
+import { useLookups } from '../../utils/lookupsStore';
+import { activeLabels } from '../../constants/lookups';
 
 interface Props {
   isOpen: boolean;
@@ -51,6 +53,9 @@ export const CustomerModal: React.FC<Props> = ({
   const [source, setSource] = useState<CustomerSource>('القيصر الذهبي');
   const [region, setRegion] = useState('صنعاء');
   const [route, setRoute] = useState('السبت');
+  const { lookups } = useLookups();
+  const gradeOptions = lookups.grades.filter((g) => g.active);
+  const ownerOptions = activeLabels(lookups, 'owners');
   const [significance, setSignificance] = useState<CustomerSignificance>('B');
   const [status, setStatus] = useState<VisitStatus>('مخطط');
   const [responsible, setResponsible] = useState('انور');
@@ -360,11 +365,14 @@ export const CustomerModal: React.FC<Props> = ({
                   onChange={(e) => setResponsible(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 font-bold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
                 >
-                  {CUSTOMER_RESPONSIBLES.map((resp) => (
-                    <option key={resp} value={resp}>
-                      {resp}
-                    </option>
-                  ))}
+                  {(() => {
+                    const list = ownerOptions.length ? ownerOptions : CUSTOMER_RESPONSIBLES;
+                    return list.map((resp) => (
+                      <option key={resp} value={resp}>
+                        {resp}
+                      </option>
+                    ));
+                  })()}
                 </select>
               </div>
 
@@ -376,15 +384,9 @@ export const CustomerModal: React.FC<Props> = ({
                   onChange={(e) => setSignificance(e.target.value as CustomerSignificance)}
                   className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 font-bold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
                 >
-                  {CUSTOMER_SIGNIFICANCES.map((sig) => (
-                    <option key={sig} value={sig}>
-                      {sig === 'A'
-                        ? 'A - عالي الأهمية'
-                        : sig === 'B'
-                        ? 'B - متوسط الأهمية'
-                        : sig === 'C'
-                        ? 'C - عادي'
-                        : '√ - عميل مؤكد'}
+                  {gradeOptions.map((g) => (
+                    <option key={g.id} value={g.label}>
+                      {g.hint ? `${g.label} - ${g.hint}` : g.label}
                     </option>
                   ))}
                 </select>

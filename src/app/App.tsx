@@ -654,7 +654,8 @@ export const MainApp: React.FC = () => {
           setIsAlertsModalOpen(false);
         }}
         onToggleCompleteTask={handleToggleCompleteTask}
-        onToggleCompleteCommitment={handleToggleCompleteCommitment}
+        systemAlerts={systemAlerts}
+          onToggleCompleteCommitment={handleToggleCompleteCommitment}
       />
     </>
   );

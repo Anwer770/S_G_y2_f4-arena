@@ -54,6 +54,8 @@ import { UniversalDataExchangeModal } from '../common/UniversalDataExchangeModal
 import { downloadDebtsExcelTemplate } from '../../utils/universalDataTemplates';
 import { parseDebtsExcelFile } from '../../utils/universalImporters';
 import { exportDebtsAndCommitmentsToExcel } from '../../utils/debts';
+import { useLookups } from '../../utils/lookupsStore';
+import { activeLabels } from '../../constants/lookups';
 
 export const DebtsModule: React.FC = () => {
   // Main Navigation Sub-tab
@@ -63,8 +65,15 @@ export const DebtsModule: React.FC = () => {
   // Data States
   const [records, setRecords] = useState<DebtRecord[]>([]);
   const [commitments, setCommitments] = useState<DebtCommitment[]>([]);
-  const [categories, setCategories] = useState<string[]>(DEBT_CATEGORIES);
-  const [owners, setOwners] = useState<string[]>(DEBT_OWNERS);
+  const { lookups } = useLookups();
+  const [categories, setCategories] = useState<string[]>(() => activeLabels(lookups, 'categories'));
+  const [owners, setOwners] = useState<string[]>(() => activeLabels(lookups, 'owners'));
+
+  // القوائم المركزية هي المصدر: أي تعديل في الإعدادات ينعكس هنا فوراً
+  useEffect(() => {
+    setCategories(activeLabels(lookups, 'categories'));
+    setOwners(activeLabels(lookups, 'owners'));
+  }, [lookups]);
   const [auditLogs, setAuditLogs] = useState<DebtAuditLog[]>([]);
 
   // Modals state

@@ -30,8 +30,8 @@ export const CommitmentModal: React.FC<CommitmentModalProps> = ({
   const [priority, setPriority] = useState<'A' | 'B' | 'C'>('B');
   const [status, setStatus] = useState('جارية');
   const [icon, setIcon] = useState('⚑');
-  const [owner, setOwner] = useState(owners[0] || 'أنور');
-  const [category, setCategory] = useState(categories[0] || 'أعمال الالتزامات');
+  const [owner, setOwner] = useState(owners[0] || '');
+  const [category, setCategory] = useState(categories[0] || '');
   const [amount, setAmount] = useState<number | ''>('');
   const [currency, setCurrency] = useState('YER');
   const [dir, setDir] = useState<'debit' | 'credit'>('debit');
@@ -48,7 +48,7 @@ export const CommitmentModal: React.FC<CommitmentModalProps> = ({
       setPriority(initialCommitment.priority || 'B');
       setStatus(initialCommitment.status || 'جارية');
       setIcon(initialCommitment.icon || '⚑');
-      setOwner(initialCommitment.owner || owners[0] || 'أنور');
+      setOwner(initialCommitment.owner || owners[0] || '');
       setCategory(initialCommitment.category || categories[0] || 'أعمال الالتزامات');
       setAmount(initialCommitment.amount || '');
       setCurrency(initialCommitment.currency || 'YER');
@@ -66,7 +66,7 @@ export const CommitmentModal: React.FC<CommitmentModalProps> = ({
       setPriority('B');
       setStatus('جارية');
       setIcon('⚑');
-      setOwner(owners[0] || 'أنور');
+      setOwner(owners[0] || '');
       setCategory(categories[0] || 'أعمال الالتزامات');
       setAmount('');
       setCurrency('YER');

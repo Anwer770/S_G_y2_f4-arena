@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ShieldCheck, Search, Trash2, RefreshCw } from 'lucide-react';
+import { ShieldCheck, Search, Trash2, RefreshCw, Download } from 'lucide-react';
 import { auditService } from '../../../core/audit/AuditService';
 
 const ACTION_LABEL: Record<string, string> = {
@@ -11,18 +11,25 @@ const ACTION_LABEL: Record<string, string> = {
 export const AuditLogTab: React.FC = () => {
   const [version, setVersion] = useState(0);
   const [query, setQuery] = useState('');
+  const [actionFilter, setActionFilter] = useState('all');
   const logs = useMemo(() => {
     void version;
     return auditService.getAllLogs();
   }, [version]);
 
+  const actionOptions = useMemo<string[]>(
+    () => Array.from(new Set(logs.map((l) => String(l.action)))),
+    [logs]
+  );
+
   const filtered = useMemo(() => {
     const q = query.trim();
-    if (!q) return logs;
-    return logs.filter((l) =>
+    const base = actionFilter === 'all' ? logs : logs.filter((l) => l.action === actionFilter);
+    if (!q) return base;
+    return base.filter((l) =>
       [l.entity, l.action, l.details, l.userId, l.recordId].filter(Boolean).some((v) => String(v).includes(q))
     );
-  }, [logs, query]);
+  }, [logs, query, actionFilter]);
 
   return (
     <div className="space-y-4" data-settings-tab="audit">
@@ -45,6 +52,35 @@ export const AuditLogTab: React.FC = () => {
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-2" />
           </div>
+          <select
+            value={actionFilter}
+            onChange={(e) => setActionFilter(e.target.value)}
+            className="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs"
+            title="تصفية حسب الإجراء"
+          >
+            <option value="all">كل الإجراءات</option>
+            {actionOptions.map((a) => (
+              <option key={a} value={a}>{ACTION_LABEL[a] || a}</option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => {
+              const rows = [['الوقت', 'الإجراء', 'الكيان', 'التفاصيل', 'المستخدم', 'الجهاز']]
+                .concat(filtered.map((l) => [l.timestamp, ACTION_LABEL[l.action] || l.action, l.entity, l.details || '', l.userId, l.deviceId]));
+              const csv = '\uFEFF' + rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+              const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+            title="تصدير السجل CSV"
+          >
+            <Download className="w-3.5 h-3.5" />
+          </button>
           <button type="button" onClick={() => setVersion((v) => v + 1)}
             className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer" title="تحديث">
             <RefreshCw className="w-3.5 h-3.5" />

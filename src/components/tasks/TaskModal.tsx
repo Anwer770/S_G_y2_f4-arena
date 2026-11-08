@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Task, TaskPriority, TaskStatus } from '../../types';
 import { generateNextTaskId } from '../../utils/tasks';
-import { TASK_PRIORITIES, TASK_STATUSES } from '../../data/defaultTasks';
+import { TASK_PRIORITIES } from '../../data/defaultTasks';
 import { X, Save, Calendar, CheckSquare, User, Tag, Activity, DollarSign, Layers } from 'lucide-react';
+import { useLookups } from '../../utils/lookupsStore';
+import { activeLabels } from '../../constants/lookups';
 
 interface Props {
   isOpen: boolean;
@@ -27,6 +29,9 @@ export const TaskModal: React.FC<Props> = ({
   assignees,
   initialDate,
 }) => {
+  const { lookups } = useLookups();
+  const statusOptions = activeLabels(lookups, 'statuses');
+
   const [id, setId] = useState('');
   const [sub, setSub] = useState('');
   const [title, setTitle] = useState('');
@@ -276,7 +281,7 @@ export const TaskModal: React.FC<Props> = ({
                 onChange={(e) => setStatus(e.target.value as TaskStatus)}
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                {TASK_STATUSES.map((s) => (
+                {statusOptions.map((s) => (
                   <option key={s} value={s}>
                     {s}
                   </option>

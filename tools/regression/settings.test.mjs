@@ -57,6 +57,17 @@ check('A7 · الترتيب يبدأ بالحرج', alerts[0].severity === 'crit
 const sum = A.alertsSummary(alerts);
 check('A8 · الملخّص يحسب الأنواع والخطورة', sum.total === alerts.length && sum.stock + sum.debt === sum.total && sum.critical >= 1, JSON.stringify(sum));
 
+
+// ── ربط الواجهات بالمصدر المركزي (فحص مصدري)
+const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
+const wired = ['src/components/debts/DebtsModule.tsx', 'src/components/customers/CustomerModal.tsx',
+  'src/components/doctors/DoctorModal.tsx', 'src/components/tasks/TaskModal.tsx'];
+check('W1 · الشاشات الأربع تقرأ القوائم من useLookups()', wired.every((f) => /useLookups\(\)/.test(read(f))), wired.filter((f) => !/useLookups\(\)/.test(read(f))).join(' · '));
+check('W2 · نموذج الصنف يحفظ حدّ الطلب (reorderPoint)', /reorderPoint/.test(read('src/components/InventoryView.tsx')) && /reorderPoint,/.test(read('src/components/InventoryView.tsx')));
+check('W3 · مركز التنبيهات يعرض تنبيهات المحرك', /data-system-alerts/.test(read('src/components/notifications/DueAlertsModal.tsx')) && /systemAlerts=\{systemAlerts\}/.test(read('src/app/App.tsx')));
+check('W4 · القوائم تُدرَج في النسخة الاحتياطية وتُستعاد', /lookups: loadLookupsForBackup\(\)/.test(read('src/utils/storage.ts')) && /setLookupsFromBackup/.test(read('src/utils/storage.ts')));
+check('W5 · القوائم باقية بلا قيم مخترعة في نماذج الديون', !/\|\| 'أنور'/.test(read('src/components/debts/CommitmentModal.tsx')));
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة اختبار الإعدادات المركزية (settings) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
