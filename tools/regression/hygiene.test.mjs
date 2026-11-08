@@ -122,6 +122,7 @@ check('H10 · لا تعطيل لمفحص الأنواع', suppressorFiles.length
 const MODULE_LINE_BUDGETS = [
   { file: 'src/components/financial/FinancialModule.tsx', max: 900 },
   { file: 'src/utils/storage.ts', max: 900 },
+  { file: 'src/components/workos/WorkOSModule.tsx', max: 900 },
 ];
 const overBudget = [];
 for (const { file, max } of MODULE_LINE_BUDGETS) {
