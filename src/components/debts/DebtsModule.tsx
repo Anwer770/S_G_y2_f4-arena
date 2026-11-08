@@ -56,10 +56,12 @@ import { parseDebtsExcelFile } from '../../utils/universalImporters';
 import { exportDebtsAndCommitmentsToExcel } from '../../utils/debts';
 import { useLookups } from '../../utils/lookupsStore';
 import { activeLabels } from '../../constants/lookups';
+import { useSubTabSync } from '../../utils/subMenuStore';
 
 export const DebtsModule: React.FC = () => {
   // Main Navigation Sub-tab
   const [activeTab, setActiveTab] = useState<'ledgers' | 'commitments' | 'alerts' | 'audit'>('ledgers');
+  useSubTabSync('debts', activeTab, setActiveTab as (next: string) => void);
   const [activeBook, setActiveBook] = useState<DebtBookId>('anwar');
 
   // Data States

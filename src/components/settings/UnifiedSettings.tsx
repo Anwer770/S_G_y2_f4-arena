@@ -34,6 +34,7 @@ import { LookupsTab } from './tabs/LookupsTab';
 import { AuditLogTab } from './tabs/AuditLogTab';
 import { DatabasesTab } from './tabs/DatabasesTab';
 import { AboutAppTab } from './tabs/AboutAppTab';
+import { useSubTabSync } from '../../utils/subMenuStore';
 
 interface Props {
   onExportBackup: () => UnifiedBackupState | void;
@@ -107,6 +108,7 @@ export const UnifiedSettings: React.FC<Props> = ({
   linksCount = 0,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('company');
+  useSubTabSync('settings', activeTab, setActiveTab as (next: string) => void);
   const [settings, setSettings] = useState<CompleteSystemSettings>(() => loadCompleteSystemSettings());
   const [isSavedRecently, setIsSavedRecently] = useState(false);
 

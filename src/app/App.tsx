@@ -27,6 +27,7 @@ import {
 // Services & Repositories
 import { inventoryService } from '../services/inventory/InventoryService';
 import { computeSystemAlerts } from '../services/alerts/alertsEngine';
+import { runAutoExport } from '../services/audit/auditAutoExport';
 import { financialService } from '../services/financial/FinancialService';
 import { customerService } from '../services/crm/CustomerService';
 import { doctorService } from '../services/crm/DoctorService';
@@ -196,6 +197,13 @@ export const MainApp: React.FC = () => {
       return 0;
     }
   }, [activeTab]);
+
+  // تصدير الأرشيف تلقائياً: عند الإقلاع ثم فحص كل 30 دقيقة (لا يرمي أبداً)
+  useEffect(() => {
+    void runAutoExport();
+    const timer = window.setInterval(() => void runAutoExport(), 30 * 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const dueAlertsSummary: DueAlertsSummary = useMemo(() => {
     return getDueAlerts(tasks, commitments, 3);

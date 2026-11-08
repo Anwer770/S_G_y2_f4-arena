@@ -1,5 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { ShieldCheck, Search, Trash2, RefreshCw, Download, Archive } from 'lucide-react';
+import { ShieldCheck, Search, Trash2, RefreshCw, Download, Archive, FolderOpen, Play, Clock } from 'lucide-react';
+import {
+  DEFAULT_AUTO_CONFIG, readAutoConfig, saveAutoConfig, readAutoState, runAutoExport,
+  readSnapshots, supportsFolderPicker, pickFolder, snapshotsSizeKb, type AutoExportConfig,
+} from '../../../services/audit/auditAutoExport';
 import { auditService } from '../../../core/audit/AuditService';
 
 const ACTION_LABEL: Record<string, string> = {
@@ -13,6 +17,48 @@ export const AuditLogTab: React.FC = () => {
   const [query, setQuery] = useState('');
   const [actionFilter, setActionFilter] = useState('all');
   const [includeArchive, setIncludeArchive] = useState(false);
+  const [autoConfig, setAutoConfig] = useState<AutoExportConfig>(() => readAutoConfig());
+  const [autoState, setAutoState] = useState(() => readAutoState());
+  const [snapshots, setSnapshots] = useState(() => readSnapshots());
+  const [busy, setBusy] = useState(false);
+  const [folderName, setFolderName] = useState('');
+
+  const refreshAuto = () => {
+    setAutoConfig(readAutoConfig());
+    setAutoState(readAutoState());
+    setSnapshots(readSnapshots());
+  };
+
+  const updateConfig = (patch: Partial<AutoExportConfig>) => {
+    const next = { ...autoConfig, ...patch };
+    saveAutoConfig(next);
+    setAutoConfig(next);
+  };
+
+  const runNow = async () => {
+    setBusy(true);
+    try {
+      await runAutoExport(true);
+      refreshAuto();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const chooseFolder = async () => {
+    const name = await pickFolder();
+    if (name) setFolderName(name);
+    refreshAuto();
+  };
+
+  const downloadSnapshot = (fileName: string, json: string) => {
+    const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
   const logs = useMemo(() => {
     void version;
     return includeArchive ? auditService.getAllLogsIncludingArchive() : auditService.getAllLogs();
@@ -111,6 +157,76 @@ export const AuditLogTab: React.FC = () => {
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
+      </div>
+
+      {/* التصدير التلقائي للأرشيف */}
+      <div className="surface-card p-4 sm:p-5 space-y-3" data-audit-auto-export>
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+            <h3 className="text-sm font-black text-slate-900 dark:text-white">تصدير الأرشيف تلقائياً</h3>
+            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${autoConfig.enabled ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'}`}>
+              {autoConfig.enabled ? 'مُفعّل' : 'متوقف'}
+            </span>
+          </div>
+          <label className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer">
+            <input type="checkbox" checked={autoConfig.enabled} onChange={(e) => updateConfig({ enabled: e.target.checked })} />
+            تفعيل التصدير التلقائي
+          </label>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <label className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+            كل
+            <select value={autoConfig.intervalDays} onChange={(e) => updateConfig({ intervalDays: Number(e.target.value) })}
+              className="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+              {[1, 3, 7, 14, 30].map((d) => (<option key={d} value={d}>{d === 1 ? 'يوم' : `${d} أيام`}</option>))}
+            </select>
+          </label>
+          <label className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+            الاحتفاظ بـ
+            <select value={autoConfig.keepCount} onChange={(e) => updateConfig({ keepCount: Number(e.target.value) })}
+              className="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+              {[3, 6, 12, 24, 52].map((k) => (<option key={k} value={k}>{k} نسخة</option>))}
+            </select>
+          </label>
+          {supportsFolderPicker() && (
+            <button type="button" onClick={chooseFolder}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+              <FolderOpen className="w-3.5 h-3.5" /> اختيار مجلد{folderName ? ` (${folderName})` : ''}
+            </button>
+          )}
+          <label className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+            <input type="checkbox" checked={autoConfig.writeToFolder} onChange={(e) => updateConfig({ writeToFolder: e.target.checked })} />
+            كتابة صامتة للمجلد
+          </label>
+          <button type="button" onClick={runNow} disabled={busy}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-bold cursor-pointer">
+            <Play className="w-3.5 h-3.5" /> {busy ? 'جارٍ التصدير…' : 'تصدير الآن'}
+          </button>
+        </div>
+
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          آخر تصدير: {autoState.lastRunAt ? new Date(autoState.lastRunAt).toLocaleString('ar-EG') : 'لم يحدث بعد'}
+          {autoState.lastCount !== undefined ? ` · ${autoState.lastCount} سجل` : ''}
+          {autoState.lastMode ? ` · ${autoState.lastMode === 'folder' ? 'إلى المجلد' : autoState.lastMode === 'download' ? 'تنزيل تلقائي' : 'محفوظ داخلياً'}` : ''}
+          {' · '}{snapshots.length} نسخة محفوظة ({snapshotsSizeKb()} ك.ب)
+        </p>
+
+        {snapshots.length > 0 && (
+          <ul className="space-y-1 max-h-32 overflow-y-auto scrollbar-thin">
+            {snapshots.slice(0, 6).map((snap) => (
+              <li key={snap.id} className="flex items-center justify-between gap-2 text-xs p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60">
+                <span className="font-mono text-slate-600 dark:text-slate-300 truncate" dir="ltr">{snap.fileName}</span>
+                <span className="text-slate-400 shrink-0">{snap.count} سجل</span>
+                <button type="button" onClick={() => downloadSnapshot(snap.fileName, snap.json)}
+                  className="p-1 rounded text-slate-500 hover:text-teal-600 cursor-pointer" title="تنزيل">
+                  <Download className="w-3.5 h-3.5" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="surface-card overflow-hidden">

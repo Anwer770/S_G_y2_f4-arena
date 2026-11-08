@@ -89,6 +89,46 @@ check('R8 · تصدير كامل للسجل (JSON)', /exportAll\(\)/.test(auditS
 // ── توحيد فئات المخزون
 check('R9 · فئات المخزون تُزامَن من القوائم المركزية', /activeLabels\(lookups, 'categories'\)/.test(read('src/components/settings/tabs/InventorySettingsTab.tsx')));
 
+
+// ── التصدير التلقائي للأرشيف
+const E = await build('src/utils/auditAutoExportLogic.ts', '.autoexport-bundle.mjs');
+const cfg = { enabled: true, intervalDays: 1, keepCount: 12, writeToFolder: false };
+check('E1 · الاستحقاق: أول تشغيل + الفاصل الزمني + الإيقاف',
+  E.isAutoExportDue(cfg, undefined, new Date('2026-11-08T10:00:00Z')) === true &&
+  E.isAutoExportDue(cfg, '2026-11-08T09:00:00Z', new Date('2026-11-08T10:00:00Z')) === false &&
+  E.isAutoExportDue(cfg, '2026-11-06T09:00:00Z', new Date('2026-11-08T10:00:00Z')) === true &&
+  E.isAutoExportDue({ ...cfg, enabled: false }, undefined, new Date()) === false);
+check('E2 · اسم الملف مؤرّخ بالدقائق', /^audit-archive-2026-11-08-0930\.json$/.test(E.buildArchiveFileName(new Date(2026, 10, 8, 9, 30))));
+check('E3 · الاحتفاظ يُبقي الأحدث فقط', (() => {
+  const list = [{ at: '2026-11-01T00:00:00Z', n: 1 }, { at: '2026-11-07T00:00:00Z', n: 2 }, { at: '2026-11-05T00:00:00Z', n: 3 }];
+  return E.pruneSnapshots(list, 2).map((x) => x.n).join(',') === '2,3';
+})());
+check('E4 · التصدير مجدول عند الإقلاع وكل 30 دقيقة', /runAutoExport\(\)/.test(read('src/app/App.tsx')) && /30 \* 60 \* 1000/.test(read('src/app/App.tsx')));
+check('E5 · واجهة التصدير التلقائي موجودة (تفعيل/فاصل/مجلد/الآن)', (() => {
+  const tab = read('src/components/settings/tabs/AuditLogTab.tsx');
+  return /data-audit-auto-export/.test(tab) && /pickFolder/.test(tab) && /runAutoExport\(true\)/.test(tab);
+})());
+
+// ── القوائم الفرعية الجانبية (الدرج)
+const subMenus = read('src/constants/subMenus.ts');
+const moduleFiles = {
+  debts: 'src/components/debts/DebtsModule.tsx',
+  settings: 'src/components/settings/UnifiedSettings.tsx',
+  dashboard: 'src/components/dashboard/UnifiedDashboard.tsx',
+};
+const idsOf = (block) => [...block.matchAll(/id: '([a-zA-Z_]+)'/g)].map((m) => m[1]);
+check('S1 · كل قائمة فرعية مرتبطة بوحدة موجودة', Object.keys(moduleFiles).every((m) => subMenus.includes(`${m}: {`)));
+check('S2 · معرّفات الأقسام تطابق التبويبات الداخلية للوحدات', Object.entries(moduleFiles).every(([mod, file]) => {
+  const start = subMenus.indexOf(`${mod}: {`);
+  const block = subMenus.slice(start, subMenus.indexOf('},', start));
+  const ids = idsOf(block);
+  const src = read(file);
+  return ids.length > 0 && ids.every((id) => src.includes(`'${id}'`));
+}));
+check('S3 · الدرج مركّب في التخطيط ويقبل الفتح/الإغلاق', /SubMenuDrawer/.test(read('src/app/layouts/MainLayout.tsx')) && /data-submenu-drawer/.test(read('src/components/SubMenuDrawer.tsx')));
+check('S4 · الوحدات الثلاث تنشر تبويبها وتستقبل طلبات الدرج', Object.values(moduleFiles).every((f) => /useSubTabSync\(/.test(read(f))));
+check('S5 · الدرج لا يزاحم الجوال (lg فقط) ويحترم RTL', /hidden lg:flex/.test(read('src/components/SubMenuDrawer.tsx')) && /lg:right-/.test(read('src/components/SubMenuDrawer.tsx')));
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة اختبار الإعدادات المركزية (settings) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
