@@ -1,7 +1,7 @@
 {
   "name": "caesar-erp-unified",
   "private": true,
-  "version": "3.19.0",
+  "version": "3.20.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -28,9 +28,10 @@
     "settings": "node --max-old-space-size=2048 tools/regression/settings.test.mjs",
     "hygiene": "node tools/regression/hygiene.test.mjs",
     "storage-keys": "node tools/regression/storage-keys.test.mjs",
+    "automation": "node tools/regression/automation.test.mjs",
     "tables:assert": "python3 tools/audit/tables_audit.py --assert",
     "tables:measure": "python3 tools/audit/tables_audit.py --json",
-    "verify": "npx tsc --noEmit && npm run lint:eslint && npm run format:check && npm run test:unit:coverage && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/security.test.mjs && node --max-old-space-size=2048 tools/regression/settings.test.mjs && node tools/regression/hygiene.test.mjs && node tools/regression/storage-keys.test.mjs && node tools/regression/run.mjs",
+    "verify": "npx tsc --noEmit && npm run lint:eslint && npm run format:check && npm run test:unit:coverage && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/security.test.mjs && node --max-old-space-size=2048 tools/regression/settings.test.mjs && node tools/regression/hygiene.test.mjs && node tools/regression/storage-keys.test.mjs && node tools/regression/automation.test.mjs && node tools/regression/run.mjs",
     "integrity": "node tools/regression/integrity.test.mjs",
     "lint:eslint": "eslint . --max-warnings 800",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"tests/**/*.ts\"",

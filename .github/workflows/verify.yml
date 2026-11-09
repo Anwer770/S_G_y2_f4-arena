@@ -124,6 +124,8 @@ jobs:
         run: npm run settings
       - name: Encrypted snapshots
         run: npm run snapshots
+      - name: Automation dispatcher · rules fire on real data changes (R31)
+        run: npm run automation
 
   # ---------------------------------------------------------------- 4) البوابات البصرية والطباعة
   visual-gates:

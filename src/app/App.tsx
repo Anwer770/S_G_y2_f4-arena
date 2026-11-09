@@ -34,6 +34,7 @@ import { financialService } from '../services/financial/FinancialService';
 import { customerService } from '../services/crm/CustomerService';
 import { doctorService } from '../services/crm/DoctorService';
 import { taskService } from '../services/work/TaskService';
+import { publishDomainEvent, startAutomationRuntime } from '../utils/automation';
 import { debtService } from '../services/debts/DebtService';
 import { custodyService } from '../services/custody/CustodyService';
 import { knowledgeService } from '../services/knowledge/KnowledgeService';
@@ -92,6 +93,12 @@ import {
 export const MainApp: React.FC = () => {
   const { isAuthenticated, canAccessModule, getAllowedTabs } = useAuth();
   const [activeTab, setActiveTab] = useState<ActiveModuleTab>('dashboard');
+
+  // R31: مشغّل أحداث الأتمتة — اشتراك واحد + مسح المتأخرات + حدث بداية الخطة اليومية
+  useEffect(() => {
+    const stop = startAutomationRuntime();
+    return stop;
+  }, []);
 
   // Role restriction redirect
   useEffect(() => {
@@ -387,9 +394,28 @@ export const MainApp: React.FC = () => {
 
   // Task & Commitment Handlers
   const handleSaveTask = (task: Task) => {
+    const exists = tasks.some((t) => t.id === task.id);
     taskService.saveTask(task);
     setTasks(taskService.getAllTasks());
     broadcastDataChange('TASK_UPDATED');
+    // R31: المهام الكلاسيكية تُطلق أحداث المجال أيضاً (إنشاء/تعديل + إنجاز عند الحالة)
+    publishDomainEvent({
+      type: exists ? 'task_updated' : 'task_created',
+      entityType: 'task',
+      entityId: task.id,
+      title: task.title,
+      data: { status: task.status, priority: task.pri, dueDate: task.end, source: 'classic' },
+    });
+    if (task.status === 'تم الانجاز' && tasks.find((t) => t.id === task.id)?.status !== 'تم الانجاز') {
+      publishDomainEvent({
+        type: 'task_completed',
+        entityType: 'task',
+        entityId: task.id,
+        title: task.title,
+        origin: 'user',
+        data: { status: task.status, source: 'classic' },
+      });
+    }
   };
 
   const handleDeleteTask = (id: string) => {
@@ -410,6 +436,13 @@ export const MainApp: React.FC = () => {
     taskService.saveTask(updated);
     setTasks(taskService.getAllTasks());
     broadcastDataChange('TASK_UPDATED');
+    publishDomainEvent({
+      type: isCompleted ? 'task_reopened' : 'task_completed',
+      entityType: 'task',
+      entityId: updated.id,
+      title: updated.title,
+      data: { status: updated.status, source: 'classic' },
+    });
   };
 
   const handleSaveCommitment = (comm: Commitment) => {

@@ -24,6 +24,10 @@ export default defineConfig({
         'src/utils/autoJournaling.ts',
         'src/utils/formatters.ts',
         'src/utils/storage/system.ts',
+        'src/utils/automation/automationRules.ts',
+        'src/utils/automation/automationDerive.ts',
+        'src/utils/automation/automationRunner.ts',
+        'src/utils/automation/automationEvents.ts',
       ],
       thresholds: {
         lines: 75,

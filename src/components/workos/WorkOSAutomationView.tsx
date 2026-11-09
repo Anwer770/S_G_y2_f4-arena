@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AutomationRule } from '../../types/workos';
+import type { AutomationRun } from '../../utils/automation';
 import {
   Cpu,
   Zap,
@@ -24,6 +25,8 @@ interface WorkOSAutomationViewProps {
   onExecuteAutomationManually: (rule: AutomationRule) => void;
   onAddAutomation?: (rule: AutomationRule) => void;
   onDeleteAutomation?: (id: string) => void;
+  /** R31: آخر عمليات التشغيل الحقيقية (من سجل المشغّل). */
+  recentRuns?: AutomationRun[];
 }
 
 export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
@@ -32,6 +35,7 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
   onExecuteAutomationManually,
   onAddAutomation,
   onDeleteAutomation,
+  recentRuns = [],
 }) => {
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [executionNotification, setExecutionNotification] = useState<string | null>(null);
@@ -153,6 +157,51 @@ export const WorkOSAutomationView: React.FC<WorkOSAutomationViewProps> = ({
           <span>{executionNotification}</span>
         </div>
       )}
+
+      {/* R31: سجل التشغيل الحقيقي — ما نفّذه مشغّل الأحداث فعلاً */}
+      <div
+        data-automation-runs
+        className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs p-4"
+      >
+        <div className="flex items-center justify-between mb-2.5">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <Cpu className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+            سجل التشغيل الفعلي
+          </h3>
+          <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
+            {recentRuns.length} عملية مسجّلة
+          </span>
+        </div>
+        {recentRuns.length === 0 ? (
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            لا عمليات بعد — ينفّذ المشغّل القواعد تلقائياً عند أي إنجاز مهمة أو اكتمال مهام فرعية أو تجاوز استحقاق.
+          </p>
+        ) : (
+          <ul className="space-y-1.5">
+            {recentRuns.slice(0, 5).map((run) => (
+              <li
+                key={run.key}
+                className="flex items-center justify-between gap-2 text-xs border border-slate-100 dark:border-slate-800 rounded-lg px-2.5 py-1.5"
+              >
+                <span className="flex items-center gap-1.5 min-w-0">
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                      run.outcome === 'executed' ? 'bg-emerald-500' : 'bg-rose-500'
+                    }`}
+                  ></span>
+                  <span className="font-bold text-slate-700 dark:text-slate-200 truncate">{run.ruleName}</span>
+                  <span className="text-slate-400 dark:text-slate-500 truncate">
+                    · {run.eventType} · {run.entityType}
+                  </span>
+                </span>
+                <span className="font-mono text-slate-500 dark:text-slate-400 shrink-0">
+                  {run.executedAt.split('T')[0]} {run.executedAt.split('T')[1]?.slice(0, 5) || ''}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {/* Rules list */}
       <div className="space-y-3.5">

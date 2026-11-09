@@ -218,6 +218,7 @@ const CI_GATES = [
   'npm run data-loss',
   'npm run workos',
   'npm run outbox',
+  'npm run automation',
   'npm run typography',
   'npm run darkmode',
   'npm run tables',

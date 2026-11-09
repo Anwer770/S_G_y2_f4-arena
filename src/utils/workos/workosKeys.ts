@@ -23,4 +23,5 @@ export const KEYS = {
   AUTOMATIONS: `${STORAGE_PREFIX}automations`,
   ACTIVITY: `${STORAGE_PREFIX}activity`,
   ACTIVE_TIMER: `${STORAGE_PREFIX}active_timer`,
+  AUTOMATION_RUNS: `${STORAGE_PREFIX}automation_runs`,
 };
