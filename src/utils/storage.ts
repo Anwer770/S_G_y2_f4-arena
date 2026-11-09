@@ -1,4 +1,5 @@
 import { dbStorage } from '../database/dbStorage';
+import { createObjectRepository } from '../database/repositories/ObjectRepository';
 import {
   AppSettings,
   AuditLog,
@@ -155,6 +156,15 @@ import {
   logDebtAudit,
 } from './storage/debts';
 import { loadSettings, saveSettings } from './storage/settings';
+/**
+ * نسخة الطوارئ الشاملة (R42): تُكتب قبل أي مسح كامل. كائن واحد عبر المستودع.
+ */
+const unifiedBackupRepo = createObjectRepository<UnifiedBackupState>({
+  key: STORAGE_KEYS.UNIFIED_BACKUP,
+  defaults: {} as UnifiedBackupState,
+  noMerge: true,
+});
+
 export { STORAGE_KEYS, STORAGE_KEY_MANIFEST } from './storage/keys';
 export * from './storage/stock';
 export * from './storage/financial';
@@ -663,7 +673,7 @@ export const resetAllModuleData = restoreDefaultData;
 export function clearAllData(): void {
   // Save safety snapshot
   const snapshot = getUnifiedBackupState();
-  dbStorage.setItem(STORAGE_KEYS.UNIFIED_BACKUP, JSON.stringify(snapshot));
+  unifiedBackupRepo.write(snapshot);
 
   saveStockRecords([]);
   saveStockSeq({ IN: 1, OUT: 1 });

@@ -21,7 +21,7 @@ import {
   WorkActivityLog,
   WorkOSData,
 } from '../../types/workos';
-import { dbStorage } from '../../database/dbStorage';
+import { createValueRepository } from '../../database/repositories/ValueRepository';
 import { publishDomainEvent, withAutomationOrigin } from '../automation/automationEvents';
 import {
   deriveTaskEvents,
@@ -51,36 +51,41 @@ import {
 // ----------------------------------------------------------------------------
 // SAFE LOCAL STORAGE LOADERS & SAVERS
 // ----------------------------------------------------------------------------
+/**
+ * مستودعات القيمة لكل مفتاح (R42) — تُنشأ مرة واحدة وتُخزَّن في سجل.
+ * القيم تُخزَّن JSON هنا (مصفوفات ومُعرّفات نصية)، والقراءة تستخدم `readRaw`
+ * كي يبقى تطبيع «النص غير المُنصَّص» أدناه كما هو حرفياً.
+ */
+const valueRepos = new Map<string, ReturnType<typeof createValueRepository>>();
+const valueRepo = (key: string): ReturnType<typeof createValueRepository> => {
+  let repo = valueRepos.get(key);
+  if (!repo) {
+    repo = createValueRepository({ key });
+    valueRepos.set(key, repo);
+  }
+  return repo;
+};
+
 function loadSafe<T>(key: string, fallback: T): T {
+  const raw = valueRepo(key).readRaw();
+  if (!raw || raw === 'undefined' || raw === 'null') return fallback;
   try {
-    const raw = dbStorage.getItem(key);
-    if (!raw || raw === 'undefined' || raw === 'null') return fallback;
-    try {
-      const parsed = JSON.parse(raw);
-      if (parsed === null || parsed === undefined) return fallback;
-      return parsed;
-    } catch {
-      // If parsing fails (e.g. key was stored as an unquoted string like 'ws_main')
-      if (typeof fallback === 'string') {
-        // Normalize in storage for clean future reads
-        try {
-          dbStorage.setItem(key, JSON.stringify(raw));
-        } catch {}
-        return raw as unknown as T;
-      }
-      return fallback;
-    }
+    const parsed = JSON.parse(raw);
+    if (parsed === null || parsed === undefined) return fallback;
+    return parsed;
   } catch {
+    // If parsing fails (e.g. key was stored as an unquoted string like 'ws_main')
+    if (typeof fallback === 'string') {
+      // Normalize in storage for clean future reads
+      valueRepo(key).write(JSON.stringify(raw));
+      return raw as unknown as T;
+    }
     return fallback;
   }
 }
 
 function saveSafe<T>(key: string, data: T): void {
-  try {
-    dbStorage.setItem(key, JSON.stringify(data));
-  } catch (err) {
-    console.error(`Error saving key ${key}:`, err);
-  }
+  valueRepo(key).write(JSON.stringify(data));
 }
 
 // Workspaces

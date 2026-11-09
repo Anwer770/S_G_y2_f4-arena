@@ -1,7 +1,17 @@
 import { CompleteSystemSettings, UserRole } from '../types/settings';
-import { dbStorage } from '../database/dbStorage';
+import { createObjectRepository } from '../database/repositories/ObjectRepository';
 
 const SETTINGS_STORAGE_KEY = 'qeema_accounting_system_settings_v1';
+
+/**
+ * الإعدادات تُقرأ ككائن واحد بلا دمج تلقائي (R42): التطبيع أدناه يدمج كل قسم
+ * على حِدة ويتعامل مع قيم قديمة، فلا يصح أن يسبقه دمج ضحل يُخفي الغياب.
+ */
+const settingsRepo = createObjectRepository<Record<string, unknown>>({
+  key: SETTINGS_STORAGE_KEY,
+  defaults: {},
+  noMerge: true,
+});
 
 export const SETTINGS_UPDATED_EVENT = 'system_settings_updated';
 
@@ -275,9 +285,8 @@ export const ALL_PERMISSIONS_LIST = [
 
 export function loadCompleteSystemSettings(): CompleteSystemSettings {
   try {
-    const raw = dbStorage.getItem(SETTINGS_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
+    const parsed = settingsRepo.read() as Partial<CompleteSystemSettings> & Record<string, unknown>;
+    if (Object.keys(parsed).length > 0) {
       const company = { ...DEFAULT_SYSTEM_SETTINGS.company, ...(parsed.company || {}) };
       // If company still has default placeholder from old version, update to new name
       if (!company.nameAr || company.nameAr === 'شركة قيمة للتجارة والتوكيلات') {
@@ -349,13 +358,9 @@ export function loadCompleteSystemSettings(): CompleteSystemSettings {
 }
 
 export function saveCompleteSystemSettings(settings: CompleteSystemSettings): void {
-  try {
-    dbStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent(SETTINGS_UPDATED_EVENT, { detail: settings }));
-    }
-  } catch (err) {
-    console.error('Error saving complete system settings:', err);
+  settingsRepo.write(settings as unknown as Record<string, unknown>);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(SETTINGS_UPDATED_EVENT, { detail: settings }));
   }
 }
 

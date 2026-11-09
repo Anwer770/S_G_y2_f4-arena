@@ -18,6 +18,7 @@ import {
 import { SCHEMA_ENTRIES } from '../../src/database/schema/entries';
 import { createCollectionRepository } from '../../src/database/repositories/CollectionRepository';
 import { createObjectRepository } from '../../src/database/repositories/ObjectRepository';
+import { createValueRepository } from '../../src/database/repositories/ValueRepository';
 
 /** تخزين وهمي في الذاكرة (لا IndexedDB ولا localStorage). */
 function memoryStorage(initial: Record<string, string> = {}) {
@@ -372,5 +373,55 @@ describe('المفاتيح القديمة والتحقّق (R37)', () => {
     const { storage: partial } = memoryStorage({ seq: JSON.stringify({ IN: 50 }) });
     const repo = createObjectRepository({ key: 'seq', defaults, noMerge: true, isValid }, partial);
     expect(repo.read()).toEqual(defaults);
+  });
+});
+
+describe('مستودع القيمة النصية', () => {
+  it('يكتب النص خاماً بلا JSON (لا علامات تنصيص)', () => {
+    const { storage, data } = memoryStorage();
+    createValueRepository({ key: 'k' }, storage).write('2026-11-07');
+    expect(data.k).toBe('2026-11-07');
+  });
+
+  it('يقرأ النص المخزَّن ويعيد البديل عند الغياب', () => {
+    const { storage } = memoryStorage({ k: 'granted' });
+    expect(createValueRepository({ key: 'k', fallback: 'unknown' }, storage).read()).toBe('granted');
+    expect(createValueRepository({ key: 'missing', fallback: 'unknown' }, storage).read()).toBe('unknown');
+    expect(createValueRepository({ key: 'missing' }, storage).readRaw()).toBeNull();
+  });
+
+  it('isValid يرفض القيمة غير المقبولة فتُعامَل كغائبة', () => {
+    const { storage } = memoryStorage({ k: 'مريب' });
+    const repo = createValueRepository({ key: 'k', fallback: 'unknown', isValid: (raw) => raw === 'granted' }, storage);
+    expect(repo.read()).toBe('unknown');
+    expect(repo.readRaw()).toBeNull();
+  });
+
+  it('يقرأ المفتاح القديم عند غياب الحالي ولا يتقدّم عليه', () => {
+    const { storage } = memoryStorage({ old: 'قيمة-قديمة' });
+    expect(createValueRepository({ key: 'new', legacyKeys: ['old'] }, storage).read()).toBe('قيمة-قديمة');
+    const { storage: both } = memoryStorage({ new: 'حديثة', old: 'قيمة-قديمة' });
+    expect(createValueRepository({ key: 'new', legacyKeys: ['old'] }, both).read()).toBe('حديثة');
+  });
+
+  it('clear يمسح المفتاح، وفشل التخزين لا يرمي', () => {
+    const { storage, data } = memoryStorage({ k: 'x' });
+    const repo = createValueRepository({ key: 'k' }, storage);
+    repo.clear();
+    expect('k' in data).toBe(false);
+    expect(repo.read()).toBe('');
+
+    const failing: SchemaStorage = {
+      getItem: () => null,
+      setItem: () => {
+        throw new Error('quota');
+      },
+      removeItem: () => {
+        throw new Error('quota');
+      },
+    };
+    const broken = createValueRepository({ key: 'k' }, failing);
+    expect(() => broken.write('y')).not.toThrow();
+    expect(() => broken.clear()).not.toThrow();
   });
 });

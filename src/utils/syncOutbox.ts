@@ -1,4 +1,4 @@
-import { dbStorage } from '../database/dbStorage';
+import { createCollectionRepository } from '../database/repositories/CollectionRepository';
 import { broadcastDataChange } from './multiTabSync';
 
 export type OutboxEntity = 'financial' | 'stock' | 'customer' | 'doctor' | 'debt' | 'custody' | 'task' | 'settings';
@@ -19,23 +19,21 @@ export interface SyncOutboxEntry {
 
 const OUTBOX_STORAGE_KEY = 'primo_sync_outbox_v1';
 
+/** سقف السجل 2000 — يُقصّ من **النهاية** (`slice(-2000)`) كما كان، لذا لا نستخدم `limit`. */
+const outboxRepo = createCollectionRepository<SyncOutboxEntry>({
+  key: OUTBOX_STORAGE_KEY,
+  fallback: [],
+});
+
 export function loadSyncOutbox(): SyncOutboxEntry[] {
-  try {
-    const raw = dbStorage.getItem(OUTBOX_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (e) {
-    console.warn('Failed to load sync outbox:', e);
-    return [];
-  }
+  return outboxRepo.read();
 }
 
 export function saveSyncOutbox(entries: SyncOutboxEntry[]): void {
   try {
     // Keep max 2000 entries in local history
     const trimmed = entries.slice(-2000);
-    dbStorage.setItem(OUTBOX_STORAGE_KEY, JSON.stringify(trimmed));
+    outboxRepo.write(trimmed);
     broadcastDataChange('OUTBOX_UPDATED', { pendingCount: trimmed.filter((e) => e.status === 'pending').length });
   } catch (e) {
     console.error('Failed to save sync outbox:', e);

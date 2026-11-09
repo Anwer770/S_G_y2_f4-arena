@@ -1,4 +1,4 @@
-import { dbStorage } from '../database/dbStorage';
+import { createValueRepository } from '../database/repositories/ValueRepository';
 
 /**
  * استمرارية التخزين ومراقبة الحصة (إصلاح R13)
@@ -11,10 +11,15 @@ import { dbStorage } from '../database/dbStorage';
  *
  * هذه الوحدة لا تكسر أي شيء عند غياب الواجهات (Safari قديم / jsdom): كل الدوال
  * تعيد قيماً آمنة وتُسجّل تحذيراً واحداً فقط.
+ *
+ * R42: القيمتان نصّيتان خامّتان (`granted` · ISO) لذا تمرّان عبر
+ * `createValueRepository` الذي يكتب النص كما هو بلا JSON.
  */
 
-const LAST_EXPORT_KEY = 'suite_last_export_v1';
-const PERSIST_STATE_KEY = 'suite_storage_persist_v1';
+/** مفتاح تاريخ آخر تصدير (R42: مُصدَّر للبوابات والنسخ الاحتياطي). */
+export const LAST_EXPORT_KEY = 'suite_last_export_v1';
+/** مفتاح حالة التخزين الدائم (R42: مُصدَّر للبوابات والنسخ الاحتياطي). */
+export const PERSIST_STATE_KEY = 'suite_storage_persist_v1';
 
 /** عدد الأيام بعدها يُعتبر التصدير متأخراً */
 export const EXPORT_REMINDER_DAYS = 7;
@@ -42,6 +47,20 @@ export interface StorageHealth {
   exportReminderDue: boolean;
 }
 
+const PERSIST_STATES: readonly PersistState[] = ['granted', 'denied', 'unsupported', 'unknown'];
+
+const persistRepo = createValueRepository({
+  key: PERSIST_STATE_KEY,
+  fallback: 'unknown',
+  isValid: (raw) => (PERSIST_STATES as readonly string[]).includes(raw),
+});
+
+const lastExportRepo = createValueRepository({
+  key: LAST_EXPORT_KEY,
+  fallback: '',
+  isValid: (raw) => !Number.isNaN(new Date(raw).getTime()),
+});
+
 function hasStorageManager(): boolean {
   return typeof navigator !== 'undefined' && typeof navigator.storage !== 'undefined' && navigator.storage !== null;
 }
@@ -49,7 +68,7 @@ function hasStorageManager(): boolean {
 /** طلب تخزين دائم — يُستدعى مرة عند الإقلاع ومرة بعد أول حفظ ناجح */
 export async function requestPersistentStorage(): Promise<boolean> {
   if (!hasStorageManager()) {
-    dbStorage.setItem(PERSIST_STATE_KEY, 'unsupported');
+    persistRepo.write('unsupported');
     return false;
   }
 
@@ -57,21 +76,21 @@ export async function requestPersistentStorage(): Promise<boolean> {
     if (typeof navigator.storage.persisted === 'function') {
       const already = await navigator.storage.persisted();
       if (already) {
-        dbStorage.setItem(PERSIST_STATE_KEY, 'granted');
+        persistRepo.write('granted');
         return true;
       }
     }
 
     if (typeof navigator.storage.persist === 'function') {
       const granted = await navigator.storage.persist();
-      dbStorage.setItem(PERSIST_STATE_KEY, granted ? 'granted' : 'denied');
+      persistRepo.write(granted ? 'granted' : 'denied');
       return granted;
     }
 
-    dbStorage.setItem(PERSIST_STATE_KEY, 'unsupported');
+    persistRepo.write('unsupported');
     return false;
   } catch (err) {
-    dbStorage.setItem(PERSIST_STATE_KEY, 'unknown');
+    persistRepo.write('unknown');
     console.warn('storagePersistence: تعذّر طلب التخزين الدائم', err);
     return false;
   }
@@ -79,17 +98,13 @@ export async function requestPersistentStorage(): Promise<boolean> {
 
 /** الحالة المخزَّنة لطلب الديمومة (قراءة متزامنة بلا وعد) */
 export function getPersistState(): PersistState {
-  const raw = dbStorage.getItem(PERSIST_STATE_KEY);
-  if (raw === 'granted' || raw === 'denied' || raw === 'unsupported' || raw === 'unknown') {
-    return raw;
-  }
-  return 'unknown';
+  return persistRepo.read() as PersistState;
 }
 
 /** تسجيل أن المستخدم صدّر نسخة احتياطية ناجحة */
 export function markDataExported(at: Date = new Date()): void {
   try {
-    dbStorage.setItem(LAST_EXPORT_KEY, at.toISOString());
+    lastExportRepo.write(at.toISOString());
   } catch (err) {
     console.warn('storagePersistence: تعذّر تسجيل تاريخ التصدير', err);
   }
@@ -97,10 +112,8 @@ export function markDataExported(at: Date = new Date()): void {
 
 /** آخر تصدير كـ ISO أو null */
 export function getLastExportAt(): string | null {
-  const raw = dbStorage.getItem(LAST_EXPORT_KEY);
-  if (!raw) return null;
-  const parsed = new Date(raw);
-  return Number.isNaN(parsed.getTime()) ? null : raw;
+  const raw = lastExportRepo.readRaw();
+  return raw === null || raw === '' ? null : raw;
 }
 
 /** حالة تذكير التصدير (متزامنة — تُستخدم في الترويسة) */

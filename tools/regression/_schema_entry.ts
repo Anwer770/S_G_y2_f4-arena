@@ -17,6 +17,7 @@ export {
 } from '../../src/database/schema';
 
 export { dbStorage } from '../../src/database/dbStorage';
+export { createValueRepository } from '../../src/database/repositories/ValueRepository';
 export { createCollectionRepository } from '../../src/database/repositories/CollectionRepository';
 export { createObjectRepository } from '../../src/database/repositories/ObjectRepository';
 
@@ -112,3 +113,15 @@ export {
   AUTO_EXPORT_SNAPSHOTS_KEY,
   DEFAULT_AUTO_CONFIG,
 } from '../../src/services/audit/auditAutoExport';
+
+export {
+  requestPersistentStorage,
+  getPersistState,
+  markDataExported,
+  getLastExportAt,
+  PERSIST_STATE_KEY,
+  LAST_EXPORT_KEY,
+} from '../../src/utils/storagePersistence';
+export { loadArchivedAlertIds, saveArchivedAlertIds } from '../../src/utils/dueAlerts';
+export { loadSyncOutbox, saveSyncOutbox } from '../../src/utils/syncOutbox';
+export { loadAutomationRuns, saveAutomationRuns } from '../../src/utils/automation/automationStore';
