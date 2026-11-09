@@ -198,7 +198,13 @@ check(
   `bootSchema عند ${bootIdx} · renderApp عند ${renderIdx}`
 );
 
-const storageModules = ['src/utils/storage/debts.ts', 'src/utils/storage/knowledge.ts'];
+const storageModules = [
+  'src/utils/storage/debts.ts',
+  'src/utils/storage/knowledge.ts',
+  'src/utils/storage/tasks.ts',
+  'src/utils/storage/custody.ts',
+  'src/utils/storage/links.ts',
+];
 const directStorage = storageModules.filter((file) => /dbStorage\.(getItem|setItem)/.test(readFamily(file)));
 check(
   'G11 · الدفاتر المرحَّلة لا تلمس التخزين مباشرةً (كل شيء عبر المستودع)',
@@ -208,6 +214,40 @@ check(
 
 const repoUsage = storageModules.every((file) => /createCollectionRepository/.test(readFamily(file)));
 check('G12 · الدفاتر المرحَّلة تستخدم المستودع العام', repoUsage);
+
+// ── G14: تكافؤ السلوك في الوحدات المنقولة حديثاً (R35)
+const parity = [];
+const expectFallback = (name, loader, key) => {
+  seed(key, '[]');
+  const empty = loader();
+  seed(key, JSON.stringify([{ id: 'X-1', title: 'سجل', name: 'سجل', url: 'https://x.y', status: 'قيد الاستخدام' }]));
+  const one = loader();
+  parity.push({ name, fallbackCount: empty.length, storedCount: one.length });
+  return empty.length > 0 && one.length === 1;
+};
+const tasksOk = expectFallback('tasks', S.loadTasks, 'suite_tasks_items_v2');
+const custodyOk = expectFallback('custody', S.loadCustodyIssues, 'suite_custody_records_v1');
+const linksOk = expectFallback('links', S.loadLinksRecords, 'suite_links_records_v1');
+check(
+  'G14 · الوحدات المنقولة تحفظ سلوك «المصفوفة الفارغة ⇒ البذرة» (مهام · عهد · روابط)',
+  tasksOk && custodyOk && linksOk,
+  parity.map((p) => `${p.name}: بذرة ${p.fallbackCount} / محفوظ ${p.storedCount}`).join(' · ')
+);
+
+// سقف سجل تدقيق العهد = 100 سطر (سلوك محفوظ من الكود السابق)
+const manyCustodyLogs = Array.from({ length: 250 }, (_, i) => ({
+  id: `L-${i}`,
+  timestamp: '2026-11-08',
+  module: 'عهدة',
+  action: 'إضافة',
+  details: 'x',
+}));
+S.saveCustodyAuditLogs(manyCustodyLogs);
+check(
+  'G15 · سقف سجل تدقيق العهد (100 سطر) محفوظ بعد النقل',
+  S.loadCustodyAuditLogs().length === 100,
+  `${S.loadCustodyAuditLogs().length} سطراً`
+);
 
 check('G13 · لا أخطاء JS أثناء التشغيل', errors.length === 0, errors[0] || '');
 

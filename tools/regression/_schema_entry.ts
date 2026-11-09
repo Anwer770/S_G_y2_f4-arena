@@ -29,3 +29,12 @@ export {
 } from '../../src/utils/storage/debts';
 
 export { loadNotes, saveNotes, loadNoteAuditLogs, saveNoteAuditLogs } from '../../src/utils/storage/knowledge';
+
+export { loadTasks, saveTasks, loadTaskAuditLogs, saveTaskAuditLogs } from '../../src/utils/storage/tasks';
+export {
+  loadCustodyIssues,
+  saveCustodyIssues,
+  loadCustodyAuditLogs,
+  saveCustodyAuditLogs,
+} from '../../src/utils/storage/custody';
+export { loadLinksRecords, saveLinksRecords } from '../../src/utils/storage/links';
