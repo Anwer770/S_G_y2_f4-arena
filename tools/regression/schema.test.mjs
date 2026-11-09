@@ -83,6 +83,10 @@ seed('workos_v1_projects', JSON.stringify(LEGACY_PROJECTS));
 seed('suite_knowledge_notes_v1', JSON.stringify(LEGACY_NOTES));
 seed('suite_debts_records_v1', '{ملف تالف');
 
+const reading = (storage, key) => {
+  const value = storage.getItem(key);
+  return value === undefined ? null : value;
+};
 const readJson = (key) => {
   try {
     return JSON.parse(S.dbStorage.getItem(key));
@@ -407,10 +411,60 @@ check(
   `محفوظ=${seqSaved.IN}/${seqSaved.OUT} · ناقص=${seqPartial.IN}/${seqPartial.OUT} · قديم=${seqLegacy.IN}/${seqLegacy.OUT}`
 );
 
+// ── G23/G24: لا تخزين في المكوّنات + خدمة مهام مساحة العمل (R40)
+const componentFiles = [];
+const walk = (dir) => {
+  for (const entry of fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
+    const rel = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(rel);
+    else if (/\.tsx?$/.test(entry.name)) componentFiles.push(rel);
+  }
+};
+walk('src/components');
+const componentHits = componentFiles.filter((f) => /dbStorage\.(getItem|setItem|removeItem|getStats)/.test(read(f)));
+check(
+  'G23 · لا مكوّن يلمس التخزين مباشرةً (كل شيء عبر خدمة أو مستودع)',
+  componentHits.length === 0,
+  componentHits.slice(0, 5).join(' · ') || `0 تجاوز في ${componentFiles.length} ملف واجهة`
+);
+
+const WT_KEY = 'workos_v1_tasks';
+const seedTasks = [
+  { id: 'WT-1', title: 'مهمة قيد التنفيذ', status: 'in_progress', progress: 50 },
+  { id: 'WT-2', title: 'مهمة مكتملة', status: 'completed', progress: 100, taskNumber: 'TN-2' },
+];
+seed(WT_KEY, JSON.stringify(seedTasks));
+const storedTasks = () => readJson(WT_KEY) || [];
+const toggleOn = S.toggleWorkOSTaskCompletion('WT-1');
+const afterToggleOn = storedTasks().find((t) => t.id === 'WT-1');
+const toggleOff = S.toggleWorkOSTaskCompletion('WT-1');
+const afterToggleOff = storedTasks().find((t) => t.id === 'WT-1');
+const missingToggle = S.toggleWorkOSTaskCompletion('لا-يوجد');
+const byTaskNumber = S.completeWorkOSTask('TN-2');
+const afterByNumber = storedTasks().find((t) => t.id === 'WT-2');
+const runsKey = reading(S.dbStorage, 'workos_v1_automation_runs');
+const serviceSrc = read('src/services/workos/WorkOSTaskService.ts');
+check(
+  'G24 · خدمة مهام مساحة العمل: تبديل الإنجاز (ثم عكسه) · مطابقة برقم المهمة · لا كتابة عند عدم المطابقة · بلا أحداث أتمتة',
+  toggleOn &&
+    afterToggleOn.status === 'completed' &&
+    afterToggleOn.progress === 100 &&
+    toggleOff &&
+    afterToggleOff.status === 'in_progress' &&
+    afterToggleOff.progress === 50 &&
+    missingToggle === false &&
+    byTaskNumber === true &&
+    afterByNumber.status === 'completed' &&
+    runsKey === null &&
+    /saveTasksWithoutEvents/.test(serviceSrc) &&
+    !/\bsaveTasks\(/.test(serviceSrc),
+  `قلب=${afterToggleOn.status}/${afterToggleOn.progress} · عكس=${afterToggleOff.status}/${afterToggleOff.progress} · بالرقم=${afterByNumber.status} · أحداث=${runsKey === null ? 'لا شيء' : 'مكتوبة'}`
+);
+
 check('G13 · لا أخطاء JS أثناء التشغيل', errors.length === 0, errors[0] || '');
 
 const passed = results.filter((r) => r.ok).length;
-console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R37) ════════`);
+console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R40) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
 fs.writeFileSync(
   path.join(OUT_DIR, 'schema-runtime.json'),
