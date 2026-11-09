@@ -1,59 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  WorkProject,
-  TeamMember,
-  TaskPriority,
-  WorkOrder,
-  WorkSubtask,
-  NewTaskDraft,
-  NewProjectDraft,
-  NewNoteDraft,
-  NewAppointmentDraft,
-  NewCommitmentDraft,
-  NewHabitDraft,
-  NewGoalDraft,
-} from '../../types/workos';
+import { TaskPriority } from '../../types/workos';
 import { createTripleLinkOrder } from '../../utils/workosStorage';
-import {
-  X,
-  CheckSquare,
-  FolderKanban,
-  ShoppingCart,
-  Coins,
-  Calendar,
-  BookOpen,
-  Target,
-  Flame,
-  Plus,
-  Trash2,
-  Sparkles,
-  Link2,
-  CheckCircle2,
-  AlertCircle,
-  Building2,
-  MapPin,
-  Clock,
-  DollarSign,
-  Tag,
-} from 'lucide-react';
-
-interface WorkOSQuickAddModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  initialType?: string;
-  initialProjectId?: string;
-  initialPriority?: TaskPriority;
-  projects: WorkProject[];
-  team: TeamMember[];
-  onAddTask: (task: NewTaskDraft) => void;
-  onAddOrder?: (order: WorkOrder) => void;
-  onAddProject: (project: NewProjectDraft) => void;
-  onAddNote: (note: NewNoteDraft) => void;
-  onAddAppointment: (appointment: NewAppointmentDraft) => void;
-  onAddCommitment: (commitment: NewCommitmentDraft) => void;
-  onAddHabit: (habit: NewHabitDraft) => void;
-  onAddGoal: (goal: NewGoalDraft) => void;
-}
+import type { WorkOSQuickAddModalProps } from './workosQuickAddConfig';
+import { QuickAddModalHeader } from './QuickAddModalHeader';
+import { CheckSquare, ShoppingCart, Coins, Calendar, Trash2, Sparkles, Link2, CheckCircle2 } from 'lucide-react';
 
 export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
   isOpen,
@@ -279,17 +229,6 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
     onClose();
   };
 
-  const INPUT_TABS = [
-    { id: 'task', label: 'مهمة', icon: CheckSquare, badge: 'تنفيذي' },
-    { id: 'project', label: 'مشروع', icon: FolderKanban, badge: 'إداري' },
-    { id: 'order', label: 'طلبية / طلب', icon: ShoppingCart, badge: 'مبيعات وتوريد' },
-    { id: 'commitment', label: 'التزام مالي', icon: Coins, badge: 'مالي وذمم' },
-    { id: 'appointment', label: 'موعد', icon: Calendar, badge: 'ميداني' },
-    { id: 'note', label: 'ملاحظة', icon: BookOpen, badge: 'معرفة' },
-    { id: 'goal', label: 'هدف', icon: Target, badge: 'استراتيجي' },
-    { id: 'habit', label: 'عادة', icon: Flame, badge: 'انضباط' },
-  ];
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/75 backdrop-blur-xs overflow-y-auto"
@@ -299,58 +238,7 @@ export const WorkOSQuickAddModal: React.FC<WorkOSQuickAddModalProps> = ({
       }}
     >
       <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-auto">
-        {/* Header Bar */}
-        <div className="bg-slate-50 dark:bg-slate-800/80 px-5 py-3.5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-[#0F3935] text-white rounded-xl shadow-xs">
-              <Plus className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="font-black text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                <span>الشاشة الموحدة للإدخال السريع (+ Quick Add المركزية)</span>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-200 border border-teal-300 dark:border-teal-700">
-                  Work OS v3.0
-                </span>
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                إدخال مركزي متكامل مع الربط التلقائي بين الطلبيات والمهام والالتزامات المالية
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer"
-            title="إغلاق النافذة"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* 1. All Input Type Tabs: [ مهمة | مشروع | طلبية / طلب | التزام مالي | موعد | ملاحظة | هدف | عادة ] */}
-        <div className="bg-slate-100/70 dark:bg-slate-800/50 p-2 border-b border-slate-200 dark:border-slate-700 overflow-x-auto scrollbar-thin">
-          <div className="flex gap-1.5 min-w-max">
-            {INPUT_TABS.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeType === item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setActiveType(item.id)}
-                  className={`px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer select-none ${
-                    isActive
-                      ? 'bg-[#0F3935] text-white shadow-xs'
-                      : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700/70 bg-white/60 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700'
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-teal-300' : 'text-slate-400'}`} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <QuickAddModalHeader activeType={activeType} setActiveType={setActiveType} onClose={onClose} />
 
         {/* Form Body */}
         <form

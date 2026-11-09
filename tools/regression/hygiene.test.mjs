@@ -137,19 +137,28 @@ check('H8 · لا حالة مهمة خارج الاتحاد (in_review سابق�
 const suppressorFiles = srcFiles.filter((f) => /@ts-(ignore|expect-error|nocheck)/.test(fs.readFileSync(f, 'utf8')));
 check('H10 · لا تعطيل لمفحص الأنواع', suppressorFiles.length === 0, suppressorFiles.map(rel).join(' · '));
 
-/* H9 — سقوف حجم الوحدات المفكَّكة (ratchet): لا تعود الملفات الكبيرة بعد التفكيك */
+/* H9 — سقوف حجم الوحدات المفكَّكة (ratchet): لا تعود الملفات الكبيرة بعد التفكيك.
+   R30: كل ملفات المشروع صارت ≤ 900 سطراً، والقائمة تحرس ألّا تعود أي وحدة للتضخّم. */
 const MODULE_LINE_BUDGETS = [
   { file: 'src/components/financial/FinancialModule.tsx', max: 900 },
   { file: 'src/utils/storage.ts', max: 900 },
   { file: 'src/components/workos/WorkOSModule.tsx', max: 900 },
-  // R30: تفكيك workosStorage.ts (1925 ⇒ برميل re-export) ووحداته الفرعية
   { file: 'src/utils/workosStorage.ts', max: 900 },
   { file: 'src/utils/workos/workosKeys.ts', max: 900 },
   { file: 'src/utils/workos/workosSeeds.ts', max: 900 },
   { file: 'src/utils/workos/workosLoaders.ts', max: 900 },
   { file: 'src/utils/workos/workosExporters.ts', max: 900 },
   { file: 'src/utils/workos/workosAutomation.ts', max: 900 },
-  // R30: تفكيك لوحة التحكم (1896 ⇒ 840) ووحداتها الفرعية
+  { file: 'src/utils/debts.ts', max: 900 },
+  { file: 'src/utils/debts/debtCatalogs.ts', max: 900 },
+  { file: 'src/utils/debts/debtSeeds.ts', max: 900 },
+  { file: 'src/utils/debts/debtCommitmentSeeds.ts', max: 900 },
+  { file: 'src/utils/debts/debtAnalytics.ts', max: 900 },
+  { file: 'src/utils/debts/debtExporters.ts', max: 900 },
+  { file: 'src/utils/excel.ts', max: 900 },
+  { file: 'src/utils/excel/excelCore.ts', max: 900 },
+  { file: 'src/utils/excel/excelExporters.ts', max: 900 },
+  { file: 'src/utils/excel/excelImporters.ts', max: 900 },
   { file: 'src/components/dashboard/UnifiedDashboard.tsx', max: 900 },
   { file: 'src/components/dashboard/dashboardModel.ts', max: 900 },
   { file: 'src/components/dashboard/useDashboardModel.ts', max: 900 },
@@ -159,27 +168,31 @@ const MODULE_LINE_BUDGETS = [
   { file: 'src/components/dashboard/DashboardPulseCards.tsx', max: 900 },
   { file: 'src/components/dashboard/DashboardFinanceInventory.tsx', max: 900 },
   { file: 'src/components/dashboard/DashboardModuleHubs.tsx', max: 900 },
-  // R30: وحدات الديون وExcel
-  { file: 'src/utils/debts/debtCatalogs.ts', max: 900 },
-  { file: 'src/utils/debts/debtSeeds.ts', max: 900 },
-  { file: 'src/utils/debts/debtCommitmentSeeds.ts', max: 900 },
-  { file: 'src/utils/debts/debtAnalytics.ts', max: 900 },
-  { file: 'src/utils/debts/debtExporters.ts', max: 900 },
-  { file: 'src/utils/excel/excelCore.ts', max: 900 },
-  { file: 'src/utils/excel/excelExporters.ts', max: 900 },
-  { file: 'src/utils/excel/excelImporters.ts', max: 900 },
+  { file: 'src/components/RecordsView.tsx', max: 900 },
+  { file: 'src/components/records/recordsTypes.ts', max: 900 },
+  { file: 'src/components/records/useRecordsViewModel.ts', max: 900 },
+  { file: 'src/components/workos/WorkOSQuickAddModal.tsx', max: 900 },
+  { file: 'src/components/workos/QuickAddModalHeader.tsx', max: 900 },
+  { file: 'src/components/workos/workosQuickAddConfig.ts', max: 900 },
+  { file: 'src/components/knowledge/KnowledgeModule.tsx', max: 900 },
+  { file: 'src/components/knowledge/knowledgeTypes.ts', max: 900 },
+  { file: 'src/components/knowledge/useKnowledgeModel.ts', max: 900 },
+  { file: 'src/components/knowledge/NoteEditorModal.tsx', max: 900 },
+  { file: 'src/components/knowledge/noteEditorTypes.ts', max: 900 },
+  { file: 'src/components/knowledge/useNoteEditorModel.ts', max: 900 },
+  { file: 'src/components/routines/RoutinesModule.tsx', max: 900 },
+  { file: 'src/components/routines/useRoutinesModel.ts', max: 900 },
+  { file: 'src/components/routines/RoutineWizardModal.tsx', max: 900 },
+  { file: 'src/components/routines/routineWizardConfig.ts', max: 900 },
+  { file: 'src/components/routines/useRoutineWizardModel.ts', max: 900 },
+  { file: 'src/components/tasks/CalendarView.tsx', max: 900 },
+  { file: 'src/components/tasks/calendarTypes.ts', max: 900 },
+  { file: 'src/components/tasks/useCalendarModel.ts', max: 900 },
+  { file: 'src/components/tasks/calendar/CalendarDayModal.tsx', max: 900 },
 ];
 
-/* ratchet: الملفات الضخمة المتبقية مجمَّدة على حجمها الحالي — تنقص ولا تزيد */
-const FROZEN_LARGE_FILES = [
-  { file: 'src/components/tasks/CalendarView.tsx', max: 1256 },
-  { file: 'src/components/knowledge/NoteEditorModal.tsx', max: 1201 },
-  { file: 'src/components/routines/RoutinesModule.tsx', max: 1013 },
-  { file: 'src/components/RecordsView.tsx', max: 990 },
-  { file: 'src/components/routines/RoutineWizardModal.tsx', max: 977 },
-  { file: 'src/components/knowledge/KnowledgeModule.tsx', max: 953 },
-  { file: 'src/components/workos/WorkOSQuickAddModal.tsx', max: 952 },
-];
+/* ratchet: لا ملف جديد يتجاوز السقف — القائمة أعلاه تُوسَّع مع كل تفكيك (R30) */
+const FROZEN_LARGE_FILES = [];
 
 const overBudget = [];
 for (const { file, max } of [...MODULE_LINE_BUDGETS, ...FROZEN_LARGE_FILES]) {
