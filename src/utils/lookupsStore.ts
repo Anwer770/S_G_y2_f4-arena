@@ -5,12 +5,12 @@
  * لذا أي تعديل من تبويب «القوائم والثوابت» يصل فوراً إلى **كل** القوائم المنسدلة في النظام
  * لأنها تقرأ من نفس المصدر وتشترك في نفس الاشتراك.
  *
- * - الحفظ: `suite_lookups_v1` عبر `dbStorage` (IndexedDB + مرآة localStorage).
+ * - الحفظ: `suite_lookups_v1` عبر `createObjectRepository` (IndexedDB + مرآة localStorage).
  * - التدقيق: كل عملية تُسجَّل في السجل المركزي (`auditService`).
  * - النسخ الاحتياطي: تُدرَج في `createUnifiedBackup` وتُستعاد معه.
  */
 import { useSyncExternalStore } from 'react';
-import { dbStorage } from '../database/dbStorage';
+import { createObjectRepository } from '../database/repositories/ObjectRepository';
 import { auditService } from '../core/audit/AuditService';
 import { LOOKUPS_STORAGE_KEY, type LookupKind, type LookupsState } from '../constants/lookups';
 import {
@@ -24,6 +24,13 @@ import {
   replaceLookupList,
 } from './lookupsLogic';
 
+/** حالة القوائم ككائن واحد (R42) — القراءة تُعيد الكائن كما هو ثم يُطبَّع في الذاكرة. */
+const lookupsRepo = createObjectRepository<Record<string, unknown>>({
+  key: LOOKUPS_STORAGE_KEY,
+  defaults: {},
+  noMerge: true,
+});
+
 const listeners = new Set<() => void>();
 let state: LookupsState | null = null;
 
@@ -32,22 +39,14 @@ const emit = () => listeners.forEach((l) => l());
 /** يقرأ من التخزين مرة واحدة ثم يحتفظ بالنسخة في الذاكرة. */
 export function getLookups(): LookupsState {
   if (state) return state;
-  try {
-    const raw = dbStorage.getItem(LOOKUPS_STORAGE_KEY);
-    state = raw ? normalizeLookups(JSON.parse(raw)) : cloneDefaults();
-  } catch {
-    state = cloneDefaults();
-  }
+  const stored = lookupsRepo.read();
+  state = Object.keys(stored).length > 0 ? normalizeLookups(stored) : cloneDefaults();
   return state;
 }
 
 function commit(next: LookupsState, action: string, details: string): LookupsState {
   state = { ...next, updatedAt: new Date().toISOString() };
-  try {
-    dbStorage.setItem(LOOKUPS_STORAGE_KEY, JSON.stringify(state));
-  } catch (err) {
-    console.warn('lookups: تعذّر الحفظ', err);
-  }
+  lookupsRepo.write(state as unknown as Record<string, unknown>);
   auditService.log({ action: 'Update', entity: 'MasterLookups', details: `${action} — ${details}` });
   emit();
   return state;

@@ -216,6 +216,15 @@ const storageModules = [
   'src/utils/storage/settings.ts',
   'src/utils/storage/system.ts',
   'src/services/audit/auditAutoExport.ts',
+  'src/utils/settingsStorage.ts',
+  'src/utils/lookupsStore.ts',
+  'src/utils/dueAlerts.ts',
+  'src/utils/syncOutbox.ts',
+  'src/utils/automation/automationStore.ts',
+  'src/utils/automation/automationRuntime.ts',
+  'src/utils/storagePersistence.ts',
+  'src/utils/workos/workosLoaders.ts',
+  'src/services/backup/snapshotStore.ts',
 ];
 const directStorage = storageModules.filter((file) => /dbStorage\.(getItem|setItem)/.test(readFamily(file)));
 check(
@@ -224,7 +233,7 @@ check(
   directStorage.join(' · ') || '0 تجاوز'
 );
 
-const repoUsage = storageModules.every((file) => /create(Collection|Object)Repository/.test(readFamily(file)));
+const repoUsage = storageModules.every((file) => /create(Collection|Object|Value)Repository/.test(readFamily(file)));
 check('G12 · الدفاتر المرحَّلة تستخدم المستودع العام', repoUsage);
 
 // ── G14: تكافؤ السلوك في الوحدات المنقولة حديثاً (R35)
@@ -503,10 +512,106 @@ check(
   `افتراضي=${configDefault.keepCount} · مدموج=${configMerged.keepCount} · محفوظ=${configSaved.keepCount} · حالة=${stateLoaded.runs} · لقطة=${snapshotsLoaded.length}`
 );
 
+// ── G26/G27: صفر وصول خام خارج طبقة البيانات + عقد مستودع القيمة (R42)
+const rawScan = [];
+const walkAll = (dir) => {
+  for (const entry of fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
+    const rel = path.join(dir, entry.name);
+    if (entry.isDirectory()) walkAll(rel);
+    else if (/\.tsx?$/.test(entry.name)) rawScan.push(rel);
+  }
+};
+walkAll('src');
+const rawHits = rawScan
+  .filter((f) => !f.startsWith(path.join('src', 'database')))
+  .filter((f) => /dbStorage\.(getItem|setItem|removeItem)/.test(read(f)));
+check(
+  'G26 · لا وصول خام للتخزين خارج `src/database` (كل شيء عبر مستودع)',
+  rawHits.length === 0,
+  rawHits.slice(0, 5).join(' · ') || `0 تجاوز في ${rawScan.length} ملف`
+);
+
+// مستودع القيمة: يكتب النص كما هو (لا JSON) ويحترم التحقّق والمفاتيح القديمة
+const vKey = 'suite_test_value_v1';
+const vRepo = S.createValueRepository({ key: vKey, fallback: 'غير-معروف', isValid: (raw) => raw === 'granted' });
+S.dbStorage.removeItem(vKey);
+const vAbsent = vRepo.read();
+vRepo.write('granted');
+const vRawStored = S.dbStorage.getItem(vKey);
+const vValid = vRepo.read();
+vRepo.write('غريب');
+const vInvalid = vRepo.read();
+const vLegacy = S.createValueRepository({ key: 'suite_test_value_new_v1', fallback: '', legacyKeys: [vKey] });
+check(
+  'G27 · مستودع القيمة: يكتب النص خاماً (لا JSON) · التحقّق يرفض غير المطابق ⇒ البديل · المفتاح القديم يُقرأ',
+  vAbsent === 'غير-معروف' &&
+    vRawStored === 'granted' &&
+    vValid === 'granted' &&
+    vInvalid === 'غير-معروف' &&
+    vLegacy.read() === 'غريب',
+  `خام=${vRawStored} · صالح=${vValid} · غير صالح=${vInvalid}`
+);
+
+// طابور المزامنة: القصّ من **النهاية** محفوظ (2000 سطر · الأحدث يبقى)
+const outboxMany = Array.from({ length: 2500 }, (_, i) => ({
+  id: `ob-${i}`,
+  entity: 'task',
+  action: 'INSERT',
+  entityId: `e-${i}`,
+  timestamp: '2026-11-07',
+  status: 'pending',
+}));
+S.saveSyncOutbox(outboxMany);
+const outboxStored = S.loadSyncOutbox();
+check(
+  'G28 · طابور المزامنة: السقف 2000 يُقصّ من النهاية (يبقى الأحدث) بعد النقل',
+  outboxStored.length === 2000 && outboxStored[0].id === 'ob-500' && outboxStored[1999].id === 'ob-2499',
+  `${outboxStored.length} سطراً · أولها ${outboxStored[0]?.id} · آخرها ${outboxStored[1999]?.id}`
+);
+
+// سجل تشغيل الأتمتة: القصّ إلى 200
+const runsMany = Array.from({ length: 320 }, (_, i) => ({
+  id: `run-${i}`,
+  ruleId: 'r1',
+  at: new Date(2026, 0, 1, 0, i).toISOString(),
+  status: 'done',
+}));
+S.saveAutomationRuns(runsMany);
+check(
+  'G29 · سجل الأتمتة: السقف 200 سطر محفوظ بعد النقل',
+  S.loadAutomationRuns().length === 200,
+  `${S.loadAutomationRuns().length} سطراً`
+);
+
+// ديمومة التخزين: نص خام لا JSON
+const persistBefore = S.getPersistState();
+await S.requestPersistentStorage();
+const persistAfter = S.getPersistState();
+S.markDataExported(new Date('2026-11-07T10:00:00.000Z'));
+const lastExport = S.getLastExportAt();
+check(
+  'G30 · ديمومة التخزين: الحالة نص خام (`unsupported` في jsdom) وتاريخ التصدير يُقرأ ISO',
+  ['unknown', 'unsupported'].includes(persistBefore) &&
+    persistAfter === 'unsupported' &&
+    S.dbStorage.getItem(S.PERSIST_STATE_KEY) === 'unsupported' &&
+    lastExport === '2026-11-07T10:00:00.000Z',
+  `قبل=${persistBefore} · بعد=${persistAfter} · تصدير=${lastExport}`
+);
+
+// التنبيهات المؤرشفة: الفراغ مقبول والكتابة تعمل
+S.dbStorage.removeItem('primo_archived_alert_ids_v1');
+const archivedEmpty = S.loadArchivedAlertIds();
+S.saveArchivedAlertIds(['a-1', 'a-2']);
+check(
+  'G31 · التنبيهات المؤرشفة: الفراغ مقبول والكتابة عبر المستودع',
+  archivedEmpty.length === 0 && S.loadArchivedAlertIds().length === 2,
+  `فارغ=${archivedEmpty.length} · محفوظ=${S.loadArchivedAlertIds().length}`
+);
+
 check('G13 · لا أخطاء JS أثناء التشغيل', errors.length === 0, errors[0] || '');
 
 const passed = results.filter((r) => r.ok).length;
-console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R41) ════════`);
+console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R42) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
 fs.writeFileSync(
   path.join(OUT_DIR, 'schema-runtime.json'),

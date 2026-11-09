@@ -6,7 +6,7 @@
  * **لا تغيير سلوك:** القراءة تُعيد `[]` عند غياب المفتاح أو تلفه (لا ترمي)،
  * والكتابة تستبدل القائمة كاملة — تماماً كالسابق.
  */
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
 import type { EncryptedSnapshotPayload } from '../../utils/snapshotCrypto';
 import type { UnifiedBackupState } from '../../types';
 
@@ -26,24 +26,18 @@ export interface CloudSnapshot {
   payload?: EncryptedSnapshotPayload | null;
 }
 
+/** النقاط المحفوظة: الفراغ مقبول، والغائب/التالف/غير المصفوفي ⇒ `[]`. */
+const snapshotsRepo = createCollectionRepository<CloudSnapshot>({
+  key: SNAPSHOTS_STORAGE_KEY,
+  fallback: [],
+});
+
 /** يقرأ النقاط المحفوظة. القيمة الغائبة/التالفة/غير المصفوفية ⇒ `[]`. */
 export function loadSnapshots(): CloudSnapshot[] {
-  try {
-    const raw = dbStorage.getItem(SNAPSHOTS_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as CloudSnapshot[]) : [];
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
+  return snapshotsRepo.read();
 }
 
 /** يستبدل القائمة كاملة. */
 export function saveSnapshots(snapshots: CloudSnapshot[]): void {
-  try {
-    dbStorage.setItem(SNAPSHOTS_STORAGE_KEY, JSON.stringify(snapshots));
-  } catch (e) {
-    console.error(e);
-  }
+  snapshotsRepo.write(snapshots);
 }

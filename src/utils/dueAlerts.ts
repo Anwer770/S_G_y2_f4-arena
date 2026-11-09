@@ -1,5 +1,5 @@
 import { Task, Commitment } from '../types';
-import { dbStorage } from '../database/dbStorage';
+import { createCollectionRepository } from '../database/repositories/CollectionRepository';
 
 export interface DueAlertItem {
   id: string;
@@ -26,21 +26,18 @@ export interface DueAlertsSummary {
 
 const ARCHIVED_ALERTS_KEY = 'primo_archived_alert_ids_v1';
 
+/** معرّفات التنبيهات المؤرشفة: الفراغ مقبول دائماً (لا بذرة). */
+const archivedAlertsRepo = createCollectionRepository<string>({
+  key: ARCHIVED_ALERTS_KEY,
+  fallback: [],
+});
+
 export function loadArchivedAlertIds(): string[] {
-  try {
-    const raw = dbStorage.getItem(ARCHIVED_ALERTS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+  return archivedAlertsRepo.read();
 }
 
 export function saveArchivedAlertIds(ids: string[]): void {
-  try {
-    dbStorage.setItem(ARCHIVED_ALERTS_KEY, JSON.stringify(ids));
-  } catch {}
+  archivedAlertsRepo.write(ids);
 }
 
 export function archiveAlertIds(idsToArchive: string[]): void {

@@ -7,11 +7,14 @@
 import { subscribeDomainEvents, countDomainEventListeners } from './automationEvents';
 import { processDomainEvent, sweepOverdueTasks, defaultAutomationDeps } from './automationRunner';
 import { loadAutomationRuns, saveAutomationRuns } from './automationStore';
-import { dbStorage } from '../../database/dbStorage';
+import { createValueRepository } from '../../database/repositories/ValueRepository';
 import { publishDomainEvent } from './automationEvents';
 import type { AutomationSweepResult } from './automationTypes';
 
 const BOOT_DATE_KEY = 'workos_v1_automation_boot_date';
+
+/** تاريخ آخر إقلاع يُخزَّن **نصاً خاماً** (`2026-11-07`) لا JSON — مستودع القيمة. */
+const bootDateRepo = createValueRepository({ key: BOOT_DATE_KEY });
 
 let started = false;
 let unsubscribe: (() => void) | null = null;
@@ -28,19 +31,11 @@ export function isAutomationRuntimeStarted(): boolean {
 
 /** يوم آخر إقلاع (لمنع تكرار `daily_plan_start` أكثر من مرة في اليوم). */
 function readBootDate(): string | null {
-  try {
-    return dbStorage.getItem(BOOT_DATE_KEY);
-  } catch {
-    return null;
-  }
+  return bootDateRepo.readRaw();
 }
 
 function writeBootDate(date: string): void {
-  try {
-    dbStorage.setItem(BOOT_DATE_KEY, date);
-  } catch {
-    /* التخزين غير متاح — لا يُعطّل الإقلاع */
-  }
+  bootDateRepo.write(date);
 }
 
 /**
