@@ -209,6 +209,8 @@ const storageModules = [
   'src/utils/storage/doctors.ts',
   'src/utils/storage/financial.ts',
   'src/utils/storage/stock.ts',
+  'src/utils/storage/settings.ts',
+  'src/utils/storage/system.ts',
 ];
 const directStorage = storageModules.filter((file) => /dbStorage\.(getItem|setItem)/.test(readFamily(file)));
 check(

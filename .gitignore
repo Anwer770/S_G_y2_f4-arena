@@ -20,6 +20,7 @@ docs/تدقيق/.workos-bundle.js
 docs/تدقيق/.automation-bundle.js
 docs/تدقيق/.csp-bundle.mjs
 docs/تدقيق/.schema-bundle.js
+docs/تدقيق/.auth-storage-bundle.js
 docs/تدقيق/.url-safety-bundle.mjs
 
 # مخرجات تجزيء اختبارات الانحدار (مولّدة)

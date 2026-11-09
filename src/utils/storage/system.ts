@@ -1,38 +1,38 @@
 /**
  * مخزن وحدة «system» — مُستخرج من storage.ts (R26).
+ * R38: القراءة/الكتابة عبر المستودعات مع الحفاظ على السلوك حرفياً:
+ *  · سجل النظام: بذرة سطر واحد عند الغياب، والفراغ **مقبول**، وسقف **1000 سطر**.
+ *  · حالة قفل المحاولات: كائن كما هو (بلا دمج)، والتالف ⇒ `{}` (لا قفل زائف).
+ *  · جلسة الدخول: غيابها أو تلفها أو غياب `userId` ⇒ `null` (جلسة مرفوضة)،
+ *    والمسح يحذف المفتاح فعلياً لا يكتب `{}` — كي لا تُقرأ جلسة فارغة كجلسة.
  */
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
+import { createObjectRepository } from '../../database/repositories/ObjectRepository';
 import { AuditLog } from '../../types';
 import { STORAGE_KEYS } from './keys';
 
+const DEFAULT_SYSTEM_AUDIT: AuditLog[] = [
+  {
+    id: 'LOG-001',
+    timestamp: new Date().toLocaleString('ar-YE'),
+    module: 'نظام',
+    action: 'تهيئة',
+    details: 'تشغيل المنظومة المتكاملة (السجل المالي، دفتر المخزون، ودفتر المهام)',
+  },
+];
+
+const auditRepo = createCollectionRepository<AuditLog>({
+  key: STORAGE_KEYS.SYSTEM_AUDIT,
+  fallback: DEFAULT_SYSTEM_AUDIT,
+  limit: 1000,
+});
+
 export function loadSystemAuditLogs(): AuditLog[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.SYSTEM_AUDIT);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading system logs:', e);
-  }
-  return [
-    {
-      id: 'LOG-001',
-      timestamp: new Date().toLocaleString('ar-YE'),
-      module: 'نظام',
-      action: 'تهيئة',
-      details: 'تشغيل المنظومة المتكاملة (السجل المالي، دفتر المخزون، ودفتر المهام)',
-    },
-  ];
+  return auditRepo.read();
 }
 
 export function saveSystemAuditLogs(logs: AuditLog[]): void {
-  try {
-    const trimmed = logs.slice(0, 1000);
-    dbStorage.setItem(STORAGE_KEYS.SYSTEM_AUDIT, JSON.stringify(trimmed));
-  } catch (e) {
-    console.error('Error saving system logs:', e);
-  }
+  auditRepo.write(logs);
 }
 
 export function logSystemAudit(module: AuditLog['module'], action: string, details: string, recordId?: string): void {
@@ -82,52 +82,40 @@ export interface StoredAuthSession {
   remember: boolean;
 }
 
+/** الحالة الافتراضية: بلا أقفال. لا تُستنسخ للقراءة فقط — الكائن هنا بديل ثابت. */
+const EMPTY_GUARD: AuthGuardState = {};
+
+const guardRepo = createObjectRepository<AuthGuardState>({
+  key: STORAGE_KEYS.AUTH_GUARD,
+  defaults: EMPTY_GUARD,
+  noMerge: true,
+});
+
+/** مفتاح الجلسة يُقرأ ككائن جزئي كي نستطيع رفضه (لا لدمجه). */
+const sessionRepo = createObjectRepository<Partial<StoredAuthSession>>({
+  key: STORAGE_KEYS.AUTH_SESSION,
+  defaults: {},
+  noMerge: true,
+});
+
 export function loadAuthGuardState(): AuthGuardState {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.AUTH_GUARD);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed as AuthGuardState;
-    }
-  } catch (e) {
-    console.warn('Error loading auth guard state:', e);
-  }
-  return {};
+  return guardRepo.read();
 }
 
 export function saveAuthGuardState(state: AuthGuardState): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.AUTH_GUARD, JSON.stringify(state));
-  } catch (e) {
-    console.warn('Error saving auth guard state:', e);
-  }
+  guardRepo.write(state);
 }
 
 export function loadAuthSession(): StoredAuthSession | null {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.AUTH_SESSION);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object' || !parsed.userId) return null;
-    return parsed as StoredAuthSession;
-  } catch (e) {
-    console.warn('Error loading auth session:', e);
-    return null;
-  }
+  const value = sessionRepo.read();
+  if (!value || typeof value.userId !== 'string' || value.userId.length === 0) return null;
+  return value as StoredAuthSession;
 }
 
 export function saveAuthSession(session: StoredAuthSession): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.AUTH_SESSION, JSON.stringify(session));
-  } catch (e) {
-    console.warn('Error saving auth session:', e);
-  }
+  sessionRepo.write(session);
 }
 
 export function clearAuthSession(): void {
-  try {
-    dbStorage.removeItem(STORAGE_KEYS.AUTH_SESSION);
-  } catch (e) {
-    console.warn('Error clearing auth session:', e);
-  }
+  sessionRepo.clear();
 }
