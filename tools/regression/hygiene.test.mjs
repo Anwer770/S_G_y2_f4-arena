@@ -224,6 +224,7 @@ const CI_GATES = [
   'npm run outbox',
   'npm run automation',
   'npm run csp',
+  'npm run schema',
   'npm run typography',
   'npm run darkmode',
   'npm run tables',

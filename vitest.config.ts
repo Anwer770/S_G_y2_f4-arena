@@ -30,6 +30,9 @@ export default defineConfig({
         'src/utils/automation/automationEvents.ts',
         'src/utils/urlSafety.ts',
         'src/utils/security/csp.ts',
+        'src/database/schema/engine.ts',
+        'src/database/schema/entries.ts',
+        'src/database/repositories/CollectionRepository.ts',
       ],
       thresholds: {
         lines: 75,

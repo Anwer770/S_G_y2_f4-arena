@@ -5,6 +5,7 @@ import './index.css';
 import { ThemeProvider } from './context/ThemeContext.tsx';
 import { indexedDBStorage } from './database/adapters/IndexedDBAdapter';
 import { requestPersistentStorage } from './utils/storagePersistence';
+import { bootSchema } from './database/schema';
 import { APP_NAME, APP_VERSION_LABEL } from './constants/appMeta';
 
 // عنوان الصفحة من المصدر الوحيد للهوية (إصلاح R7)
@@ -39,6 +40,13 @@ function renderApp() {
   } catch (err) {
     console.warn('Data safety gate: readiness failed, rendering with current cache', err);
   }
+  // R33: ترحيل المخططات المُرقَّم **قبل** تركيب الواجهة — كل القراءات متزامنة،
+  // فلو رُكِّبت أولاً لقرأت شكلاً قديماً ثم كتبته فوق الشكل المرحَّل.
+  const report = bootSchema();
+  if (report.upgraded > 0 || report.failed > 0) {
+    console.info(`Schema: رُحِّل ${report.upgraded} مفتاحاً · فشل ${report.failed}`);
+  }
+
   // طلب تخزين دائم حتى لا يُخلي المتصفح البيانات عند ضغط المساحة (إصلاح R13)
   void requestPersistentStorage();
   renderApp();

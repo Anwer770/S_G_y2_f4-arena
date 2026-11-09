@@ -1,0 +1,163 @@
+{
+ "at": "2026-11-09T02:21:29.190Z",
+ "passed": 15,
+ "total": 15,
+ "report": {
+  "upgraded": 3,
+  "current": 0,
+  "failed": 1,
+  "outcomes": [
+   {
+    "key": "workos_v1_tasks",
+    "from": 0,
+    "to": 1,
+    "applied": 1,
+    "backupKey": "workos_v1_tasks::pre-migration",
+    "status": "upgraded"
+   },
+   {
+    "key": "workos_v1_projects",
+    "from": 0,
+    "to": 1,
+    "applied": 1,
+    "backupKey": "workos_v1_projects::pre-migration",
+    "status": "upgraded"
+   },
+   {
+    "key": "workos_v1_orders",
+    "from": 0,
+    "to": 1,
+    "applied": 0,
+    "status": "skipped-empty"
+   },
+   {
+    "key": "workos_v1_commitments",
+    "from": 0,
+    "to": 1,
+    "applied": 0,
+    "status": "skipped-empty"
+   },
+   {
+    "key": "workos_v1_notes",
+    "from": 0,
+    "to": 1,
+    "applied": 0,
+    "status": "skipped-empty"
+   },
+   {
+    "key": "suite_tasks_items_v2",
+    "from": 0,
+    "to": 1,
+    "applied": 0,
+    "status": "skipped-empty"
+   },
+   {
+    "key": "suite_debts_records_v1",
+    "from": 0,
+    "to": 1,
+    "applied": 0,
+    "status": "failed",
+    "error": "JSON تالف: Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+   },
+   {
+    "key": "suite_custody_records_v1",
+    "from": 0,
+    "to": 1,
+    "applied": 0,
+    "status": "skipped-empty"
+   },
+   {
+    "key": "suite_knowledge_notes_v1",
+    "from": 0,
+    "to": 1,
+    "applied": 1,
+    "backupKey": "suite_knowledge_notes_v1::pre-migration",
+    "status": "upgraded"
+   },
+   {
+    "key": "suite_links_records_v1",
+    "from": 0,
+    "to": 1,
+    "applied": 0,
+    "status": "skipped-empty"
+   }
+  ]
+ },
+ "results": [
+  {
+   "name": "G1 · محرّك الترحيل يُجزيء ويُحمّل",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G2 · بيانات قديمة تُرحَّل (مصفوفات فرعية وتقدم ومعرّفات)",
+   "ok": true,
+   "detail": "رُحِّل 3 · مهام 3"
+  },
+  {
+   "name": "G3 · لا فقدان بيانات: كل سجل موجود بعده بنفس المعرّف والعنوان",
+   "ok": true,
+   "detail": "3/3 سجلاً"
+  },
+  {
+   "name": "G3b · السجل بلا معرّف نال معرّفاً فريداً بدل اختفائه",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G4 · نسخة احتياطية للقيمة الأصلية محفوظة قبل الترحيل",
+   "ok": true,
+   "detail": "::pre-migration"
+  },
+  {
+   "name": "G5 · تشغيل ثانٍ لا يُغيّر شيئاً (idempotent)",
+   "ok": true,
+   "detail": "ترحيلات ثانية = 0"
+  },
+  {
+   "name": "G6 · بيانات بإصدار أحدث تُترك كما هي (لا هبوط)",
+   "ok": true,
+   "detail": "skipped-future"
+  },
+  {
+   "name": "G7 · JSON تالف يُترك بلا مسح ويُسجَّل كفشل بلا إسقاط الإقلاع",
+   "ok": true,
+   "detail": "failed = 1"
+  },
+  {
+   "name": "G8 · مستودع الديون: المصفوفة الفارغة ⇒ البذرة، والمصفوفة غير الفارغة ⇒ المحفوظ",
+   "ok": true,
+   "detail": "بذرة=126 · محفوظ=1"
+  },
+  {
+   "name": "G9 · مستودع المعرفة: المصفوفة الفارغة مقبولة (لا رجوع للبذرة) والحفظ يعمل",
+   "ok": true,
+   "detail": "فارغة=0 · بعد الحفظ=1"
+  },
+  {
+   "name": "G9b · سجل التدقيق يُقرأ ويُكتب عبر المستودع",
+   "ok": true,
+   "detail": "2 سطراً"
+  },
+  {
+   "name": "G10 · الترحيل يعمل قبل تركيب الواجهة (main.tsx)",
+   "ok": true,
+   "detail": "bootSchema عند 1633 · renderApp عند 1903"
+  },
+  {
+   "name": "G11 · الدفاتر المرحَّلة لا تلمس التخزين مباشرةً (كل شيء عبر المستودع)",
+   "ok": true,
+   "detail": "0 تجاوز"
+  },
+  {
+   "name": "G12 · الدفاتر المرحَّلة تستخدم المستودع العام",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G13 · لا أخطاء JS أثناء التشغيل",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

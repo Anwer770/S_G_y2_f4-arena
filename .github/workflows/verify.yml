@@ -129,6 +129,8 @@ jobs:
         run: npm run snapshots
       - name: Automation dispatcher · rules fire on real data changes (R31)
         run: npm run automation
+      - name: Schema migrations + repositories (R33)
+        run: npm run schema
 
   # ---------------------------------------------------------------- 4) البوابات البصرية والطباعة
   visual-gates:
