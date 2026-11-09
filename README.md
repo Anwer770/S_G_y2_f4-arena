@@ -4,7 +4,7 @@
 
 **تطبيق ويب عربي (RTL) لإدارة العمليات والمخزون والحسابات والعهد والديون والعملاء والمهام — يعمل بلا خادم، وكل البيانات محلية في متصفحك.**
 
-الإصدار الحالي: **v3.25.0**
+الإصدار الحالي: **v3.26.0**
 
 [![Verify](https://github.com/Anwer770/S_G_y2_f4-arena/actions/workflows/verify.yml/badge.svg)](https://github.com/Anwer770/S_G_y2_f4-arena/actions/workflows/verify.yml)
 

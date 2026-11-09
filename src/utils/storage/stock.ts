@@ -1,8 +1,15 @@
 /**
  * مخزن وحدة المخزون (Stock) — مُستخرج من storage.ts (R24).
  * المفاتيح تأتي من keys.ts كي تبقى ثابتة ولا يتغيّر أي مفتاح تخزين.
+ *
+ * R37: كل قراءة/كتابة عبر مستودع، مع الحفاظ على **سلوكين حرفياً**:
+ *  1. **الهجرة التدريجية:** إن غاب المفتاح الحالي تُقرأ المفاتيح القديمة
+ *     (`stock_ledger_*_v1`) — عبر `legacyKeys`، والكتابة تذهب للمفتاح الحالي وحده.
+ *  2. **عدّاد التسلسل:** لا يُدمج جزئياً. كائن بلا `IN`/`OUT` رقميين = عدّاد تالف
+ *     ⇒ يُعاد الافتراضي كاملاً (`isValid`)، وإلا لتولّدت حركة برقم مكرّر.
  */
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
+import { createObjectRepository } from '../../database/repositories/ObjectRepository';
 import type { MovementRecord, Product } from '../../types';
 import {
   DEFAULT_CATEGORIES as DEFAULT_STOCK_CATEGORIES,
@@ -17,111 +24,88 @@ export const DEFAULT_STOCK_SEQ = {
   OUT: 299,
 };
 
+/** المفاتيح القديمة التي كانت تُقرأ قبل توحيد المفاتيح (R24). */
+const LEGACY_PRODUCTS = 'stock_ledger_products_v1';
+const LEGACY_RECORDS = 'stock_ledger_records_v1';
+const LEGACY_CATEGORIES = 'stock_ledger_categories_v1';
+const LEGACY_STATUSES = 'stock_ledger_statuses_v1';
+const LEGACY_SEQ = 'stock_ledger_seq_v1';
+
+const productsRepo = createCollectionRepository<Product>({
+  key: STORAGE_KEYS.STOCK_PRODUCTS,
+  fallback: DEFAULT_PRODUCTS,
+  fallbackOnEmpty: true,
+  legacyKeys: [LEGACY_PRODUCTS],
+});
+
+const recordsRepo = createCollectionRepository<MovementRecord>({
+  key: STORAGE_KEYS.STOCK_RECORDS,
+  fallback: INITIAL_RECORDS,
+  fallbackOnEmpty: true,
+  legacyKeys: [LEGACY_RECORDS],
+});
+
+const categoriesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.STOCK_CATEGORIES,
+  fallback: DEFAULT_STOCK_CATEGORIES,
+  fallbackOnEmpty: true,
+  legacyKeys: [LEGACY_CATEGORIES],
+});
+
+const statusesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.STOCK_STATUSES,
+  fallback: DEFAULT_STOCK_STATUSES,
+  fallbackOnEmpty: true,
+  legacyKeys: [LEGACY_STATUSES],
+});
+
+/** عدّاد التسلسل: كائن مفرد لا يقبل الدمج الجزئي. */
+const seqRepo = createObjectRepository<{ IN: number; OUT: number }>({
+  key: STORAGE_KEYS.STOCK_SEQ,
+  defaults: DEFAULT_STOCK_SEQ,
+  noMerge: true,
+  isValid: (value) => typeof value.IN === 'number' && typeof value.OUT === 'number',
+  legacyKeys: [LEGACY_SEQ],
+});
+
 export function loadProducts(): Product[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_PRODUCTS) || dbStorage.getItem('stock_ledger_products_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading products:', e);
-  }
-  return DEFAULT_PRODUCTS;
+  return productsRepo.read();
 }
 
 export function saveProducts(products: Product[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_PRODUCTS, JSON.stringify(products));
-  } catch (e) {
-    console.error('Error saving products:', e);
-  }
+  productsRepo.write(products);
 }
 
 export function loadStockRecords(): MovementRecord[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_RECORDS) || dbStorage.getItem('stock_ledger_records_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading stock records:', e);
-  }
-  return INITIAL_RECORDS;
+  return recordsRepo.read();
 }
 
 export function saveStockRecords(records: MovementRecord[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_RECORDS, JSON.stringify(records));
-  } catch (e) {
-    console.error('Error saving stock records:', e);
-  }
+  recordsRepo.write(records);
 }
 
 export function loadStockCategories(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_CATEGORIES) || dbStorage.getItem('stock_ledger_categories_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading stock categories:', e);
-  }
-  return DEFAULT_STOCK_CATEGORIES;
+  return categoriesRepo.read();
 }
 
 export function saveStockCategories(cats: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_CATEGORIES, JSON.stringify(cats));
-  } catch (e) {
-    console.error('Error saving stock categories:', e);
-  }
+  categoriesRepo.write(cats);
 }
 
 export function loadStockStatuses(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_STATUSES) || dbStorage.getItem('stock_ledger_statuses_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading stock statuses:', e);
-  }
-  return DEFAULT_STOCK_STATUSES;
+  return statusesRepo.read();
 }
 
 export function saveStockStatuses(stats: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_STATUSES, JSON.stringify(stats));
-  } catch (e) {
-    console.error('Error saving stock statuses:', e);
-  }
+  statusesRepo.write(stats);
 }
 
 export function loadStockSeq(): { IN: number; OUT: number } {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.STOCK_SEQ) || dbStorage.getItem('stock_ledger_seq_v1');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed.IN === 'number' && typeof parsed.OUT === 'number') {
-        return parsed;
-      }
-    }
-  } catch (e) {
-    console.error('Error loading stock seq:', e);
-  }
-  return DEFAULT_STOCK_SEQ;
+  return seqRepo.read();
 }
 
 export function saveStockSeq(seq: { IN: number; OUT: number }): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.STOCK_SEQ, JSON.stringify(seq));
-  } catch (e) {
-    console.error('Error saving stock seq:', e);
-  }
+  seqRepo.write(seq);
 }
 
 export function loadRecords(): MovementRecord[] {

@@ -207,6 +207,8 @@ const storageModules = [
   'src/utils/storage/routines.ts',
   'src/utils/storage/customers.ts',
   'src/utils/storage/doctors.ts',
+  'src/utils/storage/financial.ts',
+  'src/utils/storage/stock.ts',
 ];
 const directStorage = storageModules.filter((file) => /dbStorage\.(getItem|setItem)/.test(readFamily(file)));
 check(
@@ -331,10 +333,82 @@ check(
   limits.join(' · ')
 );
 
+// ── G20/G21/G22: الوحدات المنقولة في R37 (مالية · مخزون)
+const finModules = [
+  ['financial.transactions', S.loadFinancialTransactions, 'suite_fin_transactions_v2'],
+  ['financial.movements', S.loadFinancialMovements, 'suite_fin_movements_v2'],
+  ['financial.restrictions', S.loadFinancialRestrictions, 'suite_fin_restrictions_v2'],
+  ['financial.movementTypes', S.loadFinancialMovementTypes, 'suite_fin_movement_types_v2'],
+  ['financial.importance', S.loadFinancialImportanceList, 'suite_fin_importance_v2'],
+  ['financial.categoryAccounts', S.loadFinancialCategoryAccounts, 'suite_fin_category_accounts_v2'],
+  ['financial.restrictionAccounts', S.loadFinancialRestrictionAccounts, 'suite_fin_restriction_accounts_v2'],
+  ['financial.accountNames', S.loadFinancialAccountNames, 'suite_fin_account_names_v2'],
+];
+const finResults = finModules.map(([name, loader, key]) => {
+  seed(key, '[]');
+  const empty = loader();
+  seed(key, JSON.stringify([name.endsWith('transactions') ? { id: 'FIN-X' } : 'محفوظ']));
+  const one = loader();
+  return { name, seed: empty.length, stored: one.length };
+});
+check(
+  'G20 · الوحدة المالية: كل قوائمها الثماني تُرجع البذرة عند [] وتقرأ المحفوظ',
+  finResults.every((r) => r.seed > 0 && r.stored === 1),
+  finResults.map((r) => `${r.name.split('.')[1]}:${r.seed}`).join(' ')
+);
+
+// G21 · المفاتيح القديمة: تُقرأ إن غاب الحالي، ولا تتقدّم عليه إن وُجد
+seed('stock_ledger_products_v1', JSON.stringify([{ id: 'P-OLD', name: 'منتج قديم' }]));
+S.dbStorage.removeItem('suite_stock_products_v2');
+const legacyProducts = S.loadProducts();
+seed('suite_stock_products_v2', JSON.stringify([{ id: 'P-NEW', name: 'منتج جديد' }]));
+const currentProducts = S.loadProducts();
+seed('stock_ledger_categories_v1', JSON.stringify(['قديم']));
+S.dbStorage.removeItem('suite_stock_categories_v2');
+const legacyCategories = S.loadStockCategories();
+// المصفوفة الفارغة في المفتاح الحالي تمنع الرجوع للقديم (سلوك `getItem(new) || getItem(old)`)
+seed('suite_stock_categories_v2', '[]');
+const emptyOverLegacy = S.loadStockCategories();
+check(
+  'G21 · المخزون: المفاتيح القديمة تُقرأ عند غياب الحالي وتُحجب عند وجوده (حتى لو فارغاً)',
+  legacyProducts.length === 1 &&
+    legacyProducts[0].id === 'P-OLD' &&
+    currentProducts[0].id === 'P-NEW' &&
+    legacyCategories[0] === 'قديم' &&
+    emptyOverLegacy.length > 1,
+  `قديم=${legacyProducts[0]?.id} · حالي=${currentProducts[0]?.id} · فارغ⇒بذرة=${emptyOverLegacy.length}`
+);
+
+// G22 · عدّاد التسلسل: لا دمج جزئي (عدّاد ناقص = عدّاد تالف ⇒ الافتراضي كاملاً)
+seed('suite_stock_seq_v2', JSON.stringify({ IN: 50, OUT: 900 }));
+const seqSaved = S.loadStockSeq();
+seed('suite_stock_seq_v2', JSON.stringify({ IN: 50 }));
+const seqPartial = S.loadStockSeq();
+seed('suite_stock_seq_v2', '{تالف');
+const seqCorrupt = S.loadStockSeq();
+S.dbStorage.removeItem('suite_stock_seq_v2');
+seed('stock_ledger_seq_v1', JSON.stringify({ IN: 7, OUT: 8 }));
+const seqLegacy = S.loadStockSeq();
+S.saveStockSeq({ IN: 71, OUT: 801 });
+const seqWritten = S.loadStockSeq();
+const seqKeyRaw = JSON.parse(S.dbStorage.getItem('suite_stock_seq_v2'));
+check(
+  'G22 · عدّاد التسلسل: المحفوظ الصحيح يُقرأ، والناقص/التالف يعود للافتراضي كاملاً، والقديم يُقرأ ويُكتب للمفتاح الحالي',
+  seqSaved.IN === 50 &&
+    seqSaved.OUT === 900 &&
+    seqPartial.IN === S.DEFAULT_STOCK_SEQ.IN &&
+    seqPartial.OUT === S.DEFAULT_STOCK_SEQ.OUT &&
+    seqCorrupt.OUT === S.DEFAULT_STOCK_SEQ.OUT &&
+    seqLegacy.IN === 7 &&
+    seqWritten.IN === 71 &&
+    seqKeyRaw.IN === 71,
+  `محفوظ=${seqSaved.IN}/${seqSaved.OUT} · ناقص=${seqPartial.IN}/${seqPartial.OUT} · قديم=${seqLegacy.IN}/${seqLegacy.OUT}`
+);
+
 check('G13 · لا أخطاء JS أثناء التشغيل', errors.length === 0, errors[0] || '');
 
 const passed = results.filter((r) => r.ok).length;
-console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R36) ════════`);
+console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R37) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
 fs.writeFileSync(
   path.join(OUT_DIR, 'schema-runtime.json'),

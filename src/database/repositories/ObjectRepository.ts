@@ -18,6 +18,14 @@ export interface ObjectOptions<T extends object> {
   defaults: T;
   /** تعطيل الدمج والاكتفاء بالمحفوظ كما هو. */
   noMerge?: boolean;
+  /**
+   * تحقّق اختياري: إن فشل نُعيد الافتراضي كاملاً (لا دمج جزئي).
+   * يلزم لأن مفاتيح مثل عدّاد التسلسل تحتاج **كلا** الحقلين، ودمج كائن ناقص
+   * كان سيُنتج «نصف عدّاد» يُسقط ترقيم الحركات.
+   */
+  isValid?: (value: Record<string, unknown>) => boolean;
+  /** مفاتيح قديمة تُقرأ إن كان المفتاح الحالي غائباً (هجرة تدريجية). */
+  legacyKeys?: string[];
 }
 
 export interface ObjectRepository<T extends object> {
@@ -39,12 +47,22 @@ export function createObjectRepository<T extends object>(
   options: ObjectOptions<T>,
   storage: SchemaStorage = dbStorage
 ): ObjectRepository<T> {
-  const { key, defaults, noMerge } = options;
+  const { key, defaults, noMerge, isValid, legacyKeys = [] } = options;
+
+  const readRaw = (): string | null => {
+    const current = storage.getItem(key);
+    if (current) return current;
+    for (const legacy of legacyKeys) {
+      const value = storage.getItem(legacy);
+      if (value) return value;
+    }
+    return null;
+  };
 
   const read = (): T => {
     let parsed: unknown;
     try {
-      const raw = storage.getItem(key);
+      const raw = readRaw();
       if (!raw) return { ...defaults };
       parsed = JSON.parse(raw);
     } catch {
@@ -52,6 +70,7 @@ export function createObjectRepository<T extends object>(
     }
 
     if (!isPlainObject(parsed)) return { ...defaults };
+    if (isValid && !isValid(parsed)) return { ...defaults };
     if (noMerge) return parsed as T;
     return { ...defaults, ...(parsed as Partial<T>) };
   };

@@ -71,3 +71,29 @@ export {
   loadDoctorAuditLogs,
   saveDoctorAuditLogs,
 } from '../../src/utils/storage/doctors';
+
+export {
+  loadFinancialTransactions,
+  saveFinancialTransactions,
+  loadFinancialMovements,
+  loadFinancialRestrictions,
+  loadFinancialMovementTypes,
+  loadFinancialImportanceList,
+  loadFinancialCategoryAccounts,
+  loadFinancialRestrictionAccounts,
+  loadFinancialAccountNames,
+} from '../../src/utils/storage/financial';
+
+export {
+  loadProducts,
+  saveProducts,
+  loadStockRecords,
+  saveStockRecords,
+  loadStockCategories,
+  loadStockStatuses,
+  loadStockSeq,
+  saveStockSeq,
+  loadSeq,
+  saveSeq,
+  DEFAULT_STOCK_SEQ,
+} from '../../src/utils/storage/stock';

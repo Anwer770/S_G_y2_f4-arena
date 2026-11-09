@@ -22,6 +22,12 @@ export interface CollectionOptions<T> {
   limit?: number;
   /** تحقّق اختياري من كل عنصر قبل الاستخدام. */
   isValidItem?: (item: unknown) => boolean;
+  /**
+   * مفاتيح قديمة تُقرأ إن كان المفتاح الحالي غائباً (R37).
+   * تُقرأ **بعد** المفتاح الحالي وقبل الخطة البديلة، تماماً كسلوك
+   * `getItem(new) || getItem(legacy)` السابق. الكتابة تذهب للمفتاح الحالي وحده.
+   */
+  legacyKeys?: string[];
 }
 
 export interface CollectionRepository<T> {
@@ -63,12 +69,23 @@ export function createCollectionRepository<T>(
   options: CollectionOptions<T>,
   storage: SchemaStorage = dbStorage
 ): CollectionRepository<T> {
-  const { key, fallback, fallbackOnEmpty = false, limit, isValidItem } = options;
+  const { key, fallback, fallbackOnEmpty = false, limit, isValidItem, legacyKeys = [] } = options;
+
+  /** أول قيمة غير فارغة: المفتاح الحالي ثم المفاتيح القديمة بالترتيب. */
+  const readRaw = (): string | null => {
+    const current = storage.getItem(key);
+    if (current) return current;
+    for (const legacy of legacyKeys) {
+      const value = storage.getItem(legacy);
+      if (value) return value;
+    }
+    return null;
+  };
 
   const read = (): T[] => {
     let parsed: unknown;
     try {
-      const raw = storage.getItem(key);
+      const raw = readRaw();
       if (!raw) return cloneArray(fallback);
       parsed = JSON.parse(raw);
     } catch {

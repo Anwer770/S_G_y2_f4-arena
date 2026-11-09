@@ -328,3 +328,49 @@ describe('مستودع الكائن المفرد', () => {
     expect(() => repo.write(defaults)).not.toThrow();
   });
 });
+
+describe('المفاتيح القديمة والتحقّق (R37)', () => {
+  it('مجموعة: المفتاح القديم يُقرأ عند غياب الحالي', () => {
+    const { storage } = memoryStorage({ 'old-k': JSON.stringify([{ id: 'a' }]) });
+    const repo = createCollectionRepository({ key: 'new-k', fallback: [], legacyKeys: ['old-k'] }, storage);
+    expect(repo.read()).toEqual([{ id: 'a' }]);
+  });
+
+  it('مجموعة: المفتاح الحالي يتقدّم على القديم، والكتابة لا تلمس القديم', () => {
+    const { storage, data } = memoryStorage({
+      'new-k': JSON.stringify([{ id: 'new' }]),
+      'old-k': JSON.stringify([{ id: 'old' }]),
+    });
+    const repo = createCollectionRepository({ key: 'new-k', fallback: [], legacyKeys: ['old-k'] }, storage);
+    expect(repo.read()[0].id).toBe('new');
+    repo.write([{ id: 'x' }]);
+    expect(JSON.parse(data['old-k'])[0].id).toBe('old');
+  });
+
+  it('مجموعة: fallbackOnEmpty لا يتخطى المفتاح الحالي لصالح القديم', () => {
+    const { storage } = memoryStorage({
+      'new-k': '[]',
+      'old-k': JSON.stringify([{ id: 'old' }]),
+    });
+    const repo = createCollectionRepository(
+      { key: 'new-k', fallback: [{ id: 'seed' }], fallbackOnEmpty: true, legacyKeys: ['old-k'] },
+      storage
+    );
+    expect(repo.read()).toEqual([{ id: 'seed' }]);
+  });
+
+  it('كائن: legacyKeys و isValid معاً (عدّاد تسلسل ناقص ⇒ الافتراضي)', () => {
+    const defaults = { IN: 4, OUT: 299 };
+    const isValid = (v: Record<string, unknown>) => typeof v.IN === 'number' && typeof v.OUT === 'number';
+    const { storage } = memoryStorage({ 'legacy-seq': JSON.stringify({ IN: 7, OUT: 8 }) });
+    const legacy = createObjectRepository(
+      { key: 'seq', defaults, noMerge: true, isValid, legacyKeys: ['legacy-seq'] },
+      storage
+    );
+    expect(legacy.read()).toEqual({ IN: 7, OUT: 8 });
+
+    const { storage: partial } = memoryStorage({ seq: JSON.stringify({ IN: 50 }) });
+    const repo = createObjectRepository({ key: 'seq', defaults, noMerge: true, isValid }, partial);
+    expect(repo.read()).toEqual(defaults);
+  });
+});
