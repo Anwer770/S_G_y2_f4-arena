@@ -28,6 +28,8 @@ export default defineConfig({
         'src/utils/automation/automationDerive.ts',
         'src/utils/automation/automationRunner.ts',
         'src/utils/automation/automationEvents.ts',
+        'src/utils/urlSafety.ts',
+        'src/utils/security/csp.ts',
       ],
       thresholds: {
         lines: 75,

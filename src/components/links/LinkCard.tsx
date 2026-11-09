@@ -43,7 +43,10 @@ export const LinkCard: React.FC<LinkCardProps> = ({ link, onToggleFavorite, onVi
   const handleVisit = (e: React.MouseEvent) => {
     e.stopPropagation();
     onVisit(link.id, link.url);
-    window.open(formatValidUrl(link.url), '_blank', 'noopener,noreferrer');
+    const target = formatValidUrl(link.url);
+    // R32: رابط غير آمن (javascript:/data:/…) لا يُفتح ولا يُنفَّذ
+    if (!target) return;
+    window.open(target, '_blank', 'noopener,noreferrer');
   };
 
   // Importance badge style based on PRD 8.2

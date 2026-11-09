@@ -1,4 +1,5 @@
 import { LinkRecord } from '../types/linksLibrary';
+import { sanitizeExternalUrl } from './urlSafety';
 import * as XLSX from 'xlsx';
 
 /**
@@ -90,12 +91,8 @@ export function filterLinks(
  * Ensure URL starts with http:// or https://
  */
 export function formatValidUrl(url: string): string {
-  if (!url) return '';
-  const trimmed = url.trim();
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-    return trimmed;
-  }
-  return `https://${trimmed}`;
+  // R32: أي رابط مكتوب يدوياً يمرّ عبر منظّف المخططات (يرفض javascript:/data:/vbscript: …)
+  return sanitizeExternalUrl(url);
 }
 
 /**

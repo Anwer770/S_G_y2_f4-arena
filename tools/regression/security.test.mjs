@@ -156,6 +156,88 @@ check(
   `xlsx@${String(pkg.dependencies?.xlsx)} — مكتبة بلا إصلاح على npm، لذلك الحصار في الكود`
 );
 
+
+// ── R32: مراجعة حقن HTML وروابط المستخدم
+const SRC_DIR = path.join(ROOT, 'src');
+const files = [];
+const walkSrc = (dir) => {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walkSrc(full);
+    else if (/\.(ts|tsx)$/.test(entry.name)) files.push(full);
+  }
+};
+walkSrc(SRC_DIR);
+
+const offendersOf = (re) =>
+  files
+    .filter((f) => re.test(fs.readFileSync(f, 'utf8')))
+    .map((f) => path.relative(ROOT, f));
+
+const injections = offendersOf(/\b(innerHTML|outerHTML|insertAdjacentHTML)\s*=|dangerouslySetInnerHTML|document\.write\s*\(/);
+check(
+  'S10 · لا حقن HTML خام في كل `src/` (innerHTML · document.write · dangerouslySetInnerHTML)',
+  injections.length === 0,
+  injections.length ? injections.join(' · ') : `0 موضع في ${files.length} ملفاً`
+);
+
+const codeExec = offendersOf(/(^|[^a-zA-Z0-9_.])eval\s*\(|new\s+Function\s*\(/);
+check('S11 · لا تنفيذ كود نصّي (eval / new Function)', codeExec.length === 0, codeExec.join(' · ') || '0 موضع');
+
+// target=_blank بلا rel noopener ⇒ عطب reverse tabnabbing
+const blankViolations = [];
+for (const file of files) {
+  const text = fs.readFileSync(file, 'utf8');
+  if (!/target="_blank"/.test(text)) continue;
+  const blocks = text.split('target="_blank"').slice(0, -1);
+  blocks.forEach((block, i) => {
+    const after = text.split('target="_blank"')[i + 1].slice(0, 120);
+    if (!/rel="[^"]*noopener/.test(after)) blankViolations.push(`${path.relative(ROOT, file)}#${i + 1}`);
+  });
+}
+check(
+  'S12 · كل رابط يُفتح في نافذة جديدة يملك rel="noopener"',
+  blankViolations.length === 0,
+  blankViolations.join(' · ') || '0 تجاوز'
+);
+
+// منظّف الروابط: سلوك فعلي على مدخلات هجومية
+const URL_BUNDLE = path.join(ROOT, 'docs', 'تدقيق', '.url-safety-bundle.mjs');
+execFileSync(
+  path.join(ROOT, 'node_modules', '.bin', 'esbuild'),
+  [path.join(ROOT, 'src', 'utils', 'urlSafety.ts'), '--bundle', '--format=esm', `--outfile=${URL_BUNDLE}`, '--log-level=error'],
+  { stdio: 'inherit' }
+);
+const urlSafety = await import(url.pathToFileURL(URL_BUNDLE).href);
+const attacks = [
+  'javascript:alert(1)',
+  'JaVaScRiPt:alert(1)',
+  'java\tscript:alert(1)',
+  'data:text/html,<script>alert(1)</script>',
+  'vbscript:msgbox(1)',
+  'file:///etc/passwd',
+  'about:blank',
+];
+const leaked = attacks.filter((attack) => urlSafety.sanitizeExternalUrl(attack) !== '');
+check(
+  'S13 · منظّف الروابط يرفض كل مخططات التنفيذ (7 هجمات)',
+  leaked.length === 0 && urlSafety.sanitizeExternalUrl('https://example.com') === 'https://example.com',
+  leaked.join(' · ') || 'كلها مرفوضة'
+);
+
+const guardedSpots = [
+  ['src/components/custody/CustodyIssuesTable.tsx', /sanitizeExternalUrl/],
+  ['src/components/knowledge/NoteDetailModal.tsx', /isSafeDataUrl/],
+  ['src/utils/linksExport.ts', /sanitizeExternalUrl/],
+  ['src/components/links/LinkCard.tsx', /formatValidUrl/],
+];
+const unguarded = guardedSpots.filter(([file, re]) => !re.test(fs.readFileSync(path.join(ROOT, file), 'utf8')));
+check(
+  'S14 · كل موضع يعرض رابط مستخدم يمرّ بالمنظّف (عهد · مرفقات · مكتبة روابط)',
+  unguarded.length === 0,
+  unguarded.map(([f]) => f).join(' · ') || `${guardedSpots.length}/${guardedSpots.length}`
+);
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة اختبار أمان الاستيراد (security) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
