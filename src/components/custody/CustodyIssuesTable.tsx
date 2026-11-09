@@ -1,4 +1,5 @@
 import React from 'react';
+import { sanitizeExternalUrl } from '../../utils/urlSafety';
 import { CustodyIssueRecord, CustodySection } from '../../types/custodyIssues';
 import {
   Edit3,
@@ -30,6 +31,9 @@ interface CustodyIssuesTableProps {
   onSortByDate?: () => void;
   sortOrder?: 'asc' | 'desc';
 }
+
+/** R32: رابط المستخدم لا يُعرض إلا إذا كان http/https (يمنع javascript:/data:) */
+const safeLinkOf = (link?: string): string => sanitizeExternalUrl(link);
 
 export const CustodyIssuesTable: React.FC<CustodyIssuesTableProps> = ({
   records,
@@ -312,12 +316,12 @@ export const CustodyIssuesTable: React.FC<CustodyIssuesTableProps> = ({
                           </div>
                         )}
 
-                        {r.link && (
+                        {safeLinkOf(r.link) && (
                           <div>
                             <a
-                              href={r.link}
+                              href={safeLinkOf(r.link)}
                               target="_blank"
-                              rel="noreferrer"
+                              rel="noopener noreferrer"
                               className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 underline inline-flex items-center gap-1"
                             >
                               <ExternalLink className="w-2.5 h-2.5" />

@@ -32,7 +32,11 @@ const rel = (f) => path.relative(ROOT, f);
 
 /* H1 — لا ملفات يتيمة: كل ملف يُستورد من مكان ما (عدا نقطة الدخول) */
 const referenced = new Set();
-for (const file of srcFiles) {
+// ملفات الإعداد الجذرية تُستورد منها وحدات بناء (مثل سياسة CSP في vite.config.ts) ⇒ ليست يتيمة
+const rootConfigs = ['vite.config.ts', 'vitest.config.ts']
+  .map((f) => path.join(ROOT, f))
+  .filter((f) => fs.existsSync(f));
+for (const file of [...srcFiles, ...rootConfigs]) {
   const text = fs.readFileSync(file, 'utf8');
   const re = /from\s+['"]([^'"]+)['"]|import\(\s*['"]([^'"]+)['"]/g;
   let m;
@@ -218,6 +222,9 @@ const CI_GATES = [
   'npm run data-loss',
   'npm run workos',
   'npm run outbox',
+  'npm run automation',
+  'npm run csp',
+  'npm run schema',
   'npm run typography',
   'npm run darkmode',
   'npm run tables',

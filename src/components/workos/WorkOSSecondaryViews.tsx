@@ -12,6 +12,9 @@ import {
   TaskPriority,
 } from '../../types/workos';
 import {
+  loadAutomations,
+  loadProjects,
+  loadTasks,
   exportWorkOSToJSON,
   exportWorkOSToCSV,
   parseNaturalLanguageTask,
@@ -28,6 +31,7 @@ import { WorkOSGoalsView } from './WorkOSGoalsView';
 import { WorkOSAppointmentsCommitmentsView } from './WorkOSAppointmentsCommitmentsView';
 import { WorkOSNotesMeetingsView } from './WorkOSNotesMeetingsView';
 import { WorkOSAutomationView } from './WorkOSAutomationView';
+import { runRuleManually, loadAutomationRuns } from '../../utils/automation';
 import { WorkOSReportsView } from './WorkOSReportsView';
 import { TasksModule } from '../tasks/TasksModule';
 
@@ -337,6 +341,7 @@ export const WorkOSSecondaryViews: React.FC<WorkOSSecondaryViewsProps> = ({
     {secondaryView === 'automation' && (
       <WorkOSAutomationView
         automations={data.automations}
+        recentRuns={loadAutomationRuns().slice(0, 5)}
         onToggleAutomation={(id) => {
           setData((prev) => ({
             ...prev,
@@ -344,57 +349,14 @@ export const WorkOSSecondaryViews: React.FC<WorkOSSecondaryViewsProps> = ({
           }));
         }}
         onExecuteAutomationManually={(rule) => {
-          setData((prev) => {
-            let updatedTasks = [...prev.tasks];
-            const updatedProjects = [...prev.projects];
-
-            // Execute rule action
-            if (rule.actionType === 'tag_priority_urgent') {
-              updatedTasks = updatedTasks.map((t) => (t.status !== 'completed' ? { ...t, priority: 'urgent' } : t));
-            } else if (rule.actionType === 'create_followup_task') {
-              const followupTask: WorkTask = {
-                id: `tsk_${Date.now()}`,
-                taskNumber: `TSK-${String(updatedTasks.length + 1).padStart(3, '0')}`,
-                title: `متابعة تنفيذية: ${rule.name}`,
-                description: `مهمة متابعة تم توليدها تلقائياً بواسطة محرك الأتمتة (${rule.name})`,
-                status: 'planned',
-                priority: 'high',
-                projectId: updatedProjects[0]?.id || 'prj_1',
-                category: 'تشغيلي',
-                tags: ['أتمتة', 'متابعة'],
-                creator: 'محرك الأتمتة',
-                assigneeId: prev.team[0]?.id || 'mem_1',
-                startDate: todayStr,
-                dueDate: todayStr,
-                estimatedHours: 2,
-                actualHours: 0,
-                progress: 0,
-                subtasks: [],
-                checklist: [],
-                comments: [],
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-              };
-              updatedTasks = [followupTask, ...updatedTasks];
-            }
-
-            const updatedAutomations = prev.automations.map((a) =>
-              a.id === rule.id
-                ? {
-                    ...a,
-                    executionsCount: a.executionsCount + 1,
-                    lastExecutedAt: new Date().toISOString(),
-                  }
-                : a
-            );
-
-            return {
-              ...prev,
-              tasks: updatedTasks,
-              projects: updatedProjects,
-              automations: updatedAutomations,
-            };
-          });
+          // R31: التشغيل اليدوي يمرّ بنفس مشغّل الأحداث الحقيقي (تنفيذ + سجل + عدّادات)
+          runRuleManually(rule);
+          setData((prev) => ({
+            ...prev,
+            automations: loadAutomations(),
+            tasks: loadTasks(),
+            projects: loadProjects(),
+          }));
         }}
         onAddAutomation={(newRule) => {
           setData((prev) => ({

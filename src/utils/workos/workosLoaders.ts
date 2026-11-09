@@ -22,6 +22,13 @@ import {
   WorkOSData,
 } from '../../types/workos';
 import { dbStorage } from '../../database/dbStorage';
+import { publishDomainEvent, withAutomationOrigin } from '../automation/automationEvents';
+import {
+  deriveTaskEvents,
+  deriveProjectEvents,
+  deriveOrderEvents,
+  deriveCommitmentEvents,
+} from '../automation/automationDerive';
 import { KEYS } from './workosKeys';
 import {
   SEED_WORKSPACES,
@@ -98,7 +105,9 @@ export function loadProjects(): WorkProject[] {
   return Array.isArray(loaded) ? loaded : SEED_PROJECTS;
 }
 export function saveProjects(data: WorkProject[]): void {
+  const previous = loadProjects();
   saveSafe(KEYS.PROJECTS, data);
+  for (const event of deriveProjectEvents(previous, data)) publishDomainEvent(event);
 }
 
 // Tasks
@@ -115,7 +124,10 @@ export function loadTasks(): WorkTask[] {
   }));
 }
 export function saveTasks(data: WorkTask[]): void {
+  const previous = loadTasks();
   saveSafe(KEYS.TASKS, data);
+  // R31: كل كتابة مهام تُنشر أحداثها المشتقة (إنجاز · اكتمال مهام فرعية · إنشاء · تعديل)
+  for (const event of deriveTaskEvents(previous, data)) publishDomainEvent(event);
 }
 
 // Orders (الطلبيات)
@@ -124,7 +136,9 @@ export function loadOrders(): WorkOrder[] {
   return Array.isArray(loaded) ? loaded : SEED_ORDERS;
 }
 export function saveOrders(data: WorkOrder[]): void {
+  const previous = loadOrders();
   saveSafe(KEYS.ORDERS, data);
+  for (const event of deriveOrderEvents(previous, data)) publishDomainEvent(event);
 }
 
 // Inbox
@@ -181,7 +195,9 @@ export function loadCommitments(): WorkCommitment[] {
   return loadSafe<WorkCommitment[]>(KEYS.COMMITMENTS, SEED_COMMITMENTS);
 }
 export function saveCommitments(data: WorkCommitment[]): void {
+  const previous = loadCommitments();
   saveSafe(KEYS.COMMITMENTS, data);
+  for (const event of deriveCommitmentEvents(previous, data)) publishDomainEvent(event);
 }
 
 // Meetings
@@ -362,6 +378,13 @@ export function parseNaturalLanguageTask(text: string): ParsedTaskResult {
 
 // Reset data to seed defaults
 export function resetWorkOSToDefault(): void {
+  // إعادة التهيئة عملية جملية: لا تُطلق أتمتة على مئات السجلات البذرية
+  return withAutomationOrigin(() => {
+    resetWorkOSDefaultsInternal();
+  });
+}
+
+function resetWorkOSDefaultsInternal(): void {
   saveWorkspaces(SEED_WORKSPACES);
   saveCurrentWorkspaceId('ws_main');
   saveProjects(SEED_PROJECTS);

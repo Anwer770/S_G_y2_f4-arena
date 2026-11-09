@@ -1,0 +1,152 @@
+{
+ "at": "2026-11-09T02:26:48.419Z",
+ "passed": 19,
+ "total": 19,
+ "results": [
+  {
+   "name": "A0 · حزمة المشغّل تُجزيء وتُحمّل",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1 · المشغّل مربوط بإقلاع التطبيق (startAutomationRuntime في App)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A1b · طبقة الكتابة تنشر أحداثاً (saveTasks ⇒ deriveTaskEvents ⇒ publishDomainEvent)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A2 · المسح الزمني ينفّذ قاعدة التأخير تلقائياً عند الإقلاع",
+   "ok": true,
+   "detail": "عدّاد التأخير = 1 · سجل = 2"
+  },
+  {
+   "name": "A2b · حدث «بداية الخطة اليومية» يُنفَّذ مرة واحدة عند الإقلاع",
+   "ok": true,
+   "detail": "عدّاد اليومي = 1"
+  },
+  {
+   "name": "A2c · إجراء التأخير غيّر البيانات فعلاً (رفع الأولوية إلى «عاجل»)",
+   "ok": true,
+   "detail": "الأولوية الآن: urgent"
+  },
+  {
+   "name": "A3 · أحداث المحرّك نفسه لا تُشغّل قواعد (حماية من الحلقة)",
+   "ok": true,
+   "detail": "قبل 2 · بعد 2"
+  },
+  {
+   "name": "A4 · إنجاز مهمة عبر saveTasks يُنفّذ قاعدة «إنجاز المهمة» ويزيد عدّادها",
+   "ok": true,
+   "detail": "العدّاد 0 ⇒ 1"
+  },
+  {
+   "name": "A4b · القاعدة المعطّلة لا تُنفَّذ",
+   "ok": true,
+   "detail": "عدّاد المعطّلة = 0"
+  },
+  {
+   "name": "A5 · اكتمال المهام الفرعية أنشأ مهمة متابعة حقيقية في المخزن",
+   "ok": true,
+   "detail": "مهام المتابعة = 1 · إجمالي المهام 2 ⇒ 3"
+  },
+  {
+   "name": "A5b · قاعدة «اكتمال المهام الفرعية» عدّادها صار 1",
+   "ok": true,
+   "detail": "العدّاد = 1"
+  },
+  {
+   "name": "A6 · إعادة حفظ نفس البيانات لا تُكرّر التنفيذ (مفتاح القاعدة·الحدث·الكيان)",
+   "ok": true,
+   "detail": "سجل 4 ⇒ 4"
+  },
+  {
+   "name": "A7 · تعديل لا يمسّ الحالة/الأولوية/الموعد لا يُنفّذ أي قاعدة",
+   "ok": true,
+   "detail": "سجل 4 ⇒ 4"
+  },
+  {
+   "name": "A8 · سجل التشغيل مخزَّن ومتّسق مع العدّادات",
+   "ok": true,
+   "detail": "سجل=4 · ناجحة=4 · مجموع العدّادات=4"
+  },
+  {
+   "name": "A8b · التشغيل نال طابعاً زمنياً حقيقياً",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A8c · المشغّل مسجّل كمستمع واحد فقط (لا اشتراكات مكرّرة)",
+   "ok": true,
+   "detail": "مستمعون = 1"
+  },
+  {
+   "name": "A9 · المشغّل يُشعر الواجهة بعد التنفيذ، والوحدة تُزامن حالتها",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "A10 · لا انفجار تنفيذ بعد سلسلة كتابات (السجل محدود)",
+   "ok": true,
+   "detail": "عدد العمليات = 4"
+  },
+  {
+   "name": "A11 · لا أخطاء JS أثناء التشغيل",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "runs": [
+  {
+   "key": "aut_subtasks::all_subtasks_completed::T-SUBS",
+   "ruleId": "aut_subtasks",
+   "ruleName": "اكتمال المهام الفرعية",
+   "actionType": "create_followup_task",
+   "eventType": "all_subtasks_completed",
+   "entityType": "task",
+   "entityId": "T-SUBS",
+   "executedAt": "2026-11-09T02:26:48.417Z",
+   "outcome": "executed",
+   "note": "أُنشئت مهمة متابعة TSK-AUTO-3"
+  },
+  {
+   "key": "aut_done::task_completed::T-SUBS",
+   "ruleId": "aut_done",
+   "ruleName": "إنجاز مهمة",
+   "actionType": "notify_team",
+   "eventType": "task_completed",
+   "entityType": "task",
+   "entityId": "T-SUBS",
+   "executedAt": "2026-11-09T02:26:48.417Z",
+   "outcome": "executed",
+   "note": "سُجِّل الإشعار في سجل النشاط (إشعار النظام غير مسموح)"
+  },
+  {
+   "key": "aut_daily::daily_plan_start::2026-11-09",
+   "ruleId": "aut_daily",
+   "ruleName": "بداية الخطة اليومية",
+   "actionType": "notify_team",
+   "eventType": "daily_plan_start",
+   "entityType": "system",
+   "entityId": "2026-11-09",
+   "executedAt": "2026-11-09T02:26:48.415Z",
+   "outcome": "executed",
+   "note": "سُجِّل الإشعار في سجل النشاط (إشعار النظام غير مسموح)"
+  },
+  {
+   "key": "aut_overdue::task_overdue::T-OVERDUE",
+   "ruleId": "aut_overdue",
+   "ruleName": "تنبيه المتأخرات",
+   "actionType": "tag_priority_urgent",
+   "eventType": "task_overdue",
+   "entityType": "task",
+   "entityId": "T-OVERDUE",
+   "executedAt": "2026-11-09T02:26:48.414Z",
+   "outcome": "executed",
+   "note": "رُفعت أولوية 2 مهمة إلى «عاجل»"
+  }
+ ]
+}

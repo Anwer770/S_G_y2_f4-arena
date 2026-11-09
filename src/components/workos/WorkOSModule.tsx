@@ -23,6 +23,7 @@ import {
   ActiveTimerState,
 } from '../../utils/workosStorage';
 import { UniversalDataExchangeModal } from '../common/UniversalDataExchangeModal';
+import { useAutomationSync } from './useAutomationSync';
 
 // Unified Components
 import { WorkOSUnifiedTopBar } from './WorkOSUnifiedTopBar';
@@ -161,6 +162,9 @@ export const WorkOSModule: React.FC<WorkOSModuleProps> = ({
     saveWorkOSData(data);
     broadcastDataChange('TASK_UPDATED');
   }, [data]);
+
+  // R31: مزامنة حالة الوحدة مع نتائج مشغّل الأتمتة (تخزين ⇒ React)
+  useAutomationSync(setData);
 
   // Synchronize when navigating from external tabs
   useEffect(() => {

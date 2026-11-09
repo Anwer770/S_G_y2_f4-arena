@@ -7,123 +7,89 @@ import {
   DEFAULT_NOTE_TAGS,
   DEFAULT_NOTE_TEMPLATES,
 } from '../../data/defaultNotes';
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
 import { NoteAuditLog, NoteFolder, NoteRecord, NoteTagItem, NoteTemplate } from '../../types';
 import { STORAGE_KEYS } from './keys';
 
+/**
+ * مستودعات قاعدة المعرفة (R33) — القراءة/الكتابة عبر مستودع واحد.
+ * السلوك محفوظ: المصفوفة الفارغة مقبولة (لا رجوع للبذرة)، وسجل التدقيق بسقف 500.
+ */
+const notesRepo = createCollectionRepository<NoteRecord>({
+  key: STORAGE_KEYS.KNOWLEDGE_NOTES,
+  fallback: DEFAULT_NOTES,
+});
+
+const foldersRepo = createCollectionRepository<NoteFolder>({
+  key: STORAGE_KEYS.KNOWLEDGE_FOLDERS,
+  fallback: DEFAULT_NOTE_FOLDERS,
+});
+
+const tagsRepo = createCollectionRepository<NoteTagItem>({
+  key: STORAGE_KEYS.KNOWLEDGE_TAGS,
+  fallback: DEFAULT_NOTE_TAGS,
+});
+
+const templatesRepo = createCollectionRepository<NoteTemplate>({
+  key: STORAGE_KEYS.KNOWLEDGE_TEMPLATES,
+  fallback: DEFAULT_NOTE_TEMPLATES,
+});
+
+const DEFAULT_NOTE_AUDIT: NoteAuditLog[] = [
+  {
+    id: 'LOG-NOTE-1',
+    time: new Date().toLocaleString('ar-YE'),
+    action: 'استيراد',
+    entity: 'نظام',
+    title: 'إدارة الملاحظات والمعرفة',
+    details: 'تمت تهيئة قاعدة المعرفة والملاحظات والقوالب والمجلدات الافتراضية بنجاح',
+  },
+];
+
+const auditRepo = createCollectionRepository<NoteAuditLog>({
+  key: STORAGE_KEYS.KNOWLEDGE_AUDIT,
+  fallback: DEFAULT_NOTE_AUDIT,
+  limit: 500,
+});
+
 export function loadNotes(): NoteRecord[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.KNOWLEDGE_NOTES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading notes:', e);
-  }
-  return DEFAULT_NOTES;
+  return notesRepo.read();
 }
 
 export function saveNotes(notes: NoteRecord[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.KNOWLEDGE_NOTES, JSON.stringify(notes));
-  } catch (e) {
-    console.error('Error saving notes:', e);
-  }
+  notesRepo.write(notes);
 }
 
 export function loadNoteFolders(): NoteFolder[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.KNOWLEDGE_FOLDERS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading note folders:', e);
-  }
-  return DEFAULT_NOTE_FOLDERS;
+  return foldersRepo.read();
 }
 
 export function saveNoteFolders(folders: NoteFolder[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.KNOWLEDGE_FOLDERS, JSON.stringify(folders));
-  } catch (e) {
-    console.error('Error saving note folders:', e);
-  }
+  foldersRepo.write(folders);
 }
 
 export function loadNoteTags(): NoteTagItem[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.KNOWLEDGE_TAGS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading note tags:', e);
-  }
-  return DEFAULT_NOTE_TAGS;
+  return tagsRepo.read();
 }
 
 export function saveNoteTags(tags: NoteTagItem[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.KNOWLEDGE_TAGS, JSON.stringify(tags));
-  } catch (e) {
-    console.error('Error saving note tags:', e);
-  }
+  tagsRepo.write(tags);
 }
 
 export function loadNoteTemplates(): NoteTemplate[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.KNOWLEDGE_TEMPLATES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading note templates:', e);
-  }
-  return DEFAULT_NOTE_TEMPLATES;
+  return templatesRepo.read();
 }
 
 export function saveNoteTemplates(templates: NoteTemplate[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.KNOWLEDGE_TEMPLATES, JSON.stringify(templates));
-  } catch (e) {
-    console.error('Error saving note templates:', e);
-  }
+  templatesRepo.write(templates);
 }
 
 export function loadNoteAuditLogs(): NoteAuditLog[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.KNOWLEDGE_AUDIT);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading note audit logs:', e);
-  }
-  return [
-    {
-      id: 'LOG-NOTE-1',
-      time: new Date().toLocaleString('ar-YE'),
-      action: 'استيراد',
-      entity: 'نظام',
-      title: 'إدارة الملاحظات والمعرفة',
-      details: 'تمت تهيئة قاعدة المعرفة والملاحظات والقوالب والمجلدات الافتراضية بنجاح',
-    },
-  ];
+  return auditRepo.read();
 }
 
 export function saveNoteAuditLogs(logs: NoteAuditLog[]): void {
-  try {
-    const trimmed = logs.slice(0, 500);
-    dbStorage.setItem(STORAGE_KEYS.KNOWLEDGE_AUDIT, JSON.stringify(trimmed));
-  } catch (e) {
-    console.error('Error saving note audit logs:', e);
-  }
+  auditRepo.write(logs);
 }
 
 export function logNoteAudit(

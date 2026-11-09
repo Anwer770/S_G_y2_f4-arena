@@ -4,12 +4,21 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 import {defineConfig} from 'vite';
 import { APP_NAME, APP_SHORT_NAME, APP_TAGLINE } from './src/constants/appMeta';
+import { injectCspMeta } from './src/utils/security/csp';
 
 export default defineConfig(() => {
   return {
     plugins: [
       react(),
       tailwindcss(),
+      {
+        // R32: سياسة أمان المحتوى تُحقن في نسخة الإنتاج فقط (خادم التطوير يحقن سكربتات HMR مضمَّنة).
+        name: 'inject-csp',
+        apply: 'build' as const,
+        transformIndexHtml(html: string) {
+          return injectCspMeta(html);
+        },
+      },
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['apple-touch-icon.png', 'icon.svg'],

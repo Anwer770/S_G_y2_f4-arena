@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isSafeDataUrl } from '../../utils/urlSafety';
 import { NoteRecord, NoteTaskItem } from '../../types';
 import {
   X,
@@ -504,7 +505,7 @@ export const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                         <Paperclip className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         <span className="truncate font-medium text-slate-700 dark:text-slate-300">{att.name}</span>
                       </div>
-                      {att.dataUrl && (
+                      {att.dataUrl && isSafeDataUrl(att.dataUrl) && (
                         <a
                           href={att.dataUrl}
                           download={att.name}

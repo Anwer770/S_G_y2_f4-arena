@@ -204,7 +204,10 @@ export const LinksTableView: React.FC<LinksTableViewProps> = ({
                       <button
                         onClick={() => {
                           onVisit(link.id, link.url);
-                          window.open(formatValidUrl(link.url), '_blank', 'noopener,noreferrer');
+                          const target = formatValidUrl(link.url);
+                          // R32: رابط غير آمن (javascript:/data:/…) لا يُفتح ولا يُنفَّذ
+                          if (!target) return;
+                          window.open(target, '_blank', 'noopener,noreferrer');
                         }}
                         className="px-2.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition-colors flex items-center gap-1"
                         title="زيارة الموقع"

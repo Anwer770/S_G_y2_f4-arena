@@ -262,7 +262,7 @@ export const DoctorDetailsModal: React.FC<Props> = ({
                 <a
                   href={`https://wa.me/${doctor.phone.replace(/[^0-9]/g, '')}`}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1"
                 >
                   <MessageCircle className="w-3 h-3" />

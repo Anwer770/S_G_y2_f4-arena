@@ -144,7 +144,7 @@ export const CustomerDetailsModal: React.FC<Props> = ({
                   <a
                     href={`https://wa.me/${customer.phone.replace(/[^0-9]/g, '')}`}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 dark:bg-green-950/40 hover:bg-green-100 text-green-700 rounded-xl font-bold border border-green-200 dark:border-green-800 transition-colors"
                   >
                     <MessageCircle className="w-3.5 h-3.5" />

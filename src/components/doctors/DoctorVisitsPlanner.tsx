@@ -383,7 +383,7 @@ export const DoctorVisitsPlanner: React.FC<Props> = ({
                           <a
                             href={`https://wa.me/${doc.phone.replace(/[^0-9]/g, '')}`}
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                             title="محادثة واتساب"
                             className="p-1.5 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded-lg transition-colors cursor-pointer"
                           >
