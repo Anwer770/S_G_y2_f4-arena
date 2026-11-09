@@ -1,5 +1,7 @@
 /**
  * مخزن وحدة «customers» — مُستخرج من storage.ts (R26).
+ * R36: كل قراءة/كتابة عبر مستودع المجموعات. السلوك محفوظ: القوائم الأساسية
+ * تُرجع البذرة عند الفراغ، والزيارات تقبل الفراغ، وسجل التدقيق بسقف 500.
  */
 import {
   CUSTOMER_REGIONS,
@@ -9,164 +11,116 @@ import {
   DEFAULT_CUSTOMERS,
   DEFAULT_CUSTOMER_VISITS,
 } from '../../data/defaultCustomers';
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
 import { Customer, CustomerAuditLog, CustomerVisitRecord } from '../../types';
 import { STORAGE_KEYS } from './keys';
 
+const customersRepo = createCollectionRepository<Customer>({
+  key: STORAGE_KEYS.CUSTOMERS_ITEMS,
+  fallback: DEFAULT_CUSTOMERS,
+  fallbackOnEmpty: true,
+});
+
+/** الزيارات: مصفوفة فارغة **مقبولة** (عميل بلا زيارات بعد) مع بذرة عند الغياب. */
+const visitsRepo = createCollectionRepository<CustomerVisitRecord>({
+  key: STORAGE_KEYS.CUSTOMERS_VISITS,
+  fallback: DEFAULT_CUSTOMER_VISITS,
+});
+
+const sourcesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.CUSTOMERS_SOURCES,
+  fallback: CUSTOMER_SOURCES,
+  fallbackOnEmpty: true,
+});
+
+const regionsRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.CUSTOMERS_REGIONS,
+  fallback: CUSTOMER_REGIONS,
+  fallbackOnEmpty: true,
+});
+
+const routesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.CUSTOMERS_ROUTES,
+  fallback: CUSTOMER_ROUTES,
+  fallbackOnEmpty: true,
+});
+
+const responsiblesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.CUSTOMERS_RESPONSIBLES,
+  fallback: CUSTOMER_RESPONSIBLES,
+  fallbackOnEmpty: true,
+});
+
+const DEFAULT_CUSTOMER_AUDIT: CustomerAuditLog[] = [
+  {
+    id: 'LOG-CUST-1',
+    time: new Date().toLocaleString('ar-YE'),
+    action: 'استيراد',
+    customerName: 'قاعدة بيانات العملاء',
+    details: 'تم استيراد قاعدة بيانات 623 عميل ومسارات الزيارات بنجاح',
+  },
+];
+
+const auditRepo = createCollectionRepository<CustomerAuditLog>({
+  key: STORAGE_KEYS.CUSTOMERS_AUDIT,
+  fallback: DEFAULT_CUSTOMER_AUDIT,
+  limit: 500,
+});
+
 export function loadCustomers(): Customer[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTOMERS_ITEMS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading customers:', e);
-  }
-  return DEFAULT_CUSTOMERS;
+  return customersRepo.read();
 }
 
 export function saveCustomers(customers: Customer[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTOMERS_ITEMS, JSON.stringify(customers));
-  } catch (e) {
-    console.error('Error saving customers:', e);
-  }
+  customersRepo.write(customers);
 }
 
 export function loadCustomerVisits(): CustomerVisitRecord[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTOMERS_VISITS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading customer visits:', e);
-  }
-  return DEFAULT_CUSTOMER_VISITS;
+  return visitsRepo.read();
 }
 
 export function saveCustomerVisits(visits: CustomerVisitRecord[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTOMERS_VISITS, JSON.stringify(visits));
-  } catch (e) {
-    console.error('Error saving customer visits:', e);
-  }
+  visitsRepo.write(visits);
 }
 
 export function loadCustomerSources(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTOMERS_SOURCES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading customer sources:', e);
-  }
-  return CUSTOMER_SOURCES;
+  return sourcesRepo.read();
 }
 
 export function saveCustomerSources(sources: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTOMERS_SOURCES, JSON.stringify(sources));
-  } catch (e) {
-    console.error('Error saving customer sources:', e);
-  }
+  sourcesRepo.write(sources);
 }
 
 export function loadCustomerRegions(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTOMERS_REGIONS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading customer regions:', e);
-  }
-  return CUSTOMER_REGIONS;
+  return regionsRepo.read();
 }
 
 export function saveCustomerRegions(regions: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTOMERS_REGIONS, JSON.stringify(regions));
-  } catch (e) {
-    console.error('Error saving customer regions:', e);
-  }
+  regionsRepo.write(regions);
 }
 
 export function loadCustomerRoutes(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTOMERS_ROUTES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading customer routes:', e);
-  }
-  return CUSTOMER_ROUTES;
+  return routesRepo.read();
 }
 
 export function saveCustomerRoutes(routes: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTOMERS_ROUTES, JSON.stringify(routes));
-  } catch (e) {
-    console.error('Error saving customer routes:', e);
-  }
+  routesRepo.write(routes);
 }
 
 export function loadCustomerResponsibles(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTOMERS_RESPONSIBLES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading customer responsibles:', e);
-  }
-  return CUSTOMER_RESPONSIBLES;
+  return responsiblesRepo.read();
 }
 
 export function saveCustomerResponsibles(responsibles: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTOMERS_RESPONSIBLES, JSON.stringify(responsibles));
-  } catch (e) {
-    console.error('Error saving customer responsibles:', e);
-  }
+  responsiblesRepo.write(responsibles);
 }
 
 export function loadCustomerAuditLogs(): CustomerAuditLog[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTOMERS_AUDIT);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading customer audit logs:', e);
-  }
-  return [
-    {
-      id: 'LOG-CUST-1',
-      time: new Date().toLocaleString('ar-YE'),
-      action: 'استيراد',
-      customerName: 'قاعدة بيانات العملاء',
-      details: 'تم استيراد قاعدة بيانات 623 عميل ومسارات الزيارات بنجاح',
-    },
-  ];
+  return auditRepo.read();
 }
 
 export function saveCustomerAuditLogs(logs: CustomerAuditLog[]): void {
-  try {
-    const trimmed = logs.slice(0, 500);
-    dbStorage.setItem(STORAGE_KEYS.CUSTOMERS_AUDIT, JSON.stringify(trimmed));
-  } catch (e) {
-    console.error('Error saving customer audit logs:', e);
-  }
+  auditRepo.write(logs);
 }
 
 export function logCustomerAudit(action: CustomerAuditLog['action'], customerName: string, details: string): void {

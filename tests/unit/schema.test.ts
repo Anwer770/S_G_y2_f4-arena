@@ -17,6 +17,7 @@ import {
 } from '../../src/database/schema';
 import { SCHEMA_ENTRIES } from '../../src/database/schema/entries';
 import { createCollectionRepository } from '../../src/database/repositories/CollectionRepository';
+import { createObjectRepository } from '../../src/database/repositories/ObjectRepository';
 
 /** تخزين وهمي في الذاكرة (لا IndexedDB ولا localStorage). */
 function memoryStorage(initial: Record<string, string> = {}) {
@@ -267,5 +268,63 @@ describe('مستودع المجموعة', () => {
     expect(() => repo.write([{ id: 'a' }])).not.toThrow();
     expect(warn).toHaveBeenCalled();
     warn.mockRestore();
+  });
+});
+
+describe('مستودع الكائن المفرد', () => {
+  const defaults = { a: 1, b: 'افتراضي', c: true };
+
+  it('غياب المفتاح يعيد الافتراضي كاملاً', () => {
+    const { storage } = memoryStorage();
+    expect(createObjectRepository({ key: 'k', defaults }, storage).read()).toEqual(defaults);
+  });
+
+  it('الكائن المحفوظ يُدمج فوق الافتراضي (لا فقدان حقول جديدة بعد الترقية)', () => {
+    const { storage } = memoryStorage({ k: JSON.stringify({ b: 'محفوظ', قديم: 7 }) });
+    const value = createObjectRepository<Record<string, unknown>>({ key: 'k', defaults }, storage).read();
+    expect(value).toEqual({ a: 1, b: 'محفوظ', c: true, قديم: 7 });
+  });
+
+  it('الملف التالف أو غير الكائن يعيد الافتراضي بلا انهيار', () => {
+    const { storage } = memoryStorage({ x: 'تالف', y: '[1,2]', z: 'null' });
+    for (const key of ['x', 'y', 'z']) {
+      expect(createObjectRepository({ key, defaults }, storage).read()).toEqual(defaults);
+    }
+  });
+
+  it('noMerge يستبدل الافتراضي بدل دمجه', () => {
+    const { storage } = memoryStorage({ k: JSON.stringify({ b: 'محفوظ' }) });
+    const value = createObjectRepository<Record<string, unknown>>(
+      { key: 'k', defaults, noMerge: true },
+      storage
+    ).read();
+    expect(value).toEqual({ b: 'محفوظ' });
+  });
+
+  it('patch يعدّل حقلاً فوق المحفوظ ويحفظ الناتج', () => {
+    const { storage, data } = memoryStorage({ k: JSON.stringify({ b: 'محفوظ' }) });
+    const repo = createObjectRepository<Record<string, unknown>>({ key: 'k', defaults }, storage);
+    const next = repo.patch({ c: false });
+    expect(next).toEqual({ a: 1, b: 'محفوظ', c: false });
+    expect(JSON.parse(data.k)).toEqual({ a: 1, b: 'محفوظ', c: false });
+  });
+
+  it('clear يعيد الافتراضي في القراءة التالية', () => {
+    const { storage } = memoryStorage({ k: JSON.stringify({ b: 'محفوظ' }) });
+    const repo = createObjectRepository({ key: 'k', defaults }, storage);
+    repo.clear();
+    expect(repo.read()).toEqual(defaults);
+  });
+
+  it('فشل التخزين لا يرمي استثناءً', () => {
+    const storage: SchemaStorage = {
+      getItem: () => null,
+      setItem: () => {
+        throw new Error('quota');
+      },
+      removeItem: () => undefined,
+    };
+    const repo = createObjectRepository({ key: 'k', defaults }, storage);
+    expect(() => repo.write(defaults)).not.toThrow();
   });
 });

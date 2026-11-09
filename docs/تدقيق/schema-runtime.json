@@ -1,7 +1,7 @@
 {
- "at": "2026-11-09T03:02:29.058Z",
- "passed": 17,
- "total": 17,
+ "at": "2026-11-09T17:40:20.206Z",
+ "passed": 21,
+ "total": 21,
  "report": {
   "upgraded": 3,
   "current": 0,
@@ -163,6 +163,26 @@
    "name": "G15 · سقف سجل تدقيق العهد (100 سطر) محفوظ بعد النقل",
    "ok": true,
    "detail": "100 سطراً"
+  },
+  {
+   "name": "G16 · الوحدات المنقولة (روتين · عملاء · أطباء) تحفظ سلوك الفراغ: القوائم ⇒ البذرة والزيارات ⇒ قبول الفراغ",
+   "ok": true,
+   "detail": "routines:6(بذرة) routines.categories:7(بذرة) routines.tags:6(بذرة) routines.templates:5(بذرة) routines.occurrences:0(فراغ) routines.exceptions:0(فراغ) customers:26(بذرة) customers.regions:17(بذرة) customers.visits:0(فراغ) doctors:10(بذرة) doctors.specialties:12(بذرة) doctors.visits:0(فراغ)"
+  },
+  {
+   "name": "G17 · الحفظ والقراءة عبر المستودع (روتين · عملاء · أطباء)",
+   "ok": true,
+   "detail": "routines:1 customers:1 doctors:1"
+  },
+  {
+   "name": "G18 · إعدادات الروتين: الكائن المحفوظ يُدمج فوق الافتراضي والحقل القديم يبقى",
+   "ok": true,
+   "detail": "حقول الافتراضي=10 · القديم محفوظ=true"
+  },
+  {
+   "name": "G19 · سقف سجل التدقيق 500 سطر في الوحدات الثلاث",
+   "ok": true,
+   "detail": "500 · 500 · 500"
   },
   {
    "name": "G13 · لا أخطاء JS أثناء التشغيل",
