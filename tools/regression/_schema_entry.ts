@@ -100,3 +100,15 @@ export {
 
 export { loadTasks as loadWorkOSTasks, saveTasksWithoutEvents } from '../../src/utils/workos/workosLoaders';
 export { toggleWorkOSTaskCompletion, completeWorkOSTask } from '../../src/services/workos/WorkOSTaskService';
+
+export {
+  readAutoConfig,
+  saveAutoConfig,
+  readAutoState,
+  readSnapshots,
+  snapshotsSizeKb,
+  AUTO_EXPORT_CONFIG_KEY,
+  AUTO_EXPORT_STATE_KEY,
+  AUTO_EXPORT_SNAPSHOTS_KEY,
+  DEFAULT_AUTO_CONFIG,
+} from '../../src/services/audit/auditAutoExport';

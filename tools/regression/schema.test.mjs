@@ -215,6 +215,7 @@ const storageModules = [
   'src/utils/storage/stock.ts',
   'src/utils/storage/settings.ts',
   'src/utils/storage/system.ts',
+  'src/services/audit/auditAutoExport.ts',
 ];
 const directStorage = storageModules.filter((file) => /dbStorage\.(getItem|setItem)/.test(readFamily(file)));
 check(
@@ -461,10 +462,51 @@ check(
   `قلب=${afterToggleOn.status}/${afterToggleOn.progress} · عكس=${afterToggleOff.status}/${afterToggleOff.progress} · بالرقم=${afterByNumber.status} · أحداث=${runsKey === null ? 'لا شيء' : 'مكتوبة'}`
 );
 
+// ── G25: التصدير التلقائي للأرشيف (R41) — دمج الإعدادات وقصّ اللقطات
+const CFG = S.AUTO_EXPORT_CONFIG_KEY;
+const ST = S.AUTO_EXPORT_STATE_KEY;
+const SN = S.AUTO_EXPORT_SNAPSHOTS_KEY;
+S.dbStorage.removeItem(CFG);
+const configDefault = S.readAutoConfig();
+seed(CFG, JSON.stringify({ keepCount: 3, حقلLegacy: 'x' }));
+const configMerged = S.readAutoConfig();
+seed(CFG, '{تالف');
+const configCorrupt = S.readAutoConfig();
+S.saveAutoConfig({ ...S.DEFAULT_AUTO_CONFIG, keepCount: 7 });
+const configSaved = S.readAutoConfig();
+
+S.dbStorage.removeItem(ST);
+const stateDefault = S.readAutoState();
+seed(ST, JSON.stringify({ runs: 9, lastMode: 'folder' }));
+const stateLoaded = S.readAutoState();
+
+S.dbStorage.removeItem(SN);
+const snapshotsEmpty = S.readSnapshots();
+seed(SN, JSON.stringify([{ id: 's1', at: '2026-11-07', fileName: 'a.json', count: 1, json: '{}' }]));
+const snapshotsLoaded = S.readSnapshots();
+seed(SN, JSON.stringify({ not: 'array' }));
+const snapshotsNonArray = S.readSnapshots();
+check(
+  'G25 · التصدير التلقائي: الإعداد والحالة يُدمجان فوق الافتراضي · التالف ⇒ افتراضي · اللقطات [] عند الغياب/غير المصفوفة',
+  configDefault.keepCount === S.DEFAULT_AUTO_CONFIG.keepCount &&
+    configMerged.keepCount === 3 &&
+    configMerged.حقلLegacy === 'x' &&
+    configCorrupt.keepCount === S.DEFAULT_AUTO_CONFIG.keepCount &&
+    configSaved.keepCount === 7 &&
+    stateDefault.runs === 0 &&
+    stateLoaded.runs === 9 &&
+    stateLoaded.lastMode === 'folder' &&
+    snapshotsEmpty.length === 0 &&
+    snapshotsLoaded.length === 1 &&
+    Array.isArray(snapshotsNonArray) &&
+    snapshotsNonArray.length === 0,
+  `افتراضي=${configDefault.keepCount} · مدموج=${configMerged.keepCount} · محفوظ=${configSaved.keepCount} · حالة=${stateLoaded.runs} · لقطة=${snapshotsLoaded.length}`
+);
+
 check('G13 · لا أخطاء JS أثناء التشغيل', errors.length === 0, errors[0] || '');
 
 const passed = results.filter((r) => r.ok).length;
-console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R40) ════════`);
+console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R41) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
 fs.writeFileSync(
   path.join(OUT_DIR, 'schema-runtime.json'),

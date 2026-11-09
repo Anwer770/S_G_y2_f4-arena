@@ -6,9 +6,13 @@
  *   أغلق المستخدم المتصفح قبل التنزيل.
  * - إن اختار المستخدم مجلداً (File System Access API) تُكتب النسخة هناك بصمت؛
  *   وبخلافه تُنزَّل تلقائياً مرة واحدة عند استحقاق الموعد.
+ * - **R41:** المفاتيح الثلاثة تمرّ عبر المستودعين لا وصولاً خاماً.
+ *   السلوك محفوظ: الإعداد والحالة يُدمجان فوق الافتراضي، والتالف ⇒ الافتراضي،
+ *   واللقطات تُقصّ عند الحفظ بعدد `keepCount`.
  */
 import { auditService } from '../../core/audit/AuditService';
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
+import { createObjectRepository } from '../../database/repositories/ObjectRepository';
 import {
   DEFAULT_AUTO_CONFIG,
   buildArchiveFileName,
@@ -36,44 +40,45 @@ const HANDLE_DB = 'suite_fs_handles';
 const HANDLE_STORE = 'handles';
 const HANDLE_KEY = 'audit_archive_folder';
 
+const configRepo = createObjectRepository<AutoExportConfig>({
+  key: AUTO_EXPORT_CONFIG_KEY,
+  defaults: DEFAULT_AUTO_CONFIG,
+});
+
+const stateRepo = createObjectRepository<AutoExportState>({
+  key: AUTO_EXPORT_STATE_KEY,
+  defaults: { runs: 0 },
+});
+
+/** اللقطات: مصفوفة فارغة **مقبولة** (لا لقطة بعد) — لا رجوع لبذرة. */
+const snapshotsRepo = createCollectionRepository<ArchiveSnapshot>({
+  key: AUTO_EXPORT_SNAPSHOTS_KEY,
+  fallback: [],
+});
+
 export function readAutoConfig(): AutoExportConfig {
-  try {
-    const raw = dbStorage.getItem(AUTO_EXPORT_CONFIG_KEY);
-    return raw ? { ...DEFAULT_AUTO_CONFIG, ...JSON.parse(raw) } : { ...DEFAULT_AUTO_CONFIG };
-  } catch {
-    return { ...DEFAULT_AUTO_CONFIG };
-  }
+  return configRepo.read();
 }
 
 export function saveAutoConfig(config: AutoExportConfig): void {
-  dbStorage.setItem(AUTO_EXPORT_CONFIG_KEY, JSON.stringify(config));
+  configRepo.write(config);
   if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('suite:audit-auto-export'));
 }
 
 export function readAutoState(): AutoExportState {
-  try {
-    const raw = dbStorage.getItem(AUTO_EXPORT_STATE_KEY);
-    return raw ? { runs: 0, ...JSON.parse(raw) } : { runs: 0 };
-  } catch {
-    return { runs: 0 };
-  }
+  return stateRepo.read();
 }
 
 const saveAutoState = (state: AutoExportState): void => {
-  dbStorage.setItem(AUTO_EXPORT_STATE_KEY, JSON.stringify(state));
+  stateRepo.write(state);
 };
 
 export function readSnapshots(): ArchiveSnapshot[] {
-  try {
-    const raw = dbStorage.getItem(AUTO_EXPORT_SNAPSHOTS_KEY);
-    return raw ? (JSON.parse(raw) as ArchiveSnapshot[]) : [];
-  } catch {
-    return [];
-  }
+  return snapshotsRepo.read();
 }
 
 const saveSnapshots = (list: ArchiveSnapshot[], keep: number): void => {
-  dbStorage.setItem(AUTO_EXPORT_SNAPSHOTS_KEY, JSON.stringify(pruneSnapshots(list, keep)));
+  snapshotsRepo.write(pruneSnapshots(list, keep));
 };
 
 /* ───────────── مقبض المجلد (اختياري، Chromium/Electron) ───────────── */
