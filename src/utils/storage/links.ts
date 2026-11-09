@@ -1,5 +1,6 @@
 /**
  * مخزن وحدة «links» — مُستخرج من storage.ts (R26).
+ * R35: كل قراءة/كتابة عبر مستودع واحد؛ السلوك محفوظ (المصفوفة الفارغة ⇒ البذرة).
  */
 import {
   DEFAULT_LINKS_RECORDS,
@@ -8,114 +9,79 @@ import {
   DEFAULT_LINK_IMPORTANCES,
   DEFAULT_LINK_TYPES,
 } from '../../data/defaultLinks';
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
 import { logSystemAudit } from './system';
 import { LinkRecord, LinksKPIs } from '../../types';
 import { STORAGE_KEYS } from './keys';
 
+const linksRepo = createCollectionRepository<LinkRecord>({
+  key: STORAGE_KEYS.LINKS_RECORDS,
+  fallback: DEFAULT_LINKS_RECORDS,
+  fallbackOnEmpty: true,
+});
+
+const linkClassificationsRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.LINKS_CLASSIFICATIONS,
+  fallback: DEFAULT_LINK_CLASSIFICATIONS,
+  fallbackOnEmpty: true,
+});
+
+const linkCategoriesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.LINKS_CATEGORIES,
+  fallback: DEFAULT_LINK_CATEGORIES,
+  fallbackOnEmpty: true,
+});
+
+const linkTypesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.LINKS_TYPES,
+  fallback: DEFAULT_LINK_TYPES,
+  fallbackOnEmpty: true,
+});
+
+const linkImportancesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.LINKS_IMPORTANCES,
+  fallback: DEFAULT_LINK_IMPORTANCES,
+  fallbackOnEmpty: true,
+});
+
 export function loadLinksRecords(): LinkRecord[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.LINKS_RECORDS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading links records:', e);
-  }
-  return DEFAULT_LINKS_RECORDS;
+  return linksRepo.read();
 }
 
 export function saveLinksRecords(records: LinkRecord[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.LINKS_RECORDS, JSON.stringify(records));
-  } catch (e) {
-    console.error('Error saving links records:', e);
-  }
+  linksRepo.write(records);
 }
 
 export function loadLinkClassifications(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.LINKS_CLASSIFICATIONS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading link classifications:', e);
-  }
-  return DEFAULT_LINK_CLASSIFICATIONS;
+  return linkClassificationsRepo.read();
 }
 
 export function saveLinkClassifications(classifications: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.LINKS_CLASSIFICATIONS, JSON.stringify(classifications));
-  } catch (e) {
-    console.error('Error saving link classifications:', e);
-  }
+  linkClassificationsRepo.write(classifications);
 }
 
 export function loadLinkCategories(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.LINKS_CATEGORIES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading link categories:', e);
-  }
-  return DEFAULT_LINK_CATEGORIES;
+  return linkCategoriesRepo.read();
 }
 
 export function saveLinkCategories(categories: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.LINKS_CATEGORIES, JSON.stringify(categories));
-  } catch (e) {
-    console.error('Error saving link categories:', e);
-  }
+  linkCategoriesRepo.write(categories);
 }
 
 export function loadLinkTypes(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.LINKS_TYPES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading link types:', e);
-  }
-  return DEFAULT_LINK_TYPES;
+  return linkTypesRepo.read();
 }
 
 export function saveLinkTypes(types: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.LINKS_TYPES, JSON.stringify(types));
-  } catch (e) {
-    console.error('Error saving link types:', e);
-  }
+  linkTypesRepo.write(types);
 }
 
 export function loadLinkImportances(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.LINKS_IMPORTANCES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading link importances:', e);
-  }
-  return DEFAULT_LINK_IMPORTANCES;
+  return linkImportancesRepo.read();
 }
 
 export function saveLinkImportances(importances: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.LINKS_IMPORTANCES, JSON.stringify(importances));
-  } catch (e) {
-    console.error('Error saving link importances:', e);
-  }
+  linkImportancesRepo.write(importances);
 }
 
 export function calculateLinksKPIs(records: LinkRecord[]): LinksKPIs {

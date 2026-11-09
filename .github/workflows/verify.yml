@@ -101,6 +101,8 @@ jobs:
         run: npm run security
       - name: Storage keys · no key drift
         run: npm run storage-keys
+      - name: Architecture decision · ADR-08 documented, referenced, resolvable (R34)
+        run: npm run docs:decision
 
   # ---------------------------------------------------------------- 3) بوابات jsdom (تشغيل التطبيق فعلياً)
   runtime-gates:

@@ -1,146 +1,108 @@
 /**
  * مخزن وحدة «tasks» — مُستخرج من storage.ts (R26).
+ * R35: القراءة/الكتابة عبر مستودع واحد (`CollectionRepository`) بدل تكرار
+ * `try/JSON.parse/catch` — والسلوك محفوظ حرفياً: المصفوفة الفارغة تُعدّ «لا بيانات»
+ * فتُعرض البذرة، وسجل التدقيق بسقف 500 سطر.
  */
 import { DEFAULT_COMMITMENTS } from '../../data/defaultCommitments';
 import { DEFAULT_TASKS, TASK_ASSIGNEES, TASK_CATEGORIES, TASK_OPERATIONS } from '../../data/defaultTasks';
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
 import { Commitment, Task, TaskAuditLog } from '../../types';
 import { STORAGE_KEYS } from './keys';
 
+const tasksRepo = createCollectionRepository<Task>({
+  key: STORAGE_KEYS.TASKS_ITEMS,
+  fallback: DEFAULT_TASKS,
+  fallbackOnEmpty: true,
+});
+
+const commitmentsRepo = createCollectionRepository<Commitment>({
+  key: STORAGE_KEYS.TASKS_COMMITMENTS,
+  fallback: DEFAULT_COMMITMENTS,
+  fallbackOnEmpty: true,
+});
+
+const taskCategoriesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.TASKS_CATEGORIES,
+  fallback: TASK_CATEGORIES,
+  fallbackOnEmpty: true,
+});
+
+const taskOperationsRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.TASKS_OPERATIONS,
+  fallback: TASK_OPERATIONS,
+  fallbackOnEmpty: true,
+});
+
+const taskAssigneesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.TASKS_ASSIGNEES,
+  fallback: TASK_ASSIGNEES,
+  fallbackOnEmpty: true,
+});
+
+const DEFAULT_TASK_AUDIT: TaskAuditLog[] = [
+  {
+    id: 'TAUD-001',
+    time: new Date().toLocaleString('ar-YE'),
+    action: 'نظام',
+    entity: 'النظام',
+    title: 'تهيئة دفتر المهام والأعمال',
+    details: 'تم تحميل 103 مهمة و 32 التزاماً مالياً بنجاح',
+  },
+];
+
+const taskAuditRepo = createCollectionRepository<TaskAuditLog>({
+  key: STORAGE_KEYS.TASKS_AUDIT,
+  fallback: DEFAULT_TASK_AUDIT,
+  limit: 500,
+});
+
 export function loadTasks(): Task[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.TASKS_ITEMS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading tasks:', e);
-  }
-  return DEFAULT_TASKS;
+  return tasksRepo.read();
 }
 
 export function saveTasks(tasks: Task[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.TASKS_ITEMS, JSON.stringify(tasks));
-  } catch (e) {
-    console.error('Error saving tasks:', e);
-  }
+  tasksRepo.write(tasks);
 }
 
 export function loadCommitments(): Commitment[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.TASKS_COMMITMENTS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading commitments:', e);
-  }
-  return DEFAULT_COMMITMENTS;
+  return commitmentsRepo.read();
 }
 
 export function saveCommitments(commitments: Commitment[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.TASKS_COMMITMENTS, JSON.stringify(commitments));
-  } catch (e) {
-    console.error('Error saving commitments:', e);
-  }
+  commitmentsRepo.write(commitments);
 }
 
 export function loadTaskCategories(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.TASKS_CATEGORIES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading task categories:', e);
-  }
-  return TASK_CATEGORIES;
+  return taskCategoriesRepo.read();
 }
 
 export function saveTaskCategories(cats: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.TASKS_CATEGORIES, JSON.stringify(cats));
-  } catch (e) {
-    console.error('Error saving task categories:', e);
-  }
+  taskCategoriesRepo.write(cats);
 }
 
 export function loadTaskOperations(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.TASKS_OPERATIONS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading task operations:', e);
-  }
-  return TASK_OPERATIONS;
+  return taskOperationsRepo.read();
 }
 
 export function saveTaskOperations(ops: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.TASKS_OPERATIONS, JSON.stringify(ops));
-  } catch (e) {
-    console.error('Error saving task operations:', e);
-  }
+  taskOperationsRepo.write(ops);
 }
 
 export function loadTaskAssignees(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.TASKS_ASSIGNEES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading task assignees:', e);
-  }
-  return TASK_ASSIGNEES;
+  return taskAssigneesRepo.read();
 }
 
 export function saveTaskAssignees(assignees: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.TASKS_ASSIGNEES, JSON.stringify(assignees));
-  } catch (e) {
-    console.error('Error saving task assignees:', e);
-  }
+  taskAssigneesRepo.write(assignees);
 }
 
 export function loadTaskAuditLogs(): TaskAuditLog[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.TASKS_AUDIT);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading task audit logs:', e);
-  }
-  return [
-    {
-      id: 'TAUD-001',
-      time: new Date().toLocaleString('ar-YE'),
-      action: 'نظام',
-      entity: 'النظام',
-      title: 'تهيئة دفتر المهام والأعمال',
-      details: 'تم تحميل 103 مهمة و 32 التزاماً مالياً بنجاح',
-    },
-  ];
+  return taskAuditRepo.read();
 }
 
 export function saveTaskAuditLogs(logs: TaskAuditLog[]): void {
-  try {
-    const trimmed = logs.slice(0, 500); // PRD: Max 500
-    dbStorage.setItem(STORAGE_KEYS.TASKS_AUDIT, JSON.stringify(trimmed));
-  } catch (e) {
-    console.error('Error saving task audit logs:', e);
-  }
+  taskAuditRepo.write(logs);
 }
 
 export function logTaskAudit(

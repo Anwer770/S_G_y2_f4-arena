@@ -1,5 +1,7 @@
 /**
  * مخزن وحدة «custody» — مُستخرج من storage.ts (R26).
+ * R35: كل قراءة/كتابة عبر مستودع واحد. السلوك محفوظ: القوائم والسجلات تعود للبذرة
+ * عند المصفوفة الفارغة، وسجل التدقيق يقبل الفراغ بسقف 100 سطر.
  */
 import {
   DEFAULT_CUSTODY_CATEGORIES,
@@ -8,134 +10,93 @@ import {
   DEFAULT_CUSTODY_RESPONSIBLES,
   DEFAULT_CUSTODY_STATUSES,
 } from '../../data/defaultCustodyIssues';
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
 import { AuditLog, CustodyIssueRecord, CustodyKPIs } from '../../types';
 import { STORAGE_KEYS } from './keys';
 
+const custodyRepo = createCollectionRepository<CustodyIssueRecord>({
+  key: STORAGE_KEYS.CUSTODY_RECORDS,
+  fallback: DEFAULT_CUSTODY_ISSUES_RECORDS,
+  fallbackOnEmpty: true,
+});
+
+const custodyCategoriesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.CUSTODY_CATEGORIES,
+  fallback: DEFAULT_CUSTODY_CATEGORIES,
+  fallbackOnEmpty: true,
+});
+
+const custodyResponsiblesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.CUSTODY_RESPONSIBLES,
+  fallback: DEFAULT_CUSTODY_RESPONSIBLES,
+  fallbackOnEmpty: true,
+});
+
+const custodyStatusesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.CUSTODY_STATUSES,
+  fallback: DEFAULT_CUSTODY_STATUSES,
+  fallbackOnEmpty: true,
+});
+
+const custodyPrioritiesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.CUSTODY_PRIORITIES,
+  fallback: DEFAULT_CUSTODY_PRIORITIES,
+  fallbackOnEmpty: true,
+});
+
+/** سجل التدقيق يقبل الفراغ (ليس له بذرة) وبسقف 100 سطر كما كان. */
+const custodyAuditRepo = createCollectionRepository<AuditLog>({
+  key: STORAGE_KEYS.CUSTODY_AUDIT,
+  fallback: [],
+  limit: 100,
+});
+
 export function loadCustodyIssues(): CustodyIssueRecord[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTODY_RECORDS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading custody records:', e);
-  }
-  return DEFAULT_CUSTODY_ISSUES_RECORDS;
+  return custodyRepo.read();
 }
 
 export function saveCustodyIssues(records: CustodyIssueRecord[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTODY_RECORDS, JSON.stringify(records));
-  } catch (e) {
-    console.error('Error saving custody records:', e);
-  }
+  custodyRepo.write(records);
 }
 
 export function loadCustodyCategories(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTODY_CATEGORIES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading custody categories:', e);
-  }
-  return DEFAULT_CUSTODY_CATEGORIES;
+  return custodyCategoriesRepo.read();
 }
 
 export function saveCustodyCategories(categories: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTODY_CATEGORIES, JSON.stringify(categories));
-  } catch (e) {
-    console.error('Error saving custody categories:', e);
-  }
+  custodyCategoriesRepo.write(categories);
 }
 
 export function loadCustodyResponsibles(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTODY_RESPONSIBLES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading custody responsibles:', e);
-  }
-  return DEFAULT_CUSTODY_RESPONSIBLES;
+  return custodyResponsiblesRepo.read();
 }
 
 export function saveCustodyResponsibles(responsibles: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTODY_RESPONSIBLES, JSON.stringify(responsibles));
-  } catch (e) {
-    console.error('Error saving custody responsibles:', e);
-  }
+  custodyResponsiblesRepo.write(responsibles);
 }
 
 export function loadCustodyStatuses(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTODY_STATUSES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading custody statuses:', e);
-  }
-  return DEFAULT_CUSTODY_STATUSES;
+  return custodyStatusesRepo.read();
 }
 
 export function saveCustodyStatuses(statuses: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTODY_STATUSES, JSON.stringify(statuses));
-  } catch (e) {
-    console.error('Error saving custody statuses:', e);
-  }
+  custodyStatusesRepo.write(statuses);
 }
 
 export function loadCustodyPriorities(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTODY_PRIORITIES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading custody priorities:', e);
-  }
-  return DEFAULT_CUSTODY_PRIORITIES;
+  return custodyPrioritiesRepo.read();
 }
 
 export function saveCustodyPriorities(priorities: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTODY_PRIORITIES, JSON.stringify(priorities));
-  } catch (e) {
-    console.error('Error saving custody priorities:', e);
-  }
+  custodyPrioritiesRepo.write(priorities);
 }
 
 export function loadCustodyAuditLogs(): AuditLog[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.CUSTODY_AUDIT);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading custody audit logs:', e);
-  }
-  return [];
+  return custodyAuditRepo.read();
 }
 
 export function saveCustodyAuditLogs(logs: AuditLog[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.CUSTODY_AUDIT, JSON.stringify(logs.slice(0, 100)));
-  } catch (e) {
-    console.error('Error saving custody audit logs:', e);
-  }
+  custodyAuditRepo.write(logs);
 }
 
 export function logCustodyAudit(action: string, details: string, recordId?: string): void {

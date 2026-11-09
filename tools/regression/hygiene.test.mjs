@@ -216,6 +216,7 @@ const CI_GATES = [
   'npm run imports',
   'npm run security',
   'npm run storage-keys',
+  'npm run docs:decision',
   'npm run settings',
   'npm run snapshots',
   'npm run auth',
