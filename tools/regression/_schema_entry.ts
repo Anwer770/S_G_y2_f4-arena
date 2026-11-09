@@ -18,6 +18,7 @@ export {
 
 export { dbStorage } from '../../src/database/dbStorage';
 export { createCollectionRepository } from '../../src/database/repositories/CollectionRepository';
+export { createObjectRepository } from '../../src/database/repositories/ObjectRepository';
 
 export {
   loadDebts,
@@ -38,3 +39,35 @@ export {
   saveCustodyAuditLogs,
 } from '../../src/utils/storage/custody';
 export { loadLinksRecords, saveLinksRecords } from '../../src/utils/storage/links';
+
+export {
+  loadRoutines,
+  saveRoutines,
+  loadRoutineOccurrences,
+  loadRoutineCategories,
+  loadRoutineTags,
+  loadRoutineTemplates,
+  loadRoutineExceptions,
+  loadRoutineAuditLogs,
+  saveRoutineAuditLogs,
+  loadRoutineSettings,
+  saveRoutineSettings,
+} from '../../src/utils/storage/routines';
+
+export {
+  loadCustomers,
+  saveCustomers,
+  loadCustomerVisits,
+  loadCustomerRegions,
+  loadCustomerAuditLogs,
+  saveCustomerAuditLogs,
+} from '../../src/utils/storage/customers';
+
+export {
+  loadDoctors,
+  saveDoctors,
+  loadDoctorVisits,
+  loadDoctorSpecialties,
+  loadDoctorAuditLogs,
+  saveDoctorAuditLogs,
+} from '../../src/utils/storage/doctors';

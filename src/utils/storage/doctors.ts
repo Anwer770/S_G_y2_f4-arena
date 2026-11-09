@@ -1,5 +1,7 @@
 /**
  * مخزن وحدة «doctors» — مُستخرج من storage.ts (R26).
+ * R36: كل قراءة/كتابة عبر مستودع المجموعات. السلوك محفوظ: الأطباء والقوائم
+ * تُرجع البذرة عند الفراغ، والزيارات تقبل الفراغ، وسجل التدقيق بسقف 500.
  */
 import {
   DEFAULT_DOCTORS,
@@ -9,164 +11,116 @@ import {
   DOCTOR_ROUTES,
   DOCTOR_SPECIALTIES,
 } from '../../data/defaultDoctors';
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
 import { DoctorAuditLog, DoctorRecord, DoctorVisitLog } from '../../types';
 import { STORAGE_KEYS } from './keys';
 
+const doctorsRepo = createCollectionRepository<DoctorRecord>({
+  key: STORAGE_KEYS.DOCTORS_ITEMS,
+  fallback: DEFAULT_DOCTORS,
+  fallbackOnEmpty: true,
+});
+
+/** الزيارات: مصفوفة فارغة **مقبولة** (طبيب بلا زيارات بعد) مع بذرة عند الغياب. */
+const visitsRepo = createCollectionRepository<DoctorVisitLog>({
+  key: STORAGE_KEYS.DOCTORS_VISITS,
+  fallback: DEFAULT_DOCTOR_VISITS,
+});
+
+const regionsRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.DOCTORS_REGIONS,
+  fallback: DOCTOR_REGIONS,
+  fallbackOnEmpty: true,
+});
+
+const routesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.DOCTORS_ROUTES,
+  fallback: DOCTOR_ROUTES,
+  fallbackOnEmpty: true,
+});
+
+const responsiblesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.DOCTORS_RESPONSIBLES,
+  fallback: DOCTOR_RESPONSIBLES,
+  fallbackOnEmpty: true,
+});
+
+const specialtiesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.DOCTORS_SPECIALTIES,
+  fallback: DOCTOR_SPECIALTIES,
+  fallbackOnEmpty: true,
+});
+
+const DEFAULT_DOCTOR_AUDIT: DoctorAuditLog[] = [
+  {
+    id: 'LOG-DOC-1',
+    time: new Date().toLocaleString('ar-YE'),
+    action: 'استيراد',
+    doctorName: 'قاعدة بيانات الأطباء',
+    details: 'تم تهيئة دفتر إدارة زيارات الأطباء ومسارات الزيارات بنجاح',
+  },
+];
+
+const auditRepo = createCollectionRepository<DoctorAuditLog>({
+  key: STORAGE_KEYS.DOCTORS_AUDIT,
+  fallback: DEFAULT_DOCTOR_AUDIT,
+  limit: 500,
+});
+
 export function loadDoctors(): DoctorRecord[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DOCTORS_ITEMS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading doctors:', e);
-  }
-  return DEFAULT_DOCTORS;
+  return doctorsRepo.read();
 }
 
 export function saveDoctors(doctors: DoctorRecord[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DOCTORS_ITEMS, JSON.stringify(doctors));
-  } catch (e) {
-    console.error('Error saving doctors:', e);
-  }
+  doctorsRepo.write(doctors);
 }
 
 export function loadDoctorVisits(): DoctorVisitLog[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DOCTORS_VISITS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading doctor visits:', e);
-  }
-  return DEFAULT_DOCTOR_VISITS;
+  return visitsRepo.read();
 }
 
 export function saveDoctorVisits(visits: DoctorVisitLog[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DOCTORS_VISITS, JSON.stringify(visits));
-  } catch (e) {
-    console.error('Error saving doctor visits:', e);
-  }
+  visitsRepo.write(visits);
 }
 
 export function loadDoctorRegions(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DOCTORS_REGIONS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading doctor regions:', e);
-  }
-  return DOCTOR_REGIONS;
+  return regionsRepo.read();
 }
 
 export function saveDoctorRegions(regions: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DOCTORS_REGIONS, JSON.stringify(regions));
-  } catch (e) {
-    console.error('Error saving doctor regions:', e);
-  }
+  regionsRepo.write(regions);
 }
 
 export function loadDoctorRoutes(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DOCTORS_ROUTES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading doctor routes:', e);
-  }
-  return DOCTOR_ROUTES;
+  return routesRepo.read();
 }
 
 export function saveDoctorRoutes(routes: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DOCTORS_ROUTES, JSON.stringify(routes));
-  } catch (e) {
-    console.error('Error saving doctor routes:', e);
-  }
+  routesRepo.write(routes);
 }
 
 export function loadDoctorResponsibles(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DOCTORS_RESPONSIBLES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading doctor responsibles:', e);
-  }
-  return DOCTOR_RESPONSIBLES;
+  return responsiblesRepo.read();
 }
 
 export function saveDoctorResponsibles(responsibles: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DOCTORS_RESPONSIBLES, JSON.stringify(responsibles));
-  } catch (e) {
-    console.error('Error saving doctor responsibles:', e);
-  }
+  responsiblesRepo.write(responsibles);
 }
 
 export function loadDoctorSpecialties(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DOCTORS_SPECIALTIES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading doctor specialties:', e);
-  }
-  return DOCTOR_SPECIALTIES;
+  return specialtiesRepo.read();
 }
 
 export function saveDoctorSpecialties(specialties: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.DOCTORS_SPECIALTIES, JSON.stringify(specialties));
-  } catch (e) {
-    console.error('Error saving doctor specialties:', e);
-  }
+  specialtiesRepo.write(specialties);
 }
 
 export function loadDoctorAuditLogs(): DoctorAuditLog[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.DOCTORS_AUDIT);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading doctor audit logs:', e);
-  }
-  return [
-    {
-      id: 'LOG-DOC-1',
-      time: new Date().toLocaleString('ar-YE'),
-      action: 'استيراد',
-      doctorName: 'قاعدة بيانات الأطباء',
-      details: 'تم تهيئة دفتر إدارة زيارات الأطباء ومسارات الزيارات بنجاح',
-    },
-  ];
+  return auditRepo.read();
 }
 
 export function saveDoctorAuditLogs(logs: DoctorAuditLog[]): void {
-  try {
-    const trimmed = logs.slice(0, 500);
-    dbStorage.setItem(STORAGE_KEYS.DOCTORS_AUDIT, JSON.stringify(trimmed));
-  } catch (e) {
-    console.error('Error saving doctor audit logs:', e);
-  }
+  auditRepo.write(logs);
 }
 
 export function logDoctorAudit(action: DoctorAuditLog['action'], doctorName: string, details: string): void {

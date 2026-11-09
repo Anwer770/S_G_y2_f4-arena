@@ -204,6 +204,9 @@ const storageModules = [
   'src/utils/storage/tasks.ts',
   'src/utils/storage/custody.ts',
   'src/utils/storage/links.ts',
+  'src/utils/storage/routines.ts',
+  'src/utils/storage/customers.ts',
+  'src/utils/storage/doctors.ts',
 ];
 const directStorage = storageModules.filter((file) => /dbStorage\.(getItem|setItem)/.test(readFamily(file)));
 check(
@@ -212,7 +215,7 @@ check(
   directStorage.join(' · ') || '0 تجاوز'
 );
 
-const repoUsage = storageModules.every((file) => /createCollectionRepository/.test(readFamily(file)));
+const repoUsage = storageModules.every((file) => /create(Collection|Object)Repository/.test(readFamily(file)));
 check('G12 · الدفاتر المرحَّلة تستخدم المستودع العام', repoUsage);
 
 // ── G14: تكافؤ السلوك في الوحدات المنقولة حديثاً (R35)
@@ -249,10 +252,89 @@ check(
   `${S.loadCustodyAuditLogs().length} سطراً`
 );
 
+// ── G16/G17: الوحدات المنقولة في R36 (روتين · عملاء · أطباء)
+const seedParity = [];
+const parityCheck = (name, loader, key, expectSeed) => {
+  seed(key, '[]');
+  const empty = loader();
+  const ok = expectSeed ? empty.length > 0 : empty.length === 0;
+  seedParity.push({ name, empty: empty.length, expectSeed });
+  return ok;
+};
+const r36Ok =
+  parityCheck('routines', S.loadRoutines, 'suite_routines_items_v1', true) &&
+  parityCheck('routines.categories', S.loadRoutineCategories, 'suite_routines_categories_v1', true) &&
+  parityCheck('routines.tags', S.loadRoutineTags, 'suite_routines_tags_v1', true) &&
+  parityCheck('routines.templates', S.loadRoutineTemplates, 'suite_routines_templates_v1', true) &&
+  parityCheck('routines.occurrences', S.loadRoutineOccurrences, 'suite_routines_occurrences_v1', false) &&
+  parityCheck('routines.exceptions', S.loadRoutineExceptions, 'suite_routines_exceptions_v1', false) &&
+  parityCheck('customers', S.loadCustomers, 'suite_customers_items_v2', true) &&
+  parityCheck('customers.regions', S.loadCustomerRegions, 'suite_customers_regions_v2', true) &&
+  parityCheck('customers.visits', S.loadCustomerVisits, 'suite_customers_visits_v2', false) &&
+  parityCheck('doctors', S.loadDoctors, 'suite_doctors_items_v1', true) &&
+  parityCheck('doctors.specialties', S.loadDoctorSpecialties, 'suite_doctors_specialties_v1', true) &&
+  parityCheck('doctors.visits', S.loadDoctorVisits, 'suite_doctors_visits_v1', false);
+check(
+  'G16 · الوحدات المنقولة (روتين · عملاء · أطباء) تحفظ سلوك الفراغ: القوائم ⇒ البذرة والزيارات ⇒ قبول الفراغ',
+  r36Ok,
+  seedParity.map((p) => `${p.name}:${p.empty}${p.expectSeed ? '(بذرة)' : '(فراغ)'}`).join(' ')
+);
+
+// الحفظ ثم القراءة يعمل عبر المستودع لكل الوحدات الثلاث
+const saveRoundTrip = [];
+const trip = (name, loader, saver, record, key) => {
+  seed(key, '[]');
+  saver([record]);
+  const back = loader();
+  saveRoundTrip.push({ name, n: back.length, id: back[0]?.id });
+  return back.length === 1 && back[0]?.id === record.id;
+};
+const tripOk =
+  trip('routines', S.loadRoutines, S.saveRoutines, { id: 'RTN-X', title: 'روتين' }, 'suite_routines_items_v1') &&
+  trip('customers', S.loadCustomers, S.saveCustomers, { id: 'CUS-X', name: 'عميل' }, 'suite_customers_items_v2') &&
+  trip('doctors', S.loadDoctors, S.saveDoctors, { id: 'DOC-X', name: 'طبيب' }, 'suite_doctors_items_v1');
+check(
+  'G17 · الحفظ والقراءة عبر المستودع (روتين · عملاء · أطباء)',
+  tripOk,
+  saveRoundTrip.map((r) => `${r.name}:${r.n}`).join(' ')
+);
+
+// G18: كائن الإعدادات يُدمج فوق الافتراضي (سلوك loadRoutineSettings حرفياً)
+seed('suite_routines_settings_v1', JSON.stringify({ autoGenerateOccurrences: false, حقلLegacy: 7 }));
+const settings = S.loadRoutineSettings();
+seed('suite_routines_settings_v1', 'null');
+const settingsNullRaw = S.loadRoutineSettings();
+const defaultsKeys = Object.keys(S.loadRoutineSettings() || {});
+seed('suite_routines_settings_v1', JSON.stringify({ autoGenerateOccurrences: false }));
+const settingsKeys = Object.keys(S.loadRoutineSettings());
+check(
+  'G18 · إعدادات الروتين: الكائن المحفوظ يُدمج فوق الافتراضي والحقل القديم يبقى',
+  settings.autoGenerateOccurrences === false &&
+    settings.حقلLegacy === 7 &&
+    settingsKeys.length > 1 &&
+    settingsNullRaw !== null,
+  `حقول الافتراضي=${settingsKeys.length} · القديم محفوظ=${settings.حقلLegacy === 7}`
+);
+
+// G19: سقوف سجلات التدقيق (500) للوحدات الثلاث بعد النقل
+const makeLogs = (n, extra) => Array.from({ length: n }, (_, i) => ({ id: `L-${i}`, ...extra }));
+seed('suite_routines_audit_v1', '[]');
+S.saveRoutineAuditLogs(makeLogs(700, { timestamp: 'x', action: 'إضافة', routineName: 'r', details: 'd' }));
+seed('suite_customers_audit_v2', '[]');
+S.saveCustomerAuditLogs(makeLogs(700, { time: 'x', action: 'إضافة', customerName: 'c', details: 'd' }));
+seed('suite_doctors_audit_v1', '[]');
+S.saveDoctorAuditLogs(makeLogs(700, { time: 'x', action: 'إضافة', doctorName: 'd', details: 'x' }));
+const limits = [S.loadRoutineAuditLogs().length, S.loadCustomerAuditLogs().length, S.loadDoctorAuditLogs().length];
+check(
+  'G19 · سقف سجل التدقيق 500 سطر في الوحدات الثلاث',
+  limits.every((n) => n === 500),
+  limits.join(' · ')
+);
+
 check('G13 · لا أخطاء JS أثناء التشغيل', errors.length === 0, errors[0] || '');
 
 const passed = results.filter((r) => r.ok).length;
-console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R33) ════════`);
+console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R36) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
 fs.writeFileSync(
   path.join(OUT_DIR, 'schema-runtime.json'),
