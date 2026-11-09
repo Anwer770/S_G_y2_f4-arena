@@ -17,9 +17,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { readFamily, fnBody as extractFnBody } from './_source.mjs';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..', '..');
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
+// عائلة الوحدة = الملف + مجلده الشقيق بعد التفكيك (R30) — من _source.mjs
 
 const results = [];
 const check = (name, ok, detail = '') => {
@@ -31,24 +33,29 @@ const check = (name, ok, detail = '') => {
 const BUNDLE = path.join(ROOT, 'docs', 'تدقيق', '.imports-bundle.mjs');
 execFileSync(
   path.join(ROOT, 'node_modules', '.bin', 'esbuild'),
-  [`${path.join(ROOT, 'src', 'utils', 'importFidelity.ts')}`, '--bundle', '--format=esm', `--outfile=${BUNDLE}`, '--log-level=error'],
+  [
+    `${path.join(ROOT, 'src', 'utils', 'importFidelity.ts')}`,
+    '--bundle',
+    '--format=esm',
+    `--outfile=${BUNDLE}`,
+    '--log-level=error',
+  ],
   { stdio: 'inherit' }
 );
 const F = await import(url.pathToFileURL(BUNDLE).href);
 
 check(
   'P1 · الخلية الفارغة تُقرأ فارغة (لا قيمة افتراضية)',
-  F.cellText({ 'الاسم': '', 'name': '' }, ['الاسم', 'name']) === '' &&
-    F.cellText({}, ['الاسم', 'name']) === ''
+  F.cellText({ الاسم: '', name: '' }, ['الاسم', 'name']) === '' && F.cellText({}, ['الاسم', 'name']) === ''
 );
 
 check(
   'P2 · أول قيمة غير فارغة هي المقروءة (لا خلط بين المرشّحات)',
-  F.cellText({ 'اسم العميل': '', 'Name': 'صيدلية النور' }, ['اسم العميل', 'Name']) === 'صيدلية النور'
+  F.cellText({ 'اسم العميل': '', Name: 'صيدلية النور' }, ['اسم العميل', 'Name']) === 'صيدلية النور'
 );
 
-const blankNum = F.cellNumber({ 'الرصيد': '' }, ['الرصيد']);
-const realNum = F.cellNumber({ 'الرصيد': '1250' }, ['الرصيد']);
+const blankNum = F.cellNumber({ الرصيد: '' }, ['الرصيد']);
+const realNum = F.cellNumber({ الرصيد: '1250' }, ['الرصيد']);
 check(
   'P3 · الرقم الفارغ = 0 مع وسم «فارغ» للمراجعة، والرقم الحقيقي يُقرأ كما هو',
   blankNum.value === 0 && blankNum.blank === true && realNum.value === 1250 && realNum.blank === false,
@@ -90,17 +97,11 @@ check(
 );
 
 // ── 2) مصدرية: لا قيم افتراضية في المُحلّلات
-const excel = read('src/utils/excel.ts');
-const doctors = read('src/utils/doctors.ts');
+const excel = readFamily('src/utils/excel.ts');
+const doctors = readFamily('src/utils/doctors.ts');
 
-/** يستخرج جسم دالة تصدير معيّنة (من بدايتها حتى نهاية السطر السابق لأول `export` تالٍ). */
-const fnBody = (src, signature) => {
-  const start = src.indexOf(signature);
-  if (start < 0) return '';
-  const rest = src.slice(start + signature.length);
-  const nextExport = rest.indexOf('\nexport ');
-  return nextExport < 0 ? rest : rest.slice(0, nextExport);
-};
+/** يستخرج جسم دالة تصدير من نصّ العائلة (يتوقف عند أول قوس إغلاق علوي). */
+const fnBody = extractFnBody;
 
 const customersBody = fnBody(excel, 'export async function parseCustomersExcelFile(');
 const stockBody = fnBody(excel, 'export async function parseExcelForImport(');
@@ -118,12 +119,18 @@ const customersBad = scanForbidden(customersBody, [
   'CUST-${',
   'new Date().toISOString().split',
 ]);
-check('P8 · مُحلّل العملاء: لا مصدر/منطقة/مسار/مندوب/حالة/تاريخ مخترع', customersBad.length === 0,
-  customersBad.length ? customersBad.join(' · ') : 'نظيف');
+check(
+  'P8 · مُحلّل العملاء: لا مصدر/منطقة/مسار/مندوب/حالة/تاريخ مخترع',
+  customersBad.length === 0,
+  customersBad.length ? customersBad.join(' · ') : 'نظيف'
+);
 
 const stockBad = scanForbidden(stockBody, ["'غير محدد'", 'حركة مستوردة', "'تم التنفيذ'", "'مبيعات'", 'Categ-']);
-check('P9 · مُحلّل دفتر الصرف/التوريد: لا جهة/وصف/حالة/فئة مخترعة', stockBad.length === 0,
-  stockBad.length ? stockBad.join(' · ') : 'نظيف');
+check(
+  'P9 · مُحلّل دفتر الصرف/التوريد: لا جهة/وصف/حالة/فئة مخترعة',
+  stockBad.length === 0,
+  stockBad.length ? stockBad.join(' · ') : 'نظيف'
+);
 
 const financialBad = scanForbidden(financialBody, [
   "'ايرادات'",
@@ -135,12 +142,25 @@ const financialBad = scanForbidden(financialBody, [
   'String(1000 + index)',
   'ACC-${',
 ]);
-check('P10 · مُحلّل السجل المالي: لا حركة/قيد/دفع/فئة/حساب مخترع', financialBad.length === 0,
-  financialBad.length ? financialBad.join(' · ') : 'نظيف');
+check(
+  'P10 · مُحلّل السجل المالي: لا حركة/قيد/دفع/فئة/حساب مخترع',
+  financialBad.length === 0,
+  financialBad.length ? financialBad.join(' · ') : 'نظيف'
+);
 
-const doctorsBad = scanForbidden(doctorsBody, ["'الأطباء'", "'عام'", "'انور'", "'2026-08-01'", "'2026-08-07'", 'DOC-${']);
-check('P11 · مُحلّل الأطباء: لا مصدر/تخصص/مندوب/تواريخ مخترعة', doctorsBad.length === 0,
-  doctorsBad.length ? doctorsBad.join(' · ') : 'نظيف');
+const doctorsBad = scanForbidden(doctorsBody, [
+  "'الأطباء'",
+  "'عام'",
+  "'انور'",
+  "'2026-08-01'",
+  "'2026-08-07'",
+  'DOC-${',
+]);
+check(
+  'P11 · مُحلّل الأطباء: لا مصدر/تخصص/مندوب/تواريخ مخترعة',
+  doctorsBad.length === 0,
+  doctorsBad.length ? doctorsBad.join(' · ') : 'نظيف'
+);
 
 check(
   'P12 · المُحلّلات الأربعة تُرفق تقرير الأمانة في تحذيرات الاستيراد',
@@ -175,11 +195,19 @@ const universalBad = [
   "'مبيعات'",
   "'08:00'",
 ].filter((needle) => universal.includes(needle));
-check('P14 · المُحلّلات الشاملة: لا أسماء/جهات/روابط/أوقات مخترعة', universalBad.length === 0,
-  universalBad.length ? universalBad.join(' · ') : 'نظيف');
+check(
+  'P14 · المُحلّلات الشاملة: لا أسماء/جهات/روابط/أوقات مخترعة',
+  universalBad.length === 0,
+  universalBad.length ? universalBad.join(' · ') : 'نظيف'
+);
 
-check('P15 · المُحلّلات الشاملة تولّد مفاتيحها بوسم AUTO- وتتخطّى الصفوف بلا محتوى',
-  universal.includes("autoKey('CUST'") && universal.includes("autoKey('MOV'") && /if \(!name\) return;/.test(universal) && /if \(!itemName \|\| quantity <= 0\) return;/.test(universal));
+check(
+  'P15 · المُحلّلات الشاملة تولّد مفاتيحها بوسم AUTO- وتتخطّى الصفوف بلا محتوى',
+  universal.includes("autoKey('CUST'") &&
+    universal.includes("autoKey('MOV'") &&
+    /if \(!name\) return;/.test(universal) &&
+    /if \(!itemName \|\| quantity <= 0\) return;/.test(universal)
+);
 
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة اختبار أمانة الاستيراد (imports) ════════`);
