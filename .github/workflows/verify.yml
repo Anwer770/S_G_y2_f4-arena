@@ -133,6 +133,8 @@ jobs:
         run: npm run automation
       - name: Schema migrations + repositories (R33)
         run: npm run schema
+      - name: Auth storage · session + lockout survive the repository move (R38)
+        run: npm run auth-storage
 
   # ---------------------------------------------------------------- 4) البوابات البصرية والطباعة
   visual-gates:

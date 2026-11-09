@@ -226,6 +226,7 @@ const CI_GATES = [
   'npm run automation',
   'npm run csp',
   'npm run schema',
+  'npm run auth-storage',
   'npm run typography',
   'npm run darkmode',
   'npm run tables',
