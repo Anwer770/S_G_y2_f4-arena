@@ -130,6 +130,16 @@ export function saveTasks(data: WorkTask[]): void {
   for (const event of deriveTaskEvents(previous, data)) publishDomainEvent(event);
 }
 
+/**
+ * كتابة مهام بلا نشر أحداث (R40).
+ * تُستخدم فقط في المسارات التي كانت تكتب المفتاح مباشرةً من مكوّن، والحفاظ على
+ * «لا تغيير سلوك» يمنع إدخال أحداث أتمتة لم تكن تُنشر سابقاً.
+ * أي مسار جديد يريد إطلاق الأتمتة يستخدم `saveTasks` لا هذه.
+ */
+export function saveTasksWithoutEvents(data: WorkTask[]): void {
+  saveSafe(KEYS.TASKS, data);
+}
+
 // Orders (الطلبيات)
 export function loadOrders(): WorkOrder[] {
   const loaded = loadSafe<WorkOrder[]>(KEYS.ORDERS, SEED_ORDERS);

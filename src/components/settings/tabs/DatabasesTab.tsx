@@ -2,7 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { DatabaseConfig } from '../../../types/settings';
 import { UnifiedBackupState } from '../../../types';
 import { BackupService } from '../../../services/backup/BackupService';
-import { dbStorage } from '../../../database/dbStorage';
+import { getStorageEngineStats } from '../../../utils/storage';
+import {
+  loadSnapshots,
+  saveSnapshots as persistSnapshots,
+  type CloudSnapshot,
+} from '../../../services/backup/snapshotStore';
 import {
   getStorageHealth,
   requestPersistentStorage,
@@ -57,21 +62,6 @@ interface Props {
   };
 }
 
-interface CloudSnapshot {
-  id: string;
-  name: string;
-  timestamp: string;
-  totalRecords: number;
-  sizeKb: number;
-  isEncrypted: boolean;
-  /** نقطة غير مشفّرة (السلوك القديم — تُحفظ كما هي) */
-  data?: UnifiedBackupState | null;
-  /** نقطة مشفّرة فعلياً (AES-GCM) — لا تحتوي أي بيانات صريحة */
-  payload?: EncryptedSnapshotPayload | null;
-}
-
-const SNAPSHOTS_STORAGE_KEY = 'nova_erp_cloud_snapshots_v2';
-
 export const DatabasesTab: React.FC<Props> = ({
   databaseConfig,
   onChangeConfig,
@@ -88,17 +78,14 @@ export const DatabasesTab: React.FC<Props> = ({
   const [pinCode, setPinCode] = useState('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  const [storageStats, setStorageStats] = useState(() => dbStorage.getStats());
+  const [storageStats, setStorageStats] = useState(() => getStorageEngineStats());
   const [outboxStats, setOutboxStats] = useState(() => getOutboxStats());
   const [health, setHealth] = useState<StorageHealth | null>(null);
 
   useEffect(() => {
     try {
-      const raw = dbStorage.getItem(SNAPSHOTS_STORAGE_KEY);
-      if (raw) {
-        setSnapshots(JSON.parse(raw));
-      }
-      setStorageStats(dbStorage.getStats());
+      setSnapshots(loadSnapshots());
+      setStorageStats(getStorageEngineStats());
       setOutboxStats(getOutboxStats());
     } catch (e) {
       console.error(e);
@@ -117,8 +104,8 @@ export const DatabasesTab: React.FC<Props> = ({
 
   const saveSnapshots = (updated: CloudSnapshot[]) => {
     setSnapshots(updated);
-    dbStorage.setItem(SNAPSHOTS_STORAGE_KEY, JSON.stringify(updated));
-    setStorageStats(dbStorage.getStats());
+    persistSnapshots(updated);
+    setStorageStats(getStorageEngineStats());
   };
 
   const handleCreateSnapshot = async () => {

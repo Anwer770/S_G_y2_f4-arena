@@ -16,15 +16,11 @@ import type { NoteRecord } from './dashboardModel';
 import type { DashboardProps } from './dashboardModel';
 import { CentralUnifiedLedger } from '../workos/CentralUnifiedLedger';
 import { WorkOSQuickAddModal } from '../workos/WorkOSQuickAddModal';
-import { dbStorage } from '../../database/dbStorage';
+import { completeWorkOSTask, toggleWorkOSTaskCompletion } from '../../services/workos/WorkOSTaskService';
 import { broadcastDataChange } from '../../utils/multiTabSync';
 import { formatCurrency } from '../../utils/formatters';
 import { loadNoteFolders, loadNotes, loadNoteTags, saveNotes } from '../../utils/storage';
-import {
-  loadOrders as loadWorkOSOrders,
-  loadTasks as loadWorkOSTasks,
-  loadWorkOSData,
-} from '../../utils/workosStorage';
+import { loadOrders as loadWorkOSOrders, loadWorkOSData } from '../../utils/workosStorage';
 import { DashboardCharts } from './DashboardCharts';
 
 // الأقسام المستخرجة (R30)
@@ -296,21 +292,7 @@ export const UnifiedDashboard: React.FC<DashboardProps> = (props) => {
                             onToggleCompleteTask(task.id);
                           }
                           try {
-                            const wTasks = loadWorkOSTasks();
-                            const matched = wTasks.find((wt) => wt.id === task.id || wt.taskNumber === task.id);
-                            if (matched) {
-                              const updated = wTasks.map((wt) =>
-                                wt.id === matched.id
-                                  ? {
-                                      ...wt,
-                                      status:
-                                        wt.status === 'completed' ? ('in_progress' as const) : ('completed' as const),
-                                      progress: wt.status === 'completed' ? 50 : 100,
-                                      updatedAt: new Date().toISOString(),
-                                    }
-                                  : wt
-                              );
-                              dbStorage.setItem('workos_v1_tasks', JSON.stringify(updated));
+                            if (toggleWorkOSTaskCompletion(task.id)) {
                               broadcastDataChange('TASK_UPDATED');
                             }
                           } catch {}
@@ -397,20 +379,7 @@ export const UnifiedDashboard: React.FC<DashboardProps> = (props) => {
                           onToggleCompleteTask(task.id);
                         }
                         try {
-                          const wTasks = loadWorkOSTasks();
-                          const matched = wTasks.find((wt) => wt.id === task.id || wt.taskNumber === task.id);
-                          if (matched) {
-                            const updated = wTasks.map((wt) =>
-                              wt.id === matched.id
-                                ? {
-                                    ...wt,
-                                    status: 'completed' as const,
-                                    progress: 100,
-                                    updatedAt: new Date().toISOString(),
-                                  }
-                                : wt
-                            );
-                            dbStorage.setItem('workos_v1_tasks', JSON.stringify(updated));
+                          if (completeWorkOSTask(task.id)) {
                             broadcastDataChange('TASK_UPDATED');
                           }
                         } catch {}

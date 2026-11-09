@@ -97,3 +97,6 @@ export {
   saveSeq,
   DEFAULT_STOCK_SEQ,
 } from '../../src/utils/storage/stock';
+
+export { loadTasks as loadWorkOSTasks, saveTasksWithoutEvents } from '../../src/utils/workos/workosLoaders';
+export { toggleWorkOSTaskCompletion, completeWorkOSTask } from '../../src/services/workos/WorkOSTaskService';
