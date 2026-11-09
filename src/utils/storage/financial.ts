@@ -1,7 +1,10 @@
 /**
  * مخزن السجل المالي اليومي (Financial) — مُستخرج من storage.ts (R24).
+ * R37: كل قراءة/كتابة عبر مستودع المجموعات. السلوك محفوظ: **كل** القوائم
+ * التسع تُرجع البذرة عند المصفوفة الفارغة (`fallbackOnEmpty`) — لا عدّادات
+ * تسلسل في هذه الوحدة، وعدّاد المخزون مكانه `stock.ts`.
  */
-import { dbStorage } from '../../database/dbStorage';
+import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
 import type { FinancialTransaction } from '../../types';
 import {
   DEFAULT_ACCOUNT_NAMES,
@@ -15,170 +18,114 @@ import {
 } from '../../data/defaultFinancial';
 import { STORAGE_KEYS } from './keys';
 
+const transactionsRepo = createCollectionRepository<FinancialTransaction>({
+  key: STORAGE_KEYS.FIN_TRANSACTIONS,
+  fallback: DEFAULT_FINANCIAL_TRANSACTIONS,
+  fallbackOnEmpty: true,
+});
+
+const movementsRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.FIN_MOVEMENTS,
+  fallback: DEFAULT_MOVEMENTS,
+  fallbackOnEmpty: true,
+});
+
+const restrictionsRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.FIN_RESTRICTIONS,
+  fallback: DEFAULT_RESTRICTIONS,
+  fallbackOnEmpty: true,
+});
+
+const movementTypesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.FIN_MOVEMENT_TYPES,
+  fallback: DEFAULT_MOVEMENT_TYPES,
+  fallbackOnEmpty: true,
+});
+
+const importanceRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.FIN_IMPORTANCE,
+  fallback: DEFAULT_IMPORTANCE_LIST,
+  fallbackOnEmpty: true,
+});
+
+const categoryAccountsRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.FIN_CATEGORY_ACCOUNTS,
+  fallback: DEFAULT_CATEGORY_ACCOUNTS,
+  fallbackOnEmpty: true,
+});
+
+const restrictionAccountsRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.FIN_RESTRICTION_ACCOUNTS,
+  fallback: DEFAULT_RESTRICTION_ACCOUNTS,
+  fallbackOnEmpty: true,
+});
+
+const accountNamesRepo = createCollectionRepository<string>({
+  key: STORAGE_KEYS.FIN_ACCOUNT_NAMES,
+  fallback: DEFAULT_ACCOUNT_NAMES,
+  fallbackOnEmpty: true,
+});
+
 export function loadFinancialTransactions(): FinancialTransaction[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_TRANSACTIONS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial transactions:', e);
-  }
-  return DEFAULT_FINANCIAL_TRANSACTIONS;
+  return transactionsRepo.read();
 }
 
 export function saveFinancialTransactions(txns: FinancialTransaction[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_TRANSACTIONS, JSON.stringify(txns));
-  } catch (e) {
-    console.error('Error saving financial transactions:', e);
-  }
+  transactionsRepo.write(txns);
 }
 
 export function loadFinancialMovements(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_MOVEMENTS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial movements:', e);
-  }
-  return DEFAULT_MOVEMENTS;
+  return movementsRepo.read();
 }
 
 export function saveFinancialMovements(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_MOVEMENTS, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial movements:', e);
-  }
+  movementsRepo.write(list);
 }
 
 export function loadFinancialRestrictions(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_RESTRICTIONS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial restrictions:', e);
-  }
-  return DEFAULT_RESTRICTIONS;
+  return restrictionsRepo.read();
 }
 
 export function saveFinancialRestrictions(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_RESTRICTIONS, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial restrictions:', e);
-  }
+  restrictionsRepo.write(list);
 }
 
 export function loadFinancialMovementTypes(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_MOVEMENT_TYPES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial movement types:', e);
-  }
-  return DEFAULT_MOVEMENT_TYPES;
+  return movementTypesRepo.read();
 }
 
 export function saveFinancialMovementTypes(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_MOVEMENT_TYPES, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial movement types:', e);
-  }
+  movementTypesRepo.write(list);
 }
 
 export function loadFinancialImportanceList(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_IMPORTANCE);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial importance list:', e);
-  }
-  return DEFAULT_IMPORTANCE_LIST;
+  return importanceRepo.read();
 }
 
 export function saveFinancialImportanceList(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_IMPORTANCE, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial importance list:', e);
-  }
+  importanceRepo.write(list);
 }
 
 export function loadFinancialCategoryAccounts(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_CATEGORY_ACCOUNTS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial category accounts:', e);
-  }
-  return DEFAULT_CATEGORY_ACCOUNTS;
+  return categoryAccountsRepo.read();
 }
 
 export function saveFinancialCategoryAccounts(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_CATEGORY_ACCOUNTS, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial category accounts:', e);
-  }
+  categoryAccountsRepo.write(list);
 }
 
 export function loadFinancialRestrictionAccounts(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_RESTRICTION_ACCOUNTS);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial restriction accounts:', e);
-  }
-  return DEFAULT_RESTRICTION_ACCOUNTS;
+  return restrictionAccountsRepo.read();
 }
 
 export function saveFinancialRestrictionAccounts(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_RESTRICTION_ACCOUNTS, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial restriction accounts:', e);
-  }
+  restrictionAccountsRepo.write(list);
 }
 
 export function loadFinancialAccountNames(): string[] {
-  try {
-    const raw = dbStorage.getItem(STORAGE_KEYS.FIN_ACCOUNT_NAMES);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (e) {
-    console.error('Error loading financial account names:', e);
-  }
-  return DEFAULT_ACCOUNT_NAMES;
+  return accountNamesRepo.read();
 }
 
 export function saveFinancialAccountNames(list: string[]): void {
-  try {
-    dbStorage.setItem(STORAGE_KEYS.FIN_ACCOUNT_NAMES, JSON.stringify(list));
-  } catch (e) {
-    console.error('Error saving financial account names:', e);
-  }
+  accountNamesRepo.write(list);
 }
