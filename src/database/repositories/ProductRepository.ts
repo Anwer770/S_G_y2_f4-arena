@@ -86,7 +86,7 @@ export class StockMovementRepository extends BaseRepository<Movement> {
   }
 
   public override update(id: string, record: Partial<Movement>): Movement | null {
-    const old = this.getById(id) || this.findBySubId(id);
+    const old = this.getById(id);
     const res = super.update(id, record);
     if (res) {
       auditService.log({
@@ -102,7 +102,7 @@ export class StockMovementRepository extends BaseRepository<Movement> {
   }
 
   public override delete(id: string): boolean {
-    const old = this.getById(id) || this.findBySubId(id);
+    const old = this.getById(id);
     const res = super.delete(id);
     if (res && old) {
       auditService.log({

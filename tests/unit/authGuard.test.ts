@@ -125,3 +125,15 @@ describe('الجلسة — انتهاء صريح', () => {
     expect(readValidSession()).toBeNull();
   });
 });
+
+/**
+ * R49 — ذراع دفاعية: مسح محاولات لمستخدم لا سجلّ له ولا ينبغي أن يكتب شيئاً.
+ */
+describe('R49 — مسح محاولات لمستخدم بلا سجلّ', () => {
+  it('لا يكتب في التخزين ولا يرمي', () => {
+    resetAuthGuard();
+    const before = dbStorage.getItem(STORAGE_KEYS.AUTH_GUARD);
+    expect(() => clearFailedAttempts('مستخدم-غير-موجود')).not.toThrow();
+    expect(dbStorage.getItem(STORAGE_KEYS.AUTH_GUARD)).toBe(before);
+  });
+});

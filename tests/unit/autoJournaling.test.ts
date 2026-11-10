@@ -110,3 +110,51 @@ describe('removeMovementFromFinancialJournal — حذف القيد الآلي', 
     expect(removeMovementFromFinancialJournal('SUB-9999', txns)).toHaveLength(1);
   });
 });
+
+/**
+ * R49 — الفروع الدفاعية في القيد الآلي.
+ * حركة بلا أصناف · صنف بلا سعر في القائمة · أكثر من ثلاثة أصناف · قيود قديمة بمعرّفات
+ * لا تتبع نمط `ACC-n` · حركة بلا تصنيف أو مستفيد. كلها حالات حقيقية في بيانات المستخدم
+ * بعد استيراد قديم، وكانت كلها غير مقيسة.
+ */
+describe('R49 — generateJournalEntryFromMovement: بيانات ناقصة', () => {
+  it('حركة صرف بلا أصناف وبلا تصنيف وبلا مستفيد ⇒ بدائل صريحة بلا undefined', () => {
+    const entry = generateJournalEntryFromMovement(
+      movement({ movementType: 'صرف', items: undefined, category: undefined, beneficiary: undefined }),
+      []
+    );
+
+    expect(entry.restrictionAccount).toBe('عملاء');
+    expect(entry.accountName).toBe('عميل غير محدد');
+    expect(entry.description).not.toContain('[الأصناف');
+    expect(entry.description).not.toContain('undefined');
+    expect(entry.amountYER).toBe(0);
+  });
+
+  it('حركة توريد بلا تصنيف ⇒ «مخزن رئيسي»', () => {
+    expect(generateJournalEntryFromMovement(movement({ category: undefined }), []).restrictionAccount).toBe(
+      'مخزن رئيسي'
+    );
+  });
+
+  it('صنف بلا سعر في القائمة يُقوَّم بصفر، وأكثر من ثلاثة أصناف تُختصر بثلاثة ونقاط', () => {
+    const fourItems = { 'صنف أ': 2, 'صنف ب': 1, 'صنف ج': 5, 'صنف د': 1 };
+    const entry = generateJournalEntryFromMovement(movement({ items: fourItems }), [], [
+      { id: 'p1', name: 'صنف أ' },
+    ] as unknown as Item[]);
+
+    expect(entry.amountYER).toBe(0);
+    expect(entry.description).toContain('صنف أ (2)، صنف ب (1)، صنف ج (5)...');
+  });
+
+  it('كمية غير رقمية وصنف غير موجود في القائمة ⇒ تقويم صفر بلا NaN', () => {
+    const entry = generateJournalEntryFromMovement(movement({ items: { 'صنف مجهول': 'غير رقم' } as never }), []);
+    expect(entry.amountYER).toBe(0);
+    expect(entry.description).toContain('صنف مجهول (غير رقم)');
+  });
+
+  it('قيود قديمة بمعرّفات لا تتبع ACC-n ⇒ الترقيم يبدأ من ACC-1 لا من رقم مكسور', () => {
+    const legacy = [{ id: 'X-9', number: 'OTHER' }] as unknown as FinancialTransaction[];
+    expect(generateJournalEntryFromMovement(movement(), legacy).id).toBe('ACC-1');
+  });
+});

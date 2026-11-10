@@ -9,6 +9,7 @@ import {
   runMigrations,
   migrateValue,
   readVersions,
+  storedVersion,
   emptyReport,
   BACKUP_SUFFIX,
   SCHEMA_META_KEY,
@@ -484,5 +485,114 @@ describe('مستودع القيمة النصية', () => {
     const broken = createValueRepository({ key: 'k' }, failing);
     expect(() => broken.write('y')).not.toThrow();
     expect(() => broken.clear()).not.toThrow();
+  });
+});
+
+/**
+ * R49 — الفروع الدفاعية في محرّك الترحيل.
+ * المحرّك مُعلَن «لا يرمي أبداً»، وهذه الحالات تُثبت ذلك حيث لا تصلها الاختبارات السعيدة:
+ * JSON تالف يرمي **نصاً** لا `Error` · ترحيل يرمي نصاً · `keepBackup:false` ·
+ * خريطة إصدارات تالفة الشكل · `storedVersion` للغياب والحضور.
+ */
+describe('R49 — فروع محرّك الترحيل الدفاعية', () => {
+  it('خريطة الإصدارات: null ومصفوفة وقيم غير رقمية تُتجاهَل بلا رمي', () => {
+    expect(readVersions(memoryStorage({ [SCHEMA_META_KEY]: 'null' }).storage)).toEqual({});
+    expect(readVersions(memoryStorage({ [SCHEMA_META_KEY]: '[1,2]' }).storage)).toEqual({});
+    expect(readVersions(memoryStorage({ [SCHEMA_META_KEY]: '"نص"' }).storage)).toEqual({});
+
+    const mixed = memoryStorage({
+      [SCHEMA_META_KEY]: JSON.stringify({ a: 2, b: 'نص', c: null, d: true, e: 3 }),
+    }).storage;
+    expect(readVersions(mixed)).toEqual({ a: 2, e: 3 });
+  });
+
+  it('تخزين يرمي عند قراءة خريطة الإصدارات ⇒ {} بلا انهيار', () => {
+    const storage: SchemaStorage = {
+      getItem: () => {
+        throw new Error('تخزين معطوب');
+      },
+      setItem: () => undefined,
+    };
+    expect(readVersions(storage)).toEqual({});
+  });
+
+  it('storedVersion: الصفر للمفتاح غير المرحَّل، والإصدار المخزَّن للمرحَّل', () => {
+    const { storage } = memoryStorage({ [SCHEMA_META_KEY]: JSON.stringify({ k1: 3 }) });
+    expect(storedVersion(storage, 'k1')).toBe(3);
+    expect(storedVersion(storage, 'ghost')).toBe(0);
+  });
+
+  it('keepBackup:false ⇒ لا نسخة احتياطية على القرص ولا backupKey في التقرير', () => {
+    const { storage, data } = memoryStorage({ k1: JSON.stringify({ name: 'x' }) });
+    const report = runMigrations({ storage, entries: [entry], ctx, keepBackup: false });
+
+    expect(report.outcomes[0].status).toBe('upgraded');
+    expect(report.outcomes[0].backupKey).toBeUndefined();
+    expect(data).not.toHaveProperty(`k1${BACKUP_SUFFIX}`);
+  });
+
+  it('ترحيل يرمي نصاً لا Error ⇒ يُسجَّل نصاً، والمسجّل يستقبل الرسالة، والبقية تُكمَل', () => {
+    const messages: string[] = [];
+    const bad: SchemaEntry = {
+      key: 'bad',
+      version: 1,
+      migrations: {
+        0: () => {
+          throw 'خطأ نصي';
+        },
+      },
+    };
+    const { storage } = memoryStorage({ bad: '{}', k1: JSON.stringify({ name: 'x' }) });
+    const report = runMigrations({
+      storage,
+      entries: [bad, entry],
+      ctx: { ...ctx, logger: (message) => messages.push(message) },
+    });
+
+    expect(report.failed).toBe(1);
+    expect(report.outcomes[0].error).toBe('خطأ نصي');
+    expect(messages.filter((m) => m.includes('خطأ نصي'))).toHaveLength(1);
+    expect(report.upgraded).toBe(1);
+  });
+
+  it('ترحيل يرمي Error مع وجود مسجّل ⇒ الرسالة تحمل نصّ الخطأ نفسه', () => {
+    const messages: string[] = [];
+    const bad: SchemaEntry = {
+      key: 'bad-error',
+      version: 1,
+      migrations: {
+        0: () => {
+          throw new Error('فشل متعمّد');
+        },
+      },
+    };
+    const { storage } = memoryStorage({ 'bad-error': '{}' });
+    const report = runMigrations({
+      storage,
+      entries: [bad],
+      ctx: { ...ctx, logger: (message) => messages.push(message) },
+    });
+
+    expect(report.outcomes[0].error).toBe('فشل متعمّد');
+    expect(messages).toEqual(['schema: فشل ترحيل bad-error — فشل متعمّد']);
+  });
+
+  it('JSON.parse يرمي نصاً (لا Error) ⇒ رسالة «JSON تالف» تحمل النص بلا انهيار', () => {
+    const original = JSON.parse;
+    const spy = vi.spyOn(JSON, 'parse').mockImplementation((text: string) => {
+      /* القيمة المخزَّنة نفسها هي العلامة — `JSON.parse` يستقبل النصّ لا اسم المفتاح. */
+      if (text === 'BOOM-STRING') throw 'نصّ تالف';
+      return original(text);
+    });
+    const { storage } = memoryStorage({ 'K-STRING-THROW': 'BOOM-STRING' });
+    const report = runMigrations({
+      storage,
+      entries: [{ key: 'K-STRING-THROW', version: 1, migrations: { 0: (v) => v } }],
+      ctx,
+    });
+    spy.mockRestore();
+
+    expect(report.failed).toBe(1);
+    expect(report.outcomes[0].error).toBe('JSON تالف: نصّ تالف');
   });
 });
