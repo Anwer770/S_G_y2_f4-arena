@@ -1,5 +1,5 @@
 {
-  "_comment": "R50 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
+  "_comment": "R51 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
   "measuredAt": "2026-11-07",
   "files": [
     "src/utils/pinCrypto.ts",
@@ -30,6 +30,10 @@
     "src/database/repositories/OtherRepositories.ts",
     "src/utils/stock.ts",
     "src/utils/storage/stock.ts",
-    "src/services/inventory/InventoryService.ts"
+    "src/services/inventory/InventoryService.ts",
+    "src/utils/storage/backup.ts",
+    "src/services/backup/BackupService.ts",
+    "src/services/backup/snapshotStore.ts",
+    "src/utils/snapshotCrypto.ts"
   ]
 }

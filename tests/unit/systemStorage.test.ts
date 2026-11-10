@@ -14,6 +14,7 @@ import {
 } from '../../src/utils/storage/system';
 import type { AuditLog } from '../../src/types';
 import { dbStorage } from '../../src/database/dbStorage';
+import { auditService } from '../../src/core/audit/AuditService';
 import { STORAGE_KEYS } from '../../src/utils/storage/keys';
 
 beforeEach(() => {
@@ -58,7 +59,7 @@ describe('تخزين حماية الدخول — صلابة ضد التلف', ()
 /* ───────────────────────── سجل النظام والتدقيق (R46) ───────────────────────── */
 
 describe('سجل النظام — البذرة والفراغ والسقف', () => {
-  const AUDIT_KEY = STORAGE_KEYS.SYSTEM_AUDIT;
+  const AUDIT_KEY = STORAGE_KEYS.SYSTEM_AUDIT_LOGS;
 
   beforeEach(() => {
     dbStorage.removeItem(AUDIT_KEY);
@@ -113,7 +114,7 @@ describe('سجل النظام — البذرة والفراغ والسقف', () 
 });
 
 describe('تسجيل التدقيق — الترويسة والمعرّف والتفويض', () => {
-  const AUDIT_KEY = STORAGE_KEYS.SYSTEM_AUDIT;
+  const AUDIT_KEY = STORAGE_KEYS.SYSTEM_AUDIT_LOGS;
 
   beforeEach(() => {
     dbStorage.removeItem(AUDIT_KEY);
@@ -168,5 +169,56 @@ describe('تسجيل التدقيق — الترويسة والمعرّف وال
     saveAuditLogs(logs);
     expect(loadAuditLogs()).toEqual(logs);
     expect(loadSystemAuditLogs()).toEqual(logs);
+  });
+});
+
+/**
+ * R51 — الفصل بين سجل النظام والسجل المركزي.
+ *
+ * قبل R51 كان المفتاح `suite_unified_audit_v2` يحمل شكلين مختلفين معاً: `AuditLog`
+ * (سجل النظام) و`CentralAuditEntry` (السجل المركزي). فكل كتابة في أحدهما كانت تُفسد
+ * الآخر — وكل استرجاع نسخة احتياطية كان يمحو تاريخ التدقيق المركزي.
+ */
+describe('R51 — سجل النظام لا يمسّ السجل المركزي', () => {
+  beforeEach(() => {
+    dbStorage.removeItem(STORAGE_KEYS.SYSTEM_AUDIT_LOGS);
+    dbStorage.removeItem(STORAGE_KEYS.SYSTEM_AUDIT);
+    auditService.clearLogs();
+  });
+
+  it('كتابة سطر نظام لا تمحو السجل المركزي، وكتابة سطر مركزي لا تدخل سجل النظام', () => {
+    auditService.log({ action: 'Create', entity: 'Customer', recordId: 'C-1', details: 'إنشاء عميل' });
+    logSystemAudit('نظام', 'استرجاع', 'اختبار الفصل');
+
+    const central = auditService.getLogsByEntity('Customer');
+    expect(central).toHaveLength(1);
+    expect(central[0].action).toBe('Create');
+
+    const system = loadSystemAuditLogs();
+    expect(system[0]).toMatchObject({ module: 'نظام', action: 'استرجاع' });
+    expect(system.every((row) => typeof row.module === 'string')).toBe(true);
+    expect(system).not.toContainEqual(expect.objectContaining({ entity: 'Customer' }));
+  });
+
+  it('المفتاح القديم يُقرأ كـlegacy: أسطره ذات module تظهر، والأسطر المركزية تُرشَّح', () => {
+    dbStorage.setItem(
+      STORAGE_KEYS.SYSTEM_AUDIT,
+      JSON.stringify([
+        { id: 'L-old', timestamp: '2026-01-01', module: 'نظام', action: 'تهيئة قديمة', details: 'قديم' },
+        { id: 'audit_1', timestamp: '2026-01-01T00:00:00.000Z', action: 'Create', entity: 'Customer' },
+      ])
+    );
+
+    const logs = loadSystemAuditLogs();
+    expect(logs).toHaveLength(1);
+    expect(logs[0].id).toBe('L-old');
+  });
+
+  it('الكتابة الجديدة تذهب للمفتاح الجديد وحده', () => {
+    logSystemAudit('نظام', 'مسح', 'اختبار');
+
+    const legacy = dbStorage.getItem(STORAGE_KEYS.SYSTEM_AUDIT);
+    expect(legacy === null || !legacy.includes('اختبار')).toBe(true);
+    expect(dbStorage.getItem(STORAGE_KEYS.SYSTEM_AUDIT_LOGS)).toContain('اختبار');
   });
 });

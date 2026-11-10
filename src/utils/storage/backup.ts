@@ -80,6 +80,7 @@ import {
   TASK_STATUSES,
 } from '../../data/defaultTasks';
 import { UnifiedBackupState } from '../../types/index';
+import { APP_VERSION } from '../../constants/appMeta';
 import { DEBT_CATEGORIES, DEBT_OWNERS } from '../debts/debtCatalogs';
 import { DEFAULT_DEBT_COMMITMENTS } from '../debts/debtCommitmentSeeds';
 import { DEFAULT_DEBT_RECORDS } from '../debts/debtSeeds';
@@ -235,7 +236,8 @@ import { loadWorkOSData, saveWorkOSData } from '../workos/workosLoaders';
 export function getUnifiedBackupState(): UnifiedBackupState {
   return {
     app: 'منظومة الإدارة والمحاسبة والمخزون والمهام وإدارة العملاء وزيارات الأطباء والديون والملاحظات والمعرفة وإدارة الروتين ودفتر العهد ومكتبة الروابط',
-    version: '3.2.0',
+    /** R51: كان نصّاً جامداً `'3.2.0'` بينما التطبيق في 3.39 — رقم يكذب في كل ملف يُصدَّر. */
+    version: APP_VERSION,
     exportedAt: new Date().toISOString(),
     checksum: `CHK-${Date.now().toString(36).toUpperCase()}`,
     modules: {
@@ -544,6 +546,21 @@ const unifiedBackupRepo = createObjectRepository<UnifiedBackupState>({
   defaults: {} as UnifiedBackupState,
   noMerge: true,
 });
+
+/**
+ * R51 — الجانب المفقود من «نسخة الطوارئ».
+ *
+ * `clearAllData` كان يكتب لقطة كاملة في `suite_unified_autobackup_v2` ثم يمسح البيانات،
+ * **ولا قارئ واحد لهذا المفتاح في التطبيق كله** — أي أن الرسالة التي تُسجَّل في سجل النظام
+ * («حفظ نسخة طوارئ مسبقة») كانت تَعِد بما لا يمكن استرجاعه. هذه الدالة تُغلق الحلقة،
+ * و`BackupService.restoreEmergencyBackup` يمرّرها عبر التحقّق والاسترجاع القائمين.
+ */
+export function loadEmergencyBackup(): UnifiedBackupState | null {
+  const snapshot = unifiedBackupRepo.read();
+  const modules = (snapshot as { modules?: unknown } | null)?.modules;
+  if (!modules || typeof modules !== 'object') return null;
+  return snapshot;
+}
 
 export function clearAllData(): void {
   // Save safety snapshot

@@ -48,6 +48,10 @@ export default defineConfig({
         'src/database/repositories/ProductRepository.ts',
         'src/database/repositories/WorkTaskRepository.ts',
         'src/database/repositories/OtherRepositories.ts',
+        'src/utils/storage/backup.ts',
+        'src/services/backup/BackupService.ts',
+        'src/services/backup/snapshotStore.ts',
+        'src/utils/snapshotCrypto.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -90,6 +94,15 @@ export default defineConfig({
         'src/utils/automation/automationRunner.ts': { lines: 100, functions: 100, branches: 98, statements: 98 },
         /** المقيس: أسطر 100 · دوال 100 · تعابير 100 · فروع 98.63. */
         'src/utils/formatters.ts': { lines: 100, functions: 100, branches: 98, statements: 100 },
+        /**
+         * R51: مسار الاستعادة — `backup.ts` وحدَتا النسخ/التخزين المؤقت والتشفير.
+         * إدخالها بلا اختبارات أنزل الإجمالي إلى 82.57% أسطر (كلها كانت خارج المقام).
+         * الآن **100** في الأربعة، ويشمل ذلك ذراعَي حرّاس البيئة في `snapshotCrypto`.
+         */
+        'src/utils/storage/backup.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/services/backup/BackupService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/services/backup/snapshotStore.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/snapshotCrypto.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /**
          * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
          * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.

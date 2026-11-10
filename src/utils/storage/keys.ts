@@ -92,6 +92,13 @@ export const STORAGE_KEYS = {
 
   // System Unified
   SETTINGS: 'suite_unified_settings_v2',
+  /**
+   * R51: سجل النظام كان يشارك المفتاح `suite_unified_audit_v2` مع السجل المركزي
+   * (`CentralAuditService`) وهذا الملف — وبشكلين مختلفين للبيانات. كل كتابة في أحدهما
+   * كانت تمحو أو تُشوّه الآخر. المفتاح صار مستقلاً، والقديم يُقرأ كـ`legacy` فقط.
+   */
+  SYSTEM_AUDIT_LOGS: 'suite_system_audit_v2',
+  /** مفتاح قديم (مشترك بين سجلَّين) — قراءة فقط للترحيل التدريجي. */
   SYSTEM_AUDIT: 'suite_unified_audit_v2',
   UNIFIED_BACKUP: 'suite_unified_autobackup_v2',
 };
