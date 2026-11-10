@@ -629,6 +629,130 @@ check(
   `${barrelLines} سطراً`
 );
 
+// ── G34: لا مستودع يلمس المحوّل مباشرةً (R45)
+// المجموعات الثانوية (التزامات الديون · سجلا الزيارات · القوائم المنسدلة المالية)
+// كانت تُقرأ/تُكتب عبر `indexedDBStorage` فتكرّر منطق «الفارغ/التالف/الافتراضي» بأربع
+// صيغ مختلفة. الآن كلها تمرّ على العقد المعلَن. الاستثناء الوحيد: `BaseRepository.ts`
+// لأنه **نقطة حقن** المحرّك (المعامل الثالث في الباني).
+const repoDir = path.join(ROOT, 'src/database/repositories');
+const adapterImports = fs
+  .readdirSync(repoDir)
+  .filter((f) => f.endsWith('.ts') && f !== 'BaseRepository.ts')
+  .filter((f) => /import\s*\{[^}]*indexedDBStorage[^}]*\}\s*from/.test(fs.readFileSync(path.join(repoDir, f), 'utf8')))
+  .map((f) => `src/database/repositories/${f}`);
+const baseUsesAdapter = /from\s+'\.\.\/adapters\/IndexedDBAdapter'/.test(
+  read('src/database/repositories/BaseRepository.ts')
+);
+check(
+  'G34 · لا مستودع يستورد محوّل التخزين مباشرةً (العقد وحده)',
+  adapterImports.length === 0 && baseUsesAdapter,
+  adapterImports.length ? adapterImports.join(' · ') : 'صفر استيراد خارج نقطة الحقن'
+);
+
+// ── G35: تكافؤ سلوك المجموعات الثانوية مع التنفيذ القديم (R45)
+// البوابة تستدعي **الواجهة العامة** للمستودعات فقط، لذلك تشغيلها على الشجرة قبل
+// التوحيد يعطي النتائج نفسها — وهذا هو البرهان على أن النقل لم يغيّر سلوكاً.
+const COMMITMENTS_KEY = 'suite_debts_commitments_v1';
+const CUSTOMER_VISITS_KEY = 'suite_customers_visits_v2';
+const DOCTOR_VISITS_KEY = 'suite_doctors_visits_v1';
+const DROPDOWN_KEY = 'suite_fin_paymentMethods_v2';
+
+const resetKey = (key) => S.dbStorage.removeItem(key);
+const seeded = (key) => S.dbStorage.getItem(key);
+
+const equiv = [];
+const record = (name, ok, detail = '') => {
+  equiv.push({ name, ok, detail });
+  return ok;
+};
+
+// 1) غياب المفتاح ⇒ الافتراضي بلا كتابة (القراءة لا تكتب)
+resetKey(COMMITMENTS_KEY);
+const commitmentsMissing = S.debtRepository.getCommitments();
+record(
+  'التزامات الديون · الغياب ⇒ الافتراضي بلا كتابة',
+  commitmentsMissing.length > 0 && seeded(COMMITMENTS_KEY) === null,
+  `${commitmentsMissing.length} التزاماً · مخزَّن=${seeded(COMMITMENTS_KEY) === null ? 'لا شيء' : 'مكتوب'}`
+);
+
+// 2) المصفوفة الفارغة صالحة ⇒ []
+S.dbStorage.setItem(COMMITMENTS_KEY, '[]');
+record('التزامات الديون · الفارغ ⇒ [] (لا بذرة)', S.debtRepository.getCommitments().length === 0);
+
+// 3) التالف ⇒ الافتراضي بلا مسح
+S.dbStorage.setItem(COMMITMENTS_KEY, '{ليس JSON');
+const commitmentsCorrupt = S.debtRepository.getCommitments();
+record(
+  'التزامات الديون · التالف ⇒ الافتراضي والخام لم يُمسح',
+  commitmentsCorrupt.length > 0 && seeded(COMMITMENTS_KEY) === '{ليس JSON'
+);
+
+// 4) البيانات الموجودة تُقرأ كما هي وتُكتب وتُقرأ
+const commitmentSample = [{ id: 'cm-1', name: 'اختبار', amount: 10, currency: 'YER' }];
+S.debtRepository.saveCommitments(commitmentSample);
+record(
+  'التزامات الديون · الكتابة والقراءة',
+  JSON.stringify(S.debtRepository.getCommitments()) === JSON.stringify(commitmentSample)
+);
+
+// 5) زيارات العملاء: الغياب/الفارغ/التالف/الكتابة
+resetKey(CUSTOMER_VISITS_KEY);
+const custMissing = S.customerRepository.getVisits();
+record('زيارات العملاء · الغياب ⇒ الافتراضي بلا كتابة', custMissing.length > 0 && seeded(CUSTOMER_VISITS_KEY) === null);
+S.dbStorage.setItem(CUSTOMER_VISITS_KEY, '[]');
+record('زيارات العملاء · الفارغ ⇒ []', S.customerRepository.getVisits().length === 0);
+S.dbStorage.setItem(CUSTOMER_VISITS_KEY, 'null');
+record('زيارات العملاء · قيمة غير مصفوفية ⇒ الافتراضي', S.customerRepository.getVisits().length > 0);
+S.customerRepository.saveVisits([{ id: 'v-1', customerId: 'c-1', date: '2026-01-01' }]);
+record('زيارات العملاء · الكتابة والقراءة', S.customerRepository.getVisits().length === 1);
+
+// 6) زيارات الأطباء
+resetKey(DOCTOR_VISITS_KEY);
+record(
+  'زيارات الأطباء · الغياب ⇒ الافتراضي بلا كتابة',
+  S.doctorRepository.getVisits().length > 0 && seeded(DOCTOR_VISITS_KEY) === null
+);
+S.doctorRepository.saveVisits([{ id: 'dv-1', doctorId: 'd-1', date: '2026-01-01' }]);
+record('زيارات الأطباء · الكتابة والقراءة', S.doctorRepository.getVisits().length === 1);
+
+// 7) القوائم المنسدلة المالية: الزرع عند الغياب والتلف، وعدم الزرع فوق []
+resetKey(DROPDOWN_KEY);
+const dropdownSeeded = S.financialRepository.getDropdown('paymentMethods', ['نقد', 'شبكة']);
+record(
+  'القوائم المالية · الغياب ⇒ الافتراضي **ويُكتب** (سلوك الزرع القديم)',
+  JSON.stringify(dropdownSeeded) === JSON.stringify(['نقد', 'شبكة']) &&
+    seeded(DROPDOWN_KEY) === JSON.stringify(['نقد', 'شبكة'])
+);
+S.dbStorage.setItem(DROPDOWN_KEY, '{تالف');
+const dropdownCorrupt = S.financialRepository.getDropdown('paymentMethods', ['نقد']);
+record(
+  'القوائم المالية · التالف ⇒ الافتراضي ويُكتب',
+  JSON.stringify(dropdownCorrupt) === JSON.stringify(['نقد']) && seeded(DROPDOWN_KEY) === JSON.stringify(['نقد'])
+);
+S.dbStorage.setItem(DROPDOWN_KEY, '[]');
+const dropdownEmpty = S.financialRepository.getDropdown('paymentMethods', ['نقد']);
+record('القوائم المالية · الفارغ صالح ⇒ [] ولا زرع فوقه', dropdownEmpty.length === 0 && seeded(DROPDOWN_KEY) === '[]');
+S.financialRepository.saveDropdown('paymentMethods', ['تحويل', 'نقد']);
+record(
+  'القوائم المالية · الكتابة والقراءة',
+  JSON.stringify(S.financialRepository.getDropdown('paymentMethods', [])) === JSON.stringify(['تحويل', 'نقد'])
+);
+
+// 8) المفاتيح مستقلة: كتابة قائمة لا تمسّ غيرها
+S.financialRepository.saveDropdown('banks', ['بنك 1']);
+record(
+  'القوائم المالية · مفاتيح ديناميكية مستقلة',
+  S.financialRepository.getDropdown('banks', []).length === 1 &&
+    S.financialRepository.getDropdown('paymentMethods', []).length === 2
+);
+
+const equivFailed = equiv.filter((e) => !e.ok);
+check(
+  `G35 · تكافؤ المجموعات الثانوية (${equiv.length} حالة: غياب · فارغ · تالف · غير مصفوفة · كتابة · زرع)`,
+  equivFailed.length === 0,
+  equivFailed.length ? equivFailed.map((e) => e.name).join(' · ') : 'كل الحالات مطابقة'
+);
+
 check('G13 · لا أخطاء JS أثناء التشغيل', errors.length === 0, errors[0] || '');
 
 const passed = results.filter((r) => r.ok).length;

@@ -2,7 +2,7 @@ import { BaseRepository } from './BaseRepository';
 import { FinancialTransaction } from '../../types';
 import { DEFAULT_FINANCIAL_TRANSACTIONS } from '../../data/defaultFinancial';
 import { auditService } from '../../core/audit/AuditService';
-import { indexedDBStorage } from '../adapters/IndexedDBAdapter';
+import { createCollectionRepository } from './CollectionRepository';
 
 const FIN_TXN_KEY = 'suite_fin_transactions_v2';
 const DROPDOWNS_KEY_PREFIX = 'suite_fin_';
@@ -64,19 +64,27 @@ export class FinancialRepository extends BaseRepository<FinancialTransaction> {
     return { original, reversal };
   }
 
+  /**
+   * القوائم المنسدلة المالية — مفاتيح ديناميكية (`suite_fin_{type}_v2`).
+   * السلوك القديم محفوظ **حرفياً** بخيارين صريحين في العقد (R45):
+   *   - `seed: true` ⇒ الافتراضي يُكتب عند أول قراءة (كان `setItemSync(key, defaults)`)
+   *   - التلف (`!Array.isArray`) ⇒ نفس المسار ⇒ الافتراضي يُكتب ويُعاد
+   *   - الفراغ `[]` ⇒ قيمة صالحة تُعاد كما هي (لم يكن يُزرع فوقها)
+   */
+  private dropdownRepo(type: string, defaults: string[] = []) {
+    return createCollectionRepository<string>({
+      key: `${DROPDOWNS_KEY_PREFIX}${type}_v2`,
+      fallback: defaults,
+      seed: true,
+    });
+  }
+
   public getDropdown(type: string, defaults: string[] = []): string[] {
-    const key = `${DROPDOWNS_KEY_PREFIX}${type}_v2`;
-    const data = indexedDBStorage.getItemSync<string[]>(key);
-    if (!data || !Array.isArray(data)) {
-      indexedDBStorage.setItemSync(key, defaults);
-      return [...defaults];
-    }
-    return data;
+    return this.dropdownRepo(type, defaults).read();
   }
 
   public saveDropdown(type: string, list: string[]): void {
-    const key = `${DROPDOWNS_KEY_PREFIX}${type}_v2`;
-    indexedDBStorage.setItemSync(key, list);
+    this.dropdownRepo(type).write(list);
   }
 }
 

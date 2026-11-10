@@ -2,10 +2,22 @@ import { BaseRepository } from './BaseRepository';
 import { DebtRecord, DebtCommitment, DebtCommitmentPayment } from '../../types';
 import { DEFAULT_DEBT_RECORDS, DEFAULT_DEBT_COMMITMENTS } from '../../utils/debts';
 import { auditService } from '../../core/audit/AuditService';
-import { indexedDBStorage } from '../adapters/IndexedDBAdapter';
+import { createCollectionRepository } from './CollectionRepository';
 
 const DEBTS_KEY = 'suite_debts_records_v1';
 const DEBT_COMMITMENTS_KEY = 'suite_debts_commitments_v1';
+
+/**
+ * التزامات الديون — مجموعة ثانوية كانت تُقرأ/تُكتب عبر `indexedDBStorage` مباشرةً (R45).
+ * الآن تمرّ على العقد نفسه المعلَن في `createCollectionRepository`:
+ *   - غياب المفتاح أو تلفه ⇒ الافتراضي **بلا كتابة** (القراءة لا تكتب)
+ *   - المصفوفة الفارغة **صالحة** ⇒ [] (ليست «غياباً»)
+ *   - الكتابة تُعيد نسخة الشكل نفسه (`JSON`) عبر نفس الطبقة
+ */
+const commitmentsRepo = createCollectionRepository<DebtCommitment>({
+  key: DEBT_COMMITMENTS_KEY,
+  fallback: DEFAULT_DEBT_COMMITMENTS,
+});
 
 export class DebtRepository extends BaseRepository<DebtRecord> {
   constructor() {
@@ -13,12 +25,11 @@ export class DebtRepository extends BaseRepository<DebtRecord> {
   }
 
   public getCommitments(): DebtCommitment[] {
-    const data = indexedDBStorage.getItemSync<DebtCommitment[]>(DEBT_COMMITMENTS_KEY);
-    return Array.isArray(data) ? data : DEFAULT_DEBT_COMMITMENTS;
+    return commitmentsRepo.read();
   }
 
   public saveCommitments(commitments: DebtCommitment[]): void {
-    indexedDBStorage.setItemSync(DEBT_COMMITMENTS_KEY, commitments);
+    commitmentsRepo.write(commitments);
   }
 
   public addCommitment(commitment: DebtCommitment): DebtCommitment {

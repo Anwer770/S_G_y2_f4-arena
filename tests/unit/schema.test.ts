@@ -224,6 +224,34 @@ describe('مستودع المجموعة', () => {
     expect(createCollectionRepository({ key: 'missing', fallback }, storage).read()).toEqual(fallback);
   });
 
+  it('seed (R45): يزرع الافتراضي عند الغياب أو التلف فقط — والقاعدة: بلا seed لا كتابة', () => {
+    const fallback = ['نقد', 'شبكة'];
+
+    // غياب المفتاح
+    const missing = memoryStorage();
+    expect(createCollectionRepository<string>({ key: 'k', fallback, seed: true }, missing.storage).read()).toEqual(
+      fallback
+    );
+    expect(missing.data.k).toBe(JSON.stringify(fallback));
+
+    // تلف القيمة
+    const corrupt = memoryStorage({ k: '{تالف' });
+    expect(createCollectionRepository<string>({ key: 'k', fallback, seed: true }, corrupt.storage).read()).toEqual(
+      fallback
+    );
+    expect(corrupt.data.k).toBe(JSON.stringify(fallback));
+
+    // المصفوفة الفارغة **صالحة** ⇒ لا زرع فوقها
+    const empty = memoryStorage({ k: '[]' });
+    expect(createCollectionRepository<string>({ key: 'k', fallback, seed: true }, empty.storage).read()).toEqual([]);
+    expect(empty.data.k).toBe('[]');
+
+    // بلا seed: القراءة لا تكتب أبداً (قاعدة الطبقة الجديدة)
+    const plain = memoryStorage();
+    expect(createCollectionRepository<string>({ key: 'k', fallback }, plain.storage).read()).toEqual(fallback);
+    expect(plain.data.k).toBeUndefined();
+  });
+
   it('fallbackOnEmpty يفرّق بين «لا بيانات» و«بيانات فارغة»', () => {
     const fallback = [{ id: 'seed' }];
     const { storage } = memoryStorage({ c: '[]' });

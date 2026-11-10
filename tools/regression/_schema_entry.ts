@@ -21,6 +21,11 @@ export { createValueRepository } from '../../src/database/repositories/ValueRepo
 export { createCollectionRepository } from '../../src/database/repositories/CollectionRepository';
 export { createObjectRepository } from '../../src/database/repositories/ObjectRepository';
 
+// R45 — المستودعات القديمة بعد توحيد المجموعات الثانوية على العقد
+export { debtRepository } from '../../src/database/repositories/DebtRepository';
+export { customerRepository, doctorRepository } from '../../src/database/repositories/CustomerRepository';
+export { financialRepository } from '../../src/database/repositories/FinancialRepository';
+
 export {
   loadDebts,
   saveDebts,
