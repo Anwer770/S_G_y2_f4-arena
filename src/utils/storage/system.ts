@@ -21,10 +21,21 @@ const DEFAULT_SYSTEM_AUDIT: AuditLog[] = [
   },
 ];
 
+/**
+ * R51 — سجل النظام مستقلّ عن السجل المركزي.
+ *
+ * كان المفتاح نفسه (`suite_unified_audit_v2`) يحمل **شكلين مختلفين**: `CentralAuditEntry`
+ * (`entity/recordId/userId/deviceId`) و`AuditLog` (`module/action/details`). فكل `logSystemAudit`
+ * كان يُعيد كتابة القائمة بشكل مختلف، وكل استرجاع نسخة احتياطية كان يكتب `systemLogs`
+ * فوق السجل المركزي فيمحو تاريخه. الآن: مفتاح خاص، والقديم `legacyKeys` للقراءة فقط،
+ * وأي سطر لا يحمل `module` نصّياً (أي أنه سطر مركزي) يُرشَّح ولا يدخل سجل النظام.
+ */
 const auditRepo = createCollectionRepository<AuditLog>({
-  key: STORAGE_KEYS.SYSTEM_AUDIT,
+  key: STORAGE_KEYS.SYSTEM_AUDIT_LOGS,
   fallback: DEFAULT_SYSTEM_AUDIT,
   limit: 1000,
+  legacyKeys: [STORAGE_KEYS.SYSTEM_AUDIT],
+  isValidItem: (log) => typeof (log as AuditLog).module === 'string',
 });
 
 export function loadSystemAuditLogs(): AuditLog[] {

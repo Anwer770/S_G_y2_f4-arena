@@ -41,6 +41,7 @@
  "loadDoctorSpecialties",
  "loadDoctorVisits",
  "loadDoctors",
+ "loadEmergencyBackup",
  "loadFinancialAccountNames",
  "loadFinancialAccounts",
  "loadFinancialCategories",

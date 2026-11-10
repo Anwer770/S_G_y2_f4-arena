@@ -1,4 +1,9 @@
-import { createUnifiedBackup, restoreUnifiedBackup, resetAllModuleData } from '../../utils/storage';
+import {
+  createUnifiedBackup,
+  restoreUnifiedBackup,
+  resetAllModuleData,
+  loadEmergencyBackup,
+} from '../../utils/storage';
 import { UnifiedBackupState } from '../../types';
 import { auditService } from '../../core/audit/AuditService';
 
@@ -45,6 +50,19 @@ export class BackupService {
       console.error('BackupService: Restore failed', e);
       return false;
     }
+  }
+
+  /**
+   * استرجاع «نسخة الطوارئ» التي تُكتب قبل التصفير الكامل.
+   * R51: كانت اللقطة تُكتب ولا يوجد أي قارئ لها ⇒ لا يمكن استرجاعها بعد مسح.
+   */
+  public static restoreEmergencyBackup(): boolean {
+    const snapshot = loadEmergencyBackup();
+    if (!snapshot) {
+      console.warn('BackupService: لا توجد نسخة طوارئ صالحة للاسترجاع');
+      return false;
+    }
+    return this.restoreBackup(snapshot);
   }
 
   public static resetSystem(): void {
