@@ -16,8 +16,17 @@ export class IndexedDBAdapter implements IStorageEngine {
   private initPromise: Promise<void> | null = null;
   /** اكتمل تحميل بيانات IndexedDB إلى الذاكرة المؤقتة (بوابة الجاهزية) */
   private hydrated: boolean = false;
-  /** مفاتيح كُتبت قبل اكتمال الجاهزية — للمراقبة فقط (بلا تغيير سلوك) */
+  /** مفاتيح كُتبت قبل اكتمال الجاهزية — تُدفع إلى IndexedDB بعد التحميل (R53) */
   private preHydrationWrites: Set<string> = new Set();
+  /**
+   * R53 — عدد المفاتيح التي قُرئت فعلاً من IndexedDB عند التحميل.
+   *
+   * كان قرار الترحيل `memoryCache.size === 0`، والذاكرة تُملأ من localStorage في المُنشئ
+   * قبل فتح القاعدة. فإذا كان في localStorage أي مفتاح صار الحجم > 0 ⇒ **الترحيل لا يعمل
+   * أبداً** لغير الفارغ، وهو بالضبط الحالة التي يحتاجها (بيانات قديمة في localStorage
+   * وقاعدة جديدة فارغة). القرار الآن على ما قرأناه من القاعدة لا على ما في الذاكرة.
+   */
+  private persistedKeyCount: number = 0;
 
   constructor() {
     // Populate cache synchronously from localStorage as initial boot layer
@@ -71,9 +80,12 @@ export class IndexedDBAdapter implements IStorageEngine {
           await this.loadAllFromIndexedDB();
 
           // If IndexedDB had 0 keys but localStorage had data, do automatic migration!
-          if (this.memoryCache.size === 0 && typeof window !== 'undefined' && window.localStorage?.length > 0) {
+          if (this.persistedKeyCount === 0 && this.hasLocalStorageData()) {
             await this.migrateFromLocalStorage();
           }
+
+          /* R53: كتابات ما قبل الجاهزية لم تُحفظ في القاعدة (لم تكن مفتوحة) — تُدفع الآن */
+          await this.flushPreHydrationWrites();
 
           this.hydrated = true;
           this.reportPreHydrationWrites();
@@ -109,6 +121,7 @@ export class IndexedDBAdapter implements IStorageEngine {
           const cursor = (e.target as IDBRequest<IDBCursorWithValue>).result;
           if (cursor) {
             this.memoryCache.set(cursor.key as string, cursor.value as string);
+            this.persistedKeyCount += 1;
             cursor.continue();
           } else {
             resolve();
@@ -122,8 +135,25 @@ export class IndexedDBAdapter implements IStorageEngine {
     });
   }
 
+  /**
+   * R53 — قراءة طول localStorage قد **ترمي** (وضع التصفح الخاص/سياسة الحجب).
+   * وكان هذا الفحص داخل مسار `onsuccess` بلا حماية: استثناء هنا يعني أن وعد التهيئة
+   * لا يُحلّ أبداً ⇒ التطبيق لا يصير «جاهزاً» ويتعلّق الإقلاع في انتظار لا ينتهي.
+   */
+  private hasLocalStorageData(): boolean {
+    try {
+      return typeof window !== 'undefined' && !!window.localStorage && window.localStorage.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * R53: حُذف هنا حارس `typeof window === 'undefined' || !window.localStorage` لأنه
+   * صار غير قابل للبلوغ: النداء الوحيد يمرّ من `hasLocalStorageData()` التي تتحقّق من
+   * الشيء نفسه وتلتقط الاستثناء. والجسم محاط بـ`try/catch` فحجب localStorage يُسجَّل لا يُسقط.
+   */
   private async migrateFromLocalStorage(): Promise<void> {
-    if (typeof window === 'undefined' || !window.localStorage) return;
     try {
       console.info('IndexedDBAdapter: Migrating existing data from localStorage to IndexedDB...');
       for (let i = 0; i < window.localStorage.length; i++) {
@@ -184,6 +214,31 @@ export class IndexedDBAdapter implements IStorageEngine {
   /** هل اكتمل تحميل بيانات IndexedDB؟ (مراقبة/تشخيص) */
   public isReady(): boolean {
     return this.hydrated;
+  }
+
+  /**
+   * R53 — دفع الكتابات التي وقعت قبل اكتمال الفتح إلى IndexedDB.
+   *
+   * كانت `setRawSync`/`setItemSync` تنادي `persistToIDB` قبل جهوزية `this.db`، فترجع
+   * بلا كتابة (‏`if (!this.db) return`) وتبقى القيمة في الذاكرة وlocalStorage فقط.
+   * أي أن أول أجزاء الثانية من الإقلاع كانت تكتب في طبقة قد تُمحى (localStorage)،
+   * والنسخة الدائمة تُفقد بلا إشعار. الآن تُدفع بعد التحميل مباشرةً.
+   */
+  private async flushPreHydrationWrites(): Promise<void> {
+    if (this.preHydrationWrites.size === 0) return;
+    for (const key of Array.from(this.preHydrationWrites)) {
+      const value = this.memoryCache.get(key);
+      if (value === undefined) {
+        this.preHydrationWrites.delete(key);
+        continue;
+      }
+      try {
+        await this.persistToIDB(key, value);
+        this.preHydrationWrites.delete(key);
+      } catch (err) {
+        console.warn(`IndexedDBAdapter: could not flush pre-hydration write for key '${key}'`, err);
+      }
+    }
   }
 
   private reportPreHydrationWrites(): void {
@@ -303,7 +358,9 @@ export class IndexedDBAdapter implements IStorageEngine {
 
   public removeItemSync(key: string): void {
     this.memoryCache.delete(key);
-    this.deleteFromIDB(key).catch(() => {});
+    /* R53: كان `.catch(() => {})` هنا — ذراع ميت بالقياس: deleteFromIDB لا ترفض أبداً
+       (تُحلّ على onerror وعلى الرمي معاً)، فمعالجة الرفض لا تُنفَّذ بحال. */
+    void this.deleteFromIDB(key);
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
         window.localStorage.removeItem(key);

@@ -56,6 +56,8 @@ export default defineConfig({
         'src/utils/excel/excelExporters.ts',
         'src/utils/excel/excelImporters.ts',
         'src/utils/xlsxSafe.ts',
+        'src/database/adapters/IndexedDBAdapter.ts',
+        'src/database/dbStorage.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -121,6 +123,18 @@ export default defineConfig({
         'src/utils/excel/excelImporters.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/excel/excelExporters.ts': { lines: 100, functions: 100, branches: 98, statements: 100 },
         'src/utils/xlsxSafe.ts': { lines: 100, functions: 100, branches: 92, statements: 100 },
+        /**
+         * R53: محرّك التخزين الدائم — الطبقة التي تحمل **كل** بيانات المستخدم، وكانت خارج
+         * المقام (374 سطراً): إدخالها بلا اختبارات أنزل الإجمالي إلى 93.06% أسطر.
+         * الآن الأسطر والدوال والتعابير **100**، والفروع **99**.
+         *
+         * الذراع الباقية غير قابلة للبلوغ بنيوياً: `if (!db.objectStoreNames.contains(store))`
+         * داخل `onupgradeneeded` — هذا الحدث لا يقع إلا عند **إنشاء** قاعدة جديدة، وحينها
+         * لا يكون المخزن موجوداً بالضرورة، فالذراع الأخرى (الموجود) لا تُنفَّذ أبداً.
+         */
+        'src/database/adapters/IndexedDBAdapter.ts': { lines: 100, functions: 100, branches: 99, statements: 100 },
+        /** R53: جسر `dbStorage` (34 سطراً) — يكتب عبره كل مستودع؛ 100 في الأربعة. */
+        'src/database/dbStorage.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /**
          * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
          * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.
