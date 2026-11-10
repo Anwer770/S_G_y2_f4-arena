@@ -404,7 +404,10 @@ describe('المفاتيح القديمة والتحقّق (R37)', () => {
       'new-k': JSON.stringify([{ id: 'new' }]),
       'old-k': JSON.stringify([{ id: 'old' }]),
     });
-    const repo = createCollectionRepository({ key: 'new-k', fallback: [], legacyKeys: ['old-k'] }, storage);
+    const repo = createCollectionRepository<{ id: string }>(
+      { key: 'new-k', fallback: [], legacyKeys: ['old-k'] },
+      storage
+    );
     expect(repo.read()[0].id).toBe('new');
     repo.write([{ id: 'x' }]);
     expect(JSON.parse(data['old-k'])[0].id).toBe('old');

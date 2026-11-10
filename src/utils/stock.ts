@@ -52,7 +52,15 @@ export function normalizeDate(dateInput: string, defaultYear: number = 2024): st
 }
 
 // Compute live stock calculation for all products
-export function calculateStock(products: Product[], records: MovementRecord[], settings: AppSettings): ProductStock[] {
+/**
+ * R50 — إصلاح عقد: `settings` كان **مطلوباً في الجسم واختيارياً في التوقيع**
+ * (`InventoryService.calculateCurrentStock(products?, records?, settings?)`) ⇒ أي استدعاء
+ * بلا إعدادات كان يُسقط الدالة بـ`TypeError: reading 'skipCancelled'`. الافتراضي هنا
+ * يطابق `DEFAULT_APP_SETTINGS.skipCancelled = true` (سلوك التطبيق نفسه، لا سلوك آخر).
+ */
+export function calculateStock(products: Product[], records: MovementRecord[], settings?: AppSettings): ProductStock[] {
+  const skipCancelled = settings?.skipCancelled ?? true;
+
   const stockMap: Record<
     string,
     {
@@ -75,7 +83,7 @@ export function calculateStock(products: Product[], records: MovementRecord[], s
 
   // Accumulate from movement records
   for (const record of records) {
-    if (settings.skipCancelled && record.status === 'ملغي') {
+    if (skipCancelled && record.status === 'ملغي') {
       continue;
     }
 

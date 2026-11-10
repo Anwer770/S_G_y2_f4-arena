@@ -89,8 +89,10 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
 
-      - name: H · hygiene (H1–H12)
+      - name: H · hygiene (H1–H16)
         run: npm run hygiene
+      - name: Type safety · strictNullChecks outside the UI (R50)
+        run: npm run type-safety
       - name: Identity · version + entry point
         run: npm run identity
       - name: Integrity · data integrity checks
