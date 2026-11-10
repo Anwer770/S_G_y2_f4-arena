@@ -139,14 +139,27 @@ export function removeLookup(state: LookupsState, kind: LookupKind, id: string):
   return { ...state, [kind]: sortAll(remaining), updatedAt: new Date().toISOString() } as LookupsState;
 }
 
-/** ترتيب العناصر (أعلى/أسفل) — يُعيد ترقيماً متسلسلاً. */
+/**
+ * ترتيب العناصر (أعلى/أسفل) — يُعيد ترقيماً متسلسلاً.
+ *
+ * إصلاح R44: كانت الدالة تتبادل موضعَي العنصر في المصفوفة ثم تُمرّر الناتج على
+ * `sortAll` الذي يعيد الترتيب حسب `order` **القديم** ⇒ التبديل يُلغى ويُعاد الترتيب
+ * الأصلي، فكان زرّا ↑/↓ في «القوائم والثوابت» لا يفعلان شيئاً (يُحدَّث `updatedAt`
+ * ويُكتب سطر تدقيق فقط). الآن يُحذف العنصر من موضعه ويُدرَج في الموضع الهدف، ثم
+ * يُرقَّم بحسب **الموضع** لا بحسب `order` القديم.
+ */
 export function moveLookup(state: LookupsState, kind: LookupKind, id: string, direction: -1 | 1): LookupsState {
   const list = [...listOf(state, kind)].sort((a, b) => a.order - b.order);
   const index = list.findIndex((i) => i.id === id);
   const target = index + direction;
   if (index < 0 || target < 0 || target >= list.length) return state;
-  [list[index], list[target]] = [list[target], list[index]];
-  return { ...state, [kind]: sortAll(list), updatedAt: new Date().toISOString() } as LookupsState;
+  const [moved] = list.splice(index, 1);
+  list.splice(target, 0, moved);
+  return {
+    ...state,
+    [kind]: list.map((item, idx) => ({ ...item, order: idx + 1 })),
+    updatedAt: new Date().toISOString(),
+  } as LookupsState;
 }
 
 /** استبدال قائمة كاملة (يُستخدم عند الاستيراد من نسخة احتياطية). */

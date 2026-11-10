@@ -1,5 +1,5 @@
 {
- "at": "2026-11-10T00:13:53.948Z",
+ "at": "2026-11-10T00:52:11.166Z",
  "passed": 19,
  "total": 19,
  "results": [
@@ -108,7 +108,7 @@
    "eventType": "all_subtasks_completed",
    "entityType": "task",
    "entityId": "T-SUBS",
-   "executedAt": "2026-11-10T00:13:53.947Z",
+   "executedAt": "2026-11-10T00:52:11.163Z",
    "outcome": "executed",
    "note": "أُنشئت مهمة متابعة TSK-AUTO-3"
   },
@@ -120,7 +120,7 @@
    "eventType": "task_completed",
    "entityType": "task",
    "entityId": "T-SUBS",
-   "executedAt": "2026-11-10T00:13:53.946Z",
+   "executedAt": "2026-11-10T00:52:11.162Z",
    "outcome": "executed",
    "note": "سُجِّل الإشعار في سجل النشاط (إشعار النظام غير مسموح)"
   },
@@ -132,7 +132,7 @@
    "eventType": "daily_plan_start",
    "entityType": "system",
    "entityId": "2026-11-10",
-   "executedAt": "2026-11-10T00:13:53.945Z",
+   "executedAt": "2026-11-10T00:52:11.161Z",
    "outcome": "executed",
    "note": "سُجِّل الإشعار في سجل النشاط (إشعار النظام غير مسموح)"
   },
@@ -144,7 +144,7 @@
    "eventType": "task_overdue",
    "entityType": "task",
    "entityId": "T-OVERDUE",
-   "executedAt": "2026-11-10T00:13:53.944Z",
+   "executedAt": "2026-11-10T00:52:11.159Z",
    "outcome": "executed",
    "note": "رُفعت أولوية 2 مهمة إلى «عاجل»"
   }

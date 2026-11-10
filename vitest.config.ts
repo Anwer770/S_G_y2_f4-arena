@@ -23,6 +23,8 @@ export default defineConfig({
         'src/utils/importFidelity.ts',
         'src/utils/autoJournaling.ts',
         'src/utils/formatters.ts',
+        'src/utils/lookupsLogic.ts',
+        'src/utils/auditAutoExportLogic.ts',
         'src/utils/storage/system.ts',
         'src/utils/automation/automationRules.ts',
         'src/utils/automation/automationDerive.ts',
@@ -34,11 +36,19 @@ export default defineConfig({
         'src/database/schema/entries.ts',
         'src/database/repositories/CollectionRepository.ts',
       ],
+      /**
+       * السقوف رُفعت في R44 بعد إدخال وحدتَي المنطق إلى المقام (كانتا خارج القياس):
+       * 91.05% قديماً كانت على مقام ناقص، و91.89% اليوم على المقام الكامل.
+       * القيم أدنى من المقيس بهامش صغير ⇒ أي تراجع حقيقي يُفشل البوابة.
+       */
       thresholds: {
-        lines: 75,
-        functions: 70,
-        branches: 65,
-        statements: 75,
+        lines: 88,
+        functions: 88,
+        branches: 80,
+        statements: 88,
+        // سقف مستقلّ للوحدتين اللتين كانتا خارج القياس — لا يُخفّض بتراجع تدريجي
+        'src/utils/lookupsLogic.ts': { lines: 95, functions: 95, branches: 90, statements: 95 },
+        'src/utils/auditAutoExportLogic.ts': { lines: 95, functions: 95, branches: 95, statements: 95 },
       },
     },
   },
