@@ -45,6 +45,9 @@ jobs:
       - name: Production build (Vite + PWA)
         run: npm run build
 
+      - name: R58 · Boot budget (entry ≤ 1.45MB, no eager xlsx/charts)
+        run: npm run performance
+
       - name: Assert PWA output exists (service worker + precache)
         run: |
           set -e
