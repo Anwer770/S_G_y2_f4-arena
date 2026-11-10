@@ -17,7 +17,7 @@ import {
   saveNoteTemplates,
   saveNotes,
 } from '../../utils/storage';
-import { smartAnalyzeNoteText } from '../../utils/notes';
+import { getLocalNoteDateString, smartAnalyzeNoteText } from '../../utils/notes';
 import { NoteViewMode } from './NotesListView';
 import type { NoteAuditLog, NoteFolder, NoteRecord, NoteTagItem, NoteTemplate, NoteVersion } from '../../types';
 import type { KnowledgeModuleProps, KnowledgeSubTab } from './knowledgeTypes';
@@ -102,7 +102,7 @@ export function useKnowledgeModel(props: KnowledgeModuleProps) {
   // Handler: Save note (create or update)
   const handleSaveNote = (noteData: Partial<NoteRecord>, isNew: boolean) => {
     const now = new Date();
-    const formattedDate = now.toISOString().split('T')[0];
+    const formattedDate = getLocalNoteDateString(now);
     const formattedTime = now.toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' });
 
     if (isNew) {
@@ -192,7 +192,7 @@ export function useKnowledgeModel(props: KnowledgeModuleProps) {
     const analysis = smartAnalyzeNoteText(quickText);
 
     const now = new Date();
-    const formattedDate = now.toISOString().split('T')[0];
+    const formattedDate = getLocalNoteDateString(now);
     const formattedTime = now.toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' });
 
     const newId = `QN-${Date.now().toString(36).toUpperCase()}`;
@@ -313,7 +313,7 @@ export function useKnowledgeModel(props: KnowledgeModuleProps) {
           ...n,
           title: version.title,
           content: version.content,
-          updatedAt: new Date().toISOString().split('T')[0],
+          updatedAt: getLocalNoteDateString(),
         };
       }
       return n;
@@ -346,7 +346,7 @@ export function useKnowledgeModel(props: KnowledgeModuleProps) {
       status: 'نشطة',
       folderId: 'folder-work',
       tags: template.tags || template.defaultTags || [],
-      date: new Date().toISOString().split('T')[0],
+      date: getLocalNoteDateString(),
       createdAt: new Date().toISOString(),
     });
     setIsEditorOpen(true);
@@ -366,7 +366,7 @@ export function useKnowledgeModel(props: KnowledgeModuleProps) {
 
   // Subtab filtered list
   const currentSubTabNotes = React.useMemo(() => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalNoteDateString();
     switch (activeSubTab) {
       case 'quick_notes':
         return activeNotesList.filter((n) => n.isQuickNote);

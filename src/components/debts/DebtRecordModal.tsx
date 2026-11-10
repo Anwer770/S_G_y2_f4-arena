@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DebtBookId, DebtRecord } from '../../types';
-import { DEBT_BOOKS_META, DEBT_ICONS } from '../../utils/debts';
+import { DEBT_BOOKS_META, DEBT_ICONS, getLocalDateString } from '../../utils/debts';
 import { X, Save, DollarSign } from 'lucide-react';
 
 interface DebtRecordModalProps {
@@ -42,7 +42,7 @@ export const DebtRecordModal: React.FC<DebtRecordModalProps> = ({
       setIsCompleted(!!initialRecord.isCompleted);
     } else {
       setBook(defaultBook);
-      setDate(new Date().toISOString().split('T')[0]);
+      setDate(getLocalDateString());
       setIcon('⚑');
       setName('');
       setCurrency(defaultBook === 'previous' ? 'YER' : defaultBook === 'zaha' ? 'YER' : 'YER');

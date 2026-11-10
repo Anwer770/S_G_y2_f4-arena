@@ -7,6 +7,7 @@ import {
   DEBT_CATEGORIES,
   DEBT_OWNERS,
   formatDebtAmount,
+  getLocalDateString,
 } from '../../utils/debts';
 import {
   loadDebts,
@@ -127,7 +128,7 @@ export const DebtsModule: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `نسخة_احتياطية_الديون_والالتزامات_${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `نسخة_احتياطية_الديون_والالتزامات_${getLocalDateString()}.json`;
     link.click();
   };
 
@@ -166,7 +167,7 @@ export const DebtsModule: React.FC = () => {
       ...record,
       id: `DEBT-${Date.now().toString().slice(-6)}`,
       name: `${record.name} (نسخة)`,
-      date: new Date().toISOString().split('T')[0],
+      date: getLocalDateString(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -233,7 +234,7 @@ export const DebtsModule: React.FC = () => {
       ...commitment,
       id: `التزامات-${Date.now().toString().slice(-4)}`,
       name: `${commitment.name} (نسخة)`,
-      date: new Date().toISOString().split('T')[0],
+      date: getLocalDateString(),
       payments: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -426,8 +427,19 @@ export const DebtsModule: React.FC = () => {
               {formatDebtAmount(stats.totalCommitmentsAmount, 'YER')}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
-              العدد الإجمالي: {stats.activeCommitmentsCount + stats.completedCommitmentsCount} التزام
+              العدد الإجمالي: {stats.activeCommitmentsCount + stats.completedCommitmentsCount} التزام · الرقم أعلاه
+              بالريال اليمني
             </div>
+            {(stats.totalCommitmentsAmountByCurrency.USD > 0 || stats.totalCommitmentsAmountByCurrency.SAR > 0) && (
+              <div className="flex gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono mt-1" dir="ltr">
+                {stats.totalCommitmentsAmountByCurrency.USD > 0 && (
+                  <span>{formatDebtAmount(stats.totalCommitmentsAmountByCurrency.USD, 'USD')}</span>
+                )}
+                {stats.totalCommitmentsAmountByCurrency.SAR > 0 && (
+                  <span>{formatDebtAmount(stats.totalCommitmentsAmountByCurrency.SAR, 'SAR')}</span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -446,6 +458,17 @@ export const DebtsModule: React.FC = () => {
             <div className="text-xs text-teal-600 dark:text-teal-400 font-bold mt-1">
               تم سداد: {formatDebtAmount(stats.totalCommitmentsPaid, 'YER')}
             </div>
+            {(stats.totalCommitmentsRemainingByCurrency.USD > 0 ||
+              stats.totalCommitmentsRemainingByCurrency.SAR > 0) && (
+              <div className="flex gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono mt-1" dir="ltr">
+                {stats.totalCommitmentsRemainingByCurrency.USD > 0 && (
+                  <span>متبقٍ {formatDebtAmount(stats.totalCommitmentsRemainingByCurrency.USD, 'USD')}</span>
+                )}
+                {stats.totalCommitmentsRemainingByCurrency.SAR > 0 && (
+                  <span>متبقٍ {formatDebtAmount(stats.totalCommitmentsRemainingByCurrency.SAR, 'SAR')}</span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

@@ -47,16 +47,45 @@ export function generateNoteId(existingNotes: NoteRecord[]): string {
   return `NOTE-${maxNum + 1}`;
 }
 
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+export function getLocalNoteDateString(date: Date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function datePart(value: string | undefined): string {
+  return (value || '').trim().slice(0, 10);
+}
+
+/** فرق الأيام التقويمية بلا اعتماد على UTC أو فروق التوقيت الصيفي. */
+function calendarDayDifference(target: string, reference: string = getLocalNoteDateString()): number {
+  const toOrdinal = (value: string): number => {
+    const [year, month, day] = datePart(value).split('-').map(Number);
+    return Date.UTC(year, month - 1, day);
+  };
+  return Math.round((toOrdinal(target) - toOrdinal(reference)) / DAY_IN_MS);
+}
+
 export function calculateNoteStats(notes: NoteRecord[], trashNotes: NoteRecord[] = []): NoteStatsResult {
-  const activeNotes = notes.filter((n) => !n.deletedAt && !n.isDeleted);
+  // تأتي القائمة المحذوفة منفصلة في بعض مسارات الاستعادة ومضمّنة في `notes` في مسارات أخرى.
+  // نحسب كل معرّف مرة واحدة كي لا تنتفخ عدادات الكل/السلة.
+  const noteById = new Map<string, NoteRecord>();
+  notes.forEach((n) => noteById.set(n.id, n));
+  trashNotes.forEach((n) => noteById.set(n.id, n));
+  const trashIds = new Set([
+    ...trashNotes.map((n) => n.id),
+    ...notes.filter((n) => !!n.deletedAt || !!n.isDeleted).map((n) => n.id),
+  ]);
+  const activeNotes = [...noteById.values()].filter((n) => !trashIds.has(n.id));
   const total = activeNotes.length;
   const totalActive = total;
-  const totalNotes = notes.length + trashNotes.length;
-  const trashCount = trashNotes.length + notes.filter((n) => !!n.deletedAt || !!n.isDeleted).length;
+  const totalNotes = noteById.size;
+  const trashCount = trashIds.size;
 
-  const todayStr = new Date().toISOString().split('T')[0];
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
+  const todayStr = getLocalNoteDateString();
 
   let newToday = 0;
   let favorites = 0;
@@ -118,10 +147,7 @@ export function calculateNoteStats(notes: NoteRecord[], trashNotes: NoteRecord[]
 
     // Review due check
     if (n.nextReviewDate && n.status !== 'مكتملة' && n.status !== 'مؤرشفة') {
-      const reviewDate = new Date(n.nextReviewDate);
-      reviewDate.setHours(0, 0, 0, 0);
-      const diffTime = reviewDate.getTime() - now.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = calendarDayDifference(n.nextReviewDate, todayStr);
 
       if (diffDays <= 7) {
         reviewDueNotes.push({
@@ -280,13 +306,10 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
     .filter((s) => s.length > 3);
 
   sentences.forEach((sentence) => {
-    const hasAction = actionKeywords.some(
-      (kw) =>
-        sentence.startsWith(kw) ||
-        sentence.includes(` ${kw} `) ||
-        sentence.startsWith(`- ${kw}`) ||
-        sentence.startsWith(`[ ] ${kw}`)
-    );
+    // تقسيم إلى كلمات كاملة يمنع اعتبار «المتابعة» (اسم) فعلاً «متابعة»،
+    // ويدعم في الوقت نفسه صيغ القوائم وعلامات الترقيم.
+    const words = sentence.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+    const hasAction = actionKeywords.some((kw) => words.includes(kw));
     if (hasAction) {
       let taskPriority: NotePriority = 'متوسطة';
       if (
@@ -303,11 +326,11 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
       let dueDate: string | undefined = undefined;
       const today = new Date();
       if (sentence.includes('اليوم')) {
-        dueDate = today.toISOString().split('T')[0];
+        dueDate = getLocalNoteDateString(today);
       } else if (sentence.includes('غدا') || sentence.includes('غداً') || sentence.includes('بكرة')) {
-        const tm = new Date();
+        const tm = new Date(today);
         tm.setDate(tm.getDate() + 1);
-        dueDate = tm.toISOString().split('T')[0];
+        dueDate = getLocalNoteDateString(tm);
       } else if (sentence.includes('الأحد')) {
         dueDate = getNextDayOfWeek(0);
       } else if (sentence.includes('الاثنين')) {
@@ -375,7 +398,8 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
     if (idx !== -1) {
       const chunk = clean
         .slice(idx, idx + 40)
-        .split(/[.,\n،؛]/)[0]
+        .split(/[\n،؛]/)[0]
+        .replace(/\.+$/, '')
         .trim();
       if (chunk && !persons.includes(chunk)) {
         persons.push(chunk);
@@ -460,7 +484,7 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
   // Reminder
   let detectedReminder: { date: string; time: string; text: string } | undefined = undefined;
   if (dates.length > 0 || extractedTasks.some((t) => t.dueDate)) {
-    const tmDate = extractedTasks.find((t) => t.dueDate)?.dueDate || new Date().toISOString().split('T')[0];
+    const tmDate = extractedTasks.find((t) => t.dueDate)?.dueDate || getLocalNoteDateString();
     detectedReminder = {
       date: tmDate,
       time: '09:00',
@@ -491,9 +515,10 @@ export function smartAnalyzeNoteText(text: string): AISuggestionResult {
 function getNextDayOfWeek(dayOfWeek: number): string {
   const d = new Date();
   const day = d.getDay();
-  const diff = (dayOfWeek + 7 - day) % 7 || 7;
+  // اليوم المذكور بلا «القادم» يعني اليوم نفسه إذا وافق يوم الأسبوع.
+  const diff = (dayOfWeek + 7 - day) % 7;
   d.setDate(d.getDate() + diff);
-  return d.toISOString().split('T')[0];
+  return getLocalNoteDateString(d);
 }
 
 // ----------------------------------------------------------------------------
@@ -514,11 +539,7 @@ export function filterNotes(notes: NoteRecord[], filter: NoteFilterState): NoteR
 
     if (filter.needsReview || filter.needsReviewOnly) {
       if (!note.nextReviewDate) return false;
-      const rDate = new Date(note.nextReviewDate);
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      rDate.setHours(0, 0, 0, 0);
-      const diffDays = Math.ceil((rDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      const diffDays = calendarDayDifference(note.nextReviewDate);
       if (diffDays > 7) return false;
     }
 
@@ -566,11 +587,11 @@ export function filterNotes(notes: NoteRecord[], filter: NoteFilterState): NoteR
 
     // Date range
     if (filter.startDate) {
-      const noteDate = (note.createdAt || '').split(' ')[0];
+      const noteDate = datePart(note.createdAt);
       if (noteDate < filter.startDate) return false;
     }
     if (filter.endDate) {
-      const noteDate = (note.createdAt || '').split(' ')[0];
+      const noteDate = datePart(note.createdAt);
       if (noteDate > filter.endDate) return false;
     }
 
@@ -591,7 +612,7 @@ export function filterNotes(notes: NoteRecord[], filter: NoteFilterState): NoteR
         searchTerms.push('صيدلية', 'مركز', 'مشتريات', 'طلبية');
       }
       if (q.includes('طبيب') || q.includes('دكتور')) {
-        searchTerms.push('عيادة', 'مستشفى', 'عينات', 'زيارة');
+        searchTerms.push('دكتور', 'د.', 'عيادة', 'مستشفى', 'عينات', 'زيارة');
       }
 
       const noteText = [
@@ -645,8 +666,38 @@ export function filterNotes(notes: NoteRecord[], filter: NoteFilterState): NoteR
 // ----------------------------------------------------------------------------
 // EXPORT & DOWNLOAD UTILITIES
 // ----------------------------------------------------------------------------
-export function exportNotesToExcel(notes: NoteRecord[], filename = 'سجل_الملاحظات_والمعرفة.xlsx') {
-  const rows = notes.map((n, idx) => ({
+
+/** مخطط موحّد: لا يجوز أن يفقد CSV حقولاً تصدّرها نسخة Excel. */
+const NOTE_EXPORT_HEADERS = [
+  'م',
+  'كود الملاحظة',
+  'العنوان',
+  'النوع',
+  'التصنيف',
+  'التصنيف الفرعي',
+  'الأولوية',
+  'الحالة',
+  'المجلد',
+  'الوسوم',
+  'الملخص',
+  'المحتوى',
+  'العميل المرتبط',
+  'الطبيب المرتبط',
+  'المشروع المرتبط',
+  'المهمة المرتبطة',
+  'تاريخ المراجعة القادمة',
+  'عدد المهام',
+  'المهام المنجزة',
+  'عدد المرفقات',
+  'ملاحظة سريعة',
+  'مثبتة',
+  'مفضلة',
+  'تاريخ الإنشاء',
+  'آخر تعديل',
+] as const;
+
+function noteToExportRow(n: NoteRecord, idx: number): Record<(typeof NOTE_EXPORT_HEADERS)[number], string | number> {
+  return {
     م: idx + 1,
     'كود الملاحظة': n.id,
     العنوان: n.title,
@@ -672,7 +723,11 @@ export function exportNotesToExcel(notes: NoteRecord[], filename = 'سجل_ال�
     مفضلة: n.isFavorite ? 'نعم' : 'لا',
     'تاريخ الإنشاء': n.createdAt,
     'آخر تعديل': n.updatedAt,
-  }));
+  };
+}
+
+export function exportNotesToExcel(notes: NoteRecord[], filename = 'سجل_الملاحظات_والمعرفة.xlsx') {
+  const rows = notes.map(noteToExportRow);
 
   const worksheet = XLSX.utils.json_to_sheet(rows);
   const workbook = XLSX.utils.book_new();
@@ -710,31 +765,13 @@ export function exportNotesToExcel(notes: NoteRecord[], filename = 'سجل_ال�
 }
 
 export function exportNotesToCSV(notes: NoteRecord[], filename = 'الملاحظات_والمعرفة.csv') {
-  const headers = [
-    'كود الملاحظة',
-    'العنوان',
-    'النوع',
-    'التصنيف',
-    'الأولوية',
-    'الحالة',
-    'الوسوم',
-    'المحتوى',
-    'تاريخ الإنشاء',
-  ];
-
+  const headers = NOTE_EXPORT_HEADERS;
   const escapeCSV = (str: string) => `"${(str || '').replace(/"/g, '""')}"`;
 
-  const rows = notes.map((n) => [
-    escapeCSV(n.id),
-    escapeCSV(n.title),
-    escapeCSV(n.type),
-    escapeCSV(n.category),
-    escapeCSV(n.priority),
-    escapeCSV(n.status),
-    escapeCSV((n.tags || []).join(';')),
-    escapeCSV(n.content),
-    escapeCSV(n.createdAt),
-  ]);
+  const rows = notes.map((n, idx) => {
+    const row = noteToExportRow(n, idx);
+    return headers.map((header) => escapeCSV(String(row[header])));
+  });
 
   const csvContent = '\uFEFF' + [headers.map(escapeCSV).join(','), ...rows.map((r) => r.join(','))].join('\n');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -745,6 +782,7 @@ export function exportNotesToCSV(notes: NoteRecord[], filename = 'الملاحظ
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 export function exportNotesToJSON(notes: NoteRecord[], filename = 'notes_backup.json') {

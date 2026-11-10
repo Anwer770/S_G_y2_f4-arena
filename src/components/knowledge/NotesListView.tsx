@@ -29,7 +29,7 @@ import {
   Download,
   Share2,
 } from 'lucide-react';
-import { filterNotes } from '../../utils/notes';
+import { filterNotes, getLocalNoteDateString } from '../../utils/notes';
 
 export type NoteViewMode = 'grid' | 'list' | 'kanban' | 'calendar' | 'timeline' | 'folders';
 
@@ -107,7 +107,7 @@ export const NotesListView: React.FC<NotesListViewProps> = ({
 
   // Filtered Notes
   const filteredNotes = useMemo(() => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalNoteDateString();
 
     const result = filterNotes(notes, {
       query: searchQuery,

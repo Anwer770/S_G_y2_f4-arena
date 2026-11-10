@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DebtCommitment, DebtCommitmentPayment } from '../../types';
-import { formatDebtAmount } from '../../utils/debts';
+import { formatDebtAmount, getLocalDateString } from '../../utils/debts';
 import { X, Plus, Trash2, CheckCircle2, DollarSign, Calendar } from 'lucide-react';
 
 interface PartialPaymentModalProps {
@@ -19,7 +19,7 @@ export const PartialPaymentModal: React.FC<PartialPaymentModalProps> = ({
   onDeletePayment,
 }) => {
   const [amount, setAmount] = useState<number | ''>('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(getLocalDateString());
   const [note, setNote] = useState('');
   const [error, setError] = useState('');
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -47,7 +47,7 @@ export const PartialPaymentModal: React.FC<PartialPaymentModalProps> = ({
 
     const newPayment: DebtCommitmentPayment = {
       pid: `PAY-${Date.now().toString().slice(-6)}`,
-      date: date || new Date().toISOString().split('T')[0],
+      date: date || getLocalDateString(),
       amount: numAmount,
       note: note.trim() || undefined,
     };

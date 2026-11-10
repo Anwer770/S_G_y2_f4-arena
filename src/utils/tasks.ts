@@ -171,7 +171,11 @@ export function filterTasks(tasks: Task[], filters: TaskFilterState, todayStr: s
 }
 
 export function getUpcomingTasks(tasks: Task[], count = 8, todayStr: string): Task[] {
-  const active = tasks.filter((t) => t.status !== 'تم الانجاز' && t.status !== 'ملغي');
+  // «القادمة» لا تشمل المنتهية المتأخرة؛ لها عدّاد وقائمة مستقلة في الواجهة.
+  const active = tasks.filter((t) => {
+    const dueDate = t.end || t.start;
+    return t.status !== 'تم الانجاز' && t.status !== 'ملغي' && dueDate >= todayStr;
+  });
   return active
     .sort((a, b) => {
       const aDate = a.end || a.start;
@@ -204,6 +208,21 @@ export function generateNextCommitmentId(commitments: Commitment[]): string {
 }
 
 // FR-34: ICS Calendar Export for Google / Apple / Outlook Calendar (Tasks & Commitments)
+function addDaysToDateString(dateString: string, days: number): string {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day + days));
+  return date.toISOString().split('T')[0];
+}
+
+/** RFC 5545 TEXT escaping: يمنع حقن خصائص أو أحداث عبر حقول يكتبها المستخدم. */
+function escapeICSText(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/\r\n|\r|\n/g, '\\n')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,');
+}
+
 export function generateICS(tasks: Task[], commitments: Commitment[] = []): string {
   const lines: string[] = [
     'BEGIN:VCALENDAR',
@@ -218,21 +237,18 @@ export function generateICS(tasks: Task[], commitments: Commitment[] = []): stri
   tasks.forEach((t) => {
     const startFormatted = t.start.replace(/-/g, '');
     const endStr = t.end || t.start;
-    // For all-day events in ICS, end date is exclusive, so add 1 day
-    const endDateObj = new Date(endStr);
-    endDateObj.setDate(endDateObj.getDate() + 1);
-    const endFormatted = endDateObj.toISOString().split('T')[0].replace(/-/g, '');
+    // For all-day events in ICS, end date is exclusive, so add 1 calendar day.
+    const endFormatted = addDaysToDateString(endStr, 1).replace(/-/g, '');
 
     lines.push('BEGIN:VEVENT');
     lines.push(`UID:${t.id}@almaha-tasks.local`);
     lines.push(`DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`);
     lines.push(`DTSTART;VALUE=DATE:${startFormatted}`);
     lines.push(`DTEND;VALUE=DATE:${endFormatted}`);
-    lines.push(`SUMMARY:[${t.pri}] ${t.title}`);
-    lines.push(
-      `DESCRIPTION:الفئة: ${t.cat} | العملية: ${t.op} | المسؤول: ${t.resp} | الحالة: ${t.status}\\n${t.desc || ''}`
-    );
-    lines.push(`CATEGORIES:${t.cat}`);
+    lines.push(`SUMMARY:[${t.pri}] ${escapeICSText(t.title)}`);
+    const description = `الفئة: ${t.cat} | العملية: ${t.op} | المسؤول: ${t.resp} | الحالة: ${t.status}`;
+    lines.push(`DESCRIPTION:${escapeICSText(description)}\\n${escapeICSText(t.desc || '')}`);
+    lines.push(`CATEGORIES:${escapeICSText(t.cat)}`);
     lines.push(`STATUS:${t.status === 'تم الانجاز' ? 'COMPLETED' : 'CONFIRMED'}`);
     lines.push('END:VEVENT');
   });
@@ -240,17 +256,16 @@ export function generateICS(tasks: Task[], commitments: Commitment[] = []): stri
   commitments.forEach((c) => {
     if (!c.due) return;
     const dueFormatted = c.due.replace(/-/g, '');
-    const endDateObj = new Date(c.due);
-    endDateObj.setDate(endDateObj.getDate() + 1);
-    const endFormatted = endDateObj.toISOString().split('T')[0].replace(/-/g, '');
+    const endFormatted = addDaysToDateString(c.due, 1).replace(/-/g, '');
 
     lines.push('BEGIN:VEVENT');
     lines.push(`UID:${c.id}@almaha-commitments.local`);
     lines.push(`DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`);
     lines.push(`DTSTART;VALUE=DATE:${dueFormatted}`);
     lines.push(`DTEND;VALUE=DATE:${endFormatted}`);
-    lines.push(`SUMMARY:[التزام مالي] ${c.name} - ${c.amount} ريال`);
-    lines.push(`DESCRIPTION:المبلغ: ${c.amount} ريال | الأهمية: ${c.pri} | الحالة: ${c.status}\\n${c.desc || ''}`);
+    lines.push(`SUMMARY:[التزام مالي] ${escapeICSText(c.name)} - ${c.amount} ريال`);
+    const description = `المبلغ: ${c.amount} ريال | الأهمية: ${c.pri} | الحالة: ${c.status}`;
+    lines.push(`DESCRIPTION:${escapeICSText(description)}\\n${escapeICSText(c.desc || '')}`);
     lines.push('CATEGORIES:التزامات مالية');
     lines.push(`STATUS:${c.status === 'تم الانجاز' ? 'COMPLETED' : 'CONFIRMED'}`);
     lines.push('END:VEVENT');
