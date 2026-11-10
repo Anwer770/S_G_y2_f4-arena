@@ -27,8 +27,12 @@ import {
   processDomainEvent,
   sweepOverdueTasks,
   runRuleManually,
+  dispatchDomainEvent,
+  defaultAutomationDeps,
   type AutomationDeps,
 } from '../../src/utils/automation/automationRunner';
+import { executePlannedAction } from '../../src/utils/automation/automationActions';
+import { subscribeDomainEvents, withAutomationOrigin } from '../../src/utils/automation/automationEvents';
 
 const rule = (over: Partial<AutomationRule> = {}): AutomationRule => ({
   id: 'aut_1',
@@ -189,6 +193,32 @@ describe('اشتقاق الأحداث من فرق الحالة', () => {
     expect(deriveTaskEvents([task()], [task()])).toHaveLength(0);
   });
 
+  it('مهمة جديدة بمهام فرعية مكتملة تُنتج task_created + all_subtasks_completed (R46)', () => {
+    const fresh = task({
+      id: 't10',
+      subtasks: [{ id: 's1', title: 'خطوة', completed: true }] as WorkTask['subtasks'],
+    });
+    const types = deriveTaskEvents([], [fresh]).map((e) => e.type);
+    expect(types).toEqual(['task_created', 'all_subtasks_completed']);
+  });
+
+  it('مشروع جديد يُنتج project_created، والتقدّم يُنتج project_updated (R46)', () => {
+    const p = (progress: number, status = 'active') => ({ id: 'p9', name: 'مشروع جديد', progress, status }) as never;
+    const [created] = deriveProjectEvents([], [p(10)]);
+    expect(created).toMatchObject({
+      type: 'project_created',
+      entityId: 'p9',
+      data: { status: 'active', progress: 10 },
+    });
+
+    const [updated] = deriveProjectEvents([p(10)], [p(40)]);
+    expect(updated).toMatchObject({
+      type: 'project_updated',
+      data: { previousStatus: 'active', status: 'active', progress: 40 },
+    });
+    expect(deriveProjectEvents([p(40, 'paused')], [p(40, 'paused')])).toHaveLength(0);
+  });
+
   it('المشروع يُنتج project_100_percent عند بلوغ الاكتمال مرة واحدة', () => {
     const p = (progress: number, status: string) => ({ id: 'p1', name: 'مشروع', progress, status }) as never;
     expect(deriveProjectEvents([p(90, 'active')], [p(100, 'active')]).map((e) => e.type)).toEqual([
@@ -202,6 +232,35 @@ describe('اشتقاق الأحداث من فرق الحالة', () => {
       ({ id: 'o1', title: 'طلبية', customerName: 'عميل', status, totalAmount: 10 }) as never;
     expect(deriveOrderEvents([o('in_progress')], [o('delivered')]).map((e) => e.type)).toEqual(['order_delivered']);
     expect(deriveOrderEvents([o('delivered')], [o('delivered')])).toHaveLength(0);
+  });
+
+  it('الطلبية الجديدة تُنتج order_created ببياناتها الكاملة (R46)', () => {
+    const o = { id: 'o2', title: 'طلبية جديدة', customerName: 'عميل', status: 'pending', totalAmount: 250 };
+    const [created] = deriveOrderEvents([], [o] as never);
+    expect(created).toMatchObject({
+      type: 'order_created',
+      entityType: 'order',
+      entityId: 'o2',
+      title: 'طلبية جديدة',
+      data: { customerName: 'عميل', status: 'pending', totalAmount: 250 },
+    });
+    expect(deriveOrderEvents([o] as never, [o] as never)).toHaveLength(0);
+  });
+
+  it('الالتزام الجديد يُنتج commitment_created ببياناته (R46)', () => {
+    const c = { id: 'c2', title: 'التزام جديد', status: 'pending', amount: 900, dueDate: '2026-12-01' };
+    const [created] = deriveCommitmentEvents([], [c] as never);
+    expect(created).toMatchObject({
+      type: 'commitment_created',
+      entityType: 'commitment',
+      entityId: 'c2',
+      data: { amount: 900, dueDate: '2026-12-01' },
+    });
+  });
+
+  it('الاشتقاق بلا معاملات (القيم الافتراضية) لا يرمي (R46)', () => {
+    expect(deriveOrderEvents()).toEqual([]);
+    expect(deriveCommitmentEvents()).toEqual([]);
   });
 
   it('الالتزام المالي يُنتج commitment_fulfilled عند السداد', () => {
@@ -366,5 +425,111 @@ describe('ناقل أحداث المجال', () => {
     expect(origins).toEqual(['automation']);
     expect(isSuppressingEvents()).toBe(false);
     clearDomainEventListeners();
+  });
+});
+
+/* ─────────────── الافتراضيات والتوصيل الحقيقي (R46) ─────────────── */
+
+describe('الافتراضيات الافتراضية للمشغّل — التوصيل الحقيقي بلا واجهة', () => {
+  it('defaultAutomationDeps.now يُعيد ISO صالحاً', () => {
+    const iso = defaultAutomationDeps.now();
+    expect(iso).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+    expect(Number.isNaN(Date.parse(iso))).toBe(false);
+  });
+
+  it('القواعد والسجل يُقرأان ويُكتبان عبر طبقة العمل الحقيقية', () => {
+    defaultAutomationDeps.saveRules([rule({ id: 'aut_persist' })]);
+    expect(defaultAutomationDeps.loadRules().some((r) => r.id === 'aut_persist')).toBe(true);
+
+    defaultAutomationDeps.saveRuns([]);
+    expect(defaultAutomationDeps.loadRuns()).toEqual([]);
+  });
+
+  it('الإجراء الافتراضي هو التنفيذ الحقيقي لا بديل صامت', () => {
+    expect(defaultAutomationDeps.applyAction).toBe(executePlannedAction);
+  });
+});
+
+describe('dispatchDomainEvent — النشر والتقييم في خطوة واحدة', () => {
+  it('ينشر الحدث بمصدر «user» ثم يقيّمه ويُنفّذ القاعدة', () => {
+    const { state, deps } = fakeDeps();
+    const seen: DomainEvent[] = [];
+    const unsubscribe = subscribeDomainEvents((e) => seen.push(e));
+
+    const result = dispatchDomainEvent(
+      { type: 'task_completed', entityType: 'task', entityId: 't1', title: 'مهمة' },
+      deps
+    );
+    unsubscribe();
+
+    expect(seen).toHaveLength(1);
+    expect(seen[0].origin).toBe('user');
+    expect(seen[0].id).toMatch(/^evt_/);
+    expect(result.executed).toBe(1);
+    expect(state.applied).toHaveLength(1);
+  });
+
+  it('حدث نشر داخل withAutomationOrigin لا يُنفّذ شيئاً (منع الحلقة)', () => {
+    const { state, deps } = fakeDeps();
+    let result: ReturnType<typeof dispatchDomainEvent> | null = null;
+    withAutomationOrigin(() => {
+      result = dispatchDomainEvent({ type: 'task_completed', entityType: 'task', entityId: 't1', title: 'مهمة' }, deps);
+    });
+
+    expect(result?.executed).toBe(0);
+    expect(result?.evaluatedRules).toBe(0);
+    expect(state.applied).toHaveLength(0);
+  });
+});
+
+describe('صلابة المشغّل أمام حالات التخزين الفارغة', () => {
+  const nullRules = () =>
+    ({
+      now: () => '2026-11-07T08:00:00.000Z',
+      loadRules: () => null as unknown as AutomationRule[],
+      saveRules: vi.fn(),
+      loadRuns: () => undefined as unknown as AutomationRun[],
+      saveRuns: vi.fn(),
+      applyAction: vi.fn(() => ({ ok: true, note: '' })) as unknown as AutomationDeps['applyAction'],
+    }) satisfies AutomationDeps;
+
+  it('loadRules/loadRuns الفارغان يُعاملان كقائمتين فارغتين', () => {
+    const deps = nullRules();
+    const result = processDomainEvent(event(), deps);
+    expect(result).toEqual({ evaluatedRules: 0, executed: 0, failed: 0, duplicates: 0, runs: [] });
+    expect(deps.saveRuns).not.toHaveBeenCalled();
+  });
+
+  it('المسح الزمني بلا قواعد لا يرمي ولا يُنفّذ', () => {
+    const result = sweepOverdueTasks('2026-11-07', nullRules(), [
+      { id: 't1', title: 'متأخرة', dueDate: '2026-11-01', status: 'planned' },
+    ]);
+    expect(result.executed).toBe(0);
+  });
+
+  it('التشغيل اليدوي بلا قواعد محفوظة يستخدم القاعدة الممرَّرة', () => {
+    const deps = nullRules();
+    const manual = rule({ id: 'aut_manual_missing', triggerEvent: 'daily_plan_start' });
+    const result = runRuleManually(manual, deps);
+
+    expect(result.executed).toBe(1);
+    expect(result.runs[0].ruleId).toBe('aut_manual_missing');
+    expect(deps.saveRuns).toHaveBeenCalled();
+  });
+
+  it('التشغيل اليدوي الفاشل: يُسجَّل failed ولا يُحدَّث العدّاد', () => {
+    const { state, deps } = fakeDeps([rule({ id: 'aut_fail', triggerEvent: 'daily_plan_start' })]);
+    deps.applyAction = vi.fn(() => ({ ok: false, note: 'تعذّر' })) as AutomationDeps['applyAction'];
+
+    const result = runRuleManually(state.rules[0], deps);
+    expect(result).toMatchObject({ executed: 0, failed: 1, evaluatedRules: 1 });
+    expect(state.runs[0].outcome).toBe('failed');
+    expect(state.rules[0].executionsCount).toBe(0);
+  });
+
+  it('المسح الزمني بلا معاملات يستخدم تاريخ اليوم وقائمة المهام الحقيقية', () => {
+    const { deps } = fakeDeps([]);
+    const result = sweepOverdueTasks('2026-11-07', deps);
+    expect(result).toEqual({ evaluatedRules: 0, executed: 0, failed: 0, duplicates: 0, runs: [] });
   });
 });

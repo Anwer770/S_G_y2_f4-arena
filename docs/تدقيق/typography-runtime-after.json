@@ -9,7 +9,14 @@
   "below": 0,
   "belowFloorOutsideSmallBox": 0
  },
- "css": null,
+ "css": {
+  "min": 11,
+  "sizes": [
+   11,
+   12,
+   13
+  ]
+ },
  "dom": {
   "sizes": [
    12,
