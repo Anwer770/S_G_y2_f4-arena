@@ -2,9 +2,16 @@
  * مستورِدات Excel/CSV مع تقرير أمانة الاستيراد — مستخرجة من utils/excel.ts (R30).
  */
 import { ImportReport, cellText, cellNumber, autoKey, IMPORT_FIDELITY_BANNER } from '../importFidelity';
-import { assertFileSize, readFirstSheetSafe, readFirstSheetAoaSafe } from '../xlsxSafe';
+import {
+  assertFileSize,
+  MAX_IMPORT_ROWS,
+  readFirstSheetSafe,
+  readFirstSheetAoaSafe,
+  safeSheetWarnings,
+} from '../xlsxSafe';
 import { Customer, FinancialTransaction, MovementRecord, Product } from '../../types';
 import { normalizeArabicDigits, normalizeDate } from '../stock';
+import { calculateArabicDay } from '../formatters';
 
 export interface ImportPreviewResult {
   totalRows: number;
@@ -24,7 +31,8 @@ export async function parseExcelForImport(
 ): Promise<ImportPreviewResult> {
   assertFileSize(file);
   const buffer = await file.arrayBuffer();
-  const rawRows = readFirstSheetAoaSafe(buffer, 'array').rows;
+  const safeSheet = readFirstSheetAoaSafe(buffer, 'array');
+  const rawRows = safeSheet.rows;
 
   if (!rawRows || rawRows.length < 2) {
     throw new Error('الملف فارغ أو لا يحتوي على صفوف بيانات صالحة.');
@@ -67,7 +75,10 @@ export async function parseExcelForImport(
   const existingSubIds = new Set(existingRecords.map((r) => r.subId));
   const parsedRecords: MovementRecord[] = [];
   const report = new ImportReport();
-  const warnings: string[] = [];
+  /* R52: الاقتطاع عند 20,000 صف كان يحدث صامتاً — المستخدم يرى «نجح» وقد فقد نصف ملفه */
+  const warnings: string[] = safeSheet.truncated
+    ? [`الملف أكبر من ${MAX_IMPORT_ROWS} صفاً — استُورد أول ${MAX_IMPORT_ROWS} صفاً فقط.`]
+    : [];
   let duplicateSubIdsCount = 0;
 
   for (let rowIndex = 1; rowIndex < rawRows.length; rowIndex++) {
@@ -161,7 +172,7 @@ export async function parseCustomersExcelFile(file: File): Promise<{
   const rawRows = safeSheet.rows;
 
   const customers: Customer[] = [];
-  const warnings: string[] = [IMPORT_FIDELITY_BANNER];
+  const warnings: string[] = [IMPORT_FIDELITY_BANNER, ...safeSheetWarnings(safeSheet)];
   const report = new ImportReport();
 
   rawRows.forEach((row, idx) => {
@@ -267,18 +278,6 @@ export async function parseCustomersExcelFile(file: File): Promise<{
  * تحميل نموذج إكسل جاهز للسجل المالي اليومي (15 عمود)
  */
 
-function computeArabicDay(dateStr: string): string {
-  if (!dateStr) return 'السبت';
-  const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return 'السبت';
-    return days[d.getDay()];
-  } catch {
-    return 'السبت';
-  }
-}
-
 export async function parseFinancialExcelOrCSV(
   file: File,
   existingTransactions: FinancialTransaction[] = []
@@ -316,22 +315,37 @@ export async function parseFinancialExcelOrCSV(
         const existingIds = new Set(existingTransactions.map((t) => t.id));
         const parsed: FinancialTransaction[] = [];
         const report = new ImportReport();
-        const warnings: string[] = [];
+        const warnings: string[] = safeSheetWarnings(safeSheet);
         let duplicateCount = 0;
-        let runningId = 1000 + existingTransactions.length;
 
         rawJson.forEach((row, index) => {
-          // Helper to find column by aliases
+          /**
+           * R52 — ربط الأعمدة بمرحلتين: مطابقة تامة أولاً، ثم احتواء بالأطول أولاً.
+           *
+           * كان الترتيب معكوساً: يمرّ على أعمدة الملف ثم يقبل أول «احتواء» بأي اسم بديل.
+           * فعمود «فئة الحساب» يطابق الاسم البديل «الحساب» فيُقرأ **اسم الحساب** فئتُه،
+           * وعمود «رقم القيد (ID)» في قالب الاستيراد يطابق «القيد» فيُقرأ **نوع القيد**
+           * رقمَ القيد — عطلان صامتان يفسدان السجل المالي بلا أي رسالة.
+           */
           const findVal = (...aliases: string[]): string => {
-            for (const key of Object.keys(row)) {
-              const cleanKey = key.trim().toLowerCase();
-              for (const alias of aliases) {
-                const cleanAlias = alias.trim().toLowerCase();
-                if (cleanKey === cleanAlias || cleanKey.includes(cleanAlias)) {
-                  const val = row[key];
-                  return val !== undefined && val !== null ? String(val).trim() : '';
-                }
-              }
+            const keys = Object.keys(row);
+            const value = (key: string): string => {
+              const val = row[key];
+              return val !== undefined && val !== null ? String(val).trim() : '';
+            };
+
+            // 1) مطابقة تامة (الأدقّ: لا التباس)
+            for (const alias of aliases) {
+              const a = alias.trim().toLowerCase();
+              const key = keys.find((k) => k.trim().toLowerCase() === a);
+              if (key !== undefined && value(key) !== '') return value(key);
+            }
+            // 2) احتواء جزئي — الاسم البديل الأطول أولاً (الأكثر تحديداً)، وتُتجاهل الخلايا الفارغة
+            const byLength = [...aliases].sort((x, y) => y.trim().length - x.trim().length);
+            for (const alias of byLength) {
+              const a = alias.trim().toLowerCase();
+              const key = keys.find((k) => k.trim().toLowerCase().includes(a));
+              if (key !== undefined && value(key) !== '') return value(key);
             }
             return '';
           };
@@ -363,7 +377,13 @@ export async function parseFinancialExcelOrCSV(
           const formattedDate = normalizeDate(rawDate);
           if (!formattedDate) report.blank(line, 'التاريخ');
 
-          const day = rawDay || (formattedDate ? computeArabicDay(formattedDate) : '');
+          /**
+           * R52 — كان هنا `computeArabicDay` محلياً (20 سطراً) يعيد **«السبت»** لكل تاريخ
+           * لا يُقرأ، أي أنه يخترع يوماً لم يكن في الملف — وهو نقيض سياسة أمانة الاستيراد.
+           * صار يستخدم `calculateArabicDay` المعتمد (يعيد '' عند تاريخ غير صالح)،
+           * وهو نفس الناتج لكل تاريخ صالح (وهو كل ما يمكن أن يصل إلى هنا).
+           */
+          const day = rawDay || (formattedDate ? calculateArabicDay(formattedDate) : '');
 
           const amountYER = parseFloat(normalizeArabicDigits(rawAmountYER || '0')) || 0;
           const amountSAR = parseFloat(normalizeArabicDigits(rawAmountSAR || '0')) || 0;
@@ -372,7 +392,6 @@ export async function parseFinancialExcelOrCSV(
           if (!rawAmountSAR) report.zeroed(line, 'المبلغ SAR');
           if (!rawAmountUSD) report.zeroed(line, 'المبلغ USD');
 
-          runningId++;
           const id = rawId || autoKey('ACC', line);
 
           if (!rawId) report.generated(line, 'رقم القيد', id);

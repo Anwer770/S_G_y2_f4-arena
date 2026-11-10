@@ -52,6 +52,10 @@ export default defineConfig({
         'src/services/backup/BackupService.ts',
         'src/services/backup/snapshotStore.ts',
         'src/utils/snapshotCrypto.ts',
+        'src/utils/excel/excelCore.ts',
+        'src/utils/excel/excelExporters.ts',
+        'src/utils/excel/excelImporters.ts',
+        'src/utils/xlsxSafe.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -103,6 +107,20 @@ export default defineConfig({
         'src/services/backup/BackupService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/services/backup/snapshotStore.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/snapshotCrypto.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /**
+         * R52: طبقة Excel — كانت خارج المقام (1,116 سطراً): إدخالها بلا اختبارات أنزل
+         * الإجمالي إلى 78.78% أسطر. الآن: الأسطر والتعابير والدوال **100** في الأربعة.
+         *
+         * الفروع: ذراع «الحاجز» في `xlsxSafe` (`workbook.Sheets?.[sheetName]`) لا تُبلَغ
+         * إلا إذا أعادت `xlsx` مصنّفاً بلا خريطة أوراق — يحاكيها `xlsxSafeGuard.test.ts`
+         * ويُثبت أن العائد `[]`، لكن عدّاد v8 ينسب الذراع لمسار آخر.
+         * وفي القوالب الثلاثة `if (!worksheet['!views'])`: `json_to_sheet` لا يضع `!views`
+         * أبداً في هذه النسخة، فالذراع الأخرى غير قابلة للبلوغ بنيوياً.
+         */
+        'src/utils/excel/excelCore.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/excel/excelImporters.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/excel/excelExporters.ts': { lines: 100, functions: 100, branches: 98, statements: 100 },
+        'src/utils/xlsxSafe.ts': { lines: 100, functions: 100, branches: 92, statements: 100 },
         /**
          * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
          * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.

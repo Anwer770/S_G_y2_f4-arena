@@ -315,18 +315,23 @@ export function exportTasksToCSV(tasks: Task[], filename = 'قائمة_المه�
   lines.push(headers.map((h) => `"${h}"`).join(','));
 
   for (const t of tasks) {
+    /**
+     * R52 — كان `t.id` و`t.start` و`t.title`... تُكتب كما هي؛ وأي حقل `undefined`
+     * يتحوّل في CSV إلى كلمة **undefined** داخل خلية يفتحها المستخدم في Excel.
+     * الفراغ هنا فراغ حقيقي، لا نصٌّ مخترع.
+     */
     const row = [
-      t.id,
+      t.id || '',
       t.sub || '',
-      t.start,
+      t.start || '',
       t.end || '',
-      t.title,
+      t.title || '',
       t.desc || '',
-      t.cat,
-      t.op,
-      t.pri,
-      t.status,
-      t.resp,
+      t.cat || '',
+      t.op || '',
+      t.pri || '',
+      t.status || '',
+      t.resp || '',
       t.amount !== undefined ? t.amount : '',
     ];
     lines.push(row.map((val) => `"${String(val).replace(/"/g, '""')}"`).join(','));
