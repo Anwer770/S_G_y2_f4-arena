@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { DebtCommitment } from '../../types';
-import { DEBT_CATEGORIES, DEBT_ICONS, DEBT_OWNERS, generateNextCommitmentId } from '../../utils/debts';
+import {
+  DEBT_CATEGORIES,
+  DEBT_ICONS,
+  DEBT_OWNERS,
+  generateNextCommitmentId,
+  getLocalDateString,
+} from '../../utils/debts';
 import { X, Save, Clock, Calendar, ShieldAlert } from 'lucide-react';
 
 interface CommitmentModalProps {
@@ -58,11 +64,11 @@ export const CommitmentModal: React.FC<CommitmentModalProps> = ({
       setId(generateNextCommitmentId(existingCommitments));
       setName('');
       setDesc('');
-      setDate(new Date().toISOString().split('T')[0]);
+      setDate(getLocalDateString());
       // Default due date: 30 days from now
       const d = new Date();
       d.setDate(d.getDate() + 30);
-      setEndDate(d.toISOString().split('T')[0]);
+      setEndDate(getLocalDateString(d));
       setPriority('B');
       setStatus('جارية');
       setIcon('⚑');
@@ -102,7 +108,7 @@ export const CommitmentModal: React.FC<CommitmentModalProps> = ({
       id: id.trim() || generateNextCommitmentId(existingCommitments),
       name: name.trim(),
       desc: desc.trim(),
-      date: date || new Date().toISOString().split('T')[0],
+      date: date || getLocalDateString(),
       endDate: endDate || '',
       priority,
       status,

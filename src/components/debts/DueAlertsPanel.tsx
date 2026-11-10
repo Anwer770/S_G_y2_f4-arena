@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DebtCommitment } from '../../types';
-import { calculateCommitmentRemaining, formatDebtAmount } from '../../utils/debts';
+import { calculateCommitmentRemaining, formatDebtAmount, getLocalDateString } from '../../utils/debts';
 import {
   AlertTriangle,
   Clock,
@@ -30,7 +30,7 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
   const [testSent, setTestSent] = useState(false);
 
   const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
+  const todayStr = getLocalDateString(today);
 
   // Overdue commitments
   const overdueList = commitments
@@ -43,7 +43,7 @@ export const DueAlertsPanel: React.FC<DueAlertsPanelProps> = ({
   // Due in <= 30 days
   const in30Days = new Date();
   in30Days.setDate(in30Days.getDate() + 30);
-  const in30DaysStr = in30Days.toISOString().split('T')[0];
+  const in30DaysStr = getLocalDateString(in30Days);
 
   const dueSoonList = commitments
     .filter((c) => {

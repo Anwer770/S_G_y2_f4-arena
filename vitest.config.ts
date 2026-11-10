@@ -57,6 +57,11 @@ export default defineConfig({
         'src/utils/excel/excelImporters.ts',
         'src/utils/xlsxSafe.ts',
         'src/database/adapters/IndexedDBAdapter.ts',
+        'src/utils/notes.ts',
+        'src/utils/tasks.ts',
+        'src/utils/debts/debtAnalytics.ts',
+        'src/utils/debts/debtSeeds.ts',
+        'src/utils/debts/debtCommitmentSeeds.ts',
         'src/database/dbStorage.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
@@ -135,6 +140,19 @@ export default defineConfig({
         'src/database/adapters/IndexedDBAdapter.ts': { lines: 100, functions: 100, branches: 99, statements: 100 },
         /** R53: جسر `dbStorage` (34 سطراً) — يكتب عبره كل مستودع؛ 100 في الأربعة. */
         'src/database/dbStorage.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /**
+         * R54: دفتر الملاحظات والديون. أُدخلت الملفات الخمسة أولاً بلا اختبارات فانخفض
+         * المقام إلى 78.35% أسطر؛ الآن الأسطر والدوال والتعابير 100 في الخمسة.
+         *
+         * الفروع الواقعية المتبقية: `notes` 98% (عدم تكرار وسم «عاجل» مستحيل لأن
+         * الكود لا يضيفه إلا في الشرط نفسه)، و`debtAnalytics` 94% (بدائل العملة
+         * الفارغة تقع قبل تطبيعها إلى YER فلا تصل إلى مسار العملة المجهولة).
+         */
+        'src/utils/notes.ts': { lines: 100, functions: 100, branches: 98, statements: 100 },
+        'src/utils/tasks.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/debts/debtAnalytics.ts': { lines: 100, functions: 100, branches: 94, statements: 100 },
+        'src/utils/debts/debtSeeds.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/debts/debtCommitmentSeeds.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /**
          * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
          * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.

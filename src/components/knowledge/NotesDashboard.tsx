@@ -18,7 +18,7 @@ import {
   ListFilter,
   ArrowUpRight,
 } from 'lucide-react';
-import { calculateNoteStats } from '../../utils/notes';
+import { calculateNoteStats, getLocalNoteDateString } from '../../utils/notes';
 
 interface NotesDashboardProps {
   notes: NoteRecord[];
@@ -51,7 +51,7 @@ export const NotesDashboard: React.FC<NotesDashboardProps> = ({
     .slice(0, 6);
 
   // Overdue or needing review
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalNoteDateString();
   const overdueNotes = activeNotes.filter(
     (n) => n.nextReviewDate && n.nextReviewDate <= today && n.status !== 'مكتملة'
   );

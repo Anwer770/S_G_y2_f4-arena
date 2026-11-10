@@ -6,6 +6,22 @@ import { DebtCommitment, DebtRecord } from '../../types';
 // STATISTICAL & BUSINESS LOGIC CALCULATIONS (PRD RULES)
 // ============================================================================
 
+export type DebtCurrency = 'YER' | 'USD' | 'SAR';
+
+export interface DebtCurrencyTotals {
+  YER: number;
+  USD: number;
+  SAR: number;
+}
+
+/** تاريخ تقويمي محلي لـ input[type=date]، لا تاريخ UTC منزاح في منتصف الليل. */
+export function getLocalDateString(date: Date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export interface DebtStatsSummary {
   totalRecords: number;
   totalDebitYER: number;
@@ -34,10 +50,19 @@ export interface DebtStatsSummary {
   totalCommitmentsAmountYER: number;
   totalCommitmentsPaidYER: number;
   totalCommitmentsRemainingYER: number;
+  /** إجماليات كل عملة على حدة؛ لا تُحوَّل العملات أو تُجمع معاً. */
+  totalCommitmentsAmountByCurrency: DebtCurrencyTotals;
+  totalCommitmentsPaidByCurrency: DebtCurrencyTotals;
+  totalCommitmentsRemainingByCurrency: DebtCurrencyTotals;
+  /** توافق رجعي: هذه الحقول تعني الريال اليمني فقط. */
   totalCommitmentsAmount: number;
   totalCommitmentsPaid: number;
   totalCommitmentsRemaining: number;
   commitmentsCompletionRate: number;
+
+  /** سجلات عملتها غير معروفة لا تدخل في إجمالي أي عملة معلومة. */
+  unknownCurrencyCount: number;
+  unknownCurrencies: string[];
 
   // Category distribution
   categoryDistribution: { category: string; amount: number; count: number; percentage: number }[];
@@ -52,6 +77,29 @@ export interface DebtStatsSummary {
   dueSoonCommitments: (DebtCommitment & { daysRemaining: number; remainingAmount: number })[];
 }
 
+function normalizeCurrency(currency: string | undefined): DebtCurrency | null {
+  const normalized = (currency || 'YER').trim().toUpperCase();
+  if (normalized === 'YER' || normalized === 'ريال' || normalized === 'ريال يمني') return 'YER';
+  if (normalized === 'USD' || normalized === 'دولار' || normalized === '$') return 'USD';
+  if (normalized === 'SAR' || normalized === 'سعودي' || normalized === 'ر.س') return 'SAR';
+  return null;
+}
+
+function emptyCurrencyTotals(): DebtCurrencyTotals {
+  return { YER: 0, USD: 0, SAR: 0 };
+}
+
+function isCommitmentCompleted(c: DebtCommitment, remaining: number): boolean {
+  const status = c.status || '';
+  return remaining <= 0 || status.includes('منجز') || status.includes('مكتمل') || c.icon === '✔';
+}
+
+/** يبني تاريخاً محلياً من YYYY-MM-DD لتفادي تحويله إلى UTC ثم انزياح يوم الاستحقاق. */
+function localDateFromISO(date: string): Date {
+  const [year, month, day] = date.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 export function calculateCommitmentRemaining(c: DebtCommitment): {
   paid: number;
   remaining: number;
@@ -60,7 +108,7 @@ export function calculateCommitmentRemaining(c: DebtCommitment): {
 } {
   const paid = (c.payments || []).reduce((s, p) => s + (p.amount || 0), 0);
   const remaining = Math.max(0, (c.amount || 0) - paid);
-  const isCompleted = remaining <= 0 || c.status === 'منجز ✔' || c.icon === '✔';
+  const isCompleted = isCommitmentCompleted(c, remaining);
   const progressPercent = c.amount > 0 ? Math.min(100, Math.round((paid / c.amount) * 100)) : 0;
   return { paid, remaining, isCompleted, progressPercent };
 }
@@ -82,9 +130,11 @@ export function calculateDebtStats(
 
   let aliQatDebit = 0;
   let aliQatCredit = 0;
+  let unknownCurrencyCount = 0;
+  const unknownCurrencies = new Set<string>();
 
   debtRecords.forEach((r) => {
-    const cur = (r.currency || 'YER').toUpperCase();
+    const cur = normalizeCurrency(r.currency);
     if (r.book === 'anwar') {
       anwarDebit += r.debit || 0;
       anwarCredit += r.credit || 0;
@@ -94,18 +144,18 @@ export function calculateDebtStats(
       aliQatCredit += r.credit || 0;
     }
 
-    if (cur === 'YER' || cur === 'ريال' || cur === 'ريال يمني') {
+    if (cur === 'YER') {
       totalDebitYER += r.debit || 0;
       totalCreditYER += r.credit || 0;
-    } else if (cur === 'USD' || cur === 'دولار' || cur === '$') {
+    } else if (cur === 'USD') {
       totalDebitUSD += r.debit || 0;
       totalCreditUSD += r.credit || 0;
-    } else if (cur === 'SAR' || cur === 'سعودي' || cur === 'ر.س') {
+    } else if (cur === 'SAR') {
       totalDebitSAR += r.debit || 0;
       totalCreditSAR += r.credit || 0;
     } else {
-      totalDebitYER += r.debit || 0;
-      totalCreditYER += r.credit || 0;
+      unknownCurrencyCount++;
+      unknownCurrencies.add((r.currency || '').trim() || '(فارغة)');
     }
   });
 
@@ -117,30 +167,36 @@ export function calculateDebtStats(
   let overdueCommitmentsCount = 0;
   let dueSoonCommitmentsCount = 0;
   let completedCommitmentsCount = 0;
-  let totalCommitmentsAmountYER = 0;
-  let totalCommitmentsPaidYER = 0;
-  let totalCommitmentsRemainingYER = 0;
+  const totalCommitmentsAmountByCurrency = emptyCurrencyTotals();
+  const totalCommitmentsPaidByCurrency = emptyCurrencyTotals();
+  const totalCommitmentsRemainingByCurrency = emptyCurrencyTotals();
 
   const categoryMap: Record<string, { amount: number; count: number }> = {};
   const overdueList: (DebtCommitment & { daysOverdue: number; remainingAmount: number })[] = [];
   const dueSoonList: (DebtCommitment & { daysRemaining: number; remainingAmount: number })[] = [];
 
   commitments.forEach((c) => {
-    const paid = (c.payments || []).reduce((sum, p) => sum + (p.amount || 0), 0);
-    const remaining = Math.max(0, (c.amount || 0) - paid);
-    const isCompleted = c.status.includes('منجز') || c.status.includes('مكتمل') || c.icon === '✔' || remaining === 0;
+    const { paid, remaining, isCompleted } = calculateCommitmentRemaining(c);
+    const currency = normalizeCurrency(c.currency);
 
-    totalCommitmentsAmountYER += c.amount || 0;
-    totalCommitmentsPaidYER += paid;
-    totalCommitmentsRemainingYER += remaining;
-
-    // Categories
-    const cat = c.category || 'أخرى';
-    if (!categoryMap[cat]) {
-      categoryMap[cat] = { amount: 0, count: 0 };
+    if (currency) {
+      totalCommitmentsAmountByCurrency[currency] += c.amount || 0;
+      totalCommitmentsPaidByCurrency[currency] += paid;
+      totalCommitmentsRemainingByCurrency[currency] += remaining;
+    } else {
+      unknownCurrencyCount++;
+      unknownCurrencies.add((c.currency || '').trim() || '(فارغة)');
     }
-    categoryMap[cat].amount += remaining;
-    categoryMap[cat].count += 1;
+
+    // رسم الفئات في الواجهة بلا رمز عملة، لذلك نحسبه بالريال اليمني فقط ولا نخلط العملات.
+    if (currency === 'YER') {
+      const cat = c.category || 'أخرى';
+      if (!categoryMap[cat]) {
+        categoryMap[cat] = { amount: 0, count: 0 };
+      }
+      categoryMap[cat].amount += remaining;
+      categoryMap[cat].count += 1;
+    }
 
     if (isCompleted) {
       completedCommitmentsCount++;
@@ -149,8 +205,7 @@ export function calculateDebtStats(
 
       // Check due date
       if (c.endDate) {
-        const dueDate = new Date(c.endDate);
-        dueDate.setHours(0, 0, 0, 0);
+        const dueDate = localDateFromISO(c.endDate);
         const diffDays = Math.round((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
         if (diffDays < 0) {
@@ -210,13 +265,18 @@ export function calculateDebtStats(
     overdueCount: overdueCommitmentsCount,
     dueSoonCount: dueSoonCommitmentsCount,
     completedCommitmentsCount,
-    totalCommitmentsAmountYER,
-    totalCommitmentsPaidYER,
-    totalCommitmentsRemainingYER,
-    totalCommitmentsAmount: totalCommitmentsAmountYER,
-    totalCommitmentsPaid: totalCommitmentsPaidYER,
-    totalCommitmentsRemaining: totalCommitmentsRemainingYER,
+    totalCommitmentsAmountYER: totalCommitmentsAmountByCurrency.YER,
+    totalCommitmentsPaidYER: totalCommitmentsPaidByCurrency.YER,
+    totalCommitmentsRemainingYER: totalCommitmentsRemainingByCurrency.YER,
+    totalCommitmentsAmountByCurrency,
+    totalCommitmentsPaidByCurrency,
+    totalCommitmentsRemainingByCurrency,
+    totalCommitmentsAmount: totalCommitmentsAmountByCurrency.YER,
+    totalCommitmentsPaid: totalCommitmentsPaidByCurrency.YER,
+    totalCommitmentsRemaining: totalCommitmentsRemainingByCurrency.YER,
     commitmentsCompletionRate,
+    unknownCurrencyCount,
+    unknownCurrencies: [...unknownCurrencies].sort(),
 
     anwarDebit,
     anwarCredit,

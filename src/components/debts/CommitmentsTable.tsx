@@ -5,6 +5,7 @@ import {
   DEBT_ICONS,
   exportDebtCommitmentsToCSV,
   formatDebtAmount,
+  getLocalDateString,
 } from '../../utils/debts';
 import {
   Search,
@@ -52,10 +53,10 @@ export const CommitmentsTable: React.FC<CommitmentsTableProps> = ({
   const [ownerFilter, setOwnerFilter] = useState('all');
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = getLocalDateString();
   const in30Days = new Date();
   in30Days.setDate(in30Days.getDate() + 30);
-  const in30DaysStr = in30Days.toISOString().split('T')[0];
+  const in30DaysStr = getLocalDateString(in30Days);
 
   // Counters for status chips
   const counts = useMemo(() => {
