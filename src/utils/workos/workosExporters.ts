@@ -3,7 +3,15 @@
  */
 import * as XLSX from 'xlsx';
 import confetti from 'canvas-confetti';
-import { WorkOSData, WorkTask, WorkOrder, WorkProject, WorkCommitment, TaskStatus } from '../../types/workos';
+import {
+  WorkOSData,
+  WorkTask,
+  WorkOrder,
+  WorkProject,
+  WorkCommitment,
+  TeamMember,
+  TaskStatus,
+} from '../../types/workos';
 import { assertFileSize, readFirstSheetSafe } from '../xlsxSafe';
 import { loadWorkOSData, saveWorkOSData } from './workosLoaders';
 import { createTripleLinkOrder } from './workosAutomation';
@@ -37,20 +45,33 @@ export function exportWorkOSToJSON(data?: WorkOSData): void {
   URL.revokeObjectURL(url);
 }
 
-export function exportWorkOSToCSV(data?: WorkOSData): void {
-  const payload = data || loadWorkOSData();
+type WorkOSCSVSource = WorkOSData | WorkTask[];
+
+const csvCell = (value: unknown): string => {
+  const text = String(value ?? '');
+  // Excel يفسر الخلية التي تبدأ بعامل كصيغة حتى لو أتت من ملف CSV بين علامتي اقتباس.
+  const safeText = /^[=+\-@]/.test(text) ? `'${text}` : text;
+  return `"${safeText.replace(/"/g, '""')}"`;
+};
+
+export function exportWorkOSToCSV(data?: WorkOSCSVSource): void {
+  const payload: Pick<WorkOSData, 'tasks' | 'projects' | 'team'> = Array.isArray(data)
+    ? { tasks: data, projects: [] as WorkProject[], team: [] as TeamMember[] }
+    : data || loadWorkOSData();
   const tasks = payload.tasks || [];
+  const projects = payload.projects || [];
+  const team = payload.team || [];
   const headers = ['رقم المهمة', 'العنوان', 'الحالة', 'الأولوية', 'المشروع', 'المسؤول', 'تاريخ الاستحقاق', 'التقدم %'];
 
   const rows = tasks.map((t) => [
-    `"${t.taskNumber || ''}"`,
-    `"${(t.title || '').replace(/"/g, '""')}"`,
-    `"${t.status || ''}"`,
-    `"${t.priority || ''}"`,
-    `"${(payload.projects.find((p) => p.id === t.projectId)?.name || '').replace(/"/g, '""')}"`,
-    `"${(payload.team.find((m) => m.id === t.assigneeId)?.name || '').replace(/"/g, '""')}"`,
-    `"${t.dueDate || ''}"`,
-    `"${t.progress || 0}%"`,
+    csvCell(t.taskNumber),
+    csvCell(t.title),
+    csvCell(t.status),
+    csvCell(t.priority),
+    csvCell(projects.find((p) => p.id === t.projectId)?.name),
+    csvCell(team.find((m) => m.id === t.assigneeId)?.name),
+    csvCell(t.dueDate),
+    csvCell(`${t.progress || 0}%`),
   ]);
 
   const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\r\n');

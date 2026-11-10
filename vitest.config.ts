@@ -69,6 +69,11 @@ export default defineConfig({
         'src/utils/linksExport.ts',
         /** R58: جدولة العمل غير الحرج بعد الرسم الأول — تُقاس قبل اختبارها. */
         'src/utils/deferredWork.ts',
+        /** R55: منطق مساحة العمل يُدخل في المقام قبل اختبارات هذه الدفعة. */
+        'src/utils/workos/workosSeeds.ts',
+        'src/utils/workos/workosLoaders.ts',
+        'src/utils/workos/workosExporters.ts',
+        'src/utils/workos/workosAutomation.ts',
         'src/database/dbStorage.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
@@ -171,6 +176,11 @@ export default defineConfig({
         'src/utils/linksExport.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R58: جدولة العمل غير الحرج؛ اختبار المتصفح ووقت الخمول وكل مسارات الإلغاء 100%. */
         'src/utils/deferredWork.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R55: سقوف مساحة العمل؛ القياس الأحمر يسبق إضافة اختبار الدفعة. */
+        'src/utils/workos/workosSeeds.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/workos/workosLoaders.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/workos/workosExporters.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/workos/workosAutomation.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /**
          * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
          * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.

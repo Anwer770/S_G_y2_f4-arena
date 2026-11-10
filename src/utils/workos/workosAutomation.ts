@@ -9,6 +9,7 @@ import {
   saveTasks,
   loadCommitments,
   saveCommitments,
+  loadTeam,
   logWorkActivity,
 } from './workosLoaders';
 
@@ -39,17 +40,29 @@ export function createTripleLinkOrder(input: TripleOrderInput): {
   const currentCommitments = loadCommitments();
 
   const timestamp = Date.now();
-  const orderNum = `ORD-${new Date().getFullYear()}-${String(currentOrders.length + 1).padStart(3, '0')}`;
+  const year = new Date().getFullYear();
+  const highestOrderNumber = currentOrders.reduce((highest, order) => {
+    const match = new RegExp(`^ORD-${year}-(\\d+)$`).exec(order.orderNumber || '');
+    return Math.max(highest, Number(match?.[1]) || 0);
+  }, 0);
+  const highestTaskNumber = currentTasks.reduce((highest, task) => {
+    const match = /^TSK-(\d+)$/.exec(task.taskNumber || '');
+    return Math.max(highest, Number(match?.[1]) || 0);
+  }, 1000);
+  const orderNum = `ORD-${year}-${String(highestOrderNumber + 1).padStart(3, '0')}`;
   const orderId = `ord_${timestamp}`;
   const taskId = input.generateTask !== false ? `tsk_dlv_${timestamp}` : undefined;
   const commitmentId = input.generateCommitment !== false ? `cmt_ord_${timestamp}` : undefined;
+  const team = loadTeam();
+  const assignedMember = team.find((member) => member.id === input.assignedRep || member.name === input.assignedRep);
+  const assigneeId = assignedMember?.id || team[0]?.id || input.assignedRep;
 
   let createdTask: WorkTask | undefined;
   let createdCommitment: WorkCommitment | undefined;
 
   // 1. Create Linked Task if requested
   if (taskId) {
-    const taskNum = `TSK-${1000 + currentTasks.length + 1}`;
+    const taskNum = `TSK-${highestTaskNumber + 1}`;
     createdTask = {
       id: taskId,
       taskNumber: taskNum,
@@ -59,7 +72,7 @@ export function createTripleLinkOrder(input: TripleOrderInput): {
       priority: input.priority || 'high',
       category: 'طلبيات وتوزيع',
       tags: ['طلبية', 'توزيع', input.regionBranch],
-      assigneeId: input.assignedRep || 'mem_3',
+      assigneeId,
       startDate: input.startDate || new Date().toISOString().slice(0, 10),
       dueDate: input.deliveryDate || new Date().toISOString().slice(0, 10),
       progress: 0,
@@ -172,6 +185,7 @@ export function runSmartAutomationEngine(
 ): AutomationCheckResult {
   const todayStr = new Date().toISOString().slice(0, 10);
   let updatedOrdersCount = 0;
+  let ordersChanged = false;
   const triggeredAlerts: AutomationCheckResult['triggeredAlerts'] = [];
 
   const updatedOrders = orders.map((ord) => {
@@ -181,7 +195,10 @@ export function runSmartAutomationEngine(
     if (ord.linkedTaskId) {
       const linkedTask = tasks.find((t) => t.id === ord.linkedTaskId);
       if (linkedTask) {
-        orderCopy.linkedTaskProgress = linkedTask.progress;
+        if (orderCopy.linkedTaskProgress !== linkedTask.progress) {
+          orderCopy.linkedTaskProgress = linkedTask.progress;
+          ordersChanged = true;
+        }
 
         // Auto Delivery Trigger: If task is completed (100% or status === 'completed')
         const allSubtasksDone =
@@ -197,6 +214,7 @@ export function runSmartAutomationEngine(
           orderCopy.status = 'delivered';
           orderCopy.updatedAt = new Date().toISOString();
           updatedOrdersCount++;
+          ordersChanged = true;
 
           triggeredAlerts.push({
             id: `alt_del_${ord.id}`,
@@ -249,7 +267,7 @@ export function runSmartAutomationEngine(
     return orderCopy;
   });
 
-  if (updatedOrdersCount > 0) {
+  if (ordersChanged) {
     saveOrders(updatedOrders);
   }
 
