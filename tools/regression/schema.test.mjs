@@ -608,10 +608,31 @@ check(
   `فارغ=${archivedEmpty.length} · محفوظ=${S.loadArchivedAlertIds().length}`
 );
 
+// ── G32: واجهة `utils/storage.ts` العامة لم تتغيّر بعد التفكيك (R43)
+const barrelManifest = JSON.parse(fs.readFileSync(path.join(OUT_DIR, 'storage-barrel-exports.json'), 'utf8'));
+const barrelNow = Object.keys(S.STORAGE_BARREL || {}).sort();
+const missingExports = barrelManifest.filter((name) => !barrelNow.includes(name));
+const extraExports = barrelNow.filter((name) => !barrelManifest.includes(name));
+check(
+  'G32 · واجهة برميل التخزين العامة مطابقة للمانيفست (لا اسم مفقود ولا مضاف)',
+  missingExports.length === 0 && extraExports.length === 0,
+  missingExports.length || extraExports.length
+    ? `مفقود: ${missingExports.join(', ') || '—'} · مضاف: ${extraExports.join(', ') || '—'}`
+    : `${barrelNow.length} اسماً مطابقاً`
+);
+
+// حارس الحجم: البرميل نفسه بلا منطق — أي تضخّم يعني منطقاً عاد إلى مكانه الخاطئ
+const barrelLines = read('src/utils/storage.ts').split('\n').length;
+check(
+  'G33 · `utils/storage.ts` برميل رقيق (≤ 80 سطراً) والمنطق في `storage/backup.ts`',
+  barrelLines <= 80 && fs.existsSync(path.join(ROOT, 'src/utils/storage/backup.ts')),
+  `${barrelLines} سطراً`
+);
+
 check('G13 · لا أخطاء JS أثناء التشغيل', errors.length === 0, errors[0] || '');
 
 const passed = results.filter((r) => r.ok).length;
-console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R42) ════════`);
+console.log(`\n════════ حصيلة ترحيل المخططات والمستودعات (R43) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
 fs.writeFileSync(
   path.join(OUT_DIR, 'schema-runtime.json'),

@@ -1,5 +1,5 @@
 {
- "at": "2026-11-09T23:34:44.798Z",
+ "at": "2026-11-10T00:13:53.948Z",
  "passed": 19,
  "total": 19,
  "results": [
@@ -108,7 +108,7 @@
    "eventType": "all_subtasks_completed",
    "entityType": "task",
    "entityId": "T-SUBS",
-   "executedAt": "2026-11-09T23:34:44.796Z",
+   "executedAt": "2026-11-10T00:13:53.947Z",
    "outcome": "executed",
    "note": "أُنشئت مهمة متابعة TSK-AUTO-3"
   },
@@ -120,19 +120,19 @@
    "eventType": "task_completed",
    "entityType": "task",
    "entityId": "T-SUBS",
-   "executedAt": "2026-11-09T23:34:44.796Z",
+   "executedAt": "2026-11-10T00:13:53.946Z",
    "outcome": "executed",
    "note": "سُجِّل الإشعار في سجل النشاط (إشعار النظام غير مسموح)"
   },
   {
-   "key": "aut_daily::daily_plan_start::2026-11-09",
+   "key": "aut_daily::daily_plan_start::2026-11-10",
    "ruleId": "aut_daily",
    "ruleName": "بداية الخطة اليومية",
    "actionType": "notify_team",
    "eventType": "daily_plan_start",
    "entityType": "system",
-   "entityId": "2026-11-09",
-   "executedAt": "2026-11-09T23:34:44.795Z",
+   "entityId": "2026-11-10",
+   "executedAt": "2026-11-10T00:13:53.945Z",
    "outcome": "executed",
    "note": "سُجِّل الإشعار في سجل النشاط (إشعار النظام غير مسموح)"
   },
@@ -144,7 +144,7 @@
    "eventType": "task_overdue",
    "entityType": "task",
    "entityId": "T-OVERDUE",
-   "executedAt": "2026-11-09T23:34:44.793Z",
+   "executedAt": "2026-11-10T00:13:53.944Z",
    "outcome": "executed",
    "note": "رُفعت أولوية 2 مهمة إلى «عاجل»"
   }

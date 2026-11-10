@@ -125,3 +125,5 @@ export {
 export { loadArchivedAlertIds, saveArchivedAlertIds } from '../../src/utils/dueAlerts';
 export { loadSyncOutbox, saveSyncOutbox } from '../../src/utils/syncOutbox';
 export { loadAutomationRuns, saveAutomationRuns } from '../../src/utils/automation/automationStore';
+
+export * as STORAGE_BARREL from '../../src/utils/storage';
