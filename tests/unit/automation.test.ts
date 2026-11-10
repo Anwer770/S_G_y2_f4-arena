@@ -477,7 +477,7 @@ describe('dispatchDomainEvent — النشر والتقييم في خطوة وا
 
   it('حدث نشر داخل withAutomationOrigin لا يُنفّذ شيئاً (منع الحلقة)', () => {
     const { state, deps } = fakeDeps();
-    let result: ReturnType<typeof dispatchDomainEvent> | null = null;
+    let result: ReturnType<typeof dispatchDomainEvent> | undefined;
     withAutomationOrigin(() => {
       result = dispatchDomainEvent({ type: 'task_completed', entityType: 'task', entityId: 't1', title: 'مهمة' }, deps);
     });

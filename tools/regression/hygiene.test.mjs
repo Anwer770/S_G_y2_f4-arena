@@ -329,6 +329,20 @@ check(
   filesWithoutFloor.length ? `بلا سقف: ${filesWithoutFloor.join(' · ')}` : `${includedFiles.length} ملفاً بسقف خاص`
 );
 
+/* H16 — المقام يكبر ولا يصغر (R50).
+   أخرجت R48 تسعة ملفات من الظل، وأخرجت R50 طبقة المخزون. القاعدة الآن: أي مسار
+   سُجِّل يوماً في المقام يجب أن يبقى فيه — إخراجه (لأنه «يُنزل النسبة») هو الغش الذي
+   منعته هذه الدورة كلها. */
+const scopeBaseline = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'tools/regression/coverage-scope.baseline.json'), 'utf8')
+).files;
+const droppedFromScope = scopeBaseline.filter((f) => !includeBlock.includes(`'${f}'`));
+check(
+  'H16 · لا يُخرَج ملف من مقام التغطية بعد إدخاله',
+  droppedFromScope.length === 0,
+  droppedFromScope.length ? `أُخرج: ${droppedFromScope.join(' · ')}` : `${scopeBaseline.length} ملفاً ثابتاً`
+);
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);

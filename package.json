@@ -1,7 +1,7 @@
 {
   "name": "caesar-erp-unified",
   "private": true,
-  "version": "3.38.0",
+  "version": "3.39.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -35,13 +35,14 @@
     "docs:decision": "node tools/audit/check_decision_doc.mjs",
     "tables:assert": "python3 tools/audit/tables_audit.py --assert",
     "tables:measure": "python3 tools/audit/tables_audit.py --json",
-    "verify": "npx tsc --noEmit && npm run lint:eslint && npm run format:check && npm run test:unit:coverage && npm run docs:decision && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/security.test.mjs && node --max-old-space-size=2048 tools/regression/settings.test.mjs && node tools/regression/hygiene.test.mjs && node tools/regression/storage-keys.test.mjs && node tools/regression/automation.test.mjs && node tools/regression/csp.test.mjs && node tools/regression/schema.test.mjs && node tools/regression/auth-storage.test.mjs && node tools/regression/run.mjs",
+    "verify": "npx tsc --noEmit && npm run lint:eslint && npm run format:check && npm run test:unit:coverage && npm run docs:decision && node tools/regression/data-loss.test.mjs && node tools/regression/auth.test.mjs && node tools/regression/integrity.test.mjs && node --max-old-space-size=2048 tools/regression/workos.test.mjs && node --max-old-space-size=2048 tools/regression/outbox.test.mjs && node --max-old-space-size=2048 tools/regression/darkmode.test.mjs && node --max-old-space-size=2048 tools/regression/typography.test.mjs && python3 tools/audit/tables_audit.py --assert && node --max-old-space-size=2048 tools/regression/responsive.test.mjs && node tools/regression/identity.test.mjs && node --max-old-space-size=2048 tools/regression/snapshots.test.mjs && node tools/regression/imports.test.mjs && node tools/regression/security.test.mjs && node --max-old-space-size=2048 tools/regression/settings.test.mjs && node tools/regression/hygiene.test.mjs && node tools/regression/type-safety.test.mjs && node tools/regression/storage-keys.test.mjs && node tools/regression/automation.test.mjs && node tools/regression/csp.test.mjs && node tools/regression/schema.test.mjs && node tools/regression/auth-storage.test.mjs && node tools/regression/run.mjs",
     "integrity": "node tools/regression/integrity.test.mjs",
     "lint:eslint": "eslint . --max-warnings 800",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"tests/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"tests/**/*.ts\"",
     "test:unit": "vitest run",
-    "test:unit:coverage": "vitest run --coverage"
+    "test:unit:coverage": "vitest run --coverage",
+    "type-safety": "node tools/regression/type-safety.test.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",

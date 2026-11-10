@@ -48,6 +48,9 @@ export default defineConfig({
         'src/database/repositories/ProductRepository.ts',
         'src/database/repositories/WorkTaskRepository.ts',
         'src/database/repositories/OtherRepositories.ts',
+        'src/utils/stock.ts',
+        'src/utils/storage/stock.ts',
+        'src/services/inventory/InventoryService.ts',
       ],
       /**
        * السقوف رُفعت في R44 بعد إدخال وحدتَي المنطق إلى المقام (كانتا خارج القياس):
@@ -91,6 +94,13 @@ export default defineConfig({
          * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
          * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.
          */
+        /**
+         * R50: طبقة المخزون (حساب الأرصدة وأرقام الأذون) — كانت خارج المقام كلها.
+         * إدخالها بلا اختبارات أنزل الإجمالي إلى 87.64% أسطر، والآن 100% في الملفات الثلاثة.
+         */
+        'src/utils/stock.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/storage/stock.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/services/inventory/InventoryService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/database/repositories/BaseRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/database/repositories/ObjectRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/database/repositories/ValueRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
