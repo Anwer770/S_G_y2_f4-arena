@@ -3,12 +3,26 @@ import { Customer, CustomerVisitRecord, DoctorRecord, DoctorVisitLog } from '../
 import { DEFAULT_CUSTOMERS, DEFAULT_CUSTOMER_VISITS } from '../../data/defaultCustomers';
 import { DEFAULT_DOCTORS, DEFAULT_DOCTOR_VISITS } from '../../data/defaultDoctors';
 import { auditService } from '../../core/audit/AuditService';
-import { indexedDBStorage } from '../adapters/IndexedDBAdapter';
+import { createCollectionRepository } from './CollectionRepository';
 
 const CUSTOMERS_KEY = 'suite_customers_items_v2';
 const CUSTOMER_VISITS_KEY = 'suite_customers_visits_v2';
 const DOCTORS_KEY = 'suite_doctors_items_v1';
 const DOCTOR_VISITS_KEY = 'suite_doctors_visits_v1';
+
+/**
+ * سجلّا الزيارات — كانا يقرآن/يكتبان عبر `indexedDBStorage` مباشرةً (R45).
+ * على العقد نفسه: الغياب أو التلف ⇒ الافتراضي بلا كتابة · الفارغ صالح ⇒ [].
+ */
+const customerVisitsRepo = createCollectionRepository<CustomerVisitRecord>({
+  key: CUSTOMER_VISITS_KEY,
+  fallback: DEFAULT_CUSTOMER_VISITS,
+});
+
+const doctorVisitsRepo = createCollectionRepository<DoctorVisitLog>({
+  key: DOCTOR_VISITS_KEY,
+  fallback: DEFAULT_DOCTOR_VISITS,
+});
 
 export class CustomerRepository extends BaseRepository<Customer> {
   constructor() {
@@ -16,12 +30,11 @@ export class CustomerRepository extends BaseRepository<Customer> {
   }
 
   public getVisits(): CustomerVisitRecord[] {
-    const visits = indexedDBStorage.getItemSync<CustomerVisitRecord[]>(CUSTOMER_VISITS_KEY);
-    return Array.isArray(visits) ? visits : DEFAULT_CUSTOMER_VISITS;
+    return customerVisitsRepo.read();
   }
 
   public saveVisits(visits: CustomerVisitRecord[]): void {
-    indexedDBStorage.setItemSync(CUSTOMER_VISITS_KEY, visits);
+    customerVisitsRepo.write(visits);
   }
 
   public addVisit(visit: CustomerVisitRecord): CustomerVisitRecord {
@@ -50,12 +63,11 @@ export class DoctorRepository extends BaseRepository<DoctorRecord> {
   }
 
   public getVisits(): DoctorVisitLog[] {
-    const visits = indexedDBStorage.getItemSync<DoctorVisitLog[]>(DOCTOR_VISITS_KEY);
-    return Array.isArray(visits) ? visits : DEFAULT_DOCTOR_VISITS;
+    return doctorVisitsRepo.read();
   }
 
   public saveVisits(visits: DoctorVisitLog[]): void {
-    indexedDBStorage.setItemSync(DOCTOR_VISITS_KEY, visits);
+    doctorVisitsRepo.write(visits);
   }
 
   public addVisit(visit: DoctorVisitLog): DoctorVisitLog {

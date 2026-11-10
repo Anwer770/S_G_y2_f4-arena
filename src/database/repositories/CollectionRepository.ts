@@ -18,6 +18,14 @@ export interface CollectionOptions<T> {
   fallback: T[];
   /** تعامل مع المصفوفة الفارغة كأنها غائبة (سلوك بعض الدفاتر القديمة). */
   fallbackOnEmpty?: boolean;
+  /**
+   * زرع القيمة الافتراضية عند **غياب** المفتاح أو تلفه (R45).
+   * سلوك القوائم المنسدلة المالية القديمة: `if (!data || !Array.isArray(data))
+   * { setItem(key, defaults); return [...defaults] }` — أي أنها كانت تكتب
+   * الافتراضي عند أول قراءة. الافتراضي `false` لأن قاعدة الطبقة الجديدة:
+   * **القراءة لا تكتب**؛ لا تُشغِّله إلا حيث كان السلوك القديم يزرع فعلاً.
+   */
+  seed?: boolean;
   /** سقف العناصر المحفوظة (يقصّ الأقدم). */
   limit?: number;
   /** تحقّق اختياري من كل عنصر قبل الاستخدام. */
@@ -69,7 +77,7 @@ export function createCollectionRepository<T>(
   options: CollectionOptions<T>,
   storage: SchemaStorage = dbStorage
 ): CollectionRepository<T> {
-  const { key, fallback, fallbackOnEmpty = false, limit, isValidItem, legacyKeys = [] } = options;
+  const { key, fallback, fallbackOnEmpty = false, limit, isValidItem, legacyKeys = [], seed = false } = options;
 
   /** أول قيمة غير فارغة: المفتاح الحالي ثم المفاتيح القديمة بالترتيب. */
   const readRaw = (): string | null => {
@@ -82,30 +90,40 @@ export function createCollectionRepository<T>(
     return null;
   };
 
+  /** القيمة الافتراضية مع الزرع الاختياري — الوجهة الوحيدة لكل «لا بيانات صالحة». */
+  const fallbackValue = (): T[] => {
+    const value = cloneArray(fallback);
+    if (seed) writeToStorage(value);
+    return value;
+  };
+
   const read = (): T[] => {
     let parsed: unknown;
     try {
       const raw = readRaw();
-      if (!raw) return cloneArray(fallback);
+      if (!raw) return fallbackValue();
       parsed = JSON.parse(raw);
     } catch {
-      return cloneArray(fallback);
+      return fallbackValue();
     }
 
-    if (!Array.isArray(parsed)) return cloneArray(fallback);
+    if (!Array.isArray(parsed)) return fallbackValue();
     const items = (isValidItem ? parsed.filter(isValidItem) : parsed) as T[];
-    if (fallbackOnEmpty && items.length === 0) return cloneArray(fallback);
+    if (fallbackOnEmpty && items.length === 0) return fallbackValue();
     return items;
   };
 
-  const write = (items: T[]): void => {
+  /** الكتابة الخام (تُستدعى من `write` ومن الزرع). */
+  function writeToStorage(items: T[]): void {
     const value = limit && items.length > limit ? items.slice(0, limit) : items;
     try {
       storage.setItem(key, JSON.stringify(value));
     } catch (err) {
       console.warn(`CollectionRepository(${key}): فشل الحفظ`, err);
     }
-  };
+  }
+
+  const write = (items: T[]): void => writeToStorage(items);
 
   return {
     key,

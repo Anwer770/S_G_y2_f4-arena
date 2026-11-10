@@ -3,7 +3,6 @@ import { WorkTask, WorkProject } from '../../types/workos';
 import { Task, Commitment } from '../../types';
 import { DEFAULT_TASKS } from '../../data/defaultTasks';
 import { DEFAULT_COMMITMENTS } from '../../data/defaultCommitments';
-import { indexedDBStorage } from '../adapters/IndexedDBAdapter';
 import { auditService } from '../../core/audit/AuditService';
 
 const WORKOS_TASKS_KEY = 'workos_v1_tasks';
