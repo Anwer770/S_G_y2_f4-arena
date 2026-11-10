@@ -1,5 +1,5 @@
 {
-  "_comment": "R54 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
+  "_comment": "R56 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
   "measuredAt": "2026-11-07",
   "files": [
     "src/utils/pinCrypto.ts",
@@ -45,6 +45,10 @@
     "src/utils/tasks.ts",
     "src/utils/debts/debtAnalytics.ts",
     "src/utils/debts/debtSeeds.ts",
-    "src/utils/debts/debtCommitmentSeeds.ts"
+    "src/utils/debts/debtCommitmentSeeds.ts",
+    "src/utils/universalImporters.ts",
+    "src/utils/universalDataTemplates.ts",
+    "src/utils/dueAlerts.ts",
+    "src/utils/linksExport.ts"
   ]
 }

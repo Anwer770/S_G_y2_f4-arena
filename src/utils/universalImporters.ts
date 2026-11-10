@@ -126,7 +126,7 @@ export const parseStockExcelFile = async (file: File): Promise<{ movements: Move
     const isOut = typeRaw.includes('صرف') || typeRaw.includes('OUT');
     const movementType = isOut ? 'صرف' : 'توريد';
     const subPrefix = isOut ? 'OUT' : 'IN';
-    const rawSubId = String(row['المعرف الفرعي'] || row['Sub_ID'] || row['الكود'] || '').trim();
+    const rawSubId = String(row['المعرف الفرعي'] || row['رقم السند'] || row['Sub_ID'] || row['الكود'] || '').trim();
     const date = String(row['التاريخ'] || row['Date'] || '').substring(0, 10);
     const itemName = String(row['اسم الصنف'] || row['الصنف'] || row['Item'] || '').trim();
     const quantity = Math.abs(parseFloat(String(row['الكمية'] || row['Quantity'] || 0)) || 0);
@@ -159,6 +159,32 @@ export const parseStockExcelFile = async (file: File): Promise<{ movements: Move
 // =========================================================================
 // 4. Daily Tasks Importer
 // =========================================================================
+function parseTaskPriority(priorityRaw: string): TaskPriority {
+  const trimmed = priorityRaw.trim();
+  const normalized = trimmed.toUpperCase();
+  if (['A', 'B', 'C', 'D'].includes(normalized)) return normalized as TaskPriority;
+  if (['عالية جداً', 'عالية جدا', 'عاجلة', 'حرجة'].includes(trimmed) || ['URGENT', 'CRITICAL'].includes(normalized))
+    return 'A';
+  if (['عالية', 'مرتفع'].includes(trimmed) || normalized === 'HIGH') return 'B';
+  if (['متوسطة', 'متوسط'].includes(trimmed) || normalized === 'MEDIUM') return 'C';
+  if (['منخفضة', 'منخفض'].includes(trimmed) || normalized === 'LOW') return 'D';
+  return 'B';
+}
+
+function parseTaskStatus(statusRaw: string): TaskStatus {
+  const trimmed = statusRaw.trim();
+  const normalized = trimmed.toLowerCase();
+  if (trimmed.includes('مكتمل') || trimmed.includes('تم الانجاز') || normalized === 'completed') return 'تم الانجاز';
+  if (trimmed.includes('مخطط') || trimmed.includes('جديد') || normalized === 'planned' || normalized === 'new')
+    return 'مخطط';
+  if (trimmed.includes('ملغي') || normalized === 'cancelled' || normalized === 'canceled') return 'ملغي';
+  if (trimmed.includes('مؤجل') || normalized === 'postponed' || normalized === 'deferred') return 'مؤجل';
+  if (trimmed.includes('متأخر') || normalized === 'overdue') return 'متأخر';
+  if (trimmed.includes('هدف') || normalized === 'goal') return 'الهدف';
+  if (trimmed.includes('ترحيل') || normalized === 'migrated') return 'تم ترحيل';
+  return 'قيد التنفيذ';
+}
+
 export const parseDailyTasksExcelFile = async (file: File): Promise<{ tasks: Task[]; count: number }> => {
   const rows = await readFileToRows(file);
   const tasks: Task[] = [];
@@ -169,16 +195,13 @@ export const parseDailyTasksExcelFile = async (file: File): Promise<{ tasks: Tas
     const title = String(row['عنوان المهمة'] || row['المهمة'] || row['Title'] || `مهمة مستوردة ${idx + 1}`).trim();
     const cat = String(row['التصنيف'] || row['Category'] || 'أعمال عامة').trim();
     const op = String(row['العملية'] || row['Operation'] || 'إجراء دوري').trim();
-    const priorityRaw = String(row['الأولوية'] || row['Priority'] || 'C').toUpperCase();
-    const pri: TaskPriority = ['A', 'B', 'C', 'D'].includes(priorityRaw) ? (priorityRaw as TaskPriority) : 'B';
+    const priorityRaw = String(row['الأولوية'] || row['Priority'] || 'C').trim();
+    const pri = parseTaskPriority(priorityRaw);
     const resp = String(row['المسؤول'] || row['Assignee'] || '').trim();
     const dueDate = String(row['تاريخ الاستحقاق'] || row['Due Date'] || todayStr).substring(0, 10);
     const desc = String(row['ملاحظات'] || row['الوصف'] || row['Notes'] || '').trim();
     const statusRaw = String(row['الحالة'] || row['Status'] || 'مخطط').trim();
-
-    let status: TaskStatus = 'قيد التنفيذ';
-    if (statusRaw.includes('مكتمل') || statusRaw.includes('تم الانجاز')) status = 'تم الانجاز';
-    else if (statusRaw.includes('مخطط')) status = 'مخطط';
+    const status = parseTaskStatus(statusRaw);
 
     tasks.push({
       id: `T-imp-${Date.now().toString().slice(-4)}-${idx + 1}`,

@@ -69,14 +69,20 @@ export function getCalendarDayDiff(targetDateStr: string, referenceDate: Date = 
     referenceDate.getDate()
   ).getTime();
 
-  const parts = targetDateStr.split('-');
-  if (parts.length !== 3) return 999;
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(targetDateStr);
+  if (!match) return 999;
 
-  const year = parseInt(parts[0], 10);
-  const month = parseInt(parts[1], 10) - 1;
-  const day = parseInt(parts[2], 10);
+  const year = Number(match[1]);
+  const month = Number(match[2]) - 1;
+  const day = Number(match[3]);
+  const targetDate = new Date(year, month, day);
 
-  const targetMidnight = new Date(year, month, day).getTime();
+  // لا تسمح Date بتطبيع 2026-02-31 إلى 2026-03-03 ثم إصدار تنبيه مالي خاطئ.
+  if (targetDate.getFullYear() !== year || targetDate.getMonth() !== month || targetDate.getDate() !== day) {
+    return 999;
+  }
+
+  const targetMidnight = targetDate.getTime();
   const diffMs = targetMidnight - refMidnight;
   return Math.round(diffMs / (1000 * 60 * 60 * 24));
 }
