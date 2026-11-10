@@ -2,7 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
 import { APP_NAME, APP_SHORT_NAME, APP_TAGLINE } from './src/constants/appMeta';
 import { injectCspMeta } from './src/utils/security/csp';
 
@@ -113,11 +113,22 @@ export default defineConfig(() => {
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            'vendor-react': ['react', 'react-dom'],
-            'vendor-xlsx': ['xlsx'],
-            'vendor-charts': ['recharts'],
-            'vendor-icons': ['lucide-react'],
+          // R58: مفتاح المسار لا يطابق دائماً "react" في Rollup، فكان chunk فارغاً.
+          // التصنيف حسب المعرّف الفعلي يبقي React مشتركاً، ويترك xlsx/recharts ديناميكيتين
+          // ما دامت الشاشات التي تحتاجهما لم تُزر.
+          manualChunks(id) {
+            if (!id.includes('node_modules')) return undefined;
+            if (
+              id.includes('/node_modules/react/') ||
+              id.includes('/node_modules/react-dom/') ||
+              id.includes('/node_modules/scheduler/')
+            ) {
+              return 'vendor-react';
+            }
+            if (id.includes('/node_modules/xlsx/')) return 'vendor-xlsx';
+            if (id.includes('/node_modules/recharts/')) return 'vendor-charts';
+            if (id.includes('/node_modules/lucide-react/')) return 'vendor-icons';
+            return undefined;
           },
         },
       },

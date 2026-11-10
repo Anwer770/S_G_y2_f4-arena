@@ -15,6 +15,6 @@ export const APP_SHORT_NAME = 'القيصر ERP';
 export const APP_TAGLINE = 'نظام إدارة العمليات والمخزون والحسابات والمهام الميدانية والمطابقات';
 
 /** الإصدار الظاهر للمستخدم — يتبع إصدار حزمة `caesar-erp-unified`. */
-export const APP_VERSION = '3.44.0';
+export const APP_VERSION = '3.45.0';
 
 export const APP_VERSION_LABEL = `v${APP_VERSION}`;

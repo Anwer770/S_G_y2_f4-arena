@@ -1,7 +1,5 @@
-import * as XLSX from 'xlsx';
 import { DoctorFilterState, DoctorRecord, DoctorSignificance, DoctorVisitLog, DoctorVisitStatus } from '../types';
 import { ImportReport, autoKey, IMPORT_FIDELITY_BANNER } from './importFidelity';
-import { assertFileSize, readFirstSheetSafe } from './xlsxSafe';
 
 export function getTodayArabicDay(): string {
   const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
@@ -295,7 +293,7 @@ export function findDoctorDuplicates(
 // ============================================================================
 // EXCEL & CSV EXPORT (UTF-8 BOM WITH ARABIC COMPATIBILITY)
 // ============================================================================
-export function exportDoctorsToExcel(doctors: DoctorRecord[], fileName?: string): void {
+export async function exportDoctorsToExcel(doctors: DoctorRecord[], fileName?: string): Promise<void> {
   const exportData = doctors.map((d, index) => ({
     م: index + 1,
     المعرف: d.id,
@@ -318,6 +316,7 @@ export function exportDoctorsToExcel(doctors: DoctorRecord[], fileName?: string)
     ملاحظات: d.notes || '',
   }));
 
+  const XLSX = await import('xlsx');
   const worksheet = XLSX.utils.json_to_sheet(exportData);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, 'دفتر زيارات الأطباء');
@@ -386,7 +385,7 @@ export function exportDoctorsToCSV(doctors: DoctorRecord[], fileName?: string): 
   document.body.removeChild(link);
 }
 
-export function exportDoctorVisitsToExcel(visits: DoctorVisitLog[], fileName?: string): void {
+export async function exportDoctorVisitsToExcel(visits: DoctorVisitLog[], fileName?: string): Promise<void> {
   const exportData = visits.map((v, index) => ({
     م: index + 1,
     'معرف الزيارة': v.id,
@@ -401,6 +400,7 @@ export function exportDoctorVisitsToExcel(visits: DoctorVisitLog[], fileName?: s
     'موعد المتابعة القادمة': v.nextFollowUpDate || '',
   }));
 
+  const XLSX = await import('xlsx');
   const worksheet = XLSX.utils.json_to_sheet(exportData);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, 'سجل الزيارات الميدانية للأطباء');
@@ -429,8 +429,10 @@ export async function parseDoctorsExcelOrCSV(
   return new Promise((resolve) => {
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
+        // لا يُحمَّل xlsx إلا بعد أن يختار المستخدم ملفاً؛ لوحة التحكم تستعمل إحصاءات الأطباء فقط.
+        const { assertFileSize, readFirstSheetSafe } = await import('./xlsxSafe');
         assertFileSize(file);
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
         const safeSheet = readFirstSheetSafe<Record<string, unknown>>(data, 'array');

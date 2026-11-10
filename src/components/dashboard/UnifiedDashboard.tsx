@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CheckCircle2,
   CheckSquare,
@@ -14,14 +14,12 @@ import {
 } from 'lucide-react';
 import type { NoteRecord } from './dashboardModel';
 import type { DashboardProps } from './dashboardModel';
-import { CentralUnifiedLedger } from '../workos/CentralUnifiedLedger';
 import { WorkOSQuickAddModal } from '../workos/WorkOSQuickAddModal';
 import { completeWorkOSTask, toggleWorkOSTaskCompletion } from '../../services/workos/WorkOSTaskService';
 import { broadcastDataChange } from '../../utils/multiTabSync';
 import { formatCurrency } from '../../utils/formatters';
 import { loadNoteFolders, loadNotes, loadNoteTags, saveNotes } from '../../utils/storage';
 import { loadOrders as loadWorkOSOrders, loadWorkOSData } from '../../utils/workosStorage';
-import { DashboardCharts } from './DashboardCharts';
 
 // الأقسام المستخرجة (R30)
 import { DashboardHeader } from './DashboardHeader';
@@ -36,11 +34,27 @@ import { FinancialModal } from '../financial/FinancialModal';
 import { MovementModal } from '../MovementModal';
 import { RecordVisitModal } from '../customers/RecordVisitModal';
 import { CommitmentModal as TaskCommitmentModal } from '../tasks/CommitmentModal';
-import { NoteEditorModal } from '../knowledge/NoteEditorModal';
 import { useDashboardModel } from './useDashboardModel';
 import { useSubTabSync } from '../../utils/subMenuStore';
+import { deferNonCriticalWork } from '../../utils/deferredWork';
+
+// R58: لا تدخل الرسوم أو تصدير Excel في خريطة الإقلاع؛ تُحمَّل عند الحاجة فقط.
+const CentralUnifiedLedger = React.lazy(() =>
+  import('../workos/CentralUnifiedLedger').then(({ CentralUnifiedLedger: Component }) => ({ default: Component }))
+);
+const DashboardCharts = React.lazy(() =>
+  import('./DashboardCharts').then(({ DashboardCharts: Component }) => ({ default: Component }))
+);
+const NoteEditorModal = React.lazy(() =>
+  import('../knowledge/NoteEditorModal').then(({ NoteEditorModal: Component }) => ({ default: Component }))
+);
 
 export const UnifiedDashboard: React.FC<DashboardProps> = (props) => {
+  const [loadCharts, setLoadCharts] = useState(false);
+
+  // لا يبدأ طلب recharts قبل أول paint؛ ويبقى المنظف آمناً إذا غادر المستخدم اللوحة سريعاً.
+  useEffect(() => deferNonCriticalWork(() => setLoadCharts(true)), []);
+
   const {
     accountNames,
     activeOpsTab,
@@ -594,27 +608,35 @@ export const UnifiedDashboard: React.FC<DashboardProps> = (props) => {
         {/* TAB 5: الدفتر المركزي والطلبيات والربط الثلاثي */}
         {activeOpsTab === 'orders_ledger' && (
           <div className="pt-2">
-            <CentralUnifiedLedger
-              orders={dashboardOrders}
-              tasks={workOSData.tasks}
-              commitments={workOSData.commitments}
-              team={workOSData.team}
-              onOpenQuickAdd={(type) => {
-                setWorkOSQuickAddType(type || 'order');
-                setIsWorkOSQuickAddOpen(true);
-              }}
-              onUpdateOrders={(updated) => {
-                setDashboardOrders(updated);
-                setWorkOSData((prev) => ({ ...prev, orders: updated }));
-              }}
-              onUpdateTasks={(updated) => {
-                setWorkOSData((prev) => ({ ...prev, tasks: updated }));
-                setWorkOSTasksVersion((v) => v + 1);
-              }}
-              onUpdateCommitments={(updated) => {
-                setWorkOSData((prev) => ({ ...prev, commitments: updated }));
-              }}
-            />
+            <React.Suspense
+              fallback={
+                <div className="min-h-48" role="status">
+                  جارٍ تحميل الدفتر المركزي…
+                </div>
+              }
+            >
+              <CentralUnifiedLedger
+                orders={dashboardOrders}
+                tasks={workOSData.tasks}
+                commitments={workOSData.commitments}
+                team={workOSData.team}
+                onOpenQuickAdd={(type) => {
+                  setWorkOSQuickAddType(type || 'order');
+                  setIsWorkOSQuickAddOpen(true);
+                }}
+                onUpdateOrders={(updated) => {
+                  setDashboardOrders(updated);
+                  setWorkOSData((prev) => ({ ...prev, orders: updated }));
+                }}
+                onUpdateTasks={(updated) => {
+                  setWorkOSData((prev) => ({ ...prev, tasks: updated }));
+                  setWorkOSTasksVersion((v) => v + 1);
+                }}
+                onUpdateCommitments={(updated) => {
+                  setWorkOSData((prev) => ({ ...prev, commitments: updated }));
+                }}
+              />
+            </React.Suspense>
           </div>
         )}
       </div>
@@ -630,14 +652,26 @@ export const UnifiedDashboard: React.FC<DashboardProps> = (props) => {
         stockStats={stockStats}
       />
 
-      {/* 6. CHARTS & FINANCIAL SUMMARY */}
-      <DashboardCharts
-        financialTransactions={financialTransactions}
-        items={items}
-        tasks={tasks}
-        customers={customers}
-        doctors={doctors}
-      />
+      {/* 6. CHARTS & FINANCIAL SUMMARY — بعد paint كي لا تحجب recharts أول لوحة. */}
+      {loadCharts ? (
+        <React.Suspense
+          fallback={
+            <div className="min-h-64" role="status">
+              جارٍ تحميل الرسوم…
+            </div>
+          }
+        >
+          <DashboardCharts
+            financialTransactions={financialTransactions}
+            items={items}
+            tasks={tasks}
+            customers={customers}
+            doctors={doctors}
+          />
+        </React.Suspense>
+      ) : (
+        <div className="min-h-64" aria-hidden="true" />
+      )}
 
       <DashboardModuleHubs
         customers={customers}
@@ -724,41 +758,43 @@ export const UnifiedDashboard: React.FC<DashboardProps> = (props) => {
 
       {/* Note Editor Modal for + ملاحظة */}
       {isNoteModalOpen && (
-        <NoteEditorModal
-          isOpen={isNoteModalOpen}
-          onClose={() => setIsNoteModalOpen(false)}
-          noteToEdit={null}
-          onSave={(newNoteData) => {
-            const allNotes = loadNotes();
-            const newNote: NoteRecord = {
-              id: `note_${Date.now()}`,
-              ...newNoteData,
-              title: newNoteData.title || 'ملاحظة جديدة',
-              content: newNoteData.content || '',
-              type: newNoteData.type ?? 'عامة',
-              category: newNoteData.category ?? 'عام',
-              priority: newNoteData.priority ?? 'متوسطة',
-              status: newNoteData.status ?? 'جديدة',
-              tags: newNoteData.tags ?? [],
-              folderId: newNoteData.folderId ?? '',
-              isPinned: newNoteData.isPinned ?? false,
-              isFavorite: newNoteData.isFavorite ?? false,
-              isLocked: newNoteData.isLocked ?? false,
-              isQuickNote: false,
-              date: todayStr,
-              time: new Date().toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' }),
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            };
-            saveNotes([newNote, ...allNotes]);
-            setIsNoteModalOpen(false);
-          }}
-          folders={loadNoteFolders()}
-          tagsList={loadNoteTags()}
-          customersList={customers.map((c) => ({ id: c.id, name: c.name }))}
-          doctorsList={doctors.map((d) => ({ id: d.id, name: d.name }))}
-          tasksList={tasks.map((t) => ({ id: t.id, title: t.title }))}
-        />
+        <React.Suspense fallback={<div role="status">جارٍ تحميل محرر الملاحظة…</div>}>
+          <NoteEditorModal
+            isOpen={isNoteModalOpen}
+            onClose={() => setIsNoteModalOpen(false)}
+            noteToEdit={null}
+            onSave={(newNoteData) => {
+              const allNotes = loadNotes();
+              const newNote: NoteRecord = {
+                id: `note_${Date.now()}`,
+                ...newNoteData,
+                title: newNoteData.title || 'ملاحظة جديدة',
+                content: newNoteData.content || '',
+                type: newNoteData.type ?? 'عامة',
+                category: newNoteData.category ?? 'عام',
+                priority: newNoteData.priority ?? 'متوسطة',
+                status: newNoteData.status ?? 'جديدة',
+                tags: newNoteData.tags ?? [],
+                folderId: newNoteData.folderId ?? '',
+                isPinned: newNoteData.isPinned ?? false,
+                isFavorite: newNoteData.isFavorite ?? false,
+                isLocked: newNoteData.isLocked ?? false,
+                isQuickNote: false,
+                date: todayStr,
+                time: new Date().toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' }),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              };
+              saveNotes([newNote, ...allNotes]);
+              setIsNoteModalOpen(false);
+            }}
+            folders={loadNoteFolders()}
+            tagsList={loadNoteTags()}
+            customersList={customers.map((c) => ({ id: c.id, name: c.name }))}
+            doctorsList={doctors.map((d) => ({ id: d.id, name: d.name }))}
+            tasksList={tasks.map((t) => ({ id: t.id, title: t.title }))}
+          />
+        </React.Suspense>
       )}
 
       {/* Task Commitment Modal for + موعد / التزام */}
