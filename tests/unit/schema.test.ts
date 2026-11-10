@@ -298,6 +298,39 @@ describe('مستودع المجموعة', () => {
     expect(warn).toHaveBeenCalled();
     warn.mockRestore();
   });
+
+  it('العناصر بلا معرّف نصّي لا تُطابق أي بحث (R48)', () => {
+    const { storage } = memoryStorage({ c: JSON.stringify(['نص', { بلا: 'معرّف' }, { id: 'a' }]) });
+    const repo = createCollectionRepository<{ id?: string }>({ key: 'c', fallback: [] }, storage);
+
+    expect(repo.findById('a')).toEqual({ id: 'a' });
+    expect(repo.findById('نص')).toBeNull();
+    expect(repo.update('غير-موجود', { id: 'x' })).toHaveLength(3);
+    expect(repo.remove('غير-موجود')).toHaveLength(3);
+  });
+
+  it('clear يمسح المفتاح، وإن فشل المسح يكتب [ ] بدلاً من الرمي (R48)', () => {
+    const { storage, data } = memoryStorage({ c: JSON.stringify([{ id: 'a' }]) });
+    createCollectionRepository({ key: 'c', fallback: [] }, storage).clear();
+    expect(data.c).toBeUndefined();
+
+    const failing: SchemaStorage = {
+      getItem: () => JSON.stringify([{ id: 'a' }]),
+      setItem: () => undefined,
+      removeItem: () => {
+        throw new Error('محمي');
+      },
+    };
+    const written: string[] = [];
+    const spy: SchemaStorage = {
+      ...failing,
+      setItem: (_k, v) => {
+        written.push(v);
+      },
+    };
+    expect(() => createCollectionRepository({ key: 'c', fallback: [] }, spy).clear()).not.toThrow();
+    expect(written).toEqual(['[]']);
+  });
 });
 
 describe('مستودع الكائن المفرد', () => {

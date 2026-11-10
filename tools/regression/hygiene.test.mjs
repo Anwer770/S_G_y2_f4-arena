@@ -288,6 +288,32 @@ check(
     .join(' — ') || `${logicFiles.length} وحدات مغطّاة ومُختبَرة`
 );
 
+/* H14 — طبقة المستودعات كلها داخل مقام القياس (R48).
+   قبل R48 كانت 9 ملفات من 10 خارج `coverage.include` ⇒ النسبة 98.54% كانت تُحسب
+   وطبقة البيانات — التي يمرّ منها كل حفظ وقراءة — غير داخلة فيها (الحقيقة: 79.6%). */
+const repoFiles = fs
+  .readdirSync(path.join(ROOT, 'src/database/repositories'))
+  .filter((f) => f.endsWith('.ts'))
+  .map((f) => `src/database/repositories/${f}`)
+  .sort();
+/* نستخرج مصفوفة `include` وحدها: المسار قد يظهر في سقف لكل ملف دون أن يكون مقيساً،
+   فالبحث في نصّ الإعداد كله كان يجعل البوابة تمرّ زوراً. */
+const includeBlock = (() => {
+  /* أوّل `include` في الملف هو مجلد الاختبارات، والمقصود مصفوفة التغطية داخل كتلة `coverage`. */
+  const coverageAt = vitestCfg.indexOf('coverage:');
+  if (coverageAt < 0) return '';
+  const start = vitestCfg.indexOf('include: [', coverageAt);
+  if (start < 0) return '';
+  const end = vitestCfg.indexOf(']', start);
+  return end < 0 ? '' : vitestCfg.slice(start, end);
+})();
+const reposOutsideCoverage = repoFiles.filter((f) => !includeBlock.includes(`'${f}'`));
+check(
+  'H14 · كل ملف في طبقة المستودعات داخل مظلّة التغطية',
+  repoFiles.length >= 10 && reposOutsideCoverage.length === 0,
+  reposOutsideCoverage.length ? `خارج التغطية: ${reposOutsideCoverage.join(' · ')}` : `${repoFiles.length} ملفاً مغطّى`
+);
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
