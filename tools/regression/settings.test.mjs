@@ -55,11 +55,23 @@ check(
   'L4 · إعادة التسمية تُحدّث التسمية فقط',
   L.renameLookup(s1, 'categories', item.id, 'قطع').categories.find((i) => i.id === item.id).label === 'قطع'
 );
+// L5 كان يفحص «الترقيم 1..n» فقط — وهي خاصية تتحقّق حتى لو لم يتحرّك العنصر إطلاقاً،
+// فمرّت البوابة خضراء على دالة لا تُحرّك شيئاً (عيب حقيقي كشفه اختبار الوحدة في R44).
+// الآن تُقاس **الحركة نفسها**: موضع العنصر وترتيبه قبل/بعد، والحدود، والعودة للخلف.
 check(
-  'L5 · الترتيب يعمل ويُعيد ترقيماً متسلسلاً',
+  'L5 · الترتيب يحرّك العنصر فعلياً (أعلى/أسفل) ويُعيد ترقيماً متسلسلاً',
   (() => {
-    const m = L.moveLookup(s1, 'categories', item.id, -1);
-    return m.categories[0].order === 1 && m.categories.every((i, idx) => i.order === idx + 1);
+    const before = s1.categories.map((i) => i.id);
+    const up = L.moveLookup(s1, 'categories', item.id, -1);
+    const upIds = up.categories.map((i) => i.id);
+    const movedUp = up.categories.findIndex((i) => i.id === item.id) === before.length - 2;
+    const swapped = upIds[before.length - 2] === item.id && upIds[before.length - 1] === before[before.length - 2];
+    const renumbered = up.categories.every((i, idx) => i.order === idx + 1);
+    const down = L.moveLookup(up, 'categories', item.id, 1);
+    const back = down.categories.map((i) => i.id).join('|') === before.join('|');
+    const atTop = L.moveLookup(s1, 'categories', 'cat-care', -1) === s1;
+    const atBottom = L.moveLookup(s1, 'categories', before[before.length - 1], 1) === s1;
+    return movedUp && swapped && renumbered && back && atTop && atBottom;
   })()
 );
 let lastGuard = false;

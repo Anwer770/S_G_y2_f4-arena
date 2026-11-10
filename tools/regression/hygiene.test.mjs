@@ -259,6 +259,35 @@ check(
   missingCiSteps.join(' · ')
 );
 
+/* H13 — مظلّة التغطية: كل وحدة «منطق نقي» (*Logic.ts) داخل مقام القياس ولها اختبار وحدة.
+   قبل R44 كان `lookupsLogic.ts` و`auditAutoExportLogic.ts` خارج `coverage.include`
+   ⇒ نسبة التغطية تُحسب على مقام ناقص، فيبدو المشروع مغطّى أكثر مما هو. */
+const logicFiles = srcFiles.filter((f) => /Logic\.ts$/.test(f)).map(rel);
+const vitestCfgPath = path.join(ROOT, 'vitest.config.ts');
+const vitestCfg = fs.existsSync(vitestCfgPath) ? fs.readFileSync(vitestCfgPath, 'utf8') : '';
+const unitDir = path.join(ROOT, 'tests', 'unit');
+const unitSources = fs.existsSync(unitDir)
+  ? fs
+      .readdirSync(unitDir)
+      .filter((f) => /\.test\.ts$/.test(f))
+      .map((f) => fs.readFileSync(path.join(unitDir, f), 'utf8'))
+  : [];
+const missingFromCoverage = logicFiles.filter((f) => !vitestCfg.includes(`'${f}'`));
+const missingTests = logicFiles.filter((f) => {
+  const base = path.basename(f, '.ts');
+  return !unitSources.some((text) => text.includes(`/utils/${base}'`));
+});
+check(
+  'H13 · كل وحدة منطق (*Logic.ts) داخل مظلّة التغطية ولها اختبار وحدة',
+  logicFiles.length > 0 && missingFromCoverage.length === 0 && missingTests.length === 0,
+  [
+    missingFromCoverage.length ? `خارج التغطية: ${missingFromCoverage.join(' · ')}` : '',
+    missingTests.length ? `بلا اختبار: ${missingTests.join(' · ')}` : '',
+  ]
+    .filter(Boolean)
+    .join(' — ') || `${logicFiles.length} وحدات مغطّاة ومُختبَرة`
+);
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);
