@@ -69,8 +69,15 @@ export function readFirstSheetSafe<T = Record<string, unknown>>(
   try {
     workbook = XLSX.read(data as never, {
       type,
-      // سقف الصفوف يوقف التحليل مبكراً (تخفيف ReDoS)
-      sheetRows: MAX_IMPORT_ROWS + 1,
+      /**
+       * سقف الصفوف يوقف التحليل مبكراً (تخفيف ReDoS).
+       * R52: كان `MAX_IMPORT_ROWS + 1` فيقرأ الحارس 20001 صفاً بالضبط، ثم يقارن
+       * `length > 20000`. والصف الأول ترويسة يُسقطها `sheet_to_json` ⇒ الناتج 20000
+       * على الأكثر ⇒ الشرط **لا يتحقّق أبداً**، فكان ملف بـ50,000 صف يُقتطع صامتاً
+       * ولا يقول التقرير إنه اقتُطع. صار +2: 20002 صفاً تكفي للتمييز بين «20000 تماماً»
+       * و«أكثر»، فالاقتطاع يُكتشف ويُعلَن.
+       */
+      sheetRows: MAX_IMPORT_ROWS + 2,
       cellFormula: false,
       cellHTML: false,
       cellStyles: false,
@@ -116,7 +123,7 @@ export function readFirstSheetAoaSafe(
   try {
     workbook = XLSX.read(data as never, {
       type,
-      sheetRows: MAX_IMPORT_ROWS + 1,
+      sheetRows: MAX_IMPORT_ROWS + 2,
       cellFormula: false,
       cellHTML: false,
       cellStyles: false,
@@ -137,8 +144,9 @@ export function readFirstSheetAoaSafe(
     raw: true,
     blankrows: false,
   });
-  const truncated = rows.length > MAX_IMPORT_ROWS;
-  return { rows: truncated ? rows.slice(0, MAX_IMPORT_ROWS) : rows, truncated };
+  /* الصف الأول ترويسة لا بيانات ⇒ بيانات الملف = rows.length - 1 (R52). */
+  const truncated = rows.length > MAX_IMPORT_ROWS + 1;
+  return { rows: truncated ? rows.slice(0, MAX_IMPORT_ROWS + 1) : rows, truncated };
 }
 
 /** رسالة عربية موحّدة لملف مُقتطع أو مُنظَّف — تُضاف إلى تحذيرات الاستيراد. */
