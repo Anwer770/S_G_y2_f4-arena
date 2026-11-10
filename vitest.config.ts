@@ -62,6 +62,11 @@ export default defineConfig({
         'src/utils/debts/debtAnalytics.ts',
         'src/utils/debts/debtSeeds.ts',
         'src/utils/debts/debtCommitmentSeeds.ts',
+        /** R56: الاستيراد الموحّد وتنبيهات الاستحقاق — تُدخل أولاً بلا اختبارات لقياس الفجوة. */
+        'src/utils/universalImporters.ts',
+        'src/utils/universalDataTemplates.ts',
+        'src/utils/dueAlerts.ts',
+        'src/utils/linksExport.ts',
         'src/database/dbStorage.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
@@ -153,6 +158,15 @@ export default defineConfig({
         'src/utils/debts/debtAnalytics.ts': { lines: 100, functions: 100, branches: 94, statements: 100 },
         'src/utils/debts/debtSeeds.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/debts/debtCommitmentSeeds.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /**
+         * R56: الاستيراد الموحّد وتنبيهات الاستحقاق. بعد قياس الفجوة (48 ملفاً بلا
+         * اختبارات جديدة) أُغلقت بدائل الترويسات والتحقق التقويمي وكل مخرجات القوالب؛
+         * الملفات الأربعة 100% في الأسطر/الدوال/الفروع/التعابير.
+         */
+        'src/utils/universalImporters.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/universalDataTemplates.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/dueAlerts.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/linksExport.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /**
          * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
          * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.
