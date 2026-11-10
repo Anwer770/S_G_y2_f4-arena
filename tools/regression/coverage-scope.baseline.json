@@ -38,6 +38,8 @@
     "src/utils/excel/excelCore.ts",
     "src/utils/excel/excelExporters.ts",
     "src/utils/excel/excelImporters.ts",
-    "src/utils/xlsxSafe.ts"
+    "src/utils/xlsxSafe.ts",
+    "src/database/adapters/IndexedDBAdapter.ts",
+    "src/database/dbStorage.ts"
   ]
 }
