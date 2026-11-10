@@ -95,3 +95,46 @@ describe('hasPinDigest', () => {
     expect(hasPinDigest({ pinHash: 'x', pinSalt: 'y', pinIterations: 0 })).toBe(false);
   });
 });
+
+/**
+ * R49 — فروع دفاعية في `pinCrypto`.
+ * (١) سياق بلا Web Crypto (فتح التطبيق عبر HTTP) يجب أن يرمي رسالة مفهومة لا `TypeError`.
+ * (٢) ملخّص قديم بلا `pinIterations` ⇒ يُعامَل صفراً ويُرفض قبل أي اشتقاق.
+ */
+describe('R49 — pinCrypto بلا Web Crypto وبملخّص ناقص', () => {
+  it('غياب crypto.subtle ⇒ خطأ مفهوم لا انهيار', async () => {
+    const original = globalThis.crypto;
+    Object.defineProperty(globalThis, 'crypto', { value: {}, configurable: true });
+    try {
+      expect(isWebCryptoAvailable()).toBe(false);
+      /* التجزئة تفحص العشوائية أولاً برسالتها، والاشتقاق يفحص `subtle` — كلاهما يجب أن يكون خطأً مفهوماً. */
+      await expect(hashPin('482615')).rejects.toThrow('getRandomValues');
+      await expect(
+        verifyPin('482615', { pinHash: 'AAAA', pinSalt: 'AAAA', pinIterations: PIN_MIN_ITERATIONS })
+      ).rejects.toThrow('Web Crypto غير متاح');
+    } finally {
+      Object.defineProperty(globalThis, 'crypto', { value: original, configurable: true });
+    }
+  });
+
+  it('قراءة crypto نفسها ترمي ⇒ isWebCryptoAvailable تعيد false بلا انهيار', () => {
+    const original = Object.getOwnPropertyDescriptor(globalThis, 'crypto');
+    Object.defineProperty(globalThis, 'crypto', {
+      configurable: true,
+      get() {
+        throw new Error('سياق محمي');
+      },
+    });
+    try {
+      expect(isWebCryptoAvailable()).toBe(false);
+    } finally {
+      if (original) Object.defineProperty(globalThis, 'crypto', original);
+    }
+  });
+
+  it('ملخّص بلا pinIterations يُرفض ولا يصل إلى الاشتقاق', async () => {
+    const digest = (await hashPin('482615')) as unknown as Record<string, unknown>;
+    delete digest.pinIterations;
+    await expect(verifyPin('482615', digest as never)).resolves.toBe(false);
+  });
+});

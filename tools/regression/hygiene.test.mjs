@@ -314,6 +314,21 @@ check(
   reposOutsideCoverage.length ? `خارج التغطية: ${reposOutsideCoverage.join(' · ')}` : `${repoFiles.length} ملفاً مغطّى`
 );
 
+/* H15 — كل ملف داخل المقام له سقف خاص (R49).
+   إدخال ملف في `coverage.include` بلا سقف يتركه يُغطّى بالسقف العام وحده: 27 ملفاً
+   بسقف 99% عام تسمح لملف واحد أن يهبط إلى الصفر مقابل 12 سطراً آخر مغطّى. */
+const thresholdBlock = (() => {
+  const start = vitestCfg.indexOf('thresholds: {');
+  return start < 0 ? '' : vitestCfg.slice(start);
+})();
+const includedFiles = [...includeBlock.matchAll(/'(src\/[^']+\.ts)'/g)].map((m) => m[1]);
+const filesWithoutFloor = includedFiles.filter((f) => !thresholdBlock.includes(`'${f}': {`));
+check(
+  'H15 · كل ملف في مقام التغطية له سقف خاص به',
+  includedFiles.length >= 20 && filesWithoutFloor.length === 0,
+  filesWithoutFloor.length ? `بلا سقف: ${filesWithoutFloor.join(' · ')}` : `${includedFiles.length} ملفاً بسقف خاص`
+);
+
 const passed = results.filter((r) => r.ok).length;
 console.log(`\n════════ حصيلة فحص النظافة (hygiene) ════════`);
 console.log(`نجح: ${passed} / ${results.length}`);

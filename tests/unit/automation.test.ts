@@ -16,6 +16,7 @@ import {
   applyExecution,
   pruneRuns,
   isTaskOverdue,
+  describeAction,
 } from '../../src/utils/automation/automationRules';
 import {
   deriveTaskEvents,
@@ -32,7 +33,12 @@ import {
   type AutomationDeps,
 } from '../../src/utils/automation/automationRunner';
 import { executePlannedAction } from '../../src/utils/automation/automationActions';
-import { subscribeDomainEvents, withAutomationOrigin } from '../../src/utils/automation/automationEvents';
+import {
+  subscribeDomainEvents,
+  withAutomationOrigin,
+  countDomainEventListeners,
+  clearDomainEventListeners,
+} from '../../src/utils/automation/automationEvents';
 
 const rule = (over: Partial<AutomationRule> = {}): AutomationRule => ({
   id: 'aut_1',
@@ -531,5 +537,115 @@ describe('صلابة المشغّل أمام حالات التخزين الفا�
     const { deps } = fakeDeps([]);
     const result = sweepOverdueTasks('2026-11-07', deps);
     expect(result).toEqual({ evaluatedRules: 0, executed: 0, failed: 0, duplicates: 0, runs: [] });
+  });
+});
+
+/**
+ * R49 — الفروع الدفاعية في محرّك الأتمتة.
+ * (١) كل دوال الاشتقاق تُقبل `null` من طبقة التخزين (قيمة مفقودة) لا مصفوفة فارغة فقط.
+ * (٢) عنوان الإجراء لكل نوع كيان، وللحدث بلا عنوان (يُستعمل المعرّف).
+ * (٣) `pruneRuns` على قيمة غير مصفوفية. (٤) تشغيل يدوي بقاعدة بين قاعدتين، وساعة تُعيد نصاً فارغاً.
+ */
+describe('R49 — اشتقاق الأحداث يستقبل null من التخزين', () => {
+  it('المهام: prev=null و next=null بلا رمي', () => {
+    expect(deriveTaskEvents(null as never, null as never)).toEqual([]);
+    expect(deriveTaskEvents(null as never, [task()])).toHaveLength(1);
+    expect(deriveTaskEvents(null as never, [task()])[0].type).toBe('task_created');
+  });
+
+  it('المشاريع والطلبيات والالتزامات: prev=null يُنتج أحداث إنشاء', () => {
+    const project = { id: 'p1', name: 'مشروع', progress: 0, status: 'active' } as never;
+    expect(deriveProjectEvents(null as never, [project])).toHaveLength(1);
+
+    const order = { id: 'o1', orderNumber: 'ORD-1', status: 'new', totalAmount: 100 } as never;
+    expect(deriveOrderEvents(null as never, [order])).toHaveLength(1);
+
+    const commitment = { id: 'c1', title: 'التزام', amount: 500, status: 'pending' } as never;
+    expect(deriveCommitmentEvents(null as never, [commitment])).toEqual([
+      expect.objectContaining({ type: 'commitment_created', entityId: 'c1' }),
+    ]);
+  });
+
+  it('next=null لكل نوع ⇒ [] بلا رمي', () => {
+    expect(deriveProjectEvents([{ id: 'p1' } as never], null as never)).toEqual([]);
+    expect(deriveOrderEvents([{ id: 'o1' } as never], null as never)).toEqual([]);
+    expect(deriveCommitmentEvents([{ id: 'c1' } as never], null as never)).toEqual([]);
+  });
+
+  it('التزام كان مسدَّداً وبقي مسدَّداً لا يُنتج حدث سداد مكرّراً', () => {
+    const before = { id: 'c1', title: 'التزام', amount: 500, status: 'fulfilled' } as never;
+    const after = { id: 'c1', title: 'التزام', amount: 500, status: 'fulfilled' } as never;
+    expect(deriveCommitmentEvents([before], [after])).toEqual([]);
+
+    const pending = { id: 'c2', title: 'آخر', amount: 10, status: 'pending' } as never;
+    const stillPending = { id: 'c2', title: 'آخر', amount: 10, status: 'pending' } as never;
+    expect(deriveCommitmentEvents([pending], [stillPending])).toEqual([]);
+  });
+});
+
+describe('R49 — عدّاد مستمعي أحداث المجال', () => {
+  it('يزيد مع الاشتراك وينقص مع إلغائه ويُصفَّر عند المسح', () => {
+    clearDomainEventListeners();
+    expect(countDomainEventListeners()).toBe(0);
+
+    const offA = subscribeDomainEvents(() => undefined);
+    const offB = subscribeDomainEvents(() => undefined);
+    expect(countDomainEventListeners()).toBe(2);
+
+    offA();
+    offB();
+    expect(countDomainEventListeners()).toBe(0);
+  });
+});
+
+describe('R49 — وصف الإجراء وحدود السجل', () => {
+  it('عنوان الإجراء لكل نوع كيان وبلا عنوان يُستعمل المعرّف', () => {
+    const body = (entityType: DomainEvent['entityType'], title?: string) =>
+      describeAction(rule(), event({ entityType, title, entityId: 'X-9' })).body;
+
+    expect(body('project', 'مشروع أ')).toContain('المشروع «مشروع أ»');
+    expect(body('order', 'طلبية ب')).toContain('الطلبية «طلبية ب»');
+    expect(body('commitment', 'التزام ج')).toContain('الالتزام المالي «التزام ج»');
+    expect(body('system', '')).toContain('النظام X-9');
+  });
+
+  it('pruneRuns على قيمة غير مصفوفية تُعيد [] بدل الانهيار', () => {
+    expect(pruneRuns(null as never)).toEqual([]);
+    expect(pruneRuns(undefined as never)).toEqual([]);
+  });
+});
+
+describe('R49 — مسارات التشغيل اليدوي الدفاعية', () => {
+  it('قاعدة بين قاعدتين: تُحدَّث وحدها والأخرى تُترك كما هي', () => {
+    const other = rule({ id: 'aut_other', name: 'أخرى', triggerEvent: 'task_completed' });
+    const target = rule({ id: 'aut_m2', triggerEvent: 'daily_plan_start' });
+    const { state, deps } = fakeDeps([other, target]);
+
+    const result = runRuleManually(target, deps);
+
+    expect(result.executed).toBe(1);
+    expect(state.rules.find((r) => r.id === 'aut_m2')?.executionsCount).toBe(1);
+    expect(state.rules.find((r) => r.id === 'aut_other')?.executionsCount).toBe(0);
+  });
+
+  it('processDomainEvent بساعة تُعيد نصاً فارغاً ⇒ lastExecutedAt فارغ بلا NaN', () => {
+    const { state, deps } = fakeDeps();
+    deps.now = () => '';
+    processDomainEvent(event(), deps);
+
+    expect(state.rules[0].executionsCount).toBe(1);
+    expect(state.rules[0].lastExecutedAt).toBe('');
+  });
+
+  it('ساعة تُعيد نصاً فارغاً: معرّف الحدث ينتهي بـ_0 والعدّاد يزيد بلا NaN', () => {
+    const { state, deps } = fakeDeps([rule({ id: 'aut_clock', triggerEvent: 'daily_plan_start' })]);
+    deps.now = () => '';
+
+    const result = runRuleManually(state.rules[0], deps);
+
+    expect(result.executed).toBe(1);
+    expect(state.runs[0].key).toContain('::manual::');
+    expect(state.rules[0].executionsCount).toBe(1);
+    expect(Number.isNaN(Date.parse(state.runs[0].executedAt))).toBe(true);
   });
 });

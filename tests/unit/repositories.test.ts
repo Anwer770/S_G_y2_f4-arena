@@ -14,6 +14,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { IStorageEngine } from '../../src/database/types/StorageEngine';
 import { BaseRepository, type Identifiable } from '../../src/database/repositories/BaseRepository';
 import { createObjectRepository } from '../../src/database/repositories/ObjectRepository';
+import { createCollectionRepository } from '../../src/database/repositories/CollectionRepository';
 import { createValueRepository } from '../../src/database/repositories/ValueRepository';
 import { debtRepository } from '../../src/database/repositories/DebtRepository';
 import { customerRepository, doctorRepository } from '../../src/database/repositories/CustomerRepository';
@@ -665,5 +666,119 @@ describe('المستودعات المتبقية — مفاتيحها مستقل�
     repoRef.saveAll([{ id: `${_name}-1` }]);
     expect(JSON.parse(dbStorage.getItem(key) as string)).toEqual([{ id: `${_name}-1` }]);
     expect(repoRef.count()).toBe(1);
+  });
+});
+
+/**
+ * R49 — الفروع الدفاعية في المستودعات.
+ * كل حالة هنا تُغلق ذراعاً محدّدة قِيست على أنها غير مغطّاة (فتح الفروع 91.85%):
+ * مفتاح قديم فارغ · مبلغ غائب · سجلّ بلا رقم · حركة بلا معرّف · قيد بلا وصف.
+ */
+describe('R49 — الفروع الدفاعية للمستودعات', () => {
+  it('ObjectRepository: مفتاح قديم موجود لكنه نصّ فارغ ⇒ يُتجاهل ويُكمَل البحث', () => {
+    const storage: SchemaStorage = {
+      getItem: (k: string) => (k === 'old-empty' ? '' : k === 'old-real' ? '{"b":"من القديم"}' : null),
+      setItem: () => undefined,
+    };
+    const value = createObjectRepository<Record<string, unknown>>(
+      { key: 'k', defaults: { a: 1 }, legacyKeys: ['old-empty', 'old-real'] },
+      storage
+    ).read();
+    expect(value).toEqual({ a: 1, b: 'من القديم' });
+  });
+
+  it('ValueRepository: مفتاح قديم فارغ لا يُعاد كقيمة صالحة', () => {
+    const storage: SchemaStorage = {
+      getItem: (k: string) => (k === 'old-empty' ? '' : null),
+      setItem: () => undefined,
+    };
+    const repo = createValueRepository({ key: 'gate', fallback: 'الافتراضي', legacyKeys: ['old-empty'] }, storage);
+    expect(repo.readRaw()).toBeNull();
+    expect(repo.read()).toBe('الافتراضي');
+  });
+
+  it('CollectionRepository: مفتاح قديم فارغ يُتخطّى، و isValidItem يُرشّح العناصر غير الصالحة', () => {
+    const storage: SchemaStorage = {
+      getItem: (k: string) => {
+        if (k === 'old-empty') return '';
+        if (k === 'old-real')
+          return JSON.stringify([
+            { id: 'a', ok: true },
+            { id: 'b', ok: false },
+          ]);
+        return null;
+      },
+      setItem: () => undefined,
+    };
+    const repo = createCollectionRepository<{ id: string; ok: boolean }>(
+      {
+        key: 'k',
+        fallback: [],
+        legacyKeys: ['old-empty', 'old-real'],
+        isValidItem: (item) => (item as { ok?: boolean }).ok === true,
+      },
+      storage
+    );
+    expect(repo.read()).toEqual([{ id: 'a', ok: true }]);
+  });
+
+  it('DebtRepository: التزام بلا حقل debit يُعتبر صفراً فيُكمَل السداد', () => {
+    debtRepository.saveAll([{ id: 'd-zero', credit: 0 } as never]);
+    const paid = debtRepository.recordPayment('d-zero', 50, '2026-11-07');
+    expect(paid?.isCompleted).toBe(true);
+    expect(paid?.credit).toBe(50);
+  });
+
+  it('FinancialRepository: قيد بلا أي مبلغ يُسجَّل بمبلغ صفر في التدقيق', () => {
+    financialRepository.saveAll([]);
+    financialRepository.add({
+      id: 'f-zero',
+      restriction: 'صرف',
+      movement: 'صرف',
+      accountName: 'صندوق',
+    } as never);
+    const log = auditService.getLogsByEntity('FinancialTransaction')[0];
+    expect(log.action).toBe('Payment');
+    expect(log.details).toContain('بمبلغ 0');
+  });
+
+  it('FinancialRepository: عكس قيد بلا رقم وبلا مبالغ وبلا وصف لا يُنتج NaN أو undefined', () => {
+    financialRepository.saveAll([{ id: 'f-bare', restriction: 'قبض', movement: 'قبض', accountName: 'عميل' } as never]);
+    const result = financialRepository.reverseTransaction('f-bare', 'تصحيح');
+
+    expect(result?.reversal.number).toBe('REV-f-bare');
+    expect(result?.reversal.amountYER).toBe(-0);
+    expect(result?.reversal.amountSAR).toBe(-0);
+    expect(result?.reversal.amountUSD).toBe(-0);
+    expect(result?.reversal.description).toContain('للقيد رقم (f-bare)');
+    expect(result?.reversal.description).toContain('السبب: تصحيح. الوصف السابق: ');
+    expect(result?.reversal.description).not.toContain('undefined');
+  });
+
+  it('حركة مخزون: تحديث معرّف مجهول لا يكتب تدقيقاً ولا يرمي، والحذف كذلك', () => {
+    stockMovementRepository.saveAll([]);
+    expect(stockMovementRepository.update('ghost', { beneficiary: 'لا' })).toBeNull();
+    expect(stockMovementRepository.delete('ghost')).toBe(false);
+    expect(auditService.getLogsByEntity('StockMovement')).toHaveLength(0);
+  });
+
+  it('حركة مخزون: التحديث والحذف بالـsubId وحده يُسجّلان السجلّ القديم للتدقيق', () => {
+    stockMovementRepository.saveAll([{ id: 'm-7', subId: 'MV-7', beneficiary: 'قديم' } as never]);
+
+    expect(stockMovementRepository.update('MV-7', { beneficiary: 'جديد' })?.beneficiary).toBe('جديد');
+    const [updateLog] = auditService.getLogsByEntity('StockMovement');
+    expect(updateLog.action).toBe('Update');
+    expect((updateLog.oldValue as { beneficiary?: string } | undefined)?.beneficiary).toBe('قديم');
+
+    expect(stockMovementRepository.delete('MV-7')).toBe(true);
+    const [deleteLog] = auditService.getLogsByEntity('StockMovement');
+    expect(deleteLog.action).toBe('Delete');
+    expect(deleteLog.recordId).toBe('MV-7');
+  });
+
+  it('مهمة Work OS بلا taskNumber: سطر الإنشاء ينتهي بقوسين فارغين لا بـundefined', () => {
+    workTaskRepository.saveAll([]);
+    workTaskRepository.add({ id: 'W-bare', title: 'بلا رقم' } as never);
+    expect(auditService.getLogsByEntity('WorkTask')[0].details).toBe('إنشاء مهمة جديدة: بلا رقم ()');
   });
 });

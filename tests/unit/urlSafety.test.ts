@@ -130,3 +130,61 @@ describe('سياسة CSP', () => {
     expect(injectCspMeta(once)).toBe(once);
   });
 });
+
+/**
+ * R49 — الفروع الدفاعية في منظّف الروابط وسياسة CSP.
+ * كل حالة هنا تُغلق ذراعاً قِيست على أنها غير مغطّاة: رابط بمخطط سليم لكن نصّه غير قابل
+ * للتحليل · رابط بلا مخطط يعجز `new URL` عن تحليله · وسم CSP فارغ · سكربت مضمَّن فارغ ·
+ * سياسة بلا `script-src` أو بلا `default-src` · HTML بلا `<head>`.
+ */
+describe('R49 — منظّف الروابط: ما ينجو من الفحص الأول ويسقط في الثاني', () => {
+  it('مخطط مسموح لكن النصّ غير قابل للتحليل ⇒ سلسلة فارغة', () => {
+    expect(sanitizeExternalUrl('http://')).toBe('');
+    expect(isSafeExternalUrl('http://')).toBe(false);
+  });
+
+  it('بلا مخطط، وإضافة https لا تُنجيه ⇒ سلسلة فارغة', () => {
+    expect(sanitizeExternalUrl('%')).toBe('');
+    expect(sanitizeExternalUrl('[')).toBe('');
+  });
+});
+
+describe('R49 — CSP: الحالات التي لا يراها البناء السعيد', () => {
+  it('سكربت مضمَّن بجسم فارغ لا يُبصم', () => {
+    expect(extractInlineScripts('<script>   </script><script>alert(1)</script>')).toEqual(['alert(1)']);
+  });
+
+  it('buildCspPolicy بلا html أو بـhtml فارغ يعمل بلا بصمات إضافية', () => {
+    expect(buildCspPolicy()).toContain("script-src 'self'");
+    expect(buildCspPolicy({ html: '' })).toBe(buildCspPolicy());
+  });
+
+  it('validateCspPolicy: مقطع فارغ بين الفواصل يُتخطّى', () => {
+    const ok = validateCspPolicy(buildCspPolicy());
+    expect(ok.ok).toBe(true);
+    const withGap = validateCspPolicy(`${buildCspPolicy()};;`);
+    expect(withGap.problems).toEqual([]);
+  });
+
+  it('validateCspPolicy: سياسة بلا script-src تُبلَّغ مرتين (غياب + فراغ)', () => {
+    const result = validateCspPolicy('default-src self');
+    expect(result.ok).toBe(false);
+    expect(result.problems).toEqual([
+      'لا توجد script-src',
+      "object-src ليست 'none'",
+      "base-uri ليست 'self'",
+      "frame-ancestors ليست 'none'",
+    ]);
+  });
+
+  it('validateCspPolicy: سياسة كاملة بلا default-src تُبلَّغ بالغياب وحده', () => {
+    const policy = "script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'";
+    expect(validateCspPolicy(policy).problems).toEqual(['لا توجد default-src']);
+  });
+
+  it('injectCspMeta: HTML بلا <head> يُلحق الوسم في أوّله', () => {
+    const out = injectCspMeta('<body>x</body>');
+    expect(out.startsWith('<meta http-equiv="Content-Security-Policy"')).toBe(true);
+    expect(out.endsWith('<body>x</body>')).toBe(true);
+  });
+});

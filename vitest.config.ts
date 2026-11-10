@@ -56,39 +56,51 @@ export default defineConfig({
        */
       thresholds: {
         /**
-         * R48: رُفعت بعد إدخال **طبقة المستودعات كلها** في المقام (كانت 9 من 10 خارجه).
-         * المقيس اليوم: أسطر 99.3 · دوال 99.28 · فروع 91.72 · تعابير 98.71.
+         * R49: بعد إغلاق 63 ذراعاً دفاعياً من 65 قِيست غير مغطّاة.
+         * المقيس اليوم: أسطر **100** · دوال **100** · تعابير **99.91** · فروع **99.74**.
+         * الذراعان الباقيتان غير قابلتين للبلوغ بنيوياً (انظر `docs/تدقيق/15-الفروع-الدفاعية.md`).
          */
-        lines: 97,
-        functions: 97,
-        branches: 89,
-        statements: 96,
-        // سقف مستقلّ للوحدات التي رُفعت تغطيتها — لا يُخفّض بتراجع تدريجي
-        'src/utils/lookupsLogic.ts': { lines: 95, functions: 95, branches: 90, statements: 95 },
-        'src/utils/auditAutoExportLogic.ts': { lines: 95, functions: 95, branches: 95, statements: 95 },
-        /** R46: سجل النظام (بذرة/فراغ/سقف 1000/تدقيق) ومشغّل الأتمتة واشتقاق الأحداث. */
-        'src/utils/storage/system.ts': { lines: 95, functions: 95, branches: 95, statements: 95 },
-        'src/utils/automation/automationRunner.ts': { lines: 95, functions: 95, branches: 90, statements: 95 },
-        'src/utils/automation/automationDerive.ts': { lines: 95, functions: 95, branches: 85, statements: 95 },
-        /** R47: الترحيلات والمنسّقات — منطق صامت يكتب بيانات المستخدم. */
-        'src/database/schema/entries.ts': { lines: 98, functions: 98, branches: 95, statements: 98 },
-        'src/utils/formatters.ts': { lines: 98, functions: 98, branches: 95, statements: 98 },
+        lines: 99,
+        functions: 99,
+        branches: 99,
+        statements: 99,
         /**
-         * R48: طبقة المستودعات — سقف لكل ملف عند **المقيس اليوم** (أسطر/دوال/تعابير 100%
-         * في العشرة كلها). أي سطر جديد بلا اختبار يُفشل البوابة فوراً. الفروع أدنى في
-         * `BaseRepository`… إلخ لأنها فروع دفاعية (تخزين معطوب · قيمة غير كائنية) لا تُبلَغ
-         * إلا بمحاكاة فشل، والمقيس مذكور في `docs/تدقيق/14-طبقة-المستودعات.md`.
+         * سقف لكل ملف عند **المقيس**. الملفان الوحيدان دون 100 لهما ذراع غير قابل للبلوغ
+         * موثَّق: `automationRunner` (فحص `!plan` بعد فرض `triggerEvent`) و`formatters`
+         * (بديل `ARABIC_DAYS` و`getDay()` محصور بين 0 و6).
+         */
+        'src/database/schema/engine.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/database/schema/entries.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/autoJournaling.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/authGuard.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/pinCrypto.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/urlSafety.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/security/csp.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/importFidelity.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/lookupsLogic.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/auditAutoExportLogic.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/storage/system.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/automation/automationRules.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/automation/automationDerive.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/automation/automationEvents.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** المقيس: أسطر 100 · دوال 100 · تعابير 98.70 · فروع 98.28 (فحص `!plan` غير قابل للبلوغ). */
+        'src/utils/automation/automationRunner.ts': { lines: 100, functions: 100, branches: 98, statements: 98 },
+        /** المقيس: أسطر 100 · دوال 100 · تعابير 100 · فروع 98.63. */
+        'src/utils/formatters.ts': { lines: 100, functions: 100, branches: 98, statements: 100 },
+        /**
+         * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
+         * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.
          */
         'src/database/repositories/BaseRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
-        'src/database/repositories/ObjectRepository.ts': { lines: 100, functions: 100, branches: 94, statements: 100 },
-        'src/database/repositories/ValueRepository.ts': { lines: 100, functions: 100, branches: 93, statements: 100 },
+        'src/database/repositories/ObjectRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/database/repositories/ValueRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/database/repositories/CollectionRepository.ts': {
           lines: 100,
           functions: 100,
-          branches: 94,
+          branches: 100,
           statements: 100,
         },
-        'src/database/repositories/DebtRepository.ts': { lines: 100, functions: 100, branches: 90, statements: 100 },
+        'src/database/repositories/DebtRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/database/repositories/CustomerRepository.ts': {
           lines: 100,
           functions: 100,
@@ -98,14 +110,19 @@ export default defineConfig({
         'src/database/repositories/FinancialRepository.ts': {
           lines: 100,
           functions: 100,
-          branches: 72,
+          branches: 100,
           statements: 100,
         },
-        'src/database/repositories/ProductRepository.ts': { lines: 100, functions: 100, branches: 75, statements: 100 },
+        'src/database/repositories/ProductRepository.ts': {
+          lines: 100,
+          functions: 100,
+          branches: 100,
+          statements: 100,
+        },
         'src/database/repositories/WorkTaskRepository.ts': {
           lines: 100,
           functions: 100,
-          branches: 90,
+          branches: 100,
           statements: 100,
         },
         'src/database/repositories/OtherRepositories.ts': {
