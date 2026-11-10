@@ -42,13 +42,21 @@ export default defineConfig({
        * القيم أدنى من المقيس بهامش صغير ⇒ أي تراجع حقيقي يُفشل البوابة.
        */
       thresholds: {
-        lines: 88,
-        functions: 88,
-        branches: 80,
-        statements: 88,
-        // سقف مستقلّ للوحدتين اللتين كانتا خارج القياس — لا يُخفّض بتراجع تدريجي
+        /**
+         * R46: رُفعت بعد تغطية قرارات سجل النظام ومشغّل الأتمتة واشتقاق الأحداث.
+         * المقيس اليوم: أسطر 94.98 · دوال 98 · فروع 86.82 · تعابير 94.45.
+         */
+        lines: 92,
+        functions: 95,
+        branches: 84,
+        statements: 92,
+        // سقف مستقلّ للوحدات التي رُفعت تغطيتها — لا يُخفّض بتراجع تدريجي
         'src/utils/lookupsLogic.ts': { lines: 95, functions: 95, branches: 90, statements: 95 },
         'src/utils/auditAutoExportLogic.ts': { lines: 95, functions: 95, branches: 95, statements: 95 },
+        /** R46: سجل النظام (بذرة/فراغ/سقف 1000/تدقيق) ومشغّل الأتمتة واشتقاق الأحداث. */
+        'src/utils/storage/system.ts': { lines: 95, functions: 95, branches: 95, statements: 95 },
+        'src/utils/automation/automationRunner.ts': { lines: 95, functions: 95, branches: 90, statements: 95 },
+        'src/utils/automation/automationDerive.ts': { lines: 95, functions: 95, branches: 85, statements: 95 },
       },
     },
   },
