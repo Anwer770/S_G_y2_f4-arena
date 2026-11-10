@@ -43,13 +43,13 @@ export default defineConfig({
        */
       thresholds: {
         /**
-         * R46: رُفعت بعد تغطية قرارات سجل النظام ومشغّل الأتمتة واشتقاق الأحداث.
-         * المقيس اليوم: أسطر 94.98 · دوال 98 · فروع 86.82 · تعابير 94.45.
+         * R47: رُفعت بعد تغطية الترحيلات (entries.ts 100%) والمنسّقات (formatters.ts 100% أسطر).
+         * المقيس اليوم: أسطر 98.54 · دوال 98.5 · فروع 92.21 · تعابير 97.89.
          */
-        lines: 92,
-        functions: 95,
-        branches: 84,
-        statements: 92,
+        lines: 96,
+        functions: 96,
+        branches: 88,
+        statements: 95,
         // سقف مستقلّ للوحدات التي رُفعت تغطيتها — لا يُخفّض بتراجع تدريجي
         'src/utils/lookupsLogic.ts': { lines: 95, functions: 95, branches: 90, statements: 95 },
         'src/utils/auditAutoExportLogic.ts': { lines: 95, functions: 95, branches: 95, statements: 95 },
@@ -57,6 +57,9 @@ export default defineConfig({
         'src/utils/storage/system.ts': { lines: 95, functions: 95, branches: 95, statements: 95 },
         'src/utils/automation/automationRunner.ts': { lines: 95, functions: 95, branches: 90, statements: 95 },
         'src/utils/automation/automationDerive.ts': { lines: 95, functions: 95, branches: 85, statements: 95 },
+        /** R47: الترحيلات والمنسّقات — منطق صامت يكتب بيانات المستخدم. */
+        'src/database/schema/entries.ts': { lines: 98, functions: 98, branches: 95, statements: 98 },
+        'src/utils/formatters.ts': { lines: 98, functions: 98, branches: 95, statements: 98 },
       },
     },
   },
