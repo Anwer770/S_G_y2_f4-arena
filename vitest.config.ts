@@ -84,6 +84,9 @@ export default defineConfig({
         /** R63: الحسابات والترشيح الماليان يدخلان المقام قبل اختبار عقد الدفتر. */
         'src/utils/financial.ts',
         'src/services/financial/FinancialService.ts',
+        /** R64: دليل الأطباء وخدمة الزيارات يدخلان المقام قبل اختبار العقود. */
+        'src/utils/doctors.ts',
+        'src/services/crm/DoctorService.ts',
         /** R62: طابور المزامنة الموحد — يدخل المقام قبل اختبارات الترحيل والدفعات. */
         'src/sync/Outbox.ts',
         'src/utils/syncOutbox.ts',
@@ -207,6 +210,9 @@ export default defineConfig({
         /** R63: تجميع الدفتر والترشيح وخدمة الحفظ/الحذف/العكس؛ كل عقد مالي قابل للقياس. */
         'src/utils/financial.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/services/financial/FinancialService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R64: دليل الأطباء، الزيارة والاستيراد؛ لا يُخفى تطبيع حالة أو أثر Outbox/Audit. */
+        'src/utils/doctors.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/services/crm/DoctorService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
