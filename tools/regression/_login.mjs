@@ -58,7 +58,7 @@ export function seedSession(w, { userId = 'usr-1', expiresInMs = 60 * 60 * 1000,
 }
 
 /** يقرأ مستخدمي الإعدادات المخزّنة (للتحقق من التجزئة وعدم تخزين النص) */
-export function storedUsers(w, settingsKey = 'qeema_accounting_system_settings_v1') {
+export function storedUsers(w, settingsKey = 'suite_unified_settings_v2') {
   try {
     const raw = w.localStorage.getItem(settingsKey);
     if (!raw) return [];

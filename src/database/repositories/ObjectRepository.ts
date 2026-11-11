@@ -32,6 +32,8 @@ export interface ObjectRepository<T extends object> {
   readonly key: string;
   /** يقرأ الكائن (مدموجاً بالافتراضي ما لم يُعطَّل الدمج). */
   read(): T;
+  /** هل للمفتاح الحالي قيمة خام؟ يُستخدم لترحيل legacy بلا قراءة تخزين مباشرة. */
+  hasCurrent(): boolean;
   /** يستبدل الكائن كاملاً. */
   write(value: T): void;
   /** يعدّل حقولاً محدَّدة فوق المحفوظ (دمج ضحل). */
@@ -86,6 +88,13 @@ export function createObjectRepository<T extends object>(
   return {
     key,
     read,
+    hasCurrent: () => {
+      try {
+        return storage.getItem(key) !== null;
+      } catch {
+        return false;
+      }
+    },
     write,
     patch: (partial: Partial<T>) => {
       const next = { ...read(), ...partial };

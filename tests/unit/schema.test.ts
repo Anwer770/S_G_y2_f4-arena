@@ -342,6 +342,22 @@ describe('مستودع الكائن المفرد', () => {
     expect(createObjectRepository({ key: 'k', defaults }, storage).read()).toEqual(defaults);
   });
 
+  it('يفحص وجود المفتاح الحالي بلا لمس الإرث، وفشل القراءة يعده غائباً', () => {
+    const absent = createObjectRepository({ key: 'k', defaults }, memoryStorage().storage);
+    const present = createObjectRepository({ key: 'k', defaults }, memoryStorage({ k: '' }).storage);
+    const blocked: SchemaStorage = {
+      getItem: () => {
+        throw new Error('محجوب');
+      },
+      setItem: () => undefined,
+      removeItem: () => undefined,
+    };
+
+    expect(absent.hasCurrent()).toBe(false);
+    expect(present.hasCurrent()).toBe(true);
+    expect(createObjectRepository({ key: 'k', defaults }, blocked).hasCurrent()).toBe(false);
+  });
+
   it('الكائن المحفوظ يُدمج فوق الافتراضي (لا فقدان حقول جديدة بعد الترقية)', () => {
     const { storage } = memoryStorage({ k: JSON.stringify({ b: 'محفوظ', قديم: 7 }) });
     const value = createObjectRepository<Record<string, unknown>>({ key: 'k', defaults }, storage).read();
