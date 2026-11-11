@@ -29,8 +29,7 @@ export function isDoctorTaskActiveInRange(dateBegin?: string, dateEnd?: string):
     return todayStr >= dateBegin && todayStr <= dateEnd;
   }
   if (dateBegin) return todayStr >= dateBegin;
-  if (dateEnd) return todayStr <= dateEnd;
-  return true;
+  return todayStr <= dateEnd!;
 }
 
 export interface DoctorDashboardStats {
@@ -147,7 +146,7 @@ export function calculateDoctorStats(doctors: DoctorRecord[], visits: DoctorVisi
     .map(([region, count]) => ({
       region,
       count,
-      percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+      percentage: Math.round((count / total) * 100),
     }))
     .sort((a, b) => b.count - a.count);
 
@@ -181,7 +180,7 @@ export function calculateDoctorStats(doctors: DoctorRecord[], visits: DoctorVisi
       completed: data.completed,
       inProgress: data.inProgress,
       planned: data.planned,
-      completionRate: data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0,
+      completionRate: Math.round((data.completed / data.total) * 100),
     }))
     .sort((a, b) => b.total - a.total);
 
@@ -513,13 +512,15 @@ export async function parseDoctorsExcelOrCSV(
           // Normalize significance (فارغ ⇒ '' لا 'B')
           let significance: DoctorSignificance = '';
           if (significanceRaw.includes('A') || significanceRaw === 'أ') significance = 'A';
+          else if (significanceRaw.includes('B') || significanceRaw === 'ب') significance = 'B';
           else if (significanceRaw.includes('C') || significanceRaw === 'ج') significance = 'C';
           else if (significanceRaw.includes('√') || significanceRaw.includes('v') || significanceRaw.includes('صح'))
             significance = '√';
 
           // Normalize status (فارغ ⇒ '' لا 'مخطط')
           let status: DoctorVisitStatus = '';
-          if (statusRaw.includes('مكتمل') || statusRaw.includes('منجز') || statusRaw.includes('completed'))
+          if (statusRaw.includes('مخطط') || statusRaw.includes('planned')) status = 'مخطط';
+          else if (statusRaw.includes('مكتمل') || statusRaw.includes('منجز') || statusRaw.includes('completed'))
             status = 'مكتمل';
           else if (statusRaw.includes('تنفيذ') || statusRaw.includes('progress')) status = 'قيد تنفيذ';
           else if (statusRaw.includes('متابعة') || statusRaw.includes('follow')) status = 'متابعة';
