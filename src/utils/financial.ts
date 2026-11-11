@@ -218,9 +218,10 @@ export function filterFinancialTransactions(
 
     // Currency filter
     if (filters.currencyFilter && filters.currencyFilter !== 'all') {
-      if (filters.currencyFilter === 'YER' && (txn.amountYER || 0) <= 0) return false;
-      if (filters.currencyFilter === 'SAR' && (txn.amountSAR || 0) <= 0) return false;
-      if (filters.currencyFilter === 'USD' && (txn.amountUSD || 0) <= 0) return false;
+      // قيد العكس يحمل قيمة سالبة صحيحة؛ «هذه عملة مستخدمة» تعني غير صفرية لا موجبة فقط.
+      if (filters.currencyFilter === 'YER' && (txn.amountYER || 0) === 0) return false;
+      if (filters.currencyFilter === 'SAR' && (txn.amountSAR || 0) === 0) return false;
+      if (filters.currencyFilter === 'USD' && (txn.amountUSD || 0) === 0) return false;
     }
 
     // Draft filter
@@ -235,17 +236,17 @@ export function filterFinancialTransactions(
       if (filters.periodFilter === 'daily') {
         if (txnDate !== targetDate) return false;
       } else if (filters.periodFilter === 'weekly') {
-        const d = new Date(targetDate);
-        const dayOfWeek = d.getDay(); // 0 is Sunday, 6 is Saturday
-        // Calculate week starting on Saturday
+        // التواريخ هنا «أيام تقويمية» لا لحظات محلية. استخدام setHours/getDay المحليين
+        // يحرك بداية السبت إلى الجمعة في مناطق +UTC مثل صنعاء عند تحويلها إلى ISO.
+        const d = new Date(`${targetDate.slice(0, 10)}T00:00:00.000Z`);
+        if (Number.isNaN(d.getTime())) return false;
+        const dayOfWeek = d.getUTCDay(); // 0 is Sunday, 6 is Saturday
         const diffToSat = (dayOfWeek + 1) % 7;
         const startOfWeek = new Date(d);
-        startOfWeek.setDate(d.getDate() - diffToSat);
-        startOfWeek.setHours(0, 0, 0, 0);
+        startOfWeek.setUTCDate(d.getUTCDate() - diffToSat);
 
         const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
-        endOfWeek.setHours(23, 59, 59, 999);
+        endOfWeek.setUTCDate(startOfWeek.getUTCDate() + 6);
 
         const startStr = startOfWeek.toISOString().split('T')[0];
         const endStr = endOfWeek.toISOString().split('T')[0];
