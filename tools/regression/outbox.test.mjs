@@ -21,7 +21,7 @@ const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..'
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
 const require = createRequire(path.join(ROOT, 'package.json'));
 
-const N = 2005;                    // عدد الكتابات في الاختبار
+const N = 2005; // عدد الكتابات في الاختبار
 const results = [];
 const check = (name, ok, detail = '') => {
   results.push({ name, ok, detail });
@@ -31,21 +31,37 @@ const check = (name, ok, detail = '') => {
 // ---------------------------------------------------------------- bundle the sync layer
 const bundlePath = path.join(ROOT, 'docs', 'تدقيق', '.outbox-bundle.mjs');
 console.log(`▸ تجزيء طبقة المزامنة من: ${APP_ROOT}`);
-execFileSync(path.join(ROOT, 'node_modules', '.bin', 'esbuild'), [
-  path.join(APP_ROOT, 'src', 'sync', 'Outbox.ts'),
-  '--bundle', '--format=esm', '--platform=node', '--outfile=' + bundlePath,
-  '--define:process.env.NODE_ENV="production"', '--log-level=error',
-], { stdio: 'inherit' });
+execFileSync(
+  path.join(ROOT, 'node_modules', '.bin', 'esbuild'),
+  [
+    path.join(APP_ROOT, 'src', 'sync', 'Outbox.ts'),
+    '--bundle',
+    '--format=esm',
+    '--platform=node',
+    '--outfile=' + bundlePath,
+    '--define:process.env.NODE_ENV="production"',
+    '--log-level=error',
+  ],
+  { stdio: 'inherit' }
+);
 
 // ---------------------------------------------------------------- browser-ish globals
 const { indexedDB: fakeIDB, IDBKeyRange: fakeKeyRange } = require('fake-indexeddb');
 const ls = new Map();
+let canonicalOutboxWrites = 0;
 const localStorageStub = {
-  get length() { return ls.size; },
+  get length() {
+    return ls.size;
+  },
   key: (i) => [...ls.keys()][i] ?? null,
   getItem: (k) => (ls.has(k) ? ls.get(k) : null),
-  setItem: (k, v) => { ls.set(k, String(v)); },
-  removeItem: (k) => { ls.delete(k); },
+  setItem: (k, v) => {
+    if (k === 'suite_sync_outbox_v1') canonicalOutboxWrites += 1;
+    ls.set(k, String(v));
+  },
+  removeItem: (k) => {
+    ls.delete(k);
+  },
   clear: () => ls.clear(),
 };
 globalThis.window = { localStorage: localStorageStub, indexedDB: fakeIDB, IDBKeyRange: fakeKeyRange };
@@ -68,29 +84,67 @@ await new Promise((r) => setTimeout(r, 200));
 
 const queue = Outbox.getAll();
 check('الطابور لا يتجاوز السقف', queue.length <= 2000, `الطول الفعلي: ${queue.length} (الكتابات: ${N})`);
-check('الطابور احتفظ بأحدث العناصر (FIFO)', queue[queue.length - 1]?.recordId === `R-${N}`,
-  `آخر عنصر: ${queue[queue.length - 1]?.recordId}`);
-check('أقدم العناصر أُسقطت', queue[0]?.recordId === `R-${N - queue.length + 1}`,
-  `أول عنصر محفوظ: ${queue[0]?.recordId}`);
+check(
+  'الطابور احتفظ بأحدث العناصر (FIFO)',
+  queue[queue.length - 1]?.recordId === `R-${N}`,
+  `آخر عنصر: ${queue[queue.length - 1]?.recordId}`
+);
+check(
+  'أقدم العناصر أُسقطت',
+  queue[0]?.recordId === `R-${N - queue.length + 1}`,
+  `أول عنصر محفوظ: ${queue[0]?.recordId}`
+);
 
 const dropped = typeof Outbox.getDroppedCount === 'function' ? Outbox.getDroppedCount() : null;
-check('الإسقاط مسجَّل في عدّاد (لا إسقاط صامت)', dropped === N - queue.length,
-  `المُسقَط: ${dropped} — المتوقع: ${N - queue.length}`);
+check(
+  'الإسقاط مسجَّل في عدّاد (لا إسقاط صامت)',
+  dropped === N - queue.length,
+  `المُسقَط: ${dropped} — المتوقع: ${N - queue.length}`
+);
 
 const auditRaw = ls.get('suite_unified_audit_v2');
 let auditCount = 0;
-try { auditCount = JSON.parse(auditRaw || '[]').length; } catch { /* ignore */ }
+try {
+  auditCount = JSON.parse(auditRaw || '[]').length;
+} catch {
+  /* ignore */
+}
 check('كل إسقاط سُجّل في سجل التدقيق', auditCount > 0, `قيود التدقيق: ${auditCount}`);
 
 const outboxRaw = ls.get('suite_sync_outbox_v1') || '[]';
 let written = 0;
-try { written = JSON.parse(outboxRaw).length; } catch { /* ignore */ }
+try {
+  written = JSON.parse(outboxRaw).length;
+} catch {
+  /* ignore */
+}
 check('حجم الطابور المخزَّن مقبول (بلا تضخّم غير محدود)', written <= 2000, `${written} عنصراً مخزَّناً`);
+
+// R62: دفعة الاستيراد/الحذف الجماعي تقرأ وتكتب السجل مرة واحدة، لا مرة لكل صف.
+Outbox.clear();
+const writesBeforeBatch = canonicalOutboxWrites;
+const batchSize = 500;
+const batch = Outbox.enqueueMany(
+  Array.from({ length: batchSize }, (_, i) => ({
+    entity: 'FinancialTransaction',
+    operation: 'INSERT',
+    recordId: `B-${i + 1}`,
+    payload: { id: `B-${i + 1}` },
+  }))
+);
+check(
+  'دفعة عمليات المزامنة تكتب الطابور مرة واحدة',
+  canonicalOutboxWrites - writesBeforeBatch === 1 && Outbox.getAll().length === batchSize && batch.length === batchSize,
+  `كتابات الدفعة: ${canonicalOutboxWrites - writesBeforeBatch} · عمليات: ${batch.length}`
+);
 
 // ---------------------------------------------------------------- summary
 fs.rmSync(bundlePath, { force: true });
 const failed = results.filter((r) => !r.ok);
 console.log('\n════════ حصيلة اختبار طابور المزامنة ════════');
 console.log(`نجح: ${results.length - failed.length} / ${results.length}`);
-if (failed.length) { console.log('✗ فشل الاختبار'); process.exitCode = 1; } else console.log('✔ نجح الاختبار');
+if (failed.length) {
+  console.log('✗ فشل الاختبار');
+  process.exitCode = 1;
+} else console.log('✔ نجح الاختبار');
 process.exit(process.exitCode ?? 0);

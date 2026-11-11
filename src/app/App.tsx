@@ -44,7 +44,7 @@ import { BackupService } from '../services/backup/BackupService';
 
 // Sync & Helpers
 import { useMultiTabSync, broadcastDataChange } from '../utils/multiTabSync';
-import { recordOutboxMutation } from '../utils/syncOutbox';
+import { recordOutboxMutation, recordOutboxMutations } from '../utils/syncOutbox';
 import { loadTasks } from '../utils/workosStorage';
 import { syncMovementToFinancialJournal, removeMovementFromFinancialJournal } from '../utils/autoJournaling';
 import { getDueAlerts, DueAlertsSummary } from '../utils/dueAlerts';
@@ -278,7 +278,7 @@ export const MainApp: React.FC = () => {
     const updated = records.filter((r) => !set.has(r.subId));
     setRecords(updated);
     saveRecords(updated);
-    subIds.forEach((id) => recordOutboxMutation('stock', 'DELETE', id));
+    recordOutboxMutations(subIds.map((id) => ({ entity: 'stock', action: 'DELETE', entityId: id })));
 
     let updatedTxns = financialTransactions;
     subIds.forEach((id) => {
@@ -368,7 +368,14 @@ export const MainApp: React.FC = () => {
     }
     setFinancialTransactions(updated);
     saveFinancialTransactions(updated);
-    imported.forEach((t) => recordOutboxMutation('financial', 'INSERT', t.id, t));
+    recordOutboxMutations(
+      imported.map((transaction) => ({
+        entity: 'financial',
+        action: 'INSERT',
+        entityId: transaction.id,
+        payload: transaction,
+      }))
+    );
     broadcastDataChange('FINANCIAL_UPDATED');
   };
 
