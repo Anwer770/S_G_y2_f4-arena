@@ -74,6 +74,9 @@ export default defineConfig({
         'src/utils/workos/workosLoaders.ts',
         'src/utils/workos/workosExporters.ts',
         'src/utils/workos/workosAutomation.ts',
+        /** R57: إعدادات النظام والعهد تدخلان المقام قبل اختبارات الدفعة. */
+        'src/utils/settingsStorage.ts',
+        'src/utils/storage/custody.ts',
         'src/database/dbStorage.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
@@ -181,6 +184,9 @@ export default defineConfig({
         'src/utils/workos/workosLoaders.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/workos/workosExporters.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/workos/workosAutomation.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R57: إعدادات النظام والعهد؛ تُقاس أولاً ثم تُغلق كل قراراتها عند 100%. */
+        'src/utils/settingsStorage.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/storage/custody.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /**
          * R48/R49: طبقة المستودعات — الأسطر والدوال والتعابير والفروع **100** في العشرة كلها
          * بعد إغلاق 15 ذراعاً في R49 وإزالة سقوطَين ميتَين في `ProductRepository`.

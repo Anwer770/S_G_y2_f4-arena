@@ -1,7 +1,10 @@
-import { CompleteSystemSettings, UserRole } from '../types/settings';
+import { CompleteSystemSettings, CustomRole, SystemUser } from '../types/settings';
 import { createObjectRepository } from '../database/repositories/ObjectRepository';
+import { STORAGE_KEYS } from './storage/keys';
 
-const SETTINGS_STORAGE_KEY = 'qeema_accounting_system_settings_v1';
+/** المفتاح السابق كان خارج سجل المفاتيح الموحّد؛ يبقى للقراءة مرة واحدة فقط. */
+export const LEGACY_SETTINGS_STORAGE_KEY = 'qeema_accounting_system_settings_v1';
+const SETTINGS_STORAGE_KEY = STORAGE_KEYS.SETTINGS;
 
 /**
  * الإعدادات تُقرأ ككائن واحد بلا دمج تلقائي (R42): التطبيع أدناه يدمج كل قسم
@@ -11,6 +14,7 @@ const settingsRepo = createObjectRepository<Record<string, unknown>>({
   key: SETTINGS_STORAGE_KEY,
   defaults: {},
   noMerge: true,
+  legacyKeys: [LEGACY_SETTINGS_STORAGE_KEY],
 });
 
 export const SETTINGS_UPDATED_EVENT = 'system_settings_updated';
@@ -283,78 +287,127 @@ export const ALL_PERMISSIONS_LIST = [
   },
 ] as const;
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+/** لا تعُد المرجع الافتراضي نفسه: `updateCurrentUserName` يعدّل الكائن في مكانه. */
+const cloneDefaultSettings = (): CompleteSystemSettings => JSON.parse(JSON.stringify(DEFAULT_SYSTEM_SETTINGS));
+
+const sectionOrEmpty = (value: unknown): Record<string, unknown> => (isRecord(value) ? value : {});
+
+const isSystemUser = (value: unknown): value is SystemUser =>
+  isRecord(value) &&
+  typeof value.id === 'string' &&
+  typeof value.name === 'string' &&
+  typeof value.email === 'string' &&
+  typeof value.role === 'string' &&
+  (value.status === 'active' || value.status === 'inactive') &&
+  typeof value.createdAt === 'string';
+
+const isCustomRole = (value: unknown): value is CustomRole =>
+  isRecord(value) &&
+  typeof value.id === 'string' &&
+  typeof value.label === 'string' &&
+  Array.isArray(value.permissions) &&
+  value.permissions.every((permission) => typeof permission === 'string') &&
+  typeof value.createdAt === 'string';
+
+const normalizeRolePermissions = (value: unknown, defaults: Record<string, string[]>): Record<string, string[]> => {
+  if (!isRecord(value)) return { ...defaults };
+  return {
+    ...defaults,
+    ...Object.fromEntries(
+      Object.entries(value)
+        .filter(
+          ([, permissions]) =>
+            Array.isArray(permissions) && permissions.every((permission) => typeof permission === 'string')
+        )
+        .map(([role, permissions]) => [role, [...(permissions as string[])]])
+    ),
+  };
+};
+
 export function loadCompleteSystemSettings(): CompleteSystemSettings {
+  const defaults = cloneDefaultSettings();
   try {
     const parsed = settingsRepo.read() as Partial<CompleteSystemSettings> & Record<string, unknown>;
-    if (Object.keys(parsed).length > 0) {
-      const company = { ...DEFAULT_SYSTEM_SETTINGS.company, ...(parsed.company || {}) };
-      // If company still has default placeholder from old version, update to new name
-      if (!company.nameAr || company.nameAr === 'شركة قيمة للتجارة والتوكيلات') {
-        company.nameAr = 'المنظومة-الإدارية-المتكاملة';
-      }
+    if (Object.keys(parsed).length === 0) return defaults;
 
-      const general = {
-        ...DEFAULT_SYSTEM_SETTINGS.general,
-        ...(parsed.general || {}),
-      };
-      if (
-        !general.currentUserName ||
-        general.currentUserName.trim() === '' ||
-        general.currentUserName === 'مدير النظام'
-      ) {
-        general.currentUserName = 'محمد العولقي';
-      }
-      if (
-        !general.currentUserTitle ||
-        general.currentUserTitle.trim() === '' ||
-        general.currentUserTitle === 'مدير عام المنظومة والعمليات'
-      ) {
-        general.currentUserTitle = 'مدير النظام التنفيذي';
-      }
-
-      const users: typeof DEFAULT_SYSTEM_SETTINGS.users = parsed.users || DEFAULT_SYSTEM_SETTINGS.users;
-      // If the primary admin user exists, sync their name
-      if (
-        users &&
-        users.length > 0 &&
-        users[0].id === 'usr-1' &&
-        (users[0].name === 'أنور قاسم' || users[0].name === 'مدير النظام' || !users[0].name)
-      ) {
-        users[0].name = general.currentUserName;
-        users[0].avatarInitial = 'م';
-      }
-
-      return {
-        company,
-        general,
-        inventory: {
-          warehouses: parsed.inventory?.warehouses || DEFAULT_SYSTEM_SETTINGS.inventory.warehouses,
-          productCategories: parsed.inventory?.productCategories || DEFAULT_SYSTEM_SETTINGS.inventory.productCategories,
-          units: parsed.inventory?.units || DEFAULT_SYSTEM_SETTINGS.inventory.units,
-          reorderPointDefault:
-            typeof parsed.inventory?.reorderPointDefault === 'number'
-              ? parsed.inventory.reorderPointDefault
-              : DEFAULT_SYSTEM_SETTINGS.inventory.reorderPointDefault,
-        },
-        fiscalYear: { ...DEFAULT_SYSTEM_SETTINGS.fiscalYear, ...(parsed.fiscalYear || {}) },
-        notifications: { ...DEFAULT_SYSTEM_SETTINGS.notifications, ...(parsed.notifications || {}) },
-        printer: {
-          ...DEFAULT_SYSTEM_SETTINGS.printer,
-          ...(parsed.printer || {}),
-          margins: { ...DEFAULT_SYSTEM_SETTINGS.printer.margins, ...(parsed.printer?.margins || {}) },
-        },
-        users,
-        rolePermissions: { ...DEFAULT_SYSTEM_SETTINGS.rolePermissions, ...(parsed.rolePermissions || {}) },
-        customRoles: Array.isArray(parsed.customRoles)
-          ? parsed.customRoles.filter((r: unknown) => r && typeof r === 'object')
-          : [],
-        database: { ...DEFAULT_SYSTEM_SETTINGS.database, ...(parsed.database || {}) },
-      };
+    const company = { ...defaults.company, ...sectionOrEmpty(parsed.company) };
+    // If company still has default placeholder from old version, update to new name
+    if (typeof company.nameAr !== 'string' || !company.nameAr || company.nameAr === 'شركة قيمة للتجارة والتوكيلات') {
+      company.nameAr = defaults.company.nameAr;
     }
+
+    const general = { ...defaults.general, ...sectionOrEmpty(parsed.general) };
+    if (
+      typeof general.currentUserName !== 'string' ||
+      general.currentUserName.trim() === '' ||
+      general.currentUserName === 'مدير النظام'
+    ) {
+      general.currentUserName = defaults.general.currentUserName;
+    }
+    if (
+      typeof general.currentUserTitle !== 'string' ||
+      general.currentUserTitle.trim() === '' ||
+      general.currentUserTitle === 'مدير عام المنظومة والعمليات'
+    ) {
+      general.currentUserTitle = defaults.general.currentUserTitle;
+    }
+
+    const inventory = sectionOrEmpty(parsed.inventory);
+    const users = Array.isArray(parsed.users)
+      ? parsed.users.filter(isSystemUser).map((user) => ({ ...user }))
+      : defaults.users;
+    // If the primary admin user exists, sync their name
+    if (
+      users.length > 0 &&
+      users[0].id === 'usr-1' &&
+      (users[0].name === 'أنور قاسم' || users[0].name === 'مدير النظام' || !users[0].name)
+    ) {
+      users[0].name = general.currentUserName;
+      users[0].avatarInitial = 'م';
+    }
+
+    const normalized: CompleteSystemSettings = {
+      company,
+      general,
+      inventory: {
+        warehouses: Array.isArray(inventory.warehouses) ? inventory.warehouses : defaults.inventory.warehouses,
+        productCategories: Array.isArray(inventory.productCategories)
+          ? inventory.productCategories.filter((category): category is string => typeof category === 'string')
+          : defaults.inventory.productCategories,
+        units: Array.isArray(inventory.units)
+          ? inventory.units.filter((unit): unit is string => typeof unit === 'string')
+          : defaults.inventory.units,
+        reorderPointDefault:
+          typeof inventory.reorderPointDefault === 'number'
+            ? inventory.reorderPointDefault
+            : defaults.inventory.reorderPointDefault,
+      },
+      fiscalYear: { ...defaults.fiscalYear, ...sectionOrEmpty(parsed.fiscalYear) },
+      notifications: { ...defaults.notifications, ...sectionOrEmpty(parsed.notifications) },
+      printer: {
+        ...defaults.printer,
+        ...sectionOrEmpty(parsed.printer),
+        margins: { ...defaults.printer.margins, ...sectionOrEmpty(sectionOrEmpty(parsed.printer).margins) },
+      },
+      users,
+      rolePermissions: normalizeRolePermissions(parsed.rolePermissions, defaults.rolePermissions),
+      customRoles: Array.isArray(parsed.customRoles) ? parsed.customRoles.filter(isCustomRole) : [],
+      database: { ...defaults.database, ...sectionOrEmpty(parsed.database) },
+    };
+
+    // ننقل الإرث إلى المفتاح الموحّد مرة واحدة فقط. وجود المفتاح الجديد (حتى إن كان
+    // فارغاً/تالفاً) قرارٌ صريح ولا يجوز أن يُستبدل ببيانات قديمة.
+    if (!settingsRepo.hasCurrent()) {
+      settingsRepo.write(normalized as unknown as Record<string, unknown>);
+    }
+    return normalized;
   } catch (err) {
     console.error('Error loading complete system settings:', err);
   }
-  return DEFAULT_SYSTEM_SETTINGS;
+  return defaults;
 }
 
 export function saveCompleteSystemSettings(settings: CompleteSystemSettings): void {
@@ -366,12 +419,10 @@ export function saveCompleteSystemSettings(settings: CompleteSystemSettings): vo
 
 export function getCurrentUserProfile(): { name: string; title: string; initial: string } {
   const settings = loadCompleteSystemSettings();
-  const rawName = settings.general?.currentUserName?.trim();
-  const name = rawName && rawName !== 'مدير النظام' ? rawName : 'محمد العولقي';
-  const rawTitle = settings.general?.currentUserTitle?.trim();
-  const title = rawTitle && rawTitle !== 'مدير عام المنظومة والعمليات' ? rawTitle : 'مدير النظام التنفيذي';
-  const initial = name.charAt(0) || 'م';
-  return { name, title, initial };
+  const name = settings.general.currentUserName;
+  // `loadCompleteSystemSettings` يملأ اللقب الافتراضي دائماً رغم كونه اختيارياً في نوع الإدخال القديم.
+  const title = settings.general.currentUserTitle!;
+  return { name, title, initial: name.charAt(0) };
 }
 
 export function updateCurrentUserName(newName: string, newTitle?: string): void {
@@ -380,12 +431,10 @@ export function updateCurrentUserName(newName: string, newTitle?: string): void 
   if (newTitle !== undefined) {
     settings.general.currentUserTitle = newTitle.trim();
   }
-  if (settings.users && settings.users.length > 0) {
-    const adminIdx = settings.users.findIndex((u) => u.role === 'admin' || u.id === 'usr-1');
-    if (adminIdx >= 0) {
-      settings.users[adminIdx].name = settings.general.currentUserName;
-      settings.users[adminIdx].avatarInitial = settings.general.currentUserName.charAt(0) || 'م';
-    }
+  const admin = settings.users.find((u) => u.role === 'admin' || u.id === 'usr-1');
+  if (admin) {
+    admin.name = settings.general.currentUserName;
+    admin.avatarInitial = settings.general.currentUserName.charAt(0);
   }
   saveCompleteSystemSettings(settings);
 }

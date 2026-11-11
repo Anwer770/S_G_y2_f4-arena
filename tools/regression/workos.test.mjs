@@ -29,7 +29,7 @@ const EXPECT = process.env.WORKOS_EXPECT !== '0';
 const TAG = process.env.WORKOS_TAG || (EXPECT ? 'after' : 'before');
 const require = createRequire(path.join(ROOT, 'package.json'));
 
-const SETTINGS_KEY = 'qeema_accounting_system_settings_v1';
+const SETTINGS_KEY = 'suite_unified_settings_v2';
 const SUITE_TASKS_KEY = 'suite_tasks_tasks_v2';
 const WORKOS_TASKS_KEY = 'workos_v1_tasks';
 const SUITE_DONE_STATUS = 'تم الانجاز';

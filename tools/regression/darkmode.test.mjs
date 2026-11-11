@@ -23,7 +23,7 @@ const EXPECT = process.env.DARK_EXPECT !== '0';
 const TAG = process.env.DARK_TAG || (EXPECT ? 'after' : 'before');
 const require = createRequire(path.join(ROOT, 'package.json'));
 
-const SETTINGS_KEY = 'qeema_accounting_system_settings_v1';
+const SETTINGS_KEY = 'suite_unified_settings_v2';
 const THEME_KEY = 'app_theme_mode';
 
 const results = [];

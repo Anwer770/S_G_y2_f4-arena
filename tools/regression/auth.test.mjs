@@ -22,7 +22,8 @@ const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..'
 const APP_ROOT = process.env.APP_ROOT ? path.resolve(process.env.APP_ROOT) : ROOT;
 const require = createRequire(path.join(ROOT, 'package.json'));
 
-const SETTINGS_KEY = 'qeema_accounting_system_settings_v1';
+// إعدادات النظام الموحدة؛ ترحيل المفتاح القديم محمي في اختبارات R57 للوحدة.
+const SETTINGS_KEY = 'suite_unified_settings_v2';
 const CUSTOM_PIN = '9876';
 
 const results = [];
@@ -173,7 +174,7 @@ async function submitCredentials(w, doc, pin, confirm) {
   const entered = await waitFor(() => isLoggedIn(doc), 12000);
   check('A6 · رمز مقبول (4–6 أرقام) يُحفظ ويُدخل الحساب', entered);
 
-  const savedUser = storedUsers(w).find((u) => u.id === 'usr-1') || {};
+  const savedUser = storedUsers(w, SETTINGS_KEY).find((u) => u.id === 'usr-1') || {};
   const hashedOk =
     !!savedUser.pinHash && !!savedUser.pinSalt && Number(savedUser.pinIterations) >= 20000 &&
     !savedUser.pin && !savedUser.password;
