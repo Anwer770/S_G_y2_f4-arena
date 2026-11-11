@@ -1,7 +1,7 @@
 /**
  * مخزن السجل المالي اليومي (Financial) — مُستخرج من storage.ts (R24).
  * R37: كل قراءة/كتابة عبر مستودع المجموعات. السلوك محفوظ: **كل** القوائم
- * التسع تُرجع البذرة عند المصفوفة الفارغة (`fallbackOnEmpty`) — لا عدّادات
+ * الثماني تُرجع البذرة عند المصفوفة الفارغة (`fallbackOnEmpty`) — لا عدّادات
  * تسلسل في هذه الوحدة، وعدّاد المخزون مكانه `stock.ts`.
  */
 import { createCollectionRepository } from '../../database/repositories/CollectionRepository';
