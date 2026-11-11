@@ -1,5 +1,5 @@
 {
-  "_comment": "R64 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
+  "_comment": "R65 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
   "measuredAt": "2026-11-07",
   "files": [
     "src/utils/pinCrypto.ts",
@@ -62,6 +62,8 @@
     "src/utils/financial.ts",
     "src/services/financial/FinancialService.ts",
     "src/utils/doctors.ts",
-    "src/services/crm/DoctorService.ts"
+    "src/services/crm/DoctorService.ts",
+    "src/utils/routines.ts",
+    "src/services/routines/RoutineService.ts"
   ]
 }

@@ -50,6 +50,13 @@ export function formatTimerSeconds(totalSeconds: number): string {
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
+function parseCalendarDate(dateStr: string): Date | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
+
+  const date = new Date(`${dateStr}T00:00:00.000Z`);
+  return Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== dateStr ? null : date;
+}
+
 // Helper to check if a date matches a routine's recurrence schedule
 export function isRoutineScheduledForDate(
   routine: RoutineRecord,
@@ -59,6 +66,9 @@ export function isRoutineScheduledForDate(
   if (!routine.isActive || routine.status === 'ARCHIVED' || routine.status === 'DRAFT') {
     return false;
   }
+
+  const dateObj = parseCalendarDate(dateStr);
+  if (!dateObj) return false;
 
   // Check start & end date constraints
   if (routine.startDate && dateStr < routine.startDate) return false;
@@ -70,9 +80,8 @@ export function isRoutineScheduledForDate(
   );
   if (hasSkipException) return false;
 
-  const dateObj = new Date(dateStr + 'T00:00:00');
-  const dayOfWeek = dateObj.getDay(); // 0: Sun, 1: Mon, ... 6: Sat
-  const dayOfMonth = dateObj.getDate();
+  const dayOfWeek = dateObj.getUTCDay(); // 0: Sun, 1: Mon, ... 6: Sat
+  const dayOfMonth = dateObj.getUTCDate();
 
   switch (routine.type) {
     case 'DAILY':
@@ -102,8 +111,9 @@ export function isRoutineScheduledForDate(
 
     case 'CUSTOM_INTERVAL':
       if (routine.intervalDays && routine.intervalDays > 1 && routine.startDate) {
-        const start = new Date(routine.startDate + 'T00:00:00').getTime();
+        const start = parseCalendarDate(routine.startDate)?.getTime();
         const current = dateObj.getTime();
+        if (start === undefined) return false;
         const diffDays = Math.floor((current - start) / (1000 * 60 * 60 * 24));
         return diffDays >= 0 && diffDays % routine.intervalDays === 0;
       }
@@ -129,8 +139,10 @@ export function generateOccurrencesForDateRange(
     existingMap.set(`${occ.date}_${occ.routineId}`, occ);
   });
 
-  const start = new Date(startDate + 'T00:00:00');
-  const end = new Date(endDate + 'T00:00:00');
+  const start = parseCalendarDate(startDate);
+  const end = parseCalendarDate(endDate);
+  if (!start || !end || start > end) return result;
+
   const current = new Date(start);
 
   while (current <= end) {
@@ -162,7 +174,7 @@ export function generateOccurrencesForDateRange(
       }
     });
 
-    current.setDate(current.getDate() + 1);
+    current.setUTCDate(current.getUTCDate() + 1);
   }
 
   return result;
@@ -279,6 +291,7 @@ export function calculateRoutineKPIs(
   let energySum = 0;
   let focusSum = 0;
   let validEnergyCount = 0;
+  let validFocusCount = 0;
 
   executions.forEach((ex) => {
     totalActualMinutes += ex.actualDuration || 0;
@@ -289,11 +302,12 @@ export function calculateRoutineKPIs(
     }
     if (ex.focusLevel) {
       focusSum += ex.focusLevel;
+      validFocusCount++;
     }
   });
 
   const avgEnergyLevel = validEnergyCount > 0 ? Number((energySum / validEnergyCount).toFixed(1)) : 4.5;
-  const avgFocusLevel = validEnergyCount > 0 ? Number((focusSum / validEnergyCount).toFixed(1)) : 4.5;
+  const avgFocusLevel = validFocusCount > 0 ? Number((focusSum / validFocusCount).toFixed(1)) : 4.5;
   const avgDurationVariance =
     executions.length > 0 ? Math.round((totalActualMinutes - totalPlannedMinutes) / executions.length) : 0;
 
