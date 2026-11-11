@@ -6,6 +6,7 @@ import { ThemeProvider } from './context/ThemeContext.tsx';
 import { indexedDBStorage } from './database/adapters/IndexedDBAdapter';
 import { requestPersistentStorage } from './utils/storagePersistence';
 import { bootSchema } from './database/schema';
+import { migrateLegacySyncOutbox } from './utils/syncOutbox';
 import { APP_NAME, APP_VERSION_LABEL } from './constants/appMeta';
 
 // عنوان الصفحة من المصدر الوحيد للهوية (إصلاح R7)
@@ -46,6 +47,9 @@ function renderApp() {
   if (report.upgraded > 0 || report.failed > 0) {
     console.info(`Schema: رُحِّل ${report.upgraded} مفتاحاً · فشل ${report.failed}`);
   }
+
+  // R62: بعد جاهزية المحول، ننقل سجل واجهة المزامنة السابق قبل أن تبدأ أي خدمة بالكتابة.
+  migrateLegacySyncOutbox();
 
   // طلب تخزين دائم حتى لا يُخلي المتصفح البيانات عند ضغط المساحة (إصلاح R13)
   void requestPersistentStorage();

@@ -81,6 +81,9 @@ export default defineConfig({
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
+        /** R62: طابور المزامنة الموحد — يدخل المقام قبل اختبارات الترحيل والدفعات. */
+        'src/sync/Outbox.ts',
+        'src/utils/syncOutbox.ts',
       ],
       /**
        * السقوف رُفعت في R44 بعد إدخال وحدتَي المنطق إلى المقام (كانتا خارج القياس):
@@ -198,6 +201,9 @@ export default defineConfig({
         'src/utils/stock.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/storage/stock.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/services/inventory/InventoryService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
+        'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/database/repositories/BaseRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/database/repositories/ObjectRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/database/repositories/ValueRepository.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
