@@ -65,6 +65,9 @@ export interface CustomerDashboardStats {
 /** حزمة إحصاءات مصدر العميل الواحد (R28) */
 export type CustomerSourceBucket = CustomerDashboardStats['sourceBreakdown'][CustomerSource];
 
+/** البيانات المستوردة قد تحمل قيمة رقمية تالفة؛ لا تجعل KPI أو رصيداً `∞`. */
+const finiteBalance = (value: number): number => (Number.isFinite(value) ? value : 0);
+
 export function calculateCustomerStats(
   customers: Customer[],
   visits: CustomerVisitRecord[] = []
@@ -108,15 +111,18 @@ export function calculateCustomerStats(
 
   customers.forEach((c) => {
     // Balances
-    totalBalanceYER += c.balanceYER || 0;
-    totalBalanceSAR += c.balanceSAR || 0;
-    totalBalanceUSD += c.balanceUSD || 0;
+    const balanceYER = finiteBalance(c.balanceYER);
+    const balanceSAR = finiteBalance(c.balanceSAR);
+    const balanceUSD = finiteBalance(c.balanceUSD);
+    totalBalanceYER += balanceYER;
+    totalBalanceSAR += balanceSAR;
+    totalBalanceUSD += balanceUSD;
 
-    if (c.balanceYER > 0) {
-      positiveBalanceYER += c.balanceYER;
-    } else if (c.balanceYER < 0) {
+    if (balanceYER > 0) {
+      positiveBalanceYER += balanceYER;
+    } else if (balanceYER < 0) {
       debtorCount++;
-      totalDebtYER += Math.abs(c.balanceYER);
+      totalDebtYER += Math.abs(balanceYER);
     }
 
     if (c.isInternalAccount) {
@@ -124,17 +130,18 @@ export function calculateCustomerStats(
     }
 
     // Source breakdown
-    const srcKey = (c.source || 'أخرى') as CustomerSource;
+    /** `''` مصدر مستورد مشروع؛ لا نحوله إلى «أخرى». */
+    const srcKey = (c.source ?? 'أخرى') as CustomerSource;
     if (!sourceMap[srcKey]) {
       sourceMap[srcKey] = { count: 0, balanceYER: 0, balanceSAR: 0, balanceUSD: 0, debtorCount: 0, totalDebtYER: 0 };
     }
     sourceMap[srcKey].count++;
-    sourceMap[srcKey].balanceYER += c.balanceYER || 0;
-    sourceMap[srcKey].balanceSAR += c.balanceSAR || 0;
-    sourceMap[srcKey].balanceUSD += c.balanceUSD || 0;
-    if (c.balanceYER < 0) {
+    sourceMap[srcKey].balanceYER += balanceYER;
+    sourceMap[srcKey].balanceSAR += balanceSAR;
+    sourceMap[srcKey].balanceUSD += balanceUSD;
+    if (balanceYER < 0) {
       sourceMap[srcKey].debtorCount++;
-      sourceMap[srcKey].totalDebtYER += Math.abs(c.balanceYER);
+      sourceMap[srcKey].totalDebtYER += Math.abs(balanceYER);
     }
 
     // Regions
@@ -173,7 +180,7 @@ export function calculateCustomerStats(
     respMap[resp].total++;
     if (c.status === 'مكتمل') respMap[resp].completed++;
     if (c.status === 'قيد تنفيذ') respMap[resp].inProgress++;
-    respMap[resp].balanceYER += c.balanceYER || 0;
+    respMap[resp].balanceYER += balanceYER;
   });
 
   const totalCustomers = customers.length;
@@ -184,7 +191,7 @@ export function calculateCustomerStats(
     .map(([region, count]) => ({
       region,
       count,
-      percentage: totalCustomers > 0 ? Math.round((count / totalCustomers) * 100) : 0,
+      percentage: Math.round((count / totalCustomers) * 100),
     }))
     .sort((a, b) => b.count - a.count);
 
@@ -209,12 +216,14 @@ export function calculateCustomerStats(
 
   // Top Debtors (Negative balances or high debt)
   const topDebtors = [...customers]
-    .filter((c) => c.balanceYER < 0)
-    .sort((a, b) => a.balanceYER - b.balanceYER)
+    .filter((c) => finiteBalance(c.balanceYER) < 0)
+    .sort((a, b) => finiteBalance(a.balanceYER) - finiteBalance(b.balanceYER))
     .slice(0, 10);
 
   // Top Balances
-  const topBalances = [...customers].sort((a, b) => b.balanceYER - a.balanceYER).slice(0, 10);
+  const topBalances = [...customers]
+    .sort((a, b) => finiteBalance(b.balanceYER) - finiteBalance(a.balanceYER))
+    .slice(0, 10);
 
   return {
     totalCustomers,
@@ -334,7 +343,13 @@ export function generateNextCustomerId(customers: Customer[], source: CustomerSo
   else if (source === 'الأطباء') prefix = 'د';
 
   const sourceCustomers = customers.filter((c) => c.source === source);
-  const nextSubNum = (sourceCustomers.length + 1).toString().padStart(3, '0');
+  let maxSubNum = 0;
+  for (const customer of sourceCustomers) {
+    const match = customer.subId?.match(new RegExp(`^${prefix}-(\\d+)$`));
+    const number = Number(match?.[1]);
+    if (Number.isInteger(number) && number > maxSubNum) maxSubNum = number;
+  }
+  const nextSubNum = (maxSubNum + 1).toString().padStart(3, '0');
   const nextSubId = `${prefix}-${nextSubNum}`;
 
   return { id: nextId, subId: nextSubId };

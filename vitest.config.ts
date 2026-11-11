@@ -94,6 +94,9 @@ export default defineConfig({
         'src/utils/storage/routines.ts',
         /** R67: إنذارات المخزون والالتزامات تدخل المقام قبل اختبار الحساب. */
         'src/services/alerts/alertsEngine.ts',
+        /** R68: سجل العملاء وخدمة حفظه يدخلان المقام قبل اختبار العقود. */
+        'src/utils/customers.ts',
+        'src/services/crm/CustomerService.ts',
         /** R62: طابور المزامنة الموحد — يدخل المقام قبل اختبارات الترحيل والدفعات. */
         'src/sync/Outbox.ts',
         'src/utils/syncOutbox.ts',
@@ -227,6 +230,9 @@ export default defineConfig({
         'src/utils/storage/routines.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R67: إنذارات المخزون والالتزامات لا تخفي تاريخاً أو إذناً أو نموذج دين غير صالح. */
         'src/services/alerts/alertsEngine.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R68: عملاء الزيارات وإحصاءاتهم وحفظهم لا يخفون قراراً أو أثر تدقيق/طابور. */
+        'src/utils/customers.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/services/crm/CustomerService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
