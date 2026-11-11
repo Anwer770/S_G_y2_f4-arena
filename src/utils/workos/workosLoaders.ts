@@ -71,7 +71,6 @@ function loadSafe<T>(key: string, fallback: T): T {
   if (!raw || raw === 'undefined' || raw === 'null') return fallback;
   try {
     const parsed = JSON.parse(raw);
-    if (parsed === null || parsed === undefined) return fallback;
     return parsed;
   } catch {
     // If parsing fails (e.g. key was stored as an unquoted string like 'ws_main')
@@ -88,10 +87,15 @@ function saveSafe<T>(key: string, data: T): void {
   valueRepo(key).write(JSON.stringify(data));
 }
 
+/** بيانات WorkOS تصل من تخزين قابل للتلف؛ كائن JSON ليس بديلاً آمناً عن قائمة. */
+function loadArray<T>(key: string, fallback: T[]): T[] {
+  const loaded = loadSafe<unknown>(key, fallback);
+  return Array.isArray(loaded) ? loaded : fallback;
+}
+
 // Workspaces
 export function loadWorkspaces(): Workspace[] {
-  const loaded = loadSafe<Workspace[]>(KEYS.WORKSPACES, SEED_WORKSPACES);
-  return Array.isArray(loaded) ? loaded : SEED_WORKSPACES;
+  return loadArray<Workspace>(KEYS.WORKSPACES, SEED_WORKSPACES);
 }
 export function saveWorkspaces(data: Workspace[]): void {
   saveSafe(KEYS.WORKSPACES, data);
@@ -106,8 +110,7 @@ export function saveCurrentWorkspaceId(id: string): void {
 
 // Projects
 export function loadProjects(): WorkProject[] {
-  const loaded = loadSafe<WorkProject[]>(KEYS.PROJECTS, SEED_PROJECTS);
-  return Array.isArray(loaded) ? loaded : SEED_PROJECTS;
+  return loadArray<WorkProject>(KEYS.PROJECTS, SEED_PROJECTS);
 }
 export function saveProjects(data: WorkProject[]): void {
   const previous = loadProjects();
@@ -117,8 +120,7 @@ export function saveProjects(data: WorkProject[]): void {
 
 // Tasks
 export function loadTasks(): WorkTask[] {
-  const loaded = loadSafe<WorkTask[]>(KEYS.TASKS, SEED_TASKS);
-  const list = Array.isArray(loaded) ? loaded : SEED_TASKS;
+  const list = loadArray<WorkTask>(KEYS.TASKS, SEED_TASKS);
   return list.map((t) => ({
     ...t,
     subtasks: Array.isArray(t?.subtasks) ? t.subtasks : [],
@@ -147,8 +149,7 @@ export function saveTasksWithoutEvents(data: WorkTask[]): void {
 
 // Orders (الطلبيات)
 export function loadOrders(): WorkOrder[] {
-  const loaded = loadSafe<WorkOrder[]>(KEYS.ORDERS, SEED_ORDERS);
-  return Array.isArray(loaded) ? loaded : SEED_ORDERS;
+  return loadArray<WorkOrder>(KEYS.ORDERS, SEED_ORDERS);
 }
 export function saveOrders(data: WorkOrder[]): void {
   const previous = loadOrders();
@@ -158,8 +159,7 @@ export function saveOrders(data: WorkOrder[]): void {
 
 // Inbox
 export function loadInbox(): InboxItem[] {
-  const loaded = loadSafe<InboxItem[]>(KEYS.INBOX, SEED_INBOX);
-  return Array.isArray(loaded) ? loaded : SEED_INBOX;
+  return loadArray<InboxItem>(KEYS.INBOX, SEED_INBOX);
 }
 export function saveInbox(data: InboxItem[]): void {
   saveSafe(KEYS.INBOX, data);
@@ -167,7 +167,7 @@ export function saveInbox(data: InboxItem[]): void {
 
 // Routines
 export function loadRoutine(): DailyRoutineBlock[] {
-  return loadSafe<DailyRoutineBlock[]>(KEYS.ROUTINES, SEED_ROUTINE);
+  return loadArray<DailyRoutineBlock>(KEYS.ROUTINES, SEED_ROUTINE);
 }
 export function saveRoutine(data: DailyRoutineBlock[]): void {
   saveSafe(KEYS.ROUTINES, data);
@@ -175,7 +175,7 @@ export function saveRoutine(data: DailyRoutineBlock[]): void {
 
 // Daily Reviews
 export function loadDailyReviews(): DailyReviewRecord[] {
-  return loadSafe<DailyReviewRecord[]>(KEYS.REVIEWS, []);
+  return loadArray<DailyReviewRecord>(KEYS.REVIEWS, []);
 }
 export function saveDailyReviews(data: DailyReviewRecord[]): void {
   saveSafe(KEYS.REVIEWS, data);
@@ -183,7 +183,7 @@ export function saveDailyReviews(data: DailyReviewRecord[]): void {
 
 // Habits
 export function loadHabits(): HabitItem[] {
-  return loadSafe<HabitItem[]>(KEYS.HABITS, SEED_HABITS);
+  return loadArray<HabitItem>(KEYS.HABITS, SEED_HABITS);
 }
 export function saveHabits(data: HabitItem[]): void {
   saveSafe(KEYS.HABITS, data);
@@ -191,7 +191,7 @@ export function saveHabits(data: HabitItem[]): void {
 
 // Goals
 export function loadGoals(): GoalItem[] {
-  return loadSafe<GoalItem[]>(KEYS.GOALS, SEED_GOALS);
+  return loadArray<GoalItem>(KEYS.GOALS, SEED_GOALS);
 }
 export function saveGoals(data: GoalItem[]): void {
   saveSafe(KEYS.GOALS, data);
@@ -199,7 +199,7 @@ export function saveGoals(data: GoalItem[]): void {
 
 // Appointments
 export function loadAppointments(): AppointmentItem[] {
-  return loadSafe<AppointmentItem[]>(KEYS.APPOINTMENTS, SEED_APPOINTMENTS);
+  return loadArray<AppointmentItem>(KEYS.APPOINTMENTS, SEED_APPOINTMENTS);
 }
 export function saveAppointments(data: AppointmentItem[]): void {
   saveSafe(KEYS.APPOINTMENTS, data);
@@ -207,7 +207,7 @@ export function saveAppointments(data: AppointmentItem[]): void {
 
 // Commitments
 export function loadCommitments(): WorkCommitment[] {
-  return loadSafe<WorkCommitment[]>(KEYS.COMMITMENTS, SEED_COMMITMENTS);
+  return loadArray<WorkCommitment>(KEYS.COMMITMENTS, SEED_COMMITMENTS);
 }
 export function saveCommitments(data: WorkCommitment[]): void {
   const previous = loadCommitments();
@@ -217,7 +217,7 @@ export function saveCommitments(data: WorkCommitment[]): void {
 
 // Meetings
 export function loadMeetings(): WorkMeeting[] {
-  return loadSafe<WorkMeeting[]>(KEYS.MEETINGS, SEED_MEETINGS);
+  return loadArray<WorkMeeting>(KEYS.MEETINGS, SEED_MEETINGS);
 }
 export function saveMeetings(data: WorkMeeting[]): void {
   saveSafe(KEYS.MEETINGS, data);
@@ -225,7 +225,7 @@ export function saveMeetings(data: WorkMeeting[]): void {
 
 // Notes
 export function loadNotes(): WorkNote[] {
-  return loadSafe<WorkNote[]>(KEYS.NOTES, SEED_NOTES);
+  return loadArray<WorkNote>(KEYS.NOTES, SEED_NOTES);
 }
 export function saveNotes(data: WorkNote[]): void {
   saveSafe(KEYS.NOTES, data);
@@ -233,7 +233,7 @@ export function saveNotes(data: WorkNote[]): void {
 
 // Team
 export function loadTeam(): TeamMember[] {
-  return loadSafe<TeamMember[]>(KEYS.TEAM, SEED_TEAM);
+  return loadArray<TeamMember>(KEYS.TEAM, SEED_TEAM);
 }
 export function saveTeam(data: TeamMember[]): void {
   saveSafe(KEYS.TEAM, data);
@@ -241,7 +241,7 @@ export function saveTeam(data: TeamMember[]): void {
 
 // Automations
 export function loadAutomations(): AutomationRule[] {
-  return loadSafe<AutomationRule[]>(KEYS.AUTOMATIONS, SEED_AUTOMATIONS);
+  return loadArray<AutomationRule>(KEYS.AUTOMATIONS, SEED_AUTOMATIONS);
 }
 export function saveAutomations(data: AutomationRule[]): void {
   saveSafe(KEYS.AUTOMATIONS, data);
@@ -249,7 +249,7 @@ export function saveAutomations(data: AutomationRule[]): void {
 
 // Activity Log
 export function loadActivity(): WorkActivityLog[] {
-  return loadSafe<WorkActivityLog[]>(KEYS.ACTIVITY, SEED_ACTIVITY);
+  return loadArray<WorkActivityLog>(KEYS.ACTIVITY, SEED_ACTIVITY);
 }
 export function saveActivity(data: WorkActivityLog[]): void {
   saveSafe(KEYS.ACTIVITY, data);
@@ -370,7 +370,7 @@ export function parseNaturalLanguageTask(text: string): ParsedTaskResult {
 
   // Clean title
   let extractedTitle = clean
-    .replace(/(غدا|غداً|بكرة|اليوم|بعد غد|بعد غداً)/g, '')
+    .replace(/(بعد غداً|بعد غد|غداً|غدا|بكرة|اليوم)/g, '')
     .replace(/الساعة\s+\d+(\s+(صباحاً|مساءً))?/g, '')
     .replace(/(عاجل|ضروري|طارئ|مهم)/g, '')
     .trim();
@@ -439,23 +439,23 @@ export function loadWorkOSData(): WorkOSData {
   const act = loadActivity();
 
   return {
-    workspaces: Array.isArray(ws) ? ws : SEED_WORKSPACES,
-    currentWorkspaceId: loadCurrentWorkspaceId() || 'ws_main',
-    projects: Array.isArray(prj) ? prj : SEED_PROJECTS,
-    tasks: Array.isArray(tsk) ? tsk : SEED_TASKS,
-    orders: Array.isArray(ord) ? ord : SEED_ORDERS,
-    inbox: Array.isArray(inb) ? inb : SEED_INBOX,
-    dailyRoutine: Array.isArray(rtn) ? rtn : SEED_ROUTINE,
-    dailyReviews: Array.isArray(rev) ? rev : [],
-    habits: Array.isArray(hab) ? hab : SEED_HABITS,
-    goals: Array.isArray(gol) ? gol : SEED_GOALS,
-    appointments: Array.isArray(apt) ? apt : SEED_APPOINTMENTS,
-    commitments: Array.isArray(com) ? com : SEED_COMMITMENTS,
-    meetings: Array.isArray(mtg) ? mtg : SEED_MEETINGS,
-    notes: Array.isArray(nts) ? nts : SEED_NOTES,
-    team: Array.isArray(tem) ? tem : SEED_TEAM,
-    automations: Array.isArray(aut) ? aut : SEED_AUTOMATIONS,
-    activities: Array.isArray(act) ? act : SEED_ACTIVITY,
+    workspaces: ws,
+    currentWorkspaceId: loadCurrentWorkspaceId(),
+    projects: prj,
+    tasks: tsk,
+    orders: ord,
+    inbox: inb,
+    dailyRoutine: rtn,
+    dailyReviews: rev,
+    habits: hab,
+    goals: gol,
+    appointments: apt,
+    commitments: com,
+    meetings: mtg,
+    notes: nts,
+    team: tem,
+    automations: aut,
+    activities: act,
   };
 }
 
