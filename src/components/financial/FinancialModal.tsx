@@ -325,11 +325,15 @@ export const FinancialModal: React.FC<Props> = ({
 
             {/* Reference Number */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
+              <label
+                htmlFor="financial-reference-number"
+                className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1"
+              >
                 الرقم (رقم السند / المرجع) <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <input
+                  id="financial-reference-number"
                   type="text"
                   required
                   value={number}
@@ -499,7 +503,10 @@ export const FinancialModal: React.FC<Props> = ({
           {/* Section 3: Account Name (اسم الحساب - 110+ items) */}
           <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <label
+                htmlFor="financial-account-name"
+                className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2"
+              >
                 <User className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 <span>اسم الحساب / العميل / الصيدلية / الجهة</span>
                 <span className="text-rose-500">*</span>
@@ -548,6 +555,7 @@ export const FinancialModal: React.FC<Props> = ({
               {/* Selection */}
               <div className="sm:col-span-2">
                 <select
+                  id="financial-account-name"
                   value={accountName}
                   onChange={(e) => setAccountName(e.target.value)}
                   required
@@ -577,9 +585,12 @@ export const FinancialModal: React.FC<Props> = ({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {/* Amount YER */}
               <div className="bg-white/5 dark:bg-slate-900/5 p-3.5 rounded-xl border border-white/10 space-y-1.5">
-                <label className="block text-xs font-bold text-emerald-300">المبلغ (ريال يمني - YER)</label>
+                <label htmlFor="financial-amount-yer" className="block text-xs font-bold text-emerald-300">
+                  المبلغ (ريال يمني - YER)
+                </label>
                 <div className="relative">
                   <input
+                    id="financial-amount-yer"
                     type="number"
                     min="0"
                     step="any"
