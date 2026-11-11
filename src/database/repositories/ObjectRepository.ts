@@ -45,6 +45,15 @@ export interface ObjectRepository<T extends object> {
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
+/** ينسخ افتراضيات JSON المتداخلة كي لا يلوّث تعديل القارئ مصفوفة/كائناً مشتركاً. */
+const cloneValue = <T>(value: T): T => {
+  if (Array.isArray(value)) return value.map(cloneValue) as T;
+  if (typeof value === 'object' && value !== null) {
+    return Object.fromEntries(Object.entries(value).map(([key, nested]) => [key, cloneValue(nested)])) as T;
+  }
+  return value;
+};
+
 export function createObjectRepository<T extends object>(
   options: ObjectOptions<T>,
   storage: SchemaStorage = dbStorage
@@ -65,16 +74,16 @@ export function createObjectRepository<T extends object>(
     let parsed: unknown;
     try {
       const raw = readRaw();
-      if (!raw) return { ...defaults };
+      if (!raw) return cloneValue(defaults);
       parsed = JSON.parse(raw);
     } catch {
-      return { ...defaults };
+      return cloneValue(defaults);
     }
 
-    if (!isPlainObject(parsed)) return { ...defaults };
-    if (isValid && !isValid(parsed)) return { ...defaults };
+    if (!isPlainObject(parsed)) return cloneValue(defaults);
+    if (isValid && !isValid(parsed)) return cloneValue(defaults);
     if (noMerge) return parsed as T;
-    return { ...defaults, ...(parsed as Partial<T>) };
+    return { ...cloneValue(defaults), ...(parsed as Partial<T>) };
   };
 
   const write = (value: T): void => {
@@ -105,7 +114,7 @@ export function createObjectRepository<T extends object>(
       try {
         storage.removeItem?.(key);
       } catch {
-        write({ ...defaults });
+        write(cloneValue(defaults));
       }
     },
   };
