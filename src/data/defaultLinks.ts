@@ -37,6 +37,8 @@ export const DEFAULT_LINK_CATEGORIES: string[] = [
   'مواد علمية',
   'تدريب',
   'تحليل البينات',
+  'أدوات وتطوير',
+  'اعمال دينيه',
   'أخرى',
 ];
 
@@ -49,6 +51,7 @@ export const DEFAULT_LINK_TYPES: string[] = [
   'فيسبوك',
   'الانستجرام',
   'تلجرام',
+  'موقع مفيدة',
 ];
 
 export const DEFAULT_LINK_IMPORTANCES: string[] = ['A', 'B', 'C', 'D', 'مفيد', 'غير مفيد', 'ملغي', 'غير نشط'];

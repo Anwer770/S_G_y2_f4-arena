@@ -5,6 +5,7 @@ export const DOCTOR_REGIONS: string[] = [
   'صنعاء - التحرير وشميلة',
   'صنعاء - الحصبة وشعوب',
   'صنعاء - مذبح والستين',
+  'صنعاء - الستين والوحدة',
   'صنعاء - الأصبحي وبيت بوس',
   'تعز - الحوبان وما جاورها',
   'تعز - المدينة والوسط',
@@ -294,7 +295,7 @@ export const DEFAULT_DOCTOR_VISITS: DoctorVisitLog[] = [
     createdAt: '2026-08-01',
   },
   {
-    id: 'DOC-1002',
+    id: 'DVL-1002',
     doctorId: 'DOC-1003',
     doctorName: 'د. عادل قاسم الأصبحي',
     date: '2026-08-02',

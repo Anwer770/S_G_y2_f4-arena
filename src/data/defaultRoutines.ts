@@ -53,6 +53,7 @@ export const DEFAULT_ROUTINE_TAGS: RoutineTagItem[] = [
   { id: 'tag-daily-core', name: 'أساسي يومي', color: 'emerald' },
   { id: 'tag-customers', name: 'عملاء', color: 'blue' },
   { id: 'tag-inventory', name: 'مخزون', color: 'amber' },
+  { id: 'tag-finance', name: 'مالي', color: 'green' },
   { id: 'tag-reports', name: 'تقارير', color: 'indigo' },
   { id: 'tag-habit', name: 'عادة مستمرة', color: 'teal' },
 ];
