@@ -65,8 +65,19 @@ const idOf = (item: unknown): string | null => {
   return null;
 };
 
-const cloneArray = <T>(items: T[]): T[] =>
-  items.map((item) => (typeof item === 'object' && item !== null ? { ...item } : item));
+/**
+ * البذور كائنات JSON متداخلة (خطوات/وسوم/إعدادات). النسخ السطحي يجعل تعديل مستهلك
+ * لقيمة مقروءة يلوّث البذرة المشتركة ويظهر في قراءة لاحقة بلا أي عملية حفظ.
+ */
+const cloneValue = <T>(value: T): T => {
+  if (Array.isArray(value)) return value.map(cloneValue) as T;
+  if (typeof value === 'object' && value !== null) {
+    return Object.fromEntries(Object.entries(value).map(([key, nested]) => [key, cloneValue(nested)])) as T;
+  }
+  return value;
+};
+
+const cloneArray = <T>(items: T[]): T[] => cloneValue(items);
 
 /**
  * ينشئ مستودعاً لمجموعة معيّنة.

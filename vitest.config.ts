@@ -90,6 +90,8 @@ export default defineConfig({
         /** R65: محرك جدول الروتين وخدمة حفظه يدخلان المقام قبل اختبار العقود. */
         'src/utils/routines.ts',
         'src/services/routines/RoutineService.ts',
+        /** R66: ديمومة قوائم الروتين، سجلاته وإعداداته تدخل المقام قبل اختبار العقد. */
+        'src/utils/storage/routines.ts',
         /** R62: طابور المزامنة الموحد — يدخل المقام قبل اختبارات الترحيل والدفعات. */
         'src/sync/Outbox.ts',
         'src/utils/syncOutbox.ts',
@@ -219,6 +221,8 @@ export default defineConfig({
         /** R65: التكرار التقويمي، KPI الروتين، والحفظ ذو الأثرين Audit/Outbox. */
         'src/utils/routines.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/services/routines/RoutineService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R66: كل دفاتر الروتين تسلك المستودع الصحيح وتحفظ فصل الغياب عن الفراغ. */
+        'src/utils/storage/routines.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
