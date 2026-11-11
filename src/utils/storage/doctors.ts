@@ -123,10 +123,19 @@ export function saveDoctorAuditLogs(logs: DoctorAuditLog[]): void {
   auditRepo.write(logs);
 }
 
+const createDoctorAuditId = (current: DoctorAuditLog[]): string => {
+  const baseId = `LOG-D-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`;
+  if (!current.some((entry) => entry.id === baseId)) return baseId;
+
+  let collision = 1;
+  while (current.some((entry) => entry.id === `${baseId}-${collision}`)) collision++;
+  return `${baseId}-${collision}`;
+};
+
 export function logDoctorAudit(action: DoctorAuditLog['action'], doctorName: string, details: string): void {
   const current = loadDoctorAuditLogs();
   const newLog: DoctorAuditLog = {
-    id: `LOG-D-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: createDoctorAuditId(current),
     time: new Date().toLocaleString('ar-YE'),
     action,
     doctorName,

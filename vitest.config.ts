@@ -98,6 +98,8 @@ export default defineConfig({
         'src/utils/customers.ts',
         /** R69: استمرارية دفتر العملاء تدخل المقام قبل اختبار الغياب والفراغ والتدقيق. */
         'src/utils/storage/customers.ts',
+        /** R70: استمرارية دفتر الأطباء تدخل المقام قبل اختبار الغياب والفراغ والتدقيق. */
+        'src/utils/storage/doctors.ts',
         'src/services/crm/CustomerService.ts',
         /** R62: طابور المزامنة الموحد — يدخل المقام قبل اختبارات الترحيل والدفعات. */
         'src/sync/Outbox.ts',
@@ -237,6 +239,8 @@ export default defineConfig({
         'src/services/crm/CustomerService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R69: تخزين العملاء يحفظ فصل البذور عن الزيارات وسجل التدقيق المقصوص. */
         'src/utils/storage/customers.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R70: تخزين الأطباء يحفظ فصل البذور عن الزيارات وسجل التدقيق المقصوص. */
+        'src/utils/storage/doctors.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
