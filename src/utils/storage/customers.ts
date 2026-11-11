@@ -123,10 +123,19 @@ export function saveCustomerAuditLogs(logs: CustomerAuditLog[]): void {
   auditRepo.write(logs);
 }
 
+const createCustomerAuditId = (current: CustomerAuditLog[]): string => {
+  const baseId = `LOG-C-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`;
+  if (!current.some((entry) => entry.id === baseId)) return baseId;
+
+  let collision = 1;
+  while (current.some((entry) => entry.id === `${baseId}-${collision}`)) collision++;
+  return `${baseId}-${collision}`;
+};
+
 export function logCustomerAudit(action: CustomerAuditLog['action'], customerName: string, details: string): void {
   const current = loadCustomerAuditLogs();
   const newLog: CustomerAuditLog = {
-    id: `LOG-C-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: createCustomerAuditId(current),
     time: new Date().toLocaleString('ar-YE'),
     action,
     customerName,
