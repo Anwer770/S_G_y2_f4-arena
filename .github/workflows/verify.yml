@@ -61,7 +61,7 @@ jobs:
 
   # ---------------------------------------------------------------- 1.5) الفحص الساكن + اختبارات الوحدات
   lint-and-unit:
-    name: ESLint + Prettier + unit tests (coverage)
+    name: ESLint + Prettier + unit/component tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -76,6 +76,8 @@ jobs:
         run: npm run lint:eslint
       - name: Prettier (formatting is enforced, not advisory)
         run: npm run format:check
+      - name: Component tests (R60 · jsdom + Testing Library)
+        run: npm run test:components
       - name: Unit tests + coverage thresholds
         run: npm run test:unit:coverage
 
