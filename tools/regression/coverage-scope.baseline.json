@@ -1,5 +1,5 @@
 {
-  "_comment": "R87 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
+  "_comment": "R88 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
   "measuredAt": "2026-11-07",
   "files": [
     "src/utils/pinCrypto.ts",
@@ -90,6 +90,7 @@
     "src/utils/automation/automationRuntime.ts",
     "src/utils/automation/automationStore.ts",
     "src/utils/automation/automationNotifier.ts",
-    "src/components/workos/useAutomationSync.ts"
+    "src/components/workos/useAutomationSync.ts",
+    "src/components/workos/useWorkOSTaskActions.ts"
   ]
 }
