@@ -65,6 +65,12 @@ function hasStorageManager(): boolean {
   return typeof navigator !== 'undefined' && typeof navigator.storage !== 'undefined' && navigator.storage !== null;
 }
 
+/** واجهة المتصفح خارجية؛ لا تمرر قيمة سالبة أو غير منتهية إلى حالة الصحة المعروضة. */
+const safeByteCount = (value: unknown): number => {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
+};
+
 /** طلب تخزين دائم — يُستدعى مرة عند الإقلاع ومرة بعد أول حفظ ناجح */
 export async function requestPersistentStorage(): Promise<boolean> {
   if (!hasStorageManager()) {
@@ -127,7 +133,8 @@ export function getExportReminderState(): {
     return { due: true, daysSinceExport: null, lastExportAt: null };
   }
   const diffMs = Date.now() - new Date(lastExportAt).getTime();
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  // قد يأتي التاريخ من جهاز ساعته متقدمة؛ «منذ التصدير» لا يصح أن يظهر كعدد سالب.
+  const days = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
   return { due: days >= EXPORT_REMINDER_DAYS, daysSinceExport: days, lastExportAt };
 }
 
@@ -144,8 +151,8 @@ export async function getStorageHealth(): Promise<StorageHealth> {
     try {
       if (typeof navigator.storage.estimate === 'function') {
         const est = await navigator.storage.estimate();
-        usage = Number(est.usage) || 0;
-        quota = Number(est.quota) || 0;
+        usage = safeByteCount(est.usage);
+        quota = safeByteCount(est.quota);
       }
       if (typeof navigator.storage.persisted === 'function') {
         persisted = await navigator.storage.persisted();
@@ -173,7 +180,7 @@ export function formatBytes(bytes: number): string {
   const n = Number(bytes);
   if (!Number.isFinite(n) || n <= 0) return '0 بايت';
   const units = ['بايت', 'كيلوبايت', 'ميجابايت', 'جيجابايت', 'تيرابايت'];
-  const i = Math.min(Math.floor(Math.log(n) / Math.log(1024)), units.length - 1);
+  const i = Math.min(Math.max(0, Math.floor(Math.log(n) / Math.log(1024))), units.length - 1);
   const value = n / Math.pow(1024, i);
   return `${value.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
