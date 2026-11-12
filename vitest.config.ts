@@ -80,6 +80,11 @@ export default defineConfig({
         'src/database/dbStorage.ts',
         /** R77: ديمومة التخزين وتذكير التصدير يدخلان المقام قبل اختبار واجهات المتصفح. */
         'src/utils/storagePersistence.ts',
+        /** R78: خدمات دفاتر العهدة والدين والمعرفة والروابط تدخل المقام قبل اختبار أثر CRUD. */
+        'src/services/custody/CustodyService.ts',
+        'src/services/debts/DebtService.ts',
+        'src/services/knowledge/KnowledgeService.ts',
+        'src/services/links/LinksService.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -269,6 +274,11 @@ export default defineConfig({
         'src/utils/storage/settings.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R77: طلب الديمومة والحصة وتذكير التصدير لا يخفون غياب واجهة أو فشل متصفح. */
         'src/utils/storagePersistence.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R78: كل كتابة CRUD في الدفاتر المساندة تثبت المستودع والتدقيق وطابور المزامنة. */
+        'src/services/custody/CustodyService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/services/debts/DebtService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/services/knowledge/KnowledgeService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        'src/services/links/LinksService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
