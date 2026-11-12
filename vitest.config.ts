@@ -101,6 +101,8 @@ export default defineConfig({
         'src/utils/automation/automationStore.ts',
         /** R86: إشعار الأتمتة يدخل المقام قبل اختبار النشر والاشتراك والعزل خارج المتصفح. */
         'src/utils/automation/automationNotifier.ts',
+        /** R87: مزامنة React تدخل المقام قبل اختبار تحديثها بعد أثر الأتمتة وتنظيفها. */
+        'src/components/workos/useAutomationSync.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -311,6 +313,8 @@ export default defineConfig({
         'src/utils/automation/automationStore.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R86: الإشعار لا يخفي غياب DOM أو فشل CustomEvent أو إلغاء الاشتراك. */
         'src/utils/automation/automationNotifier.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R87: مزامنة React لا تخفي القراءة الجديدة بعد الأتمتة أو تنظيف الاشتراك. */
+        'src/components/workos/useAutomationSync.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
