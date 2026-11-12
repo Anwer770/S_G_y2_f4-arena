@@ -87,6 +87,8 @@ export default defineConfig({
         'src/services/links/LinksService.ts',
         /** R79: خدمة المهام تدخل المقام قبل اختبار CRUD الدفاتر ومهام WorkOS ومشروعاته. */
         'src/services/work/TaskService.ts',
+        /** R80: تبديل وإنجاز مهام WorkOS يدخل المقام قبل اختبار الكتابة الصامتة. */
+        'src/services/workos/WorkOSTaskService.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -283,6 +285,8 @@ export default defineConfig({
         'src/services/links/LinksService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R79: كتابة المهام والالتزامات وWorkOS تثبت المستودع والطابور، والتدقيق عند وجوده. */
         'src/services/work/TaskService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R80: لا تغيّر المهمة المطابقة فقط، وتكتب مرة واحدة عبر المسار الصامت بلا أتمتة. */
+        'src/services/workos/WorkOSTaskService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
