@@ -1,5 +1,5 @@
 {
-  "_comment": "R80 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
+  "_comment": "R81 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
   "measuredAt": "2026-11-07",
   "files": [
     "src/utils/pinCrypto.ts",
@@ -83,6 +83,7 @@
     "src/services/knowledge/KnowledgeService.ts",
     "src/services/links/LinksService.ts",
     "src/services/work/TaskService.ts",
-    "src/services/workos/WorkOSTaskService.ts"
+    "src/services/workos/WorkOSTaskService.ts",
+    "src/services/audit/auditAutoExport.ts"
   ]
 }
