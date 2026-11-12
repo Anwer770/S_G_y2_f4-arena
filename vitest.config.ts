@@ -102,6 +102,8 @@ export default defineConfig({
         'src/utils/storage/doctors.ts',
         /** R71: استمرارية السجل المالي تدخل المقام قبل اختبار البذور والدفاتر المستقلة. */
         'src/utils/storage/financial.ts',
+        /** R72: استمرارية دفتر الديون تدخل المقام قبل اختبار الغياب والفراغ والتدقيق. */
+        'src/utils/storage/debts.ts',
         'src/services/crm/CustomerService.ts',
         /** R62: طابور المزامنة الموحد — يدخل المقام قبل اختبارات الترحيل والدفعات. */
         'src/sync/Outbox.ts',
@@ -245,6 +247,8 @@ export default defineConfig({
         'src/utils/storage/doctors.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R71: السجل المالي وقوائمه لا يخلطان مفاتيحاً ولا يمرران قائمة فارغة بلا عقد. */
         'src/utils/storage/financial.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R72: دفتر الديون يحفظ فصل البذور عن سجل التدقيق ومعرفه الفريد. */
+        'src/utils/storage/debts.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
