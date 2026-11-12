@@ -110,6 +110,8 @@ export default defineConfig({
         'src/utils/storage/knowledge.ts',
         /** R75: استمرارية مكتبة الروابط تدخل المقام قبل اختبار البذور والمقاييس والاستعادة. */
         'src/utils/storage/links.ts',
+        /** R76: استمرارية إعدادات التطبيق تدخل المقام قبل اختبار الترحيل وعزل المفتاح الموحد. */
+        'src/utils/storage/settings.ts',
         'src/services/crm/CustomerService.ts',
         /** R62: طابور المزامنة الموحد — يدخل المقام قبل اختبارات الترحيل والدفعات. */
         'src/sync/Outbox.ts',
@@ -261,6 +263,8 @@ export default defineConfig({
         'src/utils/storage/knowledge.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R75: مكتبة الروابط تحفظ البذور والدفاتر ومقاييس التصنيف والاستعادة. */
         'src/utils/storage/links.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R76: إعدادات التطبيق لا تشارك مفتاح إعدادات النظام ولا تفقد الترحيل أو العزل. */
+        'src/utils/storage/settings.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },

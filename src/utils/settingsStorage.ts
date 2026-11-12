@@ -17,6 +17,19 @@ const settingsRepo = createObjectRepository<Record<string, unknown>>({
   legacyKeys: [LEGACY_SETTINGS_STORAGE_KEY],
 });
 
+/**
+ * R76: كان `storage/settings.ts` يكتب نموذج AppSettings القصير في المفتاح الموحد.
+ * نقرأ هذا المستودع فقط لترحيل ذلك الشكل قبل أن تطبّعه إعدادات النظام وتفقده.
+ */
+const appSettingsMigrationRepo = createObjectRepository<Record<string, unknown>>({
+  key: STORAGE_KEYS.APP_SETTINGS,
+  defaults: {},
+  noMerge: true,
+});
+
+const isLegacyAppSettings = (value: Record<string, unknown>): boolean =>
+  typeof value.defaultYear === 'number' && !('general' in value || 'company' in value);
+
 export const SETTINGS_UPDATED_EVENT = 'system_settings_updated';
 
 export const DEFAULT_SYSTEM_SETTINGS: CompleteSystemSettings = {
@@ -332,6 +345,16 @@ export function loadCompleteSystemSettings(): CompleteSystemSettings {
   try {
     const parsed = settingsRepo.read() as Partial<CompleteSystemSettings> & Record<string, unknown>;
     if (Object.keys(parsed).length === 0) return defaults;
+
+    // لا نسمح لترتيب إقلاع Context قبل App أن يمحو إعدادات التطبيق القديمة:
+    // انقل الشكل القصير إلى مفتاحه المستقل ثم ابدأ إعدادات النظام الكاملة من افتراضياتها.
+    if (isLegacyAppSettings(parsed)) {
+      if (!appSettingsMigrationRepo.hasCurrent()) {
+        appSettingsMigrationRepo.write(parsed);
+      }
+      settingsRepo.write(defaults as unknown as Record<string, unknown>);
+      return defaults;
+    }
 
     const company = { ...defaults.company, ...sectionOrEmpty(parsed.company) };
     // If company still has default placeholder from old version, update to new name

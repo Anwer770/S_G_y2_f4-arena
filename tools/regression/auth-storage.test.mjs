@@ -68,6 +68,7 @@ w.eval(fs.readFileSync(BUNDLE, 'utf8'));
 const S = w.AUTH_STORAGE;
 KEYS = {
   settings: S.STORAGE_KEYS.SETTINGS,
+  appSettings: S.STORAGE_KEYS.APP_SETTINGS,
   audit: S.STORAGE_KEYS.SYSTEM_AUDIT,
   guard: S.STORAGE_KEYS.AUTH_GUARD,
   session: S.STORAGE_KEYS.AUTH_SESSION,
@@ -85,25 +86,28 @@ check(
   direct.join(' · ') || '0 تجاوز'
 );
 
-// ── A2: الإعدادات
+// ── A2: إعدادات التطبيق — مفتاح مستقل وترحيل قراءة للنسخ القصيرة القديمة
 S.dbStorage.removeItem(KEYS.settings);
+S.dbStorage.removeItem(KEYS.appSettings);
 const settingsDefault = S.loadSettings();
 seed(KEYS.settings, JSON.stringify({ defaultYear: 2025, حقلLegacy: 'x' }));
-const settingsMerged = S.loadSettings();
-seed(KEYS.settings, JSON.stringify({ defaultCurrency: 'دولار' }));
+const settingsMigrated = S.loadSettings();
+S.dbStorage.removeItem(KEYS.appSettings);
+seed(KEYS.appSettings, JSON.stringify({ defaultCurrency: 'دولار' }));
 const settingsInvalid = S.loadSettings();
 S.saveSettings({ defaultYear: 2026, skipCancelled: false, defaultCurrency: 'ريال', enableNotifications: false });
 const settingsSaved = S.loadSettings();
 check(
-  'A2 · الإعدادات: افتراضي عند الغياب · دمج المحفوظ · بلا defaultYear رقمي ⇒ الافتراضي كاملاً · حفظ/قراءة',
+  'A2 · إعدادات التطبيق: مفتاح مستقل · ترحيل القديم · دمج المحفوظ · بلا defaultYear رقمي ⇒ الافتراضي · حفظ/قراءة',
   settingsDefault.defaultYear === S.DEFAULT_APP_SETTINGS.defaultYear &&
-    settingsMerged.defaultYear === 2025 &&
-    settingsMerged.skipCancelled === S.DEFAULT_APP_SETTINGS.skipCancelled &&
-    settingsMerged.حقلLegacy === 'x' &&
+    settingsMigrated.defaultYear === 2025 &&
+    settingsMigrated.skipCancelled === S.DEFAULT_APP_SETTINGS.skipCancelled &&
+    settingsMigrated.حقلLegacy === 'x' &&
     settingsInvalid.defaultYear === S.DEFAULT_APP_SETTINGS.defaultYear &&
     settingsSaved.defaultYear === 2026 &&
-    settingsSaved.skipCancelled === false,
-  `افتراضي=${settingsDefault.defaultYear} · مدموج=${settingsMerged.defaultYear} · تالف=${settingsInvalid.defaultYear}`
+    settingsSaved.skipCancelled === false &&
+    raw(KEYS.appSettings)?.includes('"defaultYear":2026'),
+  `افتراضي=${settingsDefault.defaultYear} · مرحّل=${settingsMigrated.defaultYear} · تالف=${settingsInvalid.defaultYear}`
 );
 
 // ── A3: الجلسة
