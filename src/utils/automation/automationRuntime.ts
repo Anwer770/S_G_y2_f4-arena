@@ -46,7 +46,11 @@ export function startAutomationRuntime(
   todayStr: string = new Date().toISOString().slice(0, 10),
   deps = defaultAutomationDeps
 ): () => void {
-  if (started && unsubscribe) return unsubscribe;
+  /**
+   * لا تُسرّب دالة إلغاء الاشتراك الخام: المستدعي المتكرر يحق له إيقاف المشغّل أيضاً،
+   * ويجب أن يصفّر ذلك `started` و`unsubscribe` مثل دالة الإيقاف الأولى (R84).
+   */
+  if (started && unsubscribe) return () => stopAutomationRuntime();
 
   unsubscribe = subscribeDomainEvents((event) => {
     try {
