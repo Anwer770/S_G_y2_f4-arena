@@ -78,6 +78,8 @@ export default defineConfig({
         'src/utils/settingsStorage.ts',
         'src/utils/storage/custody.ts',
         'src/database/dbStorage.ts',
+        /** R77: ديمومة التخزين وتذكير التصدير يدخلان المقام قبل اختبار واجهات المتصفح. */
+        'src/utils/storagePersistence.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -265,6 +267,8 @@ export default defineConfig({
         'src/utils/storage/links.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R76: إعدادات التطبيق لا تشارك مفتاح إعدادات النظام ولا تفقد الترحيل أو العزل. */
         'src/utils/storage/settings.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R77: طلب الديمومة والحصة وتذكير التصدير لا يخفون غياب واجهة أو فشل متصفح. */
+        'src/utils/storagePersistence.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
