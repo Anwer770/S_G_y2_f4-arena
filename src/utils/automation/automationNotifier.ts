@@ -19,7 +19,11 @@ export function notifyAutomationUpdated(detail?: { executed?: number; failed?: n
 /** يشترك في إشعار تحديث الأتمتة ويعيد دالة إلغاء. */
 export function onAutomationUpdated(handler: (detail?: { executed?: number; failed?: number }) => void): () => void {
   if (typeof window === 'undefined') return () => {};
-  const listener = (event: Event) => handler((event as CustomEvent).detail);
+  const listener = (event: Event) => {
+    // المتصفح يطبّع `detail: undefined` إلى `null`؛ الواجهة العلنية تعد بـundefined.
+    const detail = (event as CustomEvent).detail;
+    handler(detail ?? undefined);
+  };
   window.addEventListener(AUTOMATION_UPDATED_EVENT, listener);
   return () => window.removeEventListener(AUTOMATION_UPDATED_EVENT, listener);
 }
