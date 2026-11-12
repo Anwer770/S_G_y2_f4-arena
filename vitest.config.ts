@@ -97,6 +97,8 @@ export default defineConfig({
         'src/utils/automation/automationActions.ts',
         /** R84: زمن تشغيل الأتمتة يدخل المقام قبل اختبار الإقلاع والمسح والإيقاف. */
         'src/utils/automation/automationRuntime.ts',
+        /** R85: سجل تشغيل الأتمتة يدخل المقام قبل اختبار القصّ والقراءة وآخر تنفيذ. */
+        'src/utils/automation/automationStore.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -303,6 +305,8 @@ export default defineConfig({
         'src/utils/automation/automationActions.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R84: وقت التشغيل لا يخفي تكرار الإقلاع أو فشل المسح أو حدث بداية اليوم. */
         'src/utils/automation/automationRuntime.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R85: سجل التشغيل لا يخفي القصّ أو القراءة أو إيجاد آخر تنفيذ للقاعدة. */
+        'src/utils/automation/automationStore.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
