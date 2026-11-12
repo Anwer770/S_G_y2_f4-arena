@@ -91,6 +91,8 @@ export default defineConfig({
         'src/services/workos/WorkOSTaskService.ts',
         /** R81: خدمة أرشيف التدقيق تدخل المقام قبل اختبار التخزين والمجلد والتنزيل. */
         'src/services/audit/auditAutoExport.ts',
+        /** R82: مصدر سجل التدقيق يدخل المقام قبل اختبار السجل الساخن والأرشيف. */
+        'src/core/audit/AuditService.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -291,6 +293,8 @@ export default defineConfig({
         'src/services/workos/WorkOSTaskService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R81: الأرشيف لا يخفي قرار الاستحقاق أو التخزين أو مسار المجلد/التنزيل. */
         'src/services/audit/auditAutoExport.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R82: سجل التدقيق لا يخفي الكتابة أو سقف السجل الساخن أو الأرشيف. */
+        'src/core/audit/AuditService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
