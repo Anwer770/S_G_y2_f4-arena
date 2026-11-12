@@ -105,6 +105,15 @@ export function saveTaskAuditLogs(logs: TaskAuditLog[]): void {
   taskAuditRepo.write(logs);
 }
 
+const createTaskAuditId = (current: TaskAuditLog[]): string => {
+  const baseId = `TAUD-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`;
+  if (!current.some((entry) => entry.id === baseId)) return baseId;
+
+  let collision = 1;
+  while (current.some((entry) => entry.id === `${baseId}-${collision}`)) collision++;
+  return `${baseId}-${collision}`;
+};
+
 export function logTaskAudit(
   action: TaskAuditLog['action'],
   entity: TaskAuditLog['entity'],
@@ -113,7 +122,7 @@ export function logTaskAudit(
 ): void {
   const current = loadTaskAuditLogs();
   const newLog: TaskAuditLog = {
-    id: `TAUD-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: createTaskAuditId(current),
     time: new Date().toLocaleString('ar-YE'),
     action,
     entity,
