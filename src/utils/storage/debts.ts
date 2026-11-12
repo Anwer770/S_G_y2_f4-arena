@@ -94,6 +94,15 @@ export function saveDebtAuditLogs(logs: DebtAuditLog[]): void {
   debtAuditRepo.write(logs);
 }
 
+const createDebtAuditId = (current: DebtAuditLog[]): string => {
+  const baseId = `LOG-DBT-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`;
+  if (!current.some((entry) => entry.id === baseId)) return baseId;
+
+  let collision = 1;
+  while (current.some((entry) => entry.id === `${baseId}-${collision}`)) collision++;
+  return `${baseId}-${collision}`;
+};
+
 export function logDebtAudit(
   action: DebtAuditLog['action'],
   entity: DebtAuditLog['entity'],
@@ -102,7 +111,7 @@ export function logDebtAudit(
 ): void {
   const current = loadDebtAuditLogs();
   const newLog: DebtAuditLog = {
-    id: `LOG-DBT-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: createDebtAuditId(current),
     time: new Date().toLocaleString('ar-YE'),
     action,
     entity,
