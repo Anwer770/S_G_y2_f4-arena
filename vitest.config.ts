@@ -103,6 +103,8 @@ export default defineConfig({
         'src/utils/automation/automationNotifier.ts',
         /** R87: مزامنة React تدخل المقام قبل اختبار تحديثها بعد أثر الأتمتة وتنظيفها. */
         'src/components/workos/useAutomationSync.ts',
+        /** R88: إجراءات مهام WorkOS تدخل المقام قبل اختبار الكتابة وسجل النشاط والتحويل. */
+        'src/components/workos/useWorkOSTaskActions.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -315,6 +317,8 @@ export default defineConfig({
         'src/utils/automation/automationNotifier.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R87: مزامنة React لا تخفي القراءة الجديدة بعد الأتمتة أو تنظيف الاشتراك. */
         'src/components/workos/useAutomationSync.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R88: إجراءات المهام لا تخفي إنشاء/حفظ/حذف/تحويل المهمة أو آثار الحالة. */
+        'src/components/workos/useWorkOSTaskActions.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
