@@ -41,7 +41,7 @@ const EXPECTED_KEYS = [
   'suite_routines_exceptions_v1', 'suite_routines_audit_v1', 'suite_routines_settings_v1',
   'suite_links_records_v1', 'suite_links_classifications_v1', 'suite_links_categories_v1',
   'suite_links_types_v1', 'suite_links_importances_v1',
-  'suite_unified_settings_v2', 'suite_unified_audit_v2', 'suite_unified_autobackup_v2',
+  'suite_unified_settings_v2', 'suite_app_settings_v1', 'suite_unified_audit_v2', 'suite_unified_autobackup_v2',
 ];
 
 const keysSrc = read('src/utils/storage/keys.ts');

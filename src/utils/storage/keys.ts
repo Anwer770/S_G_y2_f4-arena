@@ -91,7 +91,10 @@ export const STORAGE_KEYS = {
   AUTH_GUARD: 'suite_auth_guard_v1',
 
   // System Unified
+  /** إعدادات النظام الكاملة؛ لا تشاركها إعدادات المخزون القديمة بعد R76. */
   SETTINGS: 'suite_unified_settings_v2',
+  /** إعدادات التطبيق/المخزون القديمة، فُصلت عن إعدادات النظام الكاملة في R76. */
+  APP_SETTINGS: 'suite_app_settings_v1',
   /**
    * R51: سجل النظام كان يشارك المفتاح `suite_unified_audit_v2` مع السجل المركزي
    * (`CentralAuditService`) وهذا الملف — وبشكلين مختلفين للبيانات. كل كتابة في أحدهما
