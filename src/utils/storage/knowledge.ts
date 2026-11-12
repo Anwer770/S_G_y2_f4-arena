@@ -92,6 +92,15 @@ export function saveNoteAuditLogs(logs: NoteAuditLog[]): void {
   auditRepo.write(logs);
 }
 
+const createNoteAuditId = (current: NoteAuditLog[]): string => {
+  const baseId = `LOG-NT-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`;
+  if (!current.some((entry) => entry.id === baseId)) return baseId;
+
+  let collision = 1;
+  while (current.some((entry) => entry.id === `${baseId}-${collision}`)) collision++;
+  return `${baseId}-${collision}`;
+};
+
 export function logNoteAudit(
   action: NoteAuditLog['action'],
   entity: NoteAuditLog['entity'],
@@ -100,7 +109,7 @@ export function logNoteAudit(
 ): void {
   const current = loadNoteAuditLogs();
   const newLog: NoteAuditLog = {
-    id: `LOG-NT-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: createNoteAuditId(current),
     time: new Date().toLocaleString('ar-YE'),
     action,
     entity,

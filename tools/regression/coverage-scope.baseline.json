@@ -1,5 +1,5 @@
 {
-  "_comment": "R73 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
+  "_comment": "R74 — ملفات مقام التغطية وقت إثبات القرعة. المقام يكبر فقط: كل مسار هنا يجب أن يبقى في coverage.include، وإخراجه يُفشل H16.",
   "measuredAt": "2026-11-07",
   "files": [
     "src/utils/pinCrypto.ts",
@@ -72,6 +72,7 @@
     "src/utils/storage/financial.ts",
     "src/utils/storage/debts.ts",
     "src/utils/storage/tasks.ts",
+    "src/utils/storage/knowledge.ts",
     "src/utils/customers.ts",
     "src/services/crm/CustomerService.ts"
   ]
