@@ -85,6 +85,8 @@ export default defineConfig({
         'src/services/debts/DebtService.ts',
         'src/services/knowledge/KnowledgeService.ts',
         'src/services/links/LinksService.ts',
+        /** R79: خدمة المهام تدخل المقام قبل اختبار CRUD الدفاتر ومهام WorkOS ومشروعاته. */
+        'src/services/work/TaskService.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -279,6 +281,8 @@ export default defineConfig({
         'src/services/debts/DebtService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/services/knowledge/KnowledgeService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/services/links/LinksService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R79: كتابة المهام والالتزامات وWorkOS تثبت المستودع والطابور، والتدقيق عند وجوده. */
+        'src/services/work/TaskService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },

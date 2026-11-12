@@ -57,14 +57,8 @@ export class TaskService {
     let saved: Task;
 
     if (isNew) {
+      // SuiteTaskRepository.add() هو مالك سجل الإنشاء؛ لا نكرر الحدث هنا.
       saved = suiteTaskRepository.add(task);
-      auditService.log({
-        action: 'Create',
-        entity: 'Task',
-        recordId: task.id,
-        details: `إنشاء مهمة جديدة: ${task.title} (${task.pri || ''})`,
-        newValue: task,
-      });
       Outbox.enqueue('Task', 'INSERT', task.id, task);
     } else {
       const old = suiteTaskRepository.getById(task.id);
