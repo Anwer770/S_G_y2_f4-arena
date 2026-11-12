@@ -140,7 +140,8 @@ export async function pickFolder(): Promise<string | null> {
   }
 }
 
-const downloadJson = (fileName: string, json: string): void => {
+/** يحاول التنزيل ويكشف نجاحه كي لا تدّعي الحالة خروج ملف لم يُنشأ فعلاً. */
+const downloadJson = (fileName: string, json: string): boolean => {
   try {
     const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
     const a = document.createElement('a');
@@ -148,8 +149,10 @@ const downloadJson = (fileName: string, json: string): void => {
     a.download = fileName;
     a.click();
     URL.revokeObjectURL(url);
+    return true;
   } catch (err) {
     console.warn('audit auto export: download failed', err);
+    return false;
   }
 };
 
@@ -205,8 +208,7 @@ export async function runAutoExport(force = false, now: Date = new Date()): Prom
       }
     }
   }
-  if (mode === 'store') {
-    downloadJson(fileName, json);
+  if (mode === 'store' && downloadJson(fileName, json)) {
     mode = 'download';
   }
 

@@ -89,6 +89,8 @@ export default defineConfig({
         'src/services/work/TaskService.ts',
         /** R80: تبديل وإنجاز مهام WorkOS يدخل المقام قبل اختبار الكتابة الصامتة. */
         'src/services/workos/WorkOSTaskService.ts',
+        /** R81: خدمة أرشيف التدقيق تدخل المقام قبل اختبار التخزين والمجلد والتنزيل. */
+        'src/services/audit/auditAutoExport.ts',
         'src/utils/stock.ts',
         'src/utils/storage/stock.ts',
         'src/services/inventory/InventoryService.ts',
@@ -287,6 +289,8 @@ export default defineConfig({
         'src/services/work/TaskService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R80: لا تغيّر المهمة المطابقة فقط، وتكتب مرة واحدة عبر المسار الصامت بلا أتمتة. */
         'src/services/workos/WorkOSTaskService.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
+        /** R81: الأرشيف لا يخفي قرار الاستحقاق أو التخزين أو مسار المجلد/التنزيل. */
+        'src/services/audit/auditAutoExport.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         /** R62: الطابور الرسمي وواجهة التوافق القديمة؛ لا يُخفى أي ذراع ترحيل أو قص. */
         'src/sync/Outbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
         'src/utils/syncOutbox.ts': { lines: 100, functions: 100, branches: 100, statements: 100 },
